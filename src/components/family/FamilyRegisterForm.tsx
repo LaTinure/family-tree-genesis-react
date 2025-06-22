@@ -1,4 +1,3 @@
-
 import***REMOVED***React,***REMOVED***{***REMOVED***useState,***REMOVED***useEffect***REMOVED***}***REMOVED***from***REMOVED***'react';
 import***REMOVED***{***REMOVED***useForm,***REMOVED***FormProvider***REMOVED***}***REMOVED***from***REMOVED***'react-hook-form';
 import***REMOVED***{***REMOVED***zodResolver***REMOVED***}***REMOVED***from***REMOVED***'@hookform/resolvers/zod';
@@ -18,6 +17,7 @@ import***REMOVED***{***REMOVED***FamilyRegisterSchema,***REMOVED***FamilyRegiste
 import***REMOVED***{***REMOVED***getRelationshipTypeOptions***REMOVED***}***REMOVED***from***REMOVED***'@/lib/constants/relationshipTypeOptions';
 import***REMOVED***type***REMOVED***{***REMOVED***Title***REMOVED***}***REMOVED***from***REMOVED***'@/types/family';
 import***REMOVED***{***REMOVED***z***REMOVED***}***REMOVED***from***REMOVED***'zod';
+import***REMOVED***{***REMOVED***supabase***REMOVED***}***REMOVED***from***REMOVED***'@/integrations/supabase/client';
 
 //***REMOVED***Schéma***REMOVED***de***REMOVED***validation***REMOVED***simplifié***REMOVED***pour***REMOVED***le***REMOVED***formulaire
 const***REMOVED***SimpleFamilyRegisterSchema***REMOVED***=***REMOVED***z.object({
@@ -85,10 +85,36 @@ export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED*
 ***REMOVED******REMOVED***useEffect(()***REMOVED***=>***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***checkProfilesExists***REMOVED***=***REMOVED***async***REMOVED***()***REMOVED***=>***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***try***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Simulation***REMOVED***:***REMOVED***pour***REMOVED***cette***REMOVED***démo,***REMOVED***on***REMOVED***considère***REMOVED***que***REMOVED***c'est***REMOVED***le***REMOVED***premier***REMOVED***utilisateur
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setIsFirstUser(true);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setPatriarchExists(false);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setHasAnyProfiles(false);
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***1️⃣***REMOVED***Vérification***REMOVED***du***REMOVED***nombre***REMOVED***de***REMOVED***profils
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***data:***REMOVED***profilesData,***REMOVED***error:***REMOVED***profilesError***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.from("profiles")
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.select("id");
+
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(profilesError)***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***console.error("Erreur***REMOVED***lors***REMOVED***de***REMOVED***la***REMOVED***vérification***REMOVED***des***REMOVED***profils:",***REMOVED***profilesError);
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return;
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
+
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***hasAnyProfiles***REMOVED***=***REMOVED***profilesData***REMOVED***&&***REMOVED***profilesData.length***REMOVED***>***REMOVED***0;
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setHasAnyProfiles(hasAnyProfiles);
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setIsFirstUser(!hasAnyProfiles);
+
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***2️⃣***REMOVED***Si***REMOVED***des***REMOVED***profils***REMOVED***existent,***REMOVED***vérification***REMOVED***du***REMOVED***patriarche
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(hasAnyProfiles)***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***data:***REMOVED***patriarchData,***REMOVED***error:***REMOVED***patriarchError***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.from("profiles")
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.select("id")
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.eq("is_patriarch",***REMOVED***true)
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.limit(1);
+
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(patriarchError)***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***console.error("Erreur***REMOVED***lors***REMOVED***de***REMOVED***la***REMOVED***vérification***REMOVED***du***REMOVED***patriarche:",***REMOVED***patriarchError);
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***else***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setPatriarchExists(!!(patriarchData***REMOVED***&&***REMOVED***patriarchData.length***REMOVED***>***REMOVED***0));
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***else***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setPatriarchExists(false);
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***catch***REMOVED***(err)***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***console.error("Erreur***REMOVED***lors***REMOVED***de***REMOVED***la***REMOVED***vérification***REMOVED***des***REMOVED***profils:",***REMOVED***err);
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
@@ -144,16 +170,66 @@ export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED*
 ***REMOVED******REMOVED******REMOVED******REMOVED***setIsLoading(true);
 
 ***REMOVED******REMOVED******REMOVED******REMOVED***try***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Simulation***REMOVED***de***REMOVED***l'inscription
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***userId***REMOVED***=***REMOVED***'user_'***REMOVED***+***REMOVED***Date.now();
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***data:***REMOVED***authData,***REMOVED***error:***REMOVED***authError***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase.auth.signUp({
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***email:***REMOVED***data.email,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***password:***REMOVED***data.password,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***options:***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***emailRedirectTo:***REMOVED***`${window.location.origin}/dashboard`,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data:***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***first_name:***REMOVED***data.firstName,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***last_name:***REMOVED***data.lastName,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***phone:***REMOVED***data.phone***REMOVED***?***REMOVED***`${data.phoneCode}${data.phone}`***REMOVED***:***REMOVED***'',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***profession:***REMOVED***data.profession***REMOVED***||***REMOVED***'',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***current_location:***REMOVED***data.currentLocation***REMOVED***||***REMOVED***'',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***birth_place:***REMOVED***data.birthPlace***REMOVED***||***REMOVED***'',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***photo_url:***REMOVED***'',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***relationship_type:***REMOVED***isFirstUser
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***(data.title***REMOVED***===***REMOVED***'M.'***REMOVED***?***REMOVED***'patriarche'***REMOVED***:***REMOVED***'matriarche')***REMOVED***as***REMOVED***RelationshipType
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***data.relationship***REMOVED***as***REMOVED***RelationshipType,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***father_name:***REMOVED***data.fatherName***REMOVED***||***REMOVED***'',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***mother_name:***REMOVED***data.motherName***REMOVED***||***REMOVED***'',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_admin:***REMOVED***isAdmin,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_patriarch:***REMOVED***isFirstUser,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***birth_date:***REMOVED***data.birthDate***REMOVED***||***REMOVED***null,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***situation:***REMOVED***'',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at:***REMOVED***new***REMOVED***Date().toISOString(),
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***updated_at:***REMOVED***new***REMOVED***Date().toISOString(),
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***});
+
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(authError)***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***console.error("Erreur***REMOVED***lors***REMOVED***de***REMOVED***l'inscription***REMOVED***(supabase***REMOVED***auth):",***REMOVED***authError);
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***toast({
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***title:***REMOVED***"Erreur***REMOVED***d'authentification",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***description:***REMOVED***"Erreur***REMOVED***lors***REMOVED***de***REMOVED***l'enregistrement***REMOVED***de***REMOVED***l'utilisateur.***REMOVED***Veuillez***REMOVED***réessayer.",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***variant:***REMOVED***"destructive",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***});
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return;
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
+
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***signInData***REMOVED***=***REMOVED***await***REMOVED***supabase.auth.signInWithPassword({
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***email:***REMOVED***data.email,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***password:***REMOVED***data.password,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***});
+
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(signInData.error)***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***console.error("Erreur***REMOVED***lors***REMOVED***de***REMOVED***la***REMOVED***connexion:",***REMOVED***signInData.error);
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***toast({
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***title:***REMOVED***"Erreur***REMOVED***de***REMOVED***connexion",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***description:***REMOVED***"Erreur***REMOVED***lors***REMOVED***de***REMOVED***la***REMOVED***connexion***REMOVED***après***REMOVED***l'inscription.***REMOVED***Veuillez***REMOVED***réessayer.",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***variant:***REMOVED***"destructive",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***});
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return;
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
+
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***let***REMOVED***avatarUrl***REMOVED***=***REMOVED***'';
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(data.photoUrl***REMOVED***&&***REMOVED***data.photoUrl.startsWith('data:'))***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***try***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***res***REMOVED***=***REMOVED***await***REMOVED***fetch(data.photoUrl);
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***blob***REMOVED***=***REMOVED***await***REMOVED***res.blob();
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***file***REMOVED***=***REMOVED***new***REMOVED***File([blob],***REMOVED***`avatar_${userId}.png`,***REMOVED***{***REMOVED***type:***REMOVED***blob.type***REMOVED***});
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***avatarUrl***REMOVED***=***REMOVED***await***REMOVED***api.uploadAvatar(userId,***REMOVED***file);
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***file***REMOVED***=***REMOVED***new***REMOVED***File([blob],***REMOVED***`avatar_${signInData.data.user?.id}.png`,***REMOVED***{***REMOVED***type:***REMOVED***blob.type***REMOVED***});
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***avatarUrl***REMOVED***=***REMOVED***await***REMOVED***api.uploadAvatar(signInData.data.user?.id***REMOVED***as***REMOVED***string,***REMOVED***file);
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***catch***REMOVED***(uploadError)***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***console.error('Erreur***REMOVED***upload***REMOVED***avatar:',***REMOVED***uploadError);
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
@@ -165,7 +241,7 @@ export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED*
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(isFirstUser)***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Premier***REMOVED***utilisateur***REMOVED***=***REMOVED***automatiquement***REMOVED***patriarche
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***isPatriarch***REMOVED***=***REMOVED***true;
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***profileTitle***REMOVED***=***REMOVED***data.title***REMOVED***===***REMOVED***'M.'***REMOVED***?***REMOVED***'Patriarche'***REMOVED***:***REMOVED***'Matriarche';
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***profileTitle***REMOVED***=***REMOVED***data.title***REMOVED***===***REMOVED***'M.'***REMOVED***?***REMOVED***'Fils'***REMOVED***:***REMOVED***'Fille';
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***else***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Utilisateur***REMOVED***suivant***REMOVED***=***REMOVED***jamais***REMOVED***patriarche
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***isPatriarch***REMOVED***=***REMOVED***false;
@@ -173,8 +249,8 @@ export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED*
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
 
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***profileData:***REMOVED***ProfileData***REMOVED***=***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***userId,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_id:***REMOVED***userId,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***signInData.data.user?.id***REMOVED***as***REMOVED***string,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_id:***REMOVED***signInData.data.user?.id***REMOVED***as***REMOVED***string,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***email:***REMOVED***data.email,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***first_name:***REMOVED***data.firstName,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***last_name:***REMOVED***data.lastName,
@@ -197,8 +273,6 @@ export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED*
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at:***REMOVED***new***REMOVED***Date().toISOString(),
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***updated_at:***REMOVED***new***REMOVED***Date().toISOString(),
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***};
-
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***console.log('Données***REMOVED***du***REMOVED***profil***REMOVED***à***REMOVED***créer:',***REMOVED***profileData);
 
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***try***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***await***REMOVED***api.profiles.createProfile(profileData);
@@ -304,7 +378,7 @@ export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED*
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</DialogContent>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Dialog>
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{isFirstUser***REMOVED***&&***REMOVED***(
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{isFirstUser***REMOVED***&&***REMOVED***!hasAnyProfiles***REMOVED***&&***REMOVED***(
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="patriarch-gradient***REMOVED***rounded-lg***REMOVED***p-6***REMOVED***border-2***REMOVED***border-yellow-300***REMOVED***shadow-lg***REMOVED***animate-bounce-in">
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="flex***REMOVED***items-center***REMOVED***space-x-3">
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="flex-shrink-0">
@@ -522,7 +596,7 @@ export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED*
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***/>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{!isFirstUser***REMOVED***&&***REMOVED***(
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{!isFirstUser***REMOVED***&&***REMOVED***hasAnyProfiles***REMOVED***&&***REMOVED***(
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="space-y-2***REMOVED***form-field">
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Label***REMOVED***htmlFor="relationship">
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Affiliation***REMOVED***avec***REMOVED***le***REMOVED***Patriarche***REMOVED***ou***REMOVED***un***REMOVED***autre***REMOVED***membre***REMOVED****
@@ -550,7 +624,7 @@ export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED*
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{!isFirstUser***REMOVED***&&***REMOVED***(
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{!isFirstUser***REMOVED***&&***REMOVED***hasAnyProfiles***REMOVED***&&***REMOVED***(
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="space-y-4***REMOVED***form-field">
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Label***REMOVED***className="text-sm***REMOVED***text-gray-600">Informations***REMOVED***des***REMOVED***parents***REMOVED***(optionnel)</Label>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="grid***REMOVED***grid-cols-1***REMOVED***md:grid-cols-2***REMOVED***gap-4">
@@ -576,7 +650,7 @@ export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED*
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{!isFirstUser***REMOVED***&&***REMOVED***(
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{!isFirstUser***REMOVED***&&***REMOVED***hasAnyProfiles***REMOVED***&&***REMOVED***(
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="space-y-2***REMOVED***form-field">
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Label***REMOVED***className="text-sm***REMOVED***text-gray-600">Conjoint***REMOVED***(optionnel)</Label>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<ComboboxMembre
