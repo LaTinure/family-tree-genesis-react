@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -18,6 +17,7 @@ import { FamilyRegisterSchema, FamilyRegisterData, RelationshipType } from '@/li
 import { getRelationshipTypeOptions } from '@/lib/constants/relationshipTypeOptions';
 import type { Title } from '@/types/family';
 import { z } from 'zod';
+import { supabase } from '@/integrations/supabase/client';
 
 // Schéma de validation simplifié pour le formulaire
 const SimpleFamilyRegisterSchema = z.object({
@@ -85,10 +85,36 @@ export const FamilyRegisterForm = () => {
   useEffect(() => {
     const checkProfilesExists = async () => {
       try {
-        // Simulation : pour cette démo, on considère que c'est le premier utilisateur
-        setIsFirstUser(true);
-        setPatriarchExists(false);
-        setHasAnyProfiles(false);
+        // 1️⃣ Vérification du nombre de profils
+        const { data: profilesData, error: profilesError } = await supabase
+          .from("profiles")
+          .select("id");
+
+        if (profilesError) {
+          console.error("Erreur lors de la vérification des profils:", profilesError);
+          return;
+        }
+
+        const hasAnyProfiles = profilesData && profilesData.length > 0;
+        setHasAnyProfiles(hasAnyProfiles);
+        setIsFirstUser(!hasAnyProfiles);
+
+        // 2️⃣ Si des profils existent, vérification du patriarche
+        if (hasAnyProfiles) {
+          const { data: patriarchData, error: patriarchError } = await supabase
+            .from("profiles")
+            .select("id")
+            .eq("is_patriarch", true)
+            .limit(1);
+
+          if (patriarchError) {
+            console.error("Erreur lors de la vérification du patriarche:", patriarchError);
+          } else {
+            setPatriarchExists(!!(patriarchData && patriarchData.length > 0));
+          }
+        } else {
+          setPatriarchExists(false);
+        }
       } catch (err) {
         console.error("Erreur lors de la vérification des profils:", err);
       }
@@ -144,16 +170,66 @@ export const FamilyRegisterForm = () => {
     setIsLoading(true);
 
     try {
-      // Simulation de l'inscription
-      const userId = 'user_' + Date.now();
-      
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/dashboard`,
+          data: {
+            first_name: data.firstName,
+            last_name: data.lastName,
+            phone: data.phone ? `${data.phoneCode}${data.phone}` : '',
+            profession: data.profession || '',
+            current_location: data.currentLocation || '',
+            birth_place: data.birthPlace || '',
+            photo_url: '',
+            relationship_type: isFirstUser
+              ? (data.title === 'M.' ? 'patriarche' : 'matriarche') as RelationshipType
+              : data.relationship as RelationshipType,
+            father_name: data.fatherName || '',
+            mother_name: data.motherName || '',
+            is_admin: isAdmin,
+            is_patriarch: isFirstUser,
+            birth_date: data.birthDate || null,
+            situation: '',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          }
+        }
+      });
+
+      if (authError) {
+        console.error("Erreur lors de l'inscription (supabase auth):", authError);
+        toast({
+          title: "Erreur d'authentification",
+          description: "Erreur lors de l'enregistrement de l'utilisateur. Veuillez réessayer.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const signInData = await supabase.auth.signInWithPassword({
+        email: data.email,
+        password: data.password,
+      });
+
+      if (signInData.error) {
+        console.error("Erreur lors de la connexion:", signInData.error);
+        toast({
+          title: "Erreur de connexion",
+          description: "Erreur lors de la connexion après l'inscription. Veuillez réessayer.",
+          variant: "destructive",
+        });
+        return;
+      }
+
       let avatarUrl = '';
       if (data.photoUrl && data.photoUrl.startsWith('data:')) {
         try {
           const res = await fetch(data.photoUrl);
           const blob = await res.blob();
-          const file = new File([blob], `avatar_${userId}.png`, { type: blob.type });
-          avatarUrl = await api.uploadAvatar(userId, file);
+          const file = new File([blob], `avatar_${signInData.data.user?.id}.png`, { type: blob.type });
+          avatarUrl = await api.uploadAvatar(signInData.data.user?.id as string, file);
         } catch (uploadError) {
           console.error('Erreur upload avatar:', uploadError);
         }
@@ -165,7 +241,7 @@ export const FamilyRegisterForm = () => {
       if (isFirstUser) {
         // Premier utilisateur = automatiquement patriarche
         isPatriarch = true;
-        profileTitle = data.title === 'M.' ? 'Patriarche' : 'Matriarche';
+        profileTitle = data.title === 'M.' ? 'Fils' : 'Fille';
       } else {
         // Utilisateur suivant = jamais patriarche
         isPatriarch = false;
@@ -173,8 +249,8 @@ export const FamilyRegisterForm = () => {
       }
 
       const profileData: ProfileData = {
-        id: userId,
-        user_id: userId,
+        id: signInData.data.user?.id as string,
+        user_id: signInData.data.user?.id as string,
         email: data.email,
         first_name: data.firstName,
         last_name: data.lastName,
@@ -197,8 +273,6 @@ export const FamilyRegisterForm = () => {
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       };
-
-      console.log('Données du profil à créer:', profileData);
 
       try {
         await api.profiles.createProfile(profileData);
@@ -304,7 +378,7 @@ export const FamilyRegisterForm = () => {
             </DialogContent>
           </Dialog>
 
-          {isFirstUser && (
+          {isFirstUser && !hasAnyProfiles && (
             <div className="patriarch-gradient rounded-lg p-6 border-2 border-yellow-300 shadow-lg animate-bounce-in">
               <div className="flex items-center space-x-3">
                 <div className="flex-shrink-0">
@@ -522,7 +596,7 @@ export const FamilyRegisterForm = () => {
             />
           </div>
 
-          {!isFirstUser && (
+          {!isFirstUser && hasAnyProfiles && (
             <div className="space-y-2 form-field">
               <Label htmlFor="relationship">
                 Affiliation avec le Patriarche ou un autre membre *
@@ -550,7 +624,7 @@ export const FamilyRegisterForm = () => {
             </div>
           )}
 
-          {!isFirstUser && (
+          {!isFirstUser && hasAnyProfiles && (
             <div className="space-y-4 form-field">
               <Label className="text-sm text-gray-600">Informations des parents (optionnel)</Label>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -576,7 +650,7 @@ export const FamilyRegisterForm = () => {
             </div>
           )}
 
-          {!isFirstUser && (
+          {!isFirstUser && hasAnyProfiles && (
             <div className="space-y-2 form-field">
               <Label className="text-sm text-gray-600">Conjoint (optionnel)</Label>
               <ComboboxMembre
