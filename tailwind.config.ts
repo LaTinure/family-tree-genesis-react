@@ -1,3 +1,4 @@
+
 import***REMOVED***type***REMOVED***{***REMOVED***Config***REMOVED***}***REMOVED***from***REMOVED***"tailwindcss";
 
 export***REMOVED***default***REMOVED***{
@@ -61,6 +62,25 @@ export***REMOVED***default***REMOVED***{
 					'accent-foreground':***REMOVED***'hsl(var(--sidebar-accent-foreground))',
 					border:***REMOVED***'hsl(var(--sidebar-border))',
 					ring:***REMOVED***'hsl(var(--sidebar-ring))'
+				},
+				whatsapp:***REMOVED***{
+					100:***REMOVED***'#F0F9FF',
+					200:***REMOVED***'#E0F2FE',
+					300:***REMOVED***'#7DD3FC',
+					400:***REMOVED***'#38BDF8',
+					500:***REMOVED***'#25D366',
+					600:***REMOVED***'#16A249',
+					700:***REMOVED***'#0D8236',
+					800:***REMOVED***'#166534',
+					900:***REMOVED***'#14532D'
+				},
+				family:***REMOVED***{
+					patriarch:***REMOVED***'#FFD700',
+					'patriarch-dark':***REMOVED***'#B8860B',
+					member:***REMOVED***'#22C55E',
+					'member-dark':***REMOVED***'#16A34A',
+					admin:***REMOVED***'#3B82F6',
+					'admin-dark':***REMOVED***'#1D4ED8'
 				}
 			},
 			borderRadius:***REMOVED***{
@@ -84,11 +104,22 @@ export***REMOVED***default***REMOVED***{
 					to:***REMOVED***{
 						height:***REMOVED***'0'
 					}
+				},
+				'fade-in':***REMOVED***{
+					'0%':***REMOVED***{***REMOVED***opacity:***REMOVED***'0',***REMOVED***transform:***REMOVED***'translateY(10px)'***REMOVED***},
+					'100%':***REMOVED***{***REMOVED***opacity:***REMOVED***'1',***REMOVED***transform:***REMOVED***'translateY(0)'***REMOVED***}
+				},
+				'bounce-in':***REMOVED***{
+					'0%':***REMOVED***{***REMOVED***transform:***REMOVED***'scale(0.8)',***REMOVED***opacity:***REMOVED***'0'***REMOVED***},
+					'50%':***REMOVED***{***REMOVED***transform:***REMOVED***'scale(1.05)',***REMOVED***opacity:***REMOVED***'1'***REMOVED***},
+					'100%':***REMOVED***{***REMOVED***transform:***REMOVED***'scale(1)',***REMOVED***opacity:***REMOVED***'1'***REMOVED***}
 				}
 			},
 			animation:***REMOVED***{
 				'accordion-down':***REMOVED***'accordion-down***REMOVED***0.2s***REMOVED***ease-out',
-				'accordion-up':***REMOVED***'accordion-up***REMOVED***0.2s***REMOVED***ease-out'
+				'accordion-up':***REMOVED***'accordion-up***REMOVED***0.2s***REMOVED***ease-out',
+				'fade-in':***REMOVED***'fade-in***REMOVED***0.5s***REMOVED***ease-out',
+				'bounce-in':***REMOVED***'bounce-in***REMOVED***0.6s***REMOVED***ease-out'
 			}
 		}
 	},
