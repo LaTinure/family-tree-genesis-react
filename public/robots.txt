@@ -1,0 +1,14 @@
+User-agent:***REMOVED***Googlebot
+Allow:***REMOVED***/
+
+User-agent:***REMOVED***Bingbot
+Allow:***REMOVED***/
+
+User-agent:***REMOVED***Twitterbot
+Allow:***REMOVED***/
+
+User-agent:***REMOVED***facebookexternalhit
+Allow:***REMOVED***/
+
+User-agent:***REMOVED****
+Allow:***REMOVED***/
