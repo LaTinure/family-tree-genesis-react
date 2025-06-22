@@ -39,6 +39,7 @@
 ***REMOVED******REMOVED******REMOVED******REMOVED***"@radix-ui/react-toggle":***REMOVED***"^1.1.0",
 ***REMOVED******REMOVED******REMOVED******REMOVED***"@radix-ui/react-toggle-group":***REMOVED***"^1.1.0",
 ***REMOVED******REMOVED******REMOVED******REMOVED***"@radix-ui/react-tooltip":***REMOVED***"^1.1.4",
+***REMOVED******REMOVED******REMOVED******REMOVED***"@supabase/supabase-js":***REMOVED***"^2.50.0",
 ***REMOVED******REMOVED******REMOVED******REMOVED***"@tanstack/react-query":***REMOVED***"^5.56.2",
 ***REMOVED******REMOVED******REMOVED******REMOVED***"class-variance-authority":***REMOVED***"^0.7.1",
 ***REMOVED******REMOVED******REMOVED******REMOVED***"clsx":***REMOVED***"^2.1.1",
