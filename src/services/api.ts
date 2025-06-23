@@ -1,13 +1,10 @@
 
-import { ProfileData, CreateProfileData, UpdateProfileData } from '@/types/profile';
 import { supabase } from '@/integrations/supabase/client';
+import { ProfileData } from '@/types/profile';
 
-// Service API utilisant Supabase directement
 export const api = {
   profiles: {
-    async createProfile(profileData: CreateProfileData): Promise<ProfileData> {
-      console.log('Creating profile:', profileData);
-      
+    async create(profileData: Omit<ProfileData, 'id' | 'created_at' | 'updated_at'>) {
       const { data, error } = await supabase
         .from('profiles')
         .insert({
@@ -18,94 +15,67 @@ export const api = {
         .select()
         .single();
 
-      if (error) {
-        throw error;
-      }
-
-      return data;
+      if (error) throw error;
+      return data as ProfileData;
     },
 
-    async updateProfile(userId: string, updates: UpdateProfileData): Promise<ProfileData> {
-      console.log('Updating profile:', userId, updates);
-      
+    async update(id: string, updates: Partial<ProfileData>) {
       const { data, error } = await supabase
         .from('profiles')
         .update({
           ...updates,
           updated_at: new Date().toISOString(),
         })
-        .eq('user_id', userId)
+        .eq('id', id)
         .select()
         .single();
 
-      if (error) {
-        throw error;
-      }
-
-      return data;
+      if (error) throw error;
+      return data as ProfileData;
     },
 
-    async getProfileById(userId: string): Promise<ProfileData> {
-      console.log('Getting profile by ID:', userId);
-      
+    async getCurrent() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Utilisateur non authentifié');
+
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
-        .eq('user_id', userId)
+        .eq('user_id', user.id)
         .single();
 
-      if (error) {
-        throw error;
-      }
-
-      return data;
+      if (error) throw error;
+      return data as ProfileData;
     },
 
-    async getCurrent(): Promise<ProfileData> {
-      const { data: { user }, error: authError } = await supabase.auth.getUser();
-      
-      if (authError || !user) {
-        throw new Error('Utilisateur non authentifié');
-      }
+    async getById(id: string) {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', id)
+        .single();
 
-      return this.getProfileById(user.id);
+      if (error) throw error;
+      return data as ProfileData;
     },
 
-    async getAllProfiles(): Promise<ProfileData[]> {
-      console.log('Getting all profiles');
-      
+    async getAll() {
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) {
-        throw error;
-      }
+      if (error) throw error;
+      return data as ProfileData[];
+    },
 
-      return data || [];
+    async delete(id: string) {
+      const { error } = await supabase
+        .from('profiles')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
     }
-  },
-
-  async uploadAvatar(userId: string, file: File): Promise<string> {
-    console.log('Uploading avatar for user:', userId, file);
-    
-    const fileExt = file.name.split('.').pop();
-    const fileName = `${userId}-${Math.random()}.${fileExt}`;
-    const filePath = `avatars/${fileName}`;
-
-    const { error: uploadError } = await supabase.storage
-      .from('avatars')
-      .upload(filePath, file);
-
-    if (uploadError) {
-      throw uploadError;
-    }
-
-    const { data } = supabase.storage
-      .from('avatars')
-      .getPublicUrl(filePath);
-
-    return data.publicUrl;
   }
 };
