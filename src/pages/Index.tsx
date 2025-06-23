@@ -1,9 +1,56 @@
-
-import React from 'react';
-import { TreePine, Crown, Users, Heart } from 'lucide-react';
+import React, { useState } from 'react';
+import { TreePine, Crown, Users, Heart, Trash2 } from 'lucide-react';
 import { FamilyRegisterForm } from '@/components/family/FamilyRegisterForm';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 const Index = () => {
+  const [isDeleting, setIsDeleting] = useState(false);
+  const { toast } = useToast();
+
+  const handleDeleteAll = async () => {
+    if (!confirm('⚠️ ATTENTION: Cette action supprimera TOUTES les données de la base de données (tous les profils, utilisateurs, etc.). Cette action est IRRÉVERSIBLE. Êtes-vous sûr de vouloir continuer ?')) {
+      return;
+    }
+
+    if (!confirm('Dernière confirmation: Voulez-vous vraiment supprimer TOUTES les données ? Cette action ne peut pas être annulée.')) {
+      return;
+    }
+
+    setIsDeleting(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('delete-all-data', {
+        method: 'POST'
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      toast({
+        title: "Suppression réussie",
+        description: "Toutes les données ont été supprimées avec succès.",
+      });
+
+      // Déconnecter l'utilisateur actuel s'il y en a un
+      await supabase.auth.signOut();
+      
+      // Recharger la page pour refléter les changements
+      window.location.reload();
+    } catch (error) {
+      console.error('Erreur lors de la suppression:', error);
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de la suppression des données.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
       <div className="container mx-auto px-4 py-8">
@@ -15,9 +62,30 @@ const Index = () => {
               <h1 className="text-5xl font-bold patriarch-text-gradient mb-2">
                 Arbre Généalogique
               </h1>
-              <p className="text-xl text-gray-600">
+              <p className="text-xl text-gray-600 mb-4">
                 Créez et préservez l'histoire de votre famille
               </p>
+              
+              {/* Bouton Delete All */}
+              <Button
+                onClick={handleDeleteAll}
+                disabled={isDeleting}
+                variant="destructive"
+                size="sm"
+                className="bg-red-600 hover:bg-red-700 text-white"
+              >
+                {isDeleting ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                    Suppression...
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Delete All
+                  </>
+                )}
+              </Button>
             </div>
           </div>
         </div>
