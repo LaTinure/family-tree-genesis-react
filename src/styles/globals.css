@@ -1,0 +1,313 @@
+
+/* Variables CSS pour le thème WhatsApp */
+:root {
+  --whatsapp-50: #f0fdf4;
+  --whatsapp-100: #dcfce7;
+  --whatsapp-200: #bbf7d0;
+  --whatsapp-300: #86efac;
+  --whatsapp-400: #4ade80;
+  --whatsapp-500: #25D366;
+  --whatsapp-600: #16a34a;
+  --whatsapp-700: #128C7E;
+  --whatsapp-800: #166534;
+  --whatsapp-900: #14532d;
+  --whatsapp-950: #052e16;
+}
+
+/* Styles globaux pour les cartes familiales */
+.family-card {
+  @apply bg-white rounded-xl shadow-lg border border-gray-200;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+}
+
+.family-card:hover {
+  @apply shadow-xl;
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+/* Styles pour les boutons primaires */
+.btn-primary {
+  background: linear-gradient(135deg, var(--whatsapp-500), var(--whatsapp-600));
+  @apply text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--whatsapp-600), var(--whatsapp-700));
+  transform: translateY(-1px);
+}
+
+/* Styles pour les avatars */
+.avatar-ring {
+  @apply ring-4 ring-white shadow-lg;
+}
+
+.avatar-ring.online {
+  @apply ring-green-200;
+}
+
+/* Animations personnalisées */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Styles pour les gradients */
+.gradient-bg {
+  background: linear-gradient(135deg, 
+    var(--whatsapp-50) 0%, 
+    #ffffff 50%, 
+    var(--whatsapp-100) 100%);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--whatsapp-600), var(--whatsapp-700));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Styles pour les notifications */
+.notification-dot {
+  @apply absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white;
+  animation: pulse 2s infinite;
+}
+
+/* Styles pour les états de chargement */
+.loading-skeleton {
+  @apply bg-gray-200 animate-pulse rounded;
+}
+
+/* Styles pour les transitions de page */
+.page-transition {
+  @apply opacity-0 translate-y-4;
+  transition: all 0.3s ease-out;
+}
+
+.page-transition.loaded {
+  @apply opacity-100 translate-y-0;
+}
+
+/* Styles pour les formulaires */
+.form-group {
+  @apply space-y-2;
+}
+
+.form-label {
+  @apply text-sm font-medium text-gray-700;
+}
+
+.form-input {
+  @apply w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500;
+}
+
+.form-input:disabled {
+  @apply bg-gray-50 text-gray-500;
+}
+
+/* Styles pour les messages d'erreur */
+.error-message {
+  @apply text-red-600 text-sm font-medium;
+}
+
+.success-message {
+  @apply text-green-600 text-sm font-medium;
+}
+
+/* Styles pour la barre de navigation mobile */
+.mobile-nav {
+  @apply fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 z-50;
+}
+
+/* Styles pour les badges */
+.badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+}
+
+.badge-success {
+  @apply bg-green-100 text-green-800;
+}
+
+.badge-warning {
+  @apply bg-yellow-100 text-yellow-800;
+}
+
+.badge-error {
+  @apply bg-red-100 text-red-800;
+}
+
+.badge-info {
+  @apply bg-blue-100 text-blue-800;
+}
+
+/* Styles pour les liens */
+.link-primary {
+  @apply text-green-600 hover:text-green-700 font-medium transition-colors;
+}
+
+.link-secondary {
+  @apply text-gray-600 hover:text-gray-700 transition-colors;
+}
+
+/* Styles pour les cartes de statistiques */
+.stat-card {
+  @apply bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow;
+}
+
+.stat-value {
+  @apply text-2xl font-bold text-gray-900;
+}
+
+.stat-label {
+  @apply text-sm font-medium text-gray-600;
+}
+
+/* Styles pour les listes */
+.list-item {
+  @apply flex items-center justify-between p-4 bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow;
+}
+
+/* Styles pour les modales */
+.modal-overlay {
+  @apply fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4;
+}
+
+.modal-content {
+  @apply bg-white rounded-lg shadow-xl max-w-md w-full p-6;
+}
+
+/* Styles responsifs pour les grilles */
+.grid-responsive {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+}
+
+/* Styles pour les boutons d'action flottants */
+.fab {
+  @apply fixed bottom-6 right-6 w-14 h-14 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-300 z-40;
+}
+
+.fab:hover {
+  transform: scale(1.1);
+}
+
+/* Styles pour les indicateurs de statut */
+.status-online {
+  @apply w-3 h-3 bg-green-400 rounded-full border-2 border-white;
+}
+
+.status-offline {
+  @apply w-3 h-3 bg-gray-400 rounded-full border-2 border-white;
+}
+
+.status-away {
+  @apply w-3 h-3 bg-yellow-400 rounded-full border-2 border-white;
+}
+
+/* Styles pour les barres de progression */
+.progress-bar {
+  @apply w-full bg-gray-200 rounded-full h-2;
+}
+
+.progress-fill {
+  @apply h-2 bg-green-500 rounded-full transition-all duration-500;
+}
+
+/* Styles pour les tooltips */
+.tooltip {
+  @apply absolute z-50 px-2 py-1 text-sm font-medium text-white bg-gray-900 rounded shadow-lg;
+}
+
+/* Styles pour les dividers */
+.divider {
+  @apply border-t border-gray-200 my-6;
+}
+
+.divider-text {
+  @apply relative flex justify-center text-sm;
+}
+
+.divider-text span {
+  @apply bg-white px-2 text-gray-500;
+}
+
+/* Animations pour les éléments interactifs */
+.hover-scale {
+  transition: transform 0.2s ease;
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+}
+
+.click-effect {
+  transition: transform 0.1s ease;
+}
+
+.click-effect:active {
+  transform: scale(0.95);
+}
+
+/* Styles pour les images */
+.image-rounded {
+  @apply rounded-lg shadow-md;
+}
+
+.image-circle {
+  @apply rounded-full;
+}
+
+.image-hover {
+  @apply transition-transform duration-300 hover:scale-105;
+}
+
+/* Styles pour les textes */
+.text-gradient {
+  background: linear-gradient(135deg, var(--whatsapp-600), var(--whatsapp-700));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-shadow {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Styles pour les conteneurs */
+.container-fluid {
+  @apply w-full px-4 mx-auto;
+}
+
+.container-sm {
+  @apply max-w-2xl mx-auto px-4;
+}
+
+.container-lg {
+  @apply max-w-6xl mx-auto px-4;
+}
+
+/* Styles pour les espacements */
+.spacing-sm {
+  @apply space-y-2;
+}
+
+.spacing-md {
+  @apply space-y-4;
+}
+
+.spacing-lg {
+  @apply space-y-6;
+}
+
+.spacing-xl {
+  @apply space-y-8;
+}

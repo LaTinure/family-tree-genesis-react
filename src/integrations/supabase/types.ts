@@ -36,13 +36,6 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "family_members_profile_id_fkey"
-            columns: ["profile_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "family_members_tree_id_fkey"
             columns: ["tree_id"]
             isOneToOne: false
@@ -76,15 +69,7 @@ export type Database = {
           name?: string
           updated_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "family_trees_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       messages: {
         Row: {
@@ -108,15 +93,7 @@ export type Database = {
           is_admin_message?: boolean | null
           sender_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "messages_sender_id_fkey"
-            columns: ["sender_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       notifications: {
         Row: {
@@ -149,107 +126,103 @@ export type Database = {
           type?: string
           user_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "notifications_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       profiles: {
         Row: {
+          affiliated_member: Json | null
+          affiliation: string | null
           avatar_url: string | null
           birth_date: string | null
           birth_place: string | null
+          civilite: string | null
+          civility: string | null
           created_at: string | null
           current_location: string | null
-          email: string
+          email: string | null
+          father_id: string | null
           father_name: string | null
-          first_name: string
+          first_name: string | null
           id: string
           is_admin: boolean | null
           is_parent: boolean | null
           is_patriarch: boolean | null
-          last_name: string
+          last_name: string | null
+          mother_id: string | null
           mother_name: string | null
           parent_id: string | null
           phone: string | null
           photo_url: string | null
           profession: string | null
-          relationship_type:
-            | Database["public"]["Enums"]["relationship_type"]
-            | null
+          relationship_type: string | null
+          role_radio: string | null
           situation: string | null
-          title: Database["public"]["Enums"]["family_title"] | null
           updated_at: string | null
-          user_id: string | null
+          user_id: string
         }
         Insert: {
+          affiliated_member?: Json | null
+          affiliation?: string | null
           avatar_url?: string | null
           birth_date?: string | null
           birth_place?: string | null
+          civilite?: string | null
+          civility?: string | null
           created_at?: string | null
           current_location?: string | null
-          email: string
+          email?: string | null
+          father_id?: string | null
           father_name?: string | null
-          first_name: string
-          id?: string
+          first_name?: string | null
+          id: string
           is_admin?: boolean | null
           is_parent?: boolean | null
           is_patriarch?: boolean | null
-          last_name: string
+          last_name?: string | null
+          mother_id?: string | null
           mother_name?: string | null
           parent_id?: string | null
           phone?: string | null
           photo_url?: string | null
           profession?: string | null
-          relationship_type?:
-            | Database["public"]["Enums"]["relationship_type"]
-            | null
+          relationship_type?: string | null
+          role_radio?: string | null
           situation?: string | null
-          title?: Database["public"]["Enums"]["family_title"] | null
           updated_at?: string | null
-          user_id?: string | null
+          user_id: string
         }
         Update: {
+          affiliated_member?: Json | null
+          affiliation?: string | null
           avatar_url?: string | null
           birth_date?: string | null
           birth_place?: string | null
+          civilite?: string | null
+          civility?: string | null
           created_at?: string | null
           current_location?: string | null
-          email?: string
+          email?: string | null
+          father_id?: string | null
           father_name?: string | null
-          first_name?: string
+          first_name?: string | null
           id?: string
           is_admin?: boolean | null
           is_parent?: boolean | null
           is_patriarch?: boolean | null
-          last_name?: string
+          last_name?: string | null
+          mother_id?: string | null
           mother_name?: string | null
           parent_id?: string | null
           phone?: string | null
           photo_url?: string | null
           profession?: string | null
-          relationship_type?:
-            | Database["public"]["Enums"]["relationship_type"]
-            | null
+          relationship_type?: string | null
+          role_radio?: string | null
           situation?: string | null
-          title?: Database["public"]["Enums"]["family_title"] | null
           updated_at?: string | null
-          user_id?: string | null
+          user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "profiles_parent_id_fkey"
-            columns: ["parent_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       relationships: {
         Row: {
@@ -273,22 +246,7 @@ export type Database = {
           person2_id?: string | null
           updated_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "relationships_person1_id_fkey"
-            columns: ["person1_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "relationships_person2_id_fkey"
-            columns: ["person2_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       site_settings: {
         Row: {
@@ -319,37 +277,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      create_profile_safe: {
-        Args: {
-          p_id: string
-          p_user_id: string
-          p_email: string
-          p_first_name: string
-          p_last_name: string
-          p_phone?: string
-          p_profession?: string
-          p_current_location?: string
-          p_birth_place?: string
-          p_avatar_url?: string
-          p_photo_url?: string
-          p_relationship_type?: Database["public"]["Enums"]["relationship_type"]
-          p_father_name?: string
-          p_mother_name?: string
-          p_is_admin?: boolean
-          p_birth_date?: string
-          p_title?: Database["public"]["Enums"]["family_title"]
-          p_situation?: string
-          p_is_patriarch?: boolean
-        }
-        Returns: Json
-      }
-      is_current_user_admin: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
+      [_ in never]: never
     }
     Enums: {
+      civilite: "M." | "Mme"
       family_title:
+        | "M."
+        | "Mme"
         | "Patriarche"
         | "Matriarche"
         | "Père"
@@ -375,6 +309,8 @@ export type Database = {
         | "Frère"
         | "Sœur"
       relationship_type:
+        | "patriarche"
+        | "matriarche"
         | "fils"
         | "fille"
         | "père"
@@ -388,11 +324,15 @@ export type Database = {
         | "petit-fils"
         | "petite-fille"
         | "grand-père"
-        | "grande-mère"
+        | "grand-mère"
         | "époux"
         | "épouse"
-        | "patriarche"
-        | "matriarche"
+        | "beau-père"
+        | "belle-mère"
+        | "beau-fils"
+        | "belle-fille"
+        | "frère"
+        | "sœur"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -508,7 +448,10 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      civilite: ["M.", "Mme"],
       family_title: [
+        "M.",
+        "Mme",
         "Patriarche",
         "Matriarche",
         "Père",
@@ -535,6 +478,8 @@ export const Constants = {
         "Sœur",
       ],
       relationship_type: [
+        "patriarche",
+        "matriarche",
         "fils",
         "fille",
         "père",
@@ -548,11 +493,15 @@ export const Constants = {
         "petit-fils",
         "petite-fille",
         "grand-père",
-        "grande-mère",
+        "grand-mère",
         "époux",
         "épouse",
-        "patriarche",
-        "matriarche",
+        "beau-père",
+        "belle-mère",
+        "beau-fils",
+        "belle-fille",
+        "frère",
+        "sœur",
       ],
     },
   },

@@ -18,8 +18,7 @@ import { ProfileData } from '@/types/profile';
 const Profile = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { user, loading: authLoading } = useAuth();
-  const [profile, setProfile] = useState<ProfileData | null>(null);
+  const { user, profile, loading: authLoading } = useAuth();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -34,67 +33,35 @@ const Profile = () => {
       return;
     }
 
-    fetchProfile();
-  }, [user, authLoading, navigate]);
+    if (profile) {
+      setFormData(profile);
+      setLoading(false);
+    } else {
+      // Create profile from user metadata if it doesn't exist
+      const metadata = user.user_metadata || {};
+      const newProfileData: Partial<ProfileData> = {
+        user_id: user.id,
+        email: user.email || '',
+        first_name: metadata.first_name || '',
+        last_name: metadata.last_name || '',
+        phone: metadata.phone || '',
+        birth_date: metadata.birth_date || null,
+        birth_place: metadata.birth_place || '',
+        current_location: metadata.current_location || '',
+        situation: metadata.situation || '',
+        profession: metadata.profession || '',
+        photo_url: metadata.photo_url || '',
+        avatar_url: metadata.avatar_url || metadata.photo_url || '',
+        title: (metadata.title as any) || 'Fils',
+        relationship_type: (metadata.relationship_type as any) || 'fils',
+        is_admin: metadata.is_admin || false,
+        is_patriarch: metadata.is_patriarch || false,
+      };
 
-  const fetchProfile = async () => {
-    if (!user) return;
-    
-    try {
-      setLoading(true);
-      setError(null);
-
-      // Essayer de récupérer le profil depuis la base de données
-      const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('user_id', user.id)
-        .maybeSingle();
-
-      if (profileError && profileError.code !== 'PGRST116') {
-        throw profileError;
-      }
-
-      if (profileData) {
-        setProfile(profileData);
-        setFormData(profileData);
-      } else {
-        // Créer un profil à partir des métadonnées utilisateur si non existant
-        const metadata = user.user_metadata || {};
-        const newProfileData: Partial<ProfileData> = {
-          user_id: user.id,
-          email: user.email || '',
-          first_name: metadata.first_name || '',
-          last_name: metadata.last_name || '',
-          phone: metadata.phone || '',
-          birth_date: metadata.birth_date || null,
-          birth_place: metadata.birth_place || '',
-          current_location: metadata.current_location || '',
-          situation: metadata.situation || '',
-          profession: metadata.profession || '',
-          photo_url: metadata.photo_url || '',
-          avatar_url: metadata.avatar_url || metadata.photo_url || '',
-          title: metadata.title || 'Fils',
-          relationship_type: metadata.relationship_type || 'fils',
-          is_admin: metadata.is_admin || false,
-          is_patriarch: metadata.is_patriarch || false,
-        };
-
-        setProfile(newProfileData as ProfileData);
-        setFormData(newProfileData);
-      }
-    } catch (error) {
-      console.error('Erreur lors de la récupération du profil:', error);
-      setError('Erreur lors du chargement du profil');
-      toast({
-        title: 'Erreur',
-        description: 'Impossible de charger le profil',
-        variant: 'destructive',
-      });
-    } finally {
+      setFormData(newProfileData);
       setLoading(false);
     }
-  };
+  }, [user, profile, authLoading, navigate]);
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -124,7 +91,6 @@ const Profile = () => {
       const { data: updatedProfile, error: updateError } = await supabase
         .from('profiles')
         .upsert({
-          id: profile?.id || undefined,
           user_id: user.id,
           email: user.email || '',
           first_name: formData.first_name || '',
@@ -171,7 +137,6 @@ const Profile = () => {
         console.warn('Erreur mise à jour métadonnées:', metadataError);
       }
 
-      setProfile(updatedProfile);
       setIsEditing(false);
 
       toast({
@@ -200,20 +165,11 @@ const Profile = () => {
     );
   }
 
-  if (error && !profile) {
+  if (error && !formData.first_name) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
         <p className="text-red-500 mb-4">{error}</p>
-        <Button onClick={fetchProfile}>Réessayer</Button>
-      </div>
-    );
-  }
-
-  if (!profile) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
-        <p className="text-gray-500 mb-4">Profil non trouvé</p>
-        <Button onClick={() => navigate(ROUTES.DASHBOARD.ROOT)}>Retour au tableau de bord</Button>
+        <Button onClick={() => window.location.reload()}>Réessayer</Button>
       </div>
     );
   }
@@ -222,7 +178,7 @@ const Profile = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto">
-          <div className="family-card p-8 rounded-xl">
+          <div className="family-card p-8 rounded-xl bg-white shadow-lg">
             <FormHeader
               title="Mon Profil"
               subtitle="Gérez vos informations personnelles"
@@ -392,7 +348,7 @@ const Profile = () => {
                       variant="outline"
                       onClick={() => {
                         setIsEditing(false);
-                        setFormData(profile);
+                        setFormData(profile || {});
                         setError(null);
                       }}
                       className="flex-1"
