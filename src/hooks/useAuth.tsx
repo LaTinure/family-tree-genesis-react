@@ -1,15 +1,14 @@
+
 import { useState, useEffect, createContext, useContext } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select } from '@/components/ui/select';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/lib/constants/routes';
 
 interface AuthContextType {
   user: User | null;
   session: Session | null;
+  loading: boolean;
   isLoading: boolean;
   error: Error | null;
   signOut: () => Promise<void>;
@@ -20,6 +19,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType>({
   user: null,
   session: null,
+  loading: true,
   isLoading: true,
   error: null,
   signOut: async () => {},
@@ -55,7 +55,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const initializeAuth = async () => {
       try {
         setError(null);
-        // 1. Vérifier la session existante
         const { data: { session: currentSession }, error: sessionError } = await supabase.auth.getSession();
         if (sessionError) {
           console.error('Session error:', sessionError);
@@ -65,17 +64,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           setSession(currentSession);
           setUser(currentSession?.user ?? null);
         }
-        // 2. Configurer le listener d'état d'authentification
+        
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
           async (event, newSession) => {
             if (!mounted) return;
             setSession(newSession);
             setUser(newSession?.user ?? null);
             if (event === 'SIGNED_OUT') {
-              // Nettoyer le stockage local
               localStorage.removeItem('supabase.auth.token');
               sessionStorage.removeItem('supabase.auth.token');
-              // Supprimer les cookies
               document.cookie.split(';').forEach(cookie => {
                 const [name] = cookie.trim().split('=');
                 if (name.includes('supabase') || name.includes('sb-')) {
@@ -164,6 +161,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const value = {
     user,
     session,
+    loading: isLoading,
     isLoading,
     error,
     signOut,

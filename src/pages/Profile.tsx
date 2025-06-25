@@ -48,7 +48,6 @@ const Profile = () => {
         .single();
 
       if (error) {
-        // Si pas de profil, en créer un à partir des métadonnées
         const newProfile: Partial<ProfileData> = {
           user_id: user.id,
           email: user.email || '',
@@ -62,14 +61,19 @@ const Profile = () => {
         
         const { data: createdProfile, error: createError } = await supabase
           .from('profiles')
-          .insert(newProfile)
+          .insert([{
+            id: user.id,
+            ...newProfile,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          }])
           .select()
           .single();
 
         if (createError) throw createError;
-        setProfile(createdProfile);
+        setProfile(createdProfile as ProfileData);
       } else {
-        setProfile(data);
+        setProfile(data as ProfileData);
       }
     } catch (err) {
       console.error('Erreur chargement profil:', err);
@@ -98,7 +102,7 @@ const Profile = () => {
 
       if (error) throw error;
 
-      setProfile(updatedProfile);
+      setProfile(updatedProfile as ProfileData);
       setIsEditing(false);
 
       toast({
@@ -162,7 +166,6 @@ const Profile = () => {
             />
           ) : (
             <div className="space-y-6">
-              {/* Photo et informations principales */}
               <FamilyCard
                 title="Profil"
                 description="Vos informations principales"
@@ -202,7 +205,6 @@ const Profile = () => {
                 </div>
               </FamilyCard>
 
-              {/* Informations détaillées */}
               <ProfileInfo profile={profile} />
             </div>
           )}

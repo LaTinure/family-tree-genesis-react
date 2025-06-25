@@ -20,7 +20,15 @@ export type RelationshipType =
   | 'neveu' 
   | 'niece' 
   | 'cousin' 
-  | 'cousine';
+  | 'cousine'
+  | 'époux'
+  | 'épouse'
+  | 'beau-père'
+  | 'belle-mère'
+  | 'beau-fils'
+  | 'belle-fille'
+  | 'grand-père'
+  | 'grande-mère';
 
 export interface FamilyMember {
   id: string;
@@ -44,6 +52,26 @@ export interface FamilyMember {
   situation?: string;
   created_at: string;
   updated_at: string;
+  civilite?: string;
+  father_id?: string;
+  mother_id?: string;
+}
+
+export interface NewFamilyMember {
+  first_name: string;
+  last_name: string;
+  email: string;
+  civilite?: string;
+  phone?: string;
+  profession?: string;
+  current_location?: string;
+  birth_place?: string;
+  birth_date?: string;
+  avatar_url?: string;
+  relationship_type?: RelationshipType;
+  father_id?: string;
+  mother_id?: string;
+  situation?: string;
 }
 
 export interface FamilyTreeNode extends FamilyMember {

@@ -1,5 +1,5 @@
 
-import { RelationshipType } from '../validations/relationshipSchema';
+import { RelationshipType } from '@/types/family';
 
 interface RelationshipOption {
   value: RelationshipType;
@@ -15,14 +15,13 @@ export const getRelationshipTypeOptions = (
     { value: 'conjoint', label: title === 'M.' ? 'Époux' : 'Épouse' },
     { value: 'frere', label: title === 'M.' ? 'Frère' : 'Sœur' },
     { value: 'pere', label: title === 'M.' ? 'Père' : 'Mère' },
-    { value: 'grand-pere', label: title === 'M.' ? 'Grand-père' : 'Grand-mère' },
+    { value: 'grand-père', label: title === 'M.' ? 'Grand-père' : 'Grand-mère' },
     { value: 'petit-fils', label: title === 'M.' ? 'Petit-fils' : 'Petite-fille' },
     { value: 'oncle', label: title === 'M.' ? 'Oncle' : 'Tante' },
     { value: 'neveu', label: title === 'M.' ? 'Neveu' : 'Nièce' },
     { value: 'cousin', label: title === 'M.' ? 'Cousin' : 'Cousine' },
   ];
 
-  // Si aucun patriarche n'existe encore, permettre de devenir patriarche/matriarche
   if (!patriarchExists) {
     baseOptions.unshift({
       value: title === 'M.' ? 'patriarche' : 'matriarche',

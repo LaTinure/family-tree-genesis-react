@@ -23,6 +23,9 @@ export interface ProfileData {
   is_patriarch?: boolean;
   created_at?: string;
   updated_at?: string;
+  civilite?: string;
+  father_id?: string;
+  mother_id?: string;
 }
 
 export interface FamilyMember {

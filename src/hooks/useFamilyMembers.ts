@@ -1,6 +1,7 @@
+
 import { useState, useCallback, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import type { Profile } from '@/types/profile';
+import type { ProfileData } from '@/types/profile';
 import { FamilyMember, NewFamilyMember } from '@/types/family';
 import { api } from '@/services/api';
 
@@ -23,20 +24,29 @@ export const useFamilyMembers = () => {
         return;
       }
 
-      // Convertir les profils en membres de famille avec des valeurs par défaut sécurisées
       const familyMembers: FamilyMember[] = profiles.map(profile => ({
         id: profile.id || '',
         first_name: profile.first_name || '',
         last_name: profile.last_name || '',
         email: profile.email || '',
-        civilite: (profile.civilite as FamilyMember['civilite']) || 'M.',
-        birth_date: profile.birth_date || null,
-        birth_place: profile.birth_place || null,
-        current_location: profile.current_location || null,
-        situation: profile.situation || null,
-        avatar_url: profile.avatar_url || null,
-        father_id: profile.father_id || null,
-        mother_id: profile.mother_id || null,
+        title: (profile.title as FamilyMember['title']) || 'Fils',
+        birth_date: profile.birth_date || undefined,
+        birth_place: profile.birth_place || undefined,
+        current_location: profile.current_location || undefined,
+        situation: profile.situation || undefined,
+        avatar_url: profile.avatar_url || undefined,
+        phone: profile.phone || undefined,
+        profession: profile.profession || undefined,
+        relationship_type: (profile.relationship_type as FamilyMember['relationship_type']) || 'fils',
+        father_name: profile.father_name || undefined,
+        mother_name: profile.mother_name || undefined,
+        spouse_name: profile.spouse_name || undefined,
+        is_admin: profile.is_admin || false,
+        is_patriarch: profile.is_patriarch || false,
+        civilite: profile.civilite || undefined,
+        father_id: profile.father_id || undefined,
+        mother_id: profile.mother_id || undefined,
+        photo_url: profile.photo_url || undefined,
         created_at: profile.created_at || new Date().toISOString(),
         updated_at: profile.updated_at || new Date().toISOString()
       }));
@@ -46,7 +56,7 @@ export const useFamilyMembers = () => {
     } catch (err) {
       console.error('Error fetching family members:', err);
       setError(err instanceof Error ? err.message : 'Une erreur est survenue');
-      setMembers([]); // S'assurer que members n'est jamais undefined
+      setMembers([]);
     } finally {
       setIsLoading(false);
     }
@@ -76,20 +86,29 @@ export const useFamilyMembers = () => {
         throw insertError;
       }
 
-      // Convertir les données en type FamilyMember
       const newMember: FamilyMember = {
         id: data.id,
         first_name: data.first_name,
         last_name: data.last_name,
         email: data.email,
-        civilite: data.civilite as FamilyMember['civilite'],
+        title: (data.civilite as FamilyMember['title']) || 'Fils',
         birth_date: data.birth_date,
         birth_place: data.birth_place,
         current_location: data.current_location,
         situation: data.situation,
         avatar_url: data.avatar_url,
+        phone: data.phone,
+        profession: data.profession,
+        relationship_type: (data.relationship_type as FamilyMember['relationship_type']) || 'fils',
+        father_name: data.father_name,
+        mother_name: data.mother_name,
+        spouse_name: data.spouse_name,
+        is_admin: data.is_admin || false,
+        is_patriarch: data.is_patriarch || false,
+        civilite: data.civilite,
         father_id: data.father_id,
         mother_id: data.mother_id,
+        photo_url: data.photo_url,
         created_at: data.created_at,
         updated_at: data.updated_at
       };
@@ -121,20 +140,29 @@ export const useFamilyMembers = () => {
         throw updateError;
       }
 
-      // Convertir les données en type FamilyMember
       const updatedMember: FamilyMember = {
         id: data.id,
         first_name: data.first_name,
         last_name: data.last_name,
         email: data.email,
-        civilite: data.civilite as FamilyMember['civilite'],
+        title: (data.civilite as FamilyMember['title']) || 'Fils',
         birth_date: data.birth_date,
         birth_place: data.birth_place,
         current_location: data.current_location,
         situation: data.situation,
         avatar_url: data.avatar_url,
+        phone: data.phone,
+        profession: data.profession,
+        relationship_type: (data.relationship_type as FamilyMember['relationship_type']) || 'fils',
+        father_name: data.father_name,
+        mother_name: data.mother_name,
+        spouse_name: data.spouse_name,
+        is_admin: data.is_admin || false,
+        is_patriarch: data.is_patriarch || false,
+        civilite: data.civilite,
         father_id: data.father_id,
         mother_id: data.mother_id,
+        photo_url: data.photo_url,
         created_at: data.created_at,
         updated_at: data.updated_at
       };
@@ -187,20 +215,29 @@ export const useFamilyMembers = () => {
         throw updateError;
       }
 
-      // Convertir les données en type FamilyMember
       const updatedMember: FamilyMember = {
         id: data.id,
         first_name: data.first_name,
         last_name: data.last_name,
         email: data.email,
-        civilite: data.civilite as FamilyMember['civilite'],
+        title: (data.civilite as FamilyMember['title']) || 'Fils',
         birth_date: data.birth_date,
         birth_place: data.birth_place,
         current_location: data.current_location,
         situation: data.situation,
         avatar_url: data.avatar_url,
+        phone: data.phone,
+        profession: data.profession,
+        relationship_type: (data.relationship_type as FamilyMember['relationship_type']) || 'fils',
+        father_name: data.father_name,
+        mother_name: data.mother_name,
+        spouse_name: data.spouse_name,
+        is_admin: data.is_admin || false,
+        is_patriarch: data.is_patriarch || false,
+        civilite: data.civilite,
         father_id: data.father_id,
         mother_id: data.mother_id,
+        photo_url: data.photo_url,
         created_at: data.created_at,
         updated_at: data.updated_at
       };
