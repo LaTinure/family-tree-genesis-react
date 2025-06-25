@@ -20,7 +20,15 @@ export***REMOVED***type***REMOVED***RelationshipType***REMOVED***=***REMOVED***
 ***REMOVED******REMOVED***|***REMOVED***'neveu'***REMOVED***
 ***REMOVED******REMOVED***|***REMOVED***'niece'***REMOVED***
 ***REMOVED******REMOVED***|***REMOVED***'cousin'***REMOVED***
-***REMOVED******REMOVED***|***REMOVED***'cousine';
+***REMOVED******REMOVED***|***REMOVED***'cousine'
+***REMOVED******REMOVED***|***REMOVED***'époux'
+***REMOVED******REMOVED***|***REMOVED***'épouse'
+***REMOVED******REMOVED***|***REMOVED***'beau-père'
+***REMOVED******REMOVED***|***REMOVED***'belle-mère'
+***REMOVED******REMOVED***|***REMOVED***'beau-fils'
+***REMOVED******REMOVED***|***REMOVED***'belle-fille'
+***REMOVED******REMOVED***|***REMOVED***'grand-père'
+***REMOVED******REMOVED***|***REMOVED***'grande-mère';
 
 export***REMOVED***interface***REMOVED***FamilyMember***REMOVED***{
 ***REMOVED******REMOVED***id:***REMOVED***string;
@@ -44,6 +52,26 @@ export***REMOVED***interface***REMOVED***FamilyMember***REMOVED***{
 ***REMOVED******REMOVED***situation?:***REMOVED***string;
 ***REMOVED******REMOVED***created_at:***REMOVED***string;
 ***REMOVED******REMOVED***updated_at:***REMOVED***string;
+***REMOVED******REMOVED***civilite?:***REMOVED***string;
+***REMOVED******REMOVED***father_id?:***REMOVED***string;
+***REMOVED******REMOVED***mother_id?:***REMOVED***string;
+}
+
+export***REMOVED***interface***REMOVED***NewFamilyMember***REMOVED***{
+***REMOVED******REMOVED***first_name:***REMOVED***string;
+***REMOVED******REMOVED***last_name:***REMOVED***string;
+***REMOVED******REMOVED***email:***REMOVED***string;
+***REMOVED******REMOVED***civilite?:***REMOVED***string;
+***REMOVED******REMOVED***phone?:***REMOVED***string;
+***REMOVED******REMOVED***profession?:***REMOVED***string;
+***REMOVED******REMOVED***current_location?:***REMOVED***string;
+***REMOVED******REMOVED***birth_place?:***REMOVED***string;
+***REMOVED******REMOVED***birth_date?:***REMOVED***string;
+***REMOVED******REMOVED***avatar_url?:***REMOVED***string;
+***REMOVED******REMOVED***relationship_type?:***REMOVED***RelationshipType;
+***REMOVED******REMOVED***father_id?:***REMOVED***string;
+***REMOVED******REMOVED***mother_id?:***REMOVED***string;
+***REMOVED******REMOVED***situation?:***REMOVED***string;
 }
 
 export***REMOVED***interface***REMOVED***FamilyTreeNode***REMOVED***extends***REMOVED***FamilyMember***REMOVED***{

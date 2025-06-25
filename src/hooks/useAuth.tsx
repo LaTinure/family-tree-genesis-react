@@ -1,15 +1,14 @@
+
 import***REMOVED***{***REMOVED***useState,***REMOVED***useEffect,***REMOVED***createContext,***REMOVED***useContext***REMOVED***}***REMOVED***from***REMOVED***'react';
 import***REMOVED***{***REMOVED***User,***REMOVED***Session***REMOVED***}***REMOVED***from***REMOVED***'@supabase/supabase-js';
 import***REMOVED***{***REMOVED***supabase***REMOVED***}***REMOVED***from***REMOVED***'@/integrations/supabase/client';
-import***REMOVED***{***REMOVED***Input***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/input';
-import***REMOVED***{***REMOVED***Label***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/label';
-import***REMOVED***{***REMOVED***Select***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/select';
 import***REMOVED***{***REMOVED***useNavigate***REMOVED***}***REMOVED***from***REMOVED***'react-router-dom';
 import***REMOVED***{***REMOVED***ROUTES***REMOVED***}***REMOVED***from***REMOVED***'@/lib/constants/routes';
 
 interface***REMOVED***AuthContextType***REMOVED***{
 ***REMOVED******REMOVED***user:***REMOVED***User***REMOVED***|***REMOVED***null;
 ***REMOVED******REMOVED***session:***REMOVED***Session***REMOVED***|***REMOVED***null;
+***REMOVED******REMOVED***loading:***REMOVED***boolean;
 ***REMOVED******REMOVED***isLoading:***REMOVED***boolean;
 ***REMOVED******REMOVED***error:***REMOVED***Error***REMOVED***|***REMOVED***null;
 ***REMOVED******REMOVED***signOut:***REMOVED***()***REMOVED***=>***REMOVED***Promise<void>;
@@ -20,6 +19,7 @@ interface***REMOVED***AuthContextType***REMOVED***{
 const***REMOVED***AuthContext***REMOVED***=***REMOVED***createContext<AuthContextType>({
 ***REMOVED******REMOVED***user:***REMOVED***null,
 ***REMOVED******REMOVED***session:***REMOVED***null,
+***REMOVED******REMOVED***loading:***REMOVED***true,
 ***REMOVED******REMOVED***isLoading:***REMOVED***true,
 ***REMOVED******REMOVED***error:***REMOVED***null,
 ***REMOVED******REMOVED***signOut:***REMOVED***async***REMOVED***()***REMOVED***=>***REMOVED***{},
@@ -55,7 +55,6 @@ export***REMOVED***const***REMOVED***AuthProvider***REMOVED***=***REMOVED***({**
 ***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***initializeAuth***REMOVED***=***REMOVED***async***REMOVED***()***REMOVED***=>***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***try***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setError(null);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***1.***REMOVED***Vérifier***REMOVED***la***REMOVED***session***REMOVED***existante
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***data:***REMOVED***{***REMOVED***session:***REMOVED***currentSession***REMOVED***},***REMOVED***error:***REMOVED***sessionError***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase.auth.getSession();
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(sessionError)***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***console.error('Session***REMOVED***error:',***REMOVED***sessionError);
@@ -65,17 +64,15 @@ export***REMOVED***const***REMOVED***AuthProvider***REMOVED***=***REMOVED***({**
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setSession(currentSession);
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setUser(currentSession?.user***REMOVED***??***REMOVED***null);
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***2.***REMOVED***Configurer***REMOVED***le***REMOVED***listener***REMOVED***d'état***REMOVED***d'authentification
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***data:***REMOVED***{***REMOVED***subscription***REMOVED***}***REMOVED***}***REMOVED***=***REMOVED***supabase.auth.onAuthStateChange(
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***async***REMOVED***(event,***REMOVED***newSession)***REMOVED***=>***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(!mounted)***REMOVED***return;
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setSession(newSession);
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setUser(newSession?.user***REMOVED***??***REMOVED***null);
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(event***REMOVED***===***REMOVED***'SIGNED_OUT')***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Nettoyer***REMOVED***le***REMOVED***stockage***REMOVED***local
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***localStorage.removeItem('supabase.auth.token');
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***sessionStorage.removeItem('supabase.auth.token');
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Supprimer***REMOVED***les***REMOVED***cookies
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***document.cookie.split(';').forEach(cookie***REMOVED***=>***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***[name]***REMOVED***=***REMOVED***cookie.trim().split('=');
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(name.includes('supabase')***REMOVED***||***REMOVED***name.includes('sb-'))***REMOVED***{
@@ -164,6 +161,7 @@ export***REMOVED***const***REMOVED***AuthProvider***REMOVED***=***REMOVED***({**
 ***REMOVED******REMOVED***const***REMOVED***value***REMOVED***=***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED***user,
 ***REMOVED******REMOVED******REMOVED******REMOVED***session,
+***REMOVED******REMOVED******REMOVED******REMOVED***loading:***REMOVED***isLoading,
 ***REMOVED******REMOVED******REMOVED******REMOVED***isLoading,
 ***REMOVED******REMOVED******REMOVED******REMOVED***error,
 ***REMOVED******REMOVED******REMOVED******REMOVED***signOut,

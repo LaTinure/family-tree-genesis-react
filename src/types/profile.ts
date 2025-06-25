@@ -23,6 +23,9 @@ export***REMOVED***interface***REMOVED***ProfileData***REMOVED***{
 ***REMOVED******REMOVED***is_patriarch?:***REMOVED***boolean;
 ***REMOVED******REMOVED***created_at?:***REMOVED***string;
 ***REMOVED******REMOVED***updated_at?:***REMOVED***string;
+***REMOVED******REMOVED***civilite?:***REMOVED***string;
+***REMOVED******REMOVED***father_id?:***REMOVED***string;
+***REMOVED******REMOVED***mother_id?:***REMOVED***string;
 }
 
 export***REMOVED***interface***REMOVED***FamilyMember***REMOVED***{
