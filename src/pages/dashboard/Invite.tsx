@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -34,7 +33,7 @@ const Invite = () => {
           title: 'Invitation envoyée',
           description: `Une invitation a été envoyée à ${inviteForm.email}`,
         });
-        
+
         // Reset form
         setInviteForm({
           email: '',
@@ -43,7 +42,7 @@ const Invite = () => {
           relationship_type: 'fils',
           personal_message: '',
         });
-        
+
         setSending(false);
       }, 1000);
     } catch (error) {
@@ -63,7 +62,7 @@ const Invite = () => {
       timestamp: Date.now(),
     }))}`;
     setInviteLink(link);
-    
+
     toast({
       title: 'Lien généré',
       description: 'Le lien d\'invitation a été créé avec succès',
@@ -79,7 +78,7 @@ const Invite = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 p-6">
+    <div className="pt-16 pb-8">
       <div className="container mx-auto max-w-4xl">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-800 flex items-center">
@@ -220,7 +219,7 @@ const Invite = () => {
                     </Button>
                   </div>
                   <p className="text-sm text-gray-600">
-                    Partagez ce lien avec la personne que vous souhaitez inviter. 
+                    Partagez ce lien avec la personne que vous souhaitez inviter.
                     Le lien est valide pendant 7 jours.
                   </p>
                 </div>

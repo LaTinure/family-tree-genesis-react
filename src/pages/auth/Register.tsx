@@ -29,7 +29,7 @@ const Register = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (formData.password !== formData.confirmPassword) {
       toast({
         title: 'Erreur',
@@ -53,7 +53,7 @@ const Register = () => {
           title: formData.title,
         }
       );
-      
+
       if (error) {
         toast({
           title: 'Erreur d\'inscription',
@@ -86,7 +86,7 @@ const Register = () => {
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold text-gray-800">Inscription</CardTitle>
           <CardDescription>
-            Créez votre compte Famille Connect
+         {/* {} Créez votre compte Famille Connect */}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -113,7 +113,7 @@ const Register = () => {
                 />
               </div>
             </div>
-            
+
             <div>
               <Label htmlFor="email">Email</Label>
               <Input
@@ -125,7 +125,7 @@ const Register = () => {
                 disabled={loading}
               />
             </div>
-            
+
             <div>
               <Label htmlFor="phone">Téléphone</Label>
               <Input
@@ -136,13 +136,13 @@ const Register = () => {
                 disabled={loading}
               />
             </div>
-            
+
             <div>
               <Label htmlFor="relationship_type">Relation familiale</Label>
               <Select
                 value={formData.relationship_type}
-                onValueChange={(value) => setFormData({ 
-                  ...formData, 
+                onValueChange={(value) => setFormData({
+                  ...formData,
                   relationship_type: value as any,
                   title: value === 'fils' ? 'Fils' : value === 'fille' ? 'Fille' : 'Membre'
                 })}
@@ -160,7 +160,7 @@ const Register = () => {
                 </SelectContent>
               </Select>
             </div>
-            
+
             <div>
               <Label htmlFor="password">Mot de passe</Label>
               <Input
@@ -172,7 +172,7 @@ const Register = () => {
                 disabled={loading}
               />
             </div>
-            
+
             <div>
               <Label htmlFor="confirmPassword">Confirmer le mot de passe</Label>
               <Input
@@ -184,7 +184,7 @@ const Register = () => {
                 disabled={loading}
               />
             </div>
-            
+
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? (
                 <>
@@ -196,7 +196,7 @@ const Register = () => {
               )}
             </Button>
           </form>
-          
+
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               Déjà un compte ?{' '}

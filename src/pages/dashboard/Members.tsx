@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -33,7 +32,7 @@ const Members = () => {
   }, []);
 
   useEffect(() => {
-    const filtered = members.filter(member => 
+    const filtered = members.filter(member =>
       `${member.first_name} ${member.last_name}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
       member.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (member.profession && member.profession.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -50,7 +49,7 @@ const Members = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 p-6">
+    <div className="pt-16 pb-8">
       <div className="container mx-auto">
         <div className="mb-8">
           <div className="flex items-center justify-between">
@@ -102,7 +101,7 @@ const Members = () => {
               <div className="text-2xl font-bold">{members.length}</div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Admins</CardTitle>
@@ -114,7 +113,7 @@ const Members = () => {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Parents</CardTitle>
@@ -126,7 +125,7 @@ const Members = () => {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Résultats</CardTitle>
@@ -188,7 +187,7 @@ const Members = () => {
                     </div>
                   )}
                 </div>
-                
+
                 <div className="flex flex-wrap gap-2 mt-3">
                   {member.is_patriarch && (
                     <span className="px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">

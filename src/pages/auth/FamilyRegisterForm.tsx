@@ -173,6 +173,7 @@ export const FamilyRegisterForm = () => {
 
   const confirmPhoto = () => {
     setProfilePhoto(tempPhoto);
+    methods.setValue('photoUrl', tempPhoto);
     methods.setValue('avatar_url', tempPhoto);
     setShowPhotoConfirm(false);
     setTempPhoto('');
@@ -209,7 +210,6 @@ export const FamilyRegisterForm = () => {
     setIsLoading(true);
 
     try {
-      console.log('Début inscription supabase.auth.signUp', data);
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
@@ -251,13 +251,11 @@ export const FamilyRegisterForm = () => {
         });
         return;
       }
-      console.log('Inscription supabase.auth.signUp OK', authData);
 
       const signInData = await supabase.auth.signInWithPassword({
         email: data.email,
         password: data.password,
       });
-      console.log('Tentative connexion après inscription', signInData);
 
       if (signInData.error) {
         console.error("Erreur lors de la connexion:", signInData.error);
@@ -275,8 +273,7 @@ export const FamilyRegisterForm = () => {
           const res = await fetch(data.photoUrl);
           const blob = await res.blob();
           const file = new File([blob], `avatar_${signInData.data.user?.id}.png`, { type: blob.type });
-          avatarUrl = await api.profiles.uploadAvatar(file);
-          console.log('Avatar uploadé, url:', avatarUrl);
+          avatarUrl = await api.uploadAvatar(signInData.data.user?.id as string, file);
         } catch (uploadError) {
           console.error('Erreur upload avatar:', uploadError);
         }
@@ -314,16 +311,19 @@ export const FamilyRegisterForm = () => {
         mother_name: data.motherName || '',
         is_admin: isAdmin,
         birth_date: data.birthDate || null,
+        title: profileTitle as Title,
         situation: '',
         is_patriarch: isPatriarch,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
-        title: profileTitle as ProfileData['title'],
+        display_name: data.display_name,
+        avatar_url: data.avatar_url,
+        civilite: data.civilite,
+        phone_code: data.phone_code,
       };
-      console.log('Données envoyées à api.profiles.create', profileData);
 
       try {
-        await api.profiles.create(profileData);
+        await api.profiles.createProfile(profileData);
         console.log('Profil créé avec succès');
       } catch (error) {
         console.error('Erreur lors de la création du profil:', error);
@@ -350,7 +350,13 @@ export const FamilyRegisterForm = () => {
 
   return (
     <FormProvider {...methods}>
-      <div className="flex flex-col items-center min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
+      <div className="flex flex-col items-center min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 pt-24 pb-12">
+        {/* Header visuel du formulaire */}
+        <div className="mb-8 flex flex-col items-center">
+          <img src="/images/profile01.png" alt="Logo" className="w-20 h-20 rounded-full shadow-lg mb-2" />
+          <h2 className="text-3xl font-bold text-whatsapp-700 mb-1">Créer un compte Famille</h2>
+          <p className="text-gray-600 text-center max-w-md">Rejoignez votre famille connectée et accédez à l'arbre généalogique, aux membres et plus encore !</p>
+        </div>
         <form onSubmit={methods.handleSubmit(onSubmit)} className="bg-white rounded-xl shadow-xl p-8 w-full max-w-lg space-y-6">
           {/* Photo de profil obligatoire */}
           <div className="text-center">
@@ -377,113 +383,17 @@ export const FamilyRegisterForm = () => {
               <p className="text-sm text-red-600 mt-1">{methods.formState.errors.avatar_url.message}</p>
             )}
           </div>
-          {/* Dialog de confirmation de la photo */}
-          <Dialog open={showPhotoConfirm} onOpenChange={setShowPhotoConfirm}>
-            <DialogContent className="sm:max-w-md">
-              <DialogHeader>
-                <DialogTitle>Confirmer la photo de profil</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4">
-                <div className="text-center">
-                  <div className="flex justify-center mb-4">
-                    <Avatar
-                      src={tempPhoto}
-                      size="xl"
-                      fallback="?"
-                    />
-                  </div>
-                  <p className="text-sm text-gray-600">
-                    Voulez-vous utiliser cette photo comme photo de profil ?
-                  </p>
-                </div>
-                <div className="flex justify-end space-x-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={cancelPhoto}
-                    className="flex items-center space-x-2"
-                  >
-                    <X className="w-4 h-4" />
-                    <span>Annuler</span>
-                  </Button>
-                  <Button
-                    type="button"
-                    onClick={confirmPhoto}
-                    className="flex items-center space-x-2 bg-whatsapp-500 hover:bg-whatsapp-600"
-                  >
-                    <Check className="w-4 h-4" />
-                    <span>Confirmer</span>
-                  </Button>
-                </div>
-              </div>
-            </DialogContent>
-          </Dialog>
-          {/* Rôle */}
+          {/* Nom à afficher */}
           <div>
-            <Label htmlFor="role" className="font-semibold">Rôle</Label>
-            <Select value={role} onValueChange={handleRoleChange}>
-              <SelectTrigger>
-                <SelectValue placeholder="Choisissez un rôle" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="user">Utilisateur</SelectItem>
-                <SelectItem value="admin">Administrateur</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          {/* Civilité */}
-          <div>
-            <Label htmlFor="civilite" className="font-semibold">Civilité</Label>
-            <Select
-              value={methods.watch('civilite')}
-              onValueChange={(value) => methods.setValue('civilite', value as 'M.' | 'Mme')}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Choisissez votre civilité" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="M.">M.</SelectItem>
-                <SelectItem value="Mme">Mme</SelectItem>
-              </SelectContent>
-            </Select>
-            {methods.formState.errors.civilite && (
-              <p className="text-sm text-red-600 mt-1">{methods.formState.errors.civilite.message}</p>
-            )}
-          </div>
-          {/* Prénom et Nom sur la même ligne */}
-          <div className="flex gap-2">
-            <div className="w-1/2">
-              <Label htmlFor="firstName" className="font-semibold">Prénom</Label>
-              <Input
-                id="firstName"
-                {...methods.register('firstName')}
-                placeholder="Votre prénom"
-              />
-              {methods.formState.errors.firstName && (
-                <p className="text-sm text-red-600 mt-1">{methods.formState.errors.firstName.message}</p>
-              )}
-            </div>
-            <div className="w-1/2">
-              <Label htmlFor="lastName" className="font-semibold">Nom</Label>
-              <Input
-                id="lastName"
-                {...methods.register('lastName')}
-                placeholder="Votre nom"
-              />
-              {methods.formState.errors.lastName && (
-                <p className="text-sm text-red-600 mt-1">{methods.formState.errors.lastName.message}</p>
-              )}
-            </div>
-          </div>
-          {/* Nom à afficher (auto) */}
-          <div>
-            <Label htmlFor="display_name" className="font-semibold">Nom à afficher (auto)</Label>
+            <Label htmlFor="display_name" className="font-semibold">Nom à afficher</Label>
             <Input
               id="display_name"
-              value={`${methods.watch('firstName') || ''} ${methods.watch('lastName') || ''}`.trim()}
-              readOnly
-              className="bg-gray-100 text-gray-700"
+              {...methods.register('display_name')}
+              placeholder="Nom à afficher"
             />
+            {methods.formState.errors.display_name && (
+              <p className="text-sm text-red-600 mt-1">{methods.formState.errors.display_name.message}</p>
+            )}
           </div>
           {/* Email */}
           <div>
@@ -555,6 +465,38 @@ export const FamilyRegisterForm = () => {
           {methods.formState.errors.phone && (
             <p className="text-sm text-red-600 mt-1">{methods.formState.errors.phone.message}</p>
           )}
+          {/* Civilité */}
+          <div>
+            <Label htmlFor="civilite" className="font-semibold">Civilité</Label>
+            <Select
+              value={methods.watch('civilite')}
+              onValueChange={(value) => methods.setValue('civilite', value as 'M.' | 'Mme')}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Choisissez votre civilité" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="M.">M.</SelectItem>
+                <SelectItem value="Mme">Mme</SelectItem>
+              </SelectContent>
+            </Select>
+            {methods.formState.errors.civilite && (
+              <p className="text-sm text-red-600 mt-1">{methods.formState.errors.civilite.message}</p>
+            )}
+          </div>
+          {/* Sélecteur de rôle */}
+          <div>
+            <Label htmlFor="role" className="font-semibold">Rôle</Label>
+            <Select value={role} onValueChange={handleRoleChange}>
+              <SelectTrigger>
+                <SelectValue placeholder="Choisissez un rôle" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="user">Utilisateur</SelectItem>
+                <SelectItem value="admin">Administrateur</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           <Dialog open={isAdminDialogOpen} onOpenChange={open => {
             if (!open) {
               setIsAdminDialogOpen(false);
@@ -609,9 +551,6 @@ export const FamilyRegisterForm = () => {
             type="submit"
             className="w-full bg-whatsapp-600 hover:bg-whatsapp-700 text-white rounded-md py-2 px-4 font-semibold transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-whatsapp-500 focus:ring-offset-2 disabled:opacity-60"
             disabled={isLoading || (role === 'admin' && adminCode !== '1432')}
-            onClick={() => {
-              console.log('Bouton soumis ! isLoading:', isLoading, 'role:', role, 'adminCode:', adminCode, 'formState.errors:', methods.formState.errors, 'formValues:', methods.getValues());
-            }}
           >
             {isLoading ? (
               <span className="mr-2">Inscription...</span>
@@ -619,9 +558,6 @@ export const FamilyRegisterForm = () => {
               <><UserPlus className="inline-block w-5 h-5 mr-2 align-middle" />Créer mon compte</>
             )}
           </Button>
-          {(role === 'admin' && adminCode !== '1432') && (
-            <p className="text-sm text-red-600 mt-2 text-center">Veuillez entrer le code administrateur pour activer la création du compte admin.</p>
-          )}
         </form>
       </div>
     </FormProvider>

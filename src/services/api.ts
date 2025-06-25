@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { ProfileData, FamilyMember, FamilyTree, Relationship, Message, Notification } from '@/types/profile';
 
@@ -242,6 +241,34 @@ export const api = {
         .eq('id', id);
 
       if (error) throw error;
+    }
+  },
+
+  admin: {
+    async deleteAllUsers(deleteCode: string) {
+      if (deleteCode !== '1432') {
+        return { success: false, message: 'Code secret incorrect' };
+      }
+
+      try {
+        const { data, error } = await supabase.functions.invoke('delete-all-data', {
+          method: 'POST'
+        });
+
+        if (error) throw error;
+
+        return {
+          success: true,
+          message: 'Suppression réussie',
+          deletedUsers: data?.deletedUsers || 0,
+          stats: data
+        };
+      } catch (error) {
+        return {
+          success: false,
+          message: error instanceof Error ? error.message : 'Erreur inconnue'
+        };
+      }
     }
   }
 };

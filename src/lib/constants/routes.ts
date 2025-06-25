@@ -1,10 +1,10 @@
-
 export const ROUTES = {
   HOME: '/',
   AUTH: {
-    LOGIN: '/auth/login',
-    REGISTER: '/auth/register',
-    FORGOT_PASSWORD: '/auth/forgot-password',
+    LOGIN: '/auth-family',
+    REGISTER: '/auth-family',
+    FORGOT_PASSWORD: '/auth-family',
+    FAMILY: '/auth-family',
   },
   DASHBOARD: {
     ROOT: '/dashboard',

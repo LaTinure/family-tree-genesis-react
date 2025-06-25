@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
@@ -16,7 +15,7 @@ export const ProtectedRoute = ({ children, requireAuth = true }: ProtectedRouteP
 
   useEffect(() => {
     if (!loading && requireAuth && !user) {
-      navigate(ROUTES.AUTH.LOGIN);
+      navigate(ROUTES.AUTH.FAMILY);
     }
   }, [user, loading, requireAuth, navigate]);
 
