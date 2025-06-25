@@ -1,127 +1,117 @@
 
 import***REMOVED***type***REMOVED***{***REMOVED***Config***REMOVED***}***REMOVED***from***REMOVED***"tailwindcss";
 
-export***REMOVED***default***REMOVED***{
-	darkMode:***REMOVED***["class"],
-	content:***REMOVED***[
-		"./pages/**/*.{ts,tsx}",
-		"./components/**/*.{ts,tsx}",
-		"./app/**/*.{ts,tsx}",
-		"./src/**/*.{ts,tsx}",
-	],
-	prefix:***REMOVED***"",
-	theme:***REMOVED***{
-		container:***REMOVED***{
-			center:***REMOVED***true,
-			padding:***REMOVED***'2rem',
-			screens:***REMOVED***{
-				'2xl':***REMOVED***'1400px'
-			}
-		},
-		extend:***REMOVED***{
-			colors:***REMOVED***{
-				border:***REMOVED***'hsl(var(--border))',
-				input:***REMOVED***'hsl(var(--input))',
-				ring:***REMOVED***'hsl(var(--ring))',
-				background:***REMOVED***'hsl(var(--background))',
-				foreground:***REMOVED***'hsl(var(--foreground))',
-				primary:***REMOVED***{
-					DEFAULT:***REMOVED***'hsl(var(--primary))',
-					foreground:***REMOVED***'hsl(var(--primary-foreground))'
-				},
-				secondary:***REMOVED***{
-					DEFAULT:***REMOVED***'hsl(var(--secondary))',
-					foreground:***REMOVED***'hsl(var(--secondary-foreground))'
-				},
-				destructive:***REMOVED***{
-					DEFAULT:***REMOVED***'hsl(var(--destructive))',
-					foreground:***REMOVED***'hsl(var(--destructive-foreground))'
-				},
-				muted:***REMOVED***{
-					DEFAULT:***REMOVED***'hsl(var(--muted))',
-					foreground:***REMOVED***'hsl(var(--muted-foreground))'
-				},
-				accent:***REMOVED***{
-					DEFAULT:***REMOVED***'hsl(var(--accent))',
-					foreground:***REMOVED***'hsl(var(--accent-foreground))'
-				},
-				popover:***REMOVED***{
-					DEFAULT:***REMOVED***'hsl(var(--popover))',
-					foreground:***REMOVED***'hsl(var(--popover-foreground))'
-				},
-				card:***REMOVED***{
-					DEFAULT:***REMOVED***'hsl(var(--card))',
-					foreground:***REMOVED***'hsl(var(--card-foreground))'
-				},
-				sidebar:***REMOVED***{
-					DEFAULT:***REMOVED***'hsl(var(--sidebar-background))',
-					foreground:***REMOVED***'hsl(var(--sidebar-foreground))',
-					primary:***REMOVED***'hsl(var(--sidebar-primary))',
-					'primary-foreground':***REMOVED***'hsl(var(--sidebar-primary-foreground))',
-					accent:***REMOVED***'hsl(var(--sidebar-accent))',
-					'accent-foreground':***REMOVED***'hsl(var(--sidebar-accent-foreground))',
-					border:***REMOVED***'hsl(var(--sidebar-border))',
-					ring:***REMOVED***'hsl(var(--sidebar-ring))'
-				},
-				whatsapp:***REMOVED***{
-					100:***REMOVED***'#F0F9FF',
-					200:***REMOVED***'#E0F2FE',
-					300:***REMOVED***'#7DD3FC',
-					400:***REMOVED***'#38BDF8',
-					500:***REMOVED***'#25D366',
-					600:***REMOVED***'#16A249',
-					700:***REMOVED***'#0D8236',
-					800:***REMOVED***'#166534',
-					900:***REMOVED***'#14532D'
-				},
-				family:***REMOVED***{
-					patriarch:***REMOVED***'#FFD700',
-					'patriarch-dark':***REMOVED***'#B8860B',
-					member:***REMOVED***'#22C55E',
-					'member-dark':***REMOVED***'#16A34A',
-					admin:***REMOVED***'#3B82F6',
-					'admin-dark':***REMOVED***'#1D4ED8'
-				}
-			},
-			borderRadius:***REMOVED***{
-				lg:***REMOVED***'var(--radius)',
-				md:***REMOVED***'calc(var(--radius)***REMOVED***-***REMOVED***2px)',
-				sm:***REMOVED***'calc(var(--radius)***REMOVED***-***REMOVED***4px)'
-			},
-			keyframes:***REMOVED***{
-				'accordion-down':***REMOVED***{
-					from:***REMOVED***{
-						height:***REMOVED***'0'
-					},
-					to:***REMOVED***{
-						height:***REMOVED***'var(--radix-accordion-content-height)'
-					}
-				},
-				'accordion-up':***REMOVED***{
-					from:***REMOVED***{
-						height:***REMOVED***'var(--radix-accordion-content-height)'
-					},
-					to:***REMOVED***{
-						height:***REMOVED***'0'
-					}
-				},
-				'fade-in':***REMOVED***{
-					'0%':***REMOVED***{***REMOVED***opacity:***REMOVED***'0',***REMOVED***transform:***REMOVED***'translateY(10px)'***REMOVED***},
-					'100%':***REMOVED***{***REMOVED***opacity:***REMOVED***'1',***REMOVED***transform:***REMOVED***'translateY(0)'***REMOVED***}
-				},
-				'bounce-in':***REMOVED***{
-					'0%':***REMOVED***{***REMOVED***transform:***REMOVED***'scale(0.8)',***REMOVED***opacity:***REMOVED***'0'***REMOVED***},
-					'50%':***REMOVED***{***REMOVED***transform:***REMOVED***'scale(1.05)',***REMOVED***opacity:***REMOVED***'1'***REMOVED***},
-					'100%':***REMOVED***{***REMOVED***transform:***REMOVED***'scale(1)',***REMOVED***opacity:***REMOVED***'1'***REMOVED***}
-				}
-			},
-			animation:***REMOVED***{
-				'accordion-down':***REMOVED***'accordion-down***REMOVED***0.2s***REMOVED***ease-out',
-				'accordion-up':***REMOVED***'accordion-up***REMOVED***0.2s***REMOVED***ease-out',
-				'fade-in':***REMOVED***'fade-in***REMOVED***0.5s***REMOVED***ease-out',
-				'bounce-in':***REMOVED***'bounce-in***REMOVED***0.6s***REMOVED***ease-out'
-			}
-		}
-	},
-	plugins:***REMOVED***[require("tailwindcss-animate")],
+const***REMOVED***config:***REMOVED***Config***REMOVED***=***REMOVED***{
+***REMOVED******REMOVED***darkMode:***REMOVED***["class"],
+***REMOVED******REMOVED***content:***REMOVED***[
+***REMOVED******REMOVED******REMOVED******REMOVED***"./pages/**/*.{ts,tsx}",
+***REMOVED******REMOVED******REMOVED******REMOVED***"./components/**/*.{ts,tsx}",
+***REMOVED******REMOVED******REMOVED******REMOVED***"./app/**/*.{ts,tsx}",
+***REMOVED******REMOVED******REMOVED******REMOVED***"./src/**/*.{ts,tsx}",
+***REMOVED******REMOVED***],
+***REMOVED******REMOVED***prefix:***REMOVED***"",
+***REMOVED******REMOVED***theme:***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED***container:***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***center:***REMOVED***true,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***padding:***REMOVED***"2rem",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***screens:***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"2xl":***REMOVED***"1400px",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
+***REMOVED******REMOVED******REMOVED******REMOVED***},
+***REMOVED******REMOVED******REMOVED******REMOVED***extend:***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***colors:***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***whatsapp:***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***50:***REMOVED***'#f0fdf4',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***100:***REMOVED***'#dcfce7',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***200:***REMOVED***'#bbf7d0',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***300:***REMOVED***'#86efac',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***400:***REMOVED***'#4ade80',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***500:***REMOVED***'#25D366',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***600:***REMOVED***'#16a34a',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***700:***REMOVED***'#128C7E',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***800:***REMOVED***'#166534',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***900:***REMOVED***'#14532d',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***950:***REMOVED***'#052e16',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***border:***REMOVED***"hsl(var(--border))",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***input:***REMOVED***"hsl(var(--input))",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ring:***REMOVED***"hsl(var(--ring))",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***background:***REMOVED***"hsl(var(--background))",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***foreground:***REMOVED***"hsl(var(--foreground))",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***primary:***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***DEFAULT:***REMOVED***"hsl(var(--primary))",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***foreground:***REMOVED***"hsl(var(--primary-foreground))",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***secondary:***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***DEFAULT:***REMOVED***"hsl(var(--secondary))",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***foreground:***REMOVED***"hsl(var(--secondary-foreground))",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***destructive:***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***DEFAULT:***REMOVED***"hsl(var(--destructive))",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***foreground:***REMOVED***"hsl(var(--destructive-foreground))",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***muted:***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***DEFAULT:***REMOVED***"hsl(var(--muted))",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***foreground:***REMOVED***"hsl(var(--muted-foreground))",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***accent:***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***DEFAULT:***REMOVED***"hsl(var(--accent))",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***foreground:***REMOVED***"hsl(var(--accent-foreground))",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***popover:***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***DEFAULT:***REMOVED***"hsl(var(--popover))",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***foreground:***REMOVED***"hsl(var(--popover-foreground))",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***card:***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***DEFAULT:***REMOVED***"hsl(var(--card))",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***foreground:***REMOVED***"hsl(var(--card-foreground))",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***borderRadius:***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***lg:***REMOVED***"var(--radius)",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***md:***REMOVED***"calc(var(--radius)***REMOVED***-***REMOVED***2px)",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***sm:***REMOVED***"calc(var(--radius)***REMOVED***-***REMOVED***4px)",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***keyframes:***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"accordion-down":***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***from:***REMOVED***{***REMOVED***height:***REMOVED***"0"***REMOVED***},
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***to:***REMOVED***{***REMOVED***height:***REMOVED***"var(--radix-accordion-content-height)"***REMOVED***},
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"accordion-up":***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***from:***REMOVED***{***REMOVED***height:***REMOVED***"var(--radix-accordion-content-height)"***REMOVED***},
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***to:***REMOVED***{***REMOVED***height:***REMOVED***"0"***REMOVED***},
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"fade-in":***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"0%":***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***opacity:***REMOVED***"0",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***transform:***REMOVED***"translateY(10px)",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"100%":***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***opacity:***REMOVED***"1",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***transform:***REMOVED***"translateY(0)",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"pulse-slow":***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"0%,***REMOVED***100%":***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***opacity:***REMOVED***"1",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"50%":***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***opacity:***REMOVED***"0.5",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***animation:***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"accordion-down":***REMOVED***"accordion-down***REMOVED***0.2s***REMOVED***ease-out",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"accordion-up":***REMOVED***"accordion-up***REMOVED***0.2s***REMOVED***ease-out",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"fade-in":***REMOVED***"fade-in***REMOVED***0.6s***REMOVED***ease-out",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"pulse-slow":***REMOVED***"pulse-slow***REMOVED***2s***REMOVED***ease-in-out***REMOVED***infinite",
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***fontFamily:***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***sans:***REMOVED***['Inter',***REMOVED***'system-ui',***REMOVED***'sans-serif'],
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
+***REMOVED******REMOVED******REMOVED******REMOVED***},
+***REMOVED******REMOVED***},
+***REMOVED******REMOVED***plugins:***REMOVED***[require("tailwindcss-animate")],
 }***REMOVED***satisfies***REMOVED***Config;
+
+export***REMOVED***default***REMOVED***config;

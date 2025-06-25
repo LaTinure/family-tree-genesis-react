@@ -18,6 +18,21 @@ export***REMOVED***const***REMOVED***api***REMOVED***=***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***data***REMOVED***as***REMOVED***ProfileData;
 ***REMOVED******REMOVED******REMOVED******REMOVED***},
 
+***REMOVED******REMOVED******REMOVED******REMOVED***async***REMOVED***createProfile(profileData:***REMOVED***ProfileData)***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***data,***REMOVED***error***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.from('profiles')
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.upsert({
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***...profileData,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at:***REMOVED***profileData.created_at***REMOVED***||***REMOVED***new***REMOVED***Date().toISOString(),
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***updated_at:***REMOVED***new***REMOVED***Date().toISOString(),
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***})
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.select()
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.single();
+
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(error)***REMOVED***throw***REMOVED***error;
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***data***REMOVED***as***REMOVED***ProfileData;
+***REMOVED******REMOVED******REMOVED******REMOVED***},
+
 ***REMOVED******REMOVED******REMOVED******REMOVED***async***REMOVED***update(id:***REMOVED***string,***REMOVED***updates:***REMOVED***Partial<ProfileData>)***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***data,***REMOVED***error***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.from('profiles')
@@ -77,9 +92,9 @@ export***REMOVED***const***REMOVED***api***REMOVED***=***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(error)***REMOVED***throw***REMOVED***error;
 ***REMOVED******REMOVED******REMOVED******REMOVED***},
 
-***REMOVED******REMOVED******REMOVED******REMOVED***async***REMOVED***uploadAvatar(file:***REMOVED***File)***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED***async***REMOVED***uploadAvatar(userId:***REMOVED***string,***REMOVED***file:***REMOVED***File)***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***fileExt***REMOVED***=***REMOVED***file.name.split('.').pop();
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***filePath***REMOVED***=***REMOVED***`avatars/${Date.now()}.${fileExt}`;
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***filePath***REMOVED***=***REMOVED***`${userId}/${Date.now()}.${fileExt}`;
 
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***error:***REMOVED***uploadError***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase.storage
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.from('avatars')
@@ -92,6 +107,17 @@ export***REMOVED***const***REMOVED***api***REMOVED***=***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.getPublicUrl(filePath);
 
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***data.publicUrl;
+***REMOVED******REMOVED******REMOVED******REMOVED***},
+
+***REMOVED******REMOVED******REMOVED******REMOVED***async***REMOVED***search(query:***REMOVED***string,***REMOVED***limit:***REMOVED***number***REMOVED***=***REMOVED***10)***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***data,***REMOVED***error***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.from('profiles')
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.select('*')
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.or(`first_name.ilike.%${query}%,last_name.ilike.%${query}%,email.ilike.%${query}%,profession.ilike.%${query}%,current_location.ilike.%${query}%`)
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.limit(limit);
+
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(error)***REMOVED***throw***REMOVED***error;
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***data***REMOVED***as***REMOVED***ProfileData[];
 ***REMOVED******REMOVED******REMOVED******REMOVED***}
 ***REMOVED******REMOVED***},
 
