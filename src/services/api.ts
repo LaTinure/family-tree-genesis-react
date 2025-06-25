@@ -18,6 +18,21 @@ export const api = {
       return data as ProfileData;
     },
 
+    async createProfile(profileData: ProfileData) {
+      const { data, error } = await supabase
+        .from('profiles')
+        .upsert({
+          ...profileData,
+          created_at: profileData.created_at || new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data as ProfileData;
+    },
+
     async update(id: string, updates: Partial<ProfileData>) {
       const { data, error } = await supabase
         .from('profiles')
@@ -77,9 +92,9 @@ export const api = {
       if (error) throw error;
     },
 
-    async uploadAvatar(file: File) {
+    async uploadAvatar(userId: string, file: File) {
       const fileExt = file.name.split('.').pop();
-      const filePath = `avatars/${Date.now()}.${fileExt}`;
+      const filePath = `${userId}/${Date.now()}.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
         .from('avatars')
@@ -92,6 +107,17 @@ export const api = {
         .getPublicUrl(filePath);
 
       return data.publicUrl;
+    },
+
+    async search(query: string, limit: number = 10) {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .or(`first_name.ilike.%${query}%,last_name.ilike.%${query}%,email.ilike.%${query}%,profession.ilike.%${query}%,current_location.ilike.%${query}%`)
+        .limit(limit);
+
+      if (error) throw error;
+      return data as ProfileData[];
     }
   },
 
