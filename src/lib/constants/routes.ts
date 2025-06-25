@@ -1,10 +1,10 @@
-
 export***REMOVED***const***REMOVED***ROUTES***REMOVED***=***REMOVED***{
 ***REMOVED******REMOVED***HOME:***REMOVED***'/',
 ***REMOVED******REMOVED***AUTH:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***LOGIN:***REMOVED***'/auth/login',
-***REMOVED******REMOVED******REMOVED******REMOVED***REGISTER:***REMOVED***'/auth/register',
-***REMOVED******REMOVED******REMOVED******REMOVED***FORGOT_PASSWORD:***REMOVED***'/auth/forgot-password',
+***REMOVED******REMOVED******REMOVED******REMOVED***LOGIN:***REMOVED***'/auth-family',
+***REMOVED******REMOVED******REMOVED******REMOVED***REGISTER:***REMOVED***'/auth-family',
+***REMOVED******REMOVED******REMOVED******REMOVED***FORGOT_PASSWORD:***REMOVED***'/auth-family',
+***REMOVED******REMOVED******REMOVED******REMOVED***FAMILY:***REMOVED***'/auth-family',
 ***REMOVED******REMOVED***},
 ***REMOVED******REMOVED***DASHBOARD:***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED***ROOT:***REMOVED***'/dashboard',

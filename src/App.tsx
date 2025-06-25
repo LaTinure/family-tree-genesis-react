@@ -1,4 +1,3 @@
-
 import***REMOVED***{***REMOVED***Toaster***REMOVED***}***REMOVED***from***REMOVED***"@/components/ui/toaster";
 import***REMOVED***{***REMOVED***Toaster***REMOVED***as***REMOVED***Sonner***REMOVED***}***REMOVED***from***REMOVED***"@/components/ui/sonner";
 import***REMOVED***{***REMOVED***TooltipProvider***REMOVED***}***REMOVED***from***REMOVED***"@/components/ui/tooltip";
@@ -12,6 +11,7 @@ import***REMOVED***{***REMOVED***ProtectedRoute***REMOVED***}***REMOVED***from**
 import***REMOVED***Index***REMOVED***from***REMOVED***"./pages/Index";
 import***REMOVED***Login***REMOVED***from***REMOVED***"./pages/auth/Login";
 import***REMOVED***Register***REMOVED***from***REMOVED***"./pages/auth/Register";
+import***REMOVED***AuthFamily***REMOVED***from***REMOVED***"./pages/auth/AuthFamily";
 import***REMOVED***Dashboard***REMOVED***from***REMOVED***"./pages/Dashboard";
 import***REMOVED***FamilyTree***REMOVED***from***REMOVED***"./pages/dashboard/FamilyTree";
 import***REMOVED***Members***REMOVED***from***REMOVED***"./pages/dashboard/Members";
@@ -26,7 +26,7 @@ const***REMOVED***queryClient***REMOVED***=***REMOVED***new***REMOVED***QueryCli
 ***REMOVED******REMOVED***defaultOptions:***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED***queries:***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***staleTime:***REMOVED***5***REMOVED*******REMOVED***60***REMOVED*******REMOVED***1000,***REMOVED***//***REMOVED***5***REMOVED***minutes
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***cacheTime:***REMOVED***10***REMOVED*******REMOVED***60***REMOVED*******REMOVED***1000,***REMOVED***//***REMOVED***10***REMOVED***minutes
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***gcTime:***REMOVED***10***REMOVED*******REMOVED***60***REMOVED*******REMOVED***1000,***REMOVED***//***REMOVED***10***REMOVED***minutes
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***retry:***REMOVED***1,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***refetchOnWindowFocus:***REMOVED***false,
 ***REMOVED******REMOVED******REMOVED******REMOVED***},
@@ -35,18 +35,19 @@ const***REMOVED***queryClient***REMOVED***=***REMOVED***new***REMOVED***QueryCli
 
 const***REMOVED***App***REMOVED***=***REMOVED***()***REMOVED***=>***REMOVED***(
 ***REMOVED******REMOVED***<QueryClientProvider***REMOVED***client={queryClient}>
-***REMOVED******REMOVED******REMOVED******REMOVED***<AuthProvider>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<TooltipProvider>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Toaster***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Sonner***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<BrowserRouter>
+***REMOVED******REMOVED******REMOVED******REMOVED***<BrowserRouter>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<AuthProvider>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<TooltipProvider>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Toaster***REMOVED***/>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Sonner***REMOVED***/>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Layout>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Routes>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{/****REMOVED***Public***REMOVED***routes***REMOVED****/}
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path="/"***REMOVED***element={<Index***REMOVED***/>}***REMOVED***/>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path="/auth/login"***REMOVED***element={<Login***REMOVED***/>}***REMOVED***/>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path="/auth/register"***REMOVED***element={<Register***REMOVED***/>}***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path="/auth-family"***REMOVED***element={<AuthFamily***REMOVED***/>}***REMOVED***/>
+
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{/****REMOVED***Protected***REMOVED***routes***REMOVED****/}
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path="/dashboard"***REMOVED***element={
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<ProtectedRoute>
@@ -88,14 +89,14 @@ const***REMOVED***App***REMOVED***=***REMOVED***()***REMOVED***=>***REMOVED***(
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Profile***REMOVED***/>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</ProtectedRoute>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***
+
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{/****REMOVED***Catch-all***REMOVED***route***REMOVED****/}
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path="*"***REMOVED***element={<NotFound***REMOVED***/>}***REMOVED***/>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Routes>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Layout>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</BrowserRouter>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</TooltipProvider>
-***REMOVED******REMOVED******REMOVED******REMOVED***</AuthProvider>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</TooltipProvider>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</AuthProvider>
+***REMOVED******REMOVED******REMOVED******REMOVED***</BrowserRouter>
 ***REMOVED******REMOVED***</QueryClientProvider>
 );
 

@@ -1,5 +1,5 @@
 {
-***REMOVED******REMOVED***"name":***REMOVED***"vite_react_shadcn_ts",
+***REMOVED******REMOVED***"name":***REMOVED***"connections-familiales",
 ***REMOVED******REMOVED***"private":***REMOVED***true,
 ***REMOVED******REMOVED***"version":***REMOVED***"0.0.0",
 ***REMOVED******REMOVED***"type":***REMOVED***"module",
@@ -46,6 +46,7 @@
 ***REMOVED******REMOVED******REMOVED******REMOVED***"cmdk":***REMOVED***"^1.0.0",
 ***REMOVED******REMOVED******REMOVED******REMOVED***"date-fns":***REMOVED***"^3.6.0",
 ***REMOVED******REMOVED******REMOVED******REMOVED***"embla-carousel-react":***REMOVED***"^8.3.0",
+***REMOVED******REMOVED******REMOVED******REMOVED***"framer-motion":***REMOVED***"^12.19.1",
 ***REMOVED******REMOVED******REMOVED******REMOVED***"input-otp":***REMOVED***"^1.2.4",
 ***REMOVED******REMOVED******REMOVED******REMOVED***"lucide-react":***REMOVED***"^0.462.0",
 ***REMOVED******REMOVED******REMOVED******REMOVED***"next-themes":***REMOVED***"^0.3.0",

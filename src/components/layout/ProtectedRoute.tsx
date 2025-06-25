@@ -1,4 +1,3 @@
-
 import***REMOVED***{***REMOVED***useEffect***REMOVED***}***REMOVED***from***REMOVED***'react';
 import***REMOVED***{***REMOVED***useNavigate***REMOVED***}***REMOVED***from***REMOVED***'react-router-dom';
 import***REMOVED***{***REMOVED***useAuth***REMOVED***}***REMOVED***from***REMOVED***'@/hooks/useAuth';
@@ -16,7 +15,7 @@ export***REMOVED***const***REMOVED***ProtectedRoute***REMOVED***=***REMOVED***({
 
 ***REMOVED******REMOVED***useEffect(()***REMOVED***=>***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(!loading***REMOVED***&&***REMOVED***requireAuth***REMOVED***&&***REMOVED***!user)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***navigate(ROUTES.AUTH.LOGIN);
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***navigate(ROUTES.AUTH.FAMILY);
 ***REMOVED******REMOVED******REMOVED******REMOVED***}
 ***REMOVED******REMOVED***},***REMOVED***[user,***REMOVED***loading,***REMOVED***requireAuth,***REMOVED***navigate]);
 
