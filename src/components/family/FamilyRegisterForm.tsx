@@ -217,6 +217,11 @@ export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED*
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***(data.relationship_type***REMOVED***||***REMOVED***'fils');
 
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Mapping***REMOVED***des***REMOVED***valeurs***REMOVED***sans***REMOVED***accents***REMOVED***vers***REMOVED***les***REMOVED***valeurs***REMOVED***attendues***REMOVED***par***REMOVED***le***REMOVED***type***REMOVED***(avec***REMOVED***accents***REMOVED***si***REMOVED***besoin)
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***validRelationshipTypes***REMOVED***=***REMOVED***[
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***'père',***REMOVED***'mère',***REMOVED***'grand-père',***REMOVED***'nièce',***REMOVED***'neveu',***REMOVED***'époux',***REMOVED***'épouse',***REMOVED***'grande-mère',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***'petit-fils',***REMOVED***'petite-fille',***REMOVED***'oncle',***REMOVED***'tante',***REMOVED***'cousin',***REMOVED***'cousine',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***'patriarche',***REMOVED***'matriarche',***REMOVED***'fils',***REMOVED***'fille',***REMOVED***'conjoint'
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***];
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***accentMap:***REMOVED***Record<string,***REMOVED***string>***REMOVED***=***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***frere:***REMOVED***'frère',
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***soeur:***REMOVED***'sœur',
@@ -244,17 +249,12 @@ export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED*
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***matriarche:***REMOVED***'matriarche',
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***fils:***REMOVED***'fils',
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***fille:***REMOVED***'fille',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***'beau-pere':***REMOVED***'conjoint',***REMOVED***//***REMOVED***non***REMOVED***utilisé***REMOVED***dans***REMOVED***le***REMOVED***type***REMOVED***cible,***REMOVED***on***REMOVED***mappe***REMOVED***sur***REMOVED***'conjoint'***REMOVED***(ou***REMOVED***à***REMOVED***ignorer)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***beau_pere:***REMOVED***'conjoint',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***'belle-mere':***REMOVED***'conjoint',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***belle_mere:***REMOVED***'conjoint',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***'beau-fils':***REMOVED***'conjoint',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***beau_fils:***REMOVED***'conjoint',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***'belle-fille':***REMOVED***'conjoint',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***belle_fille:***REMOVED***'conjoint',
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***conjoint:***REMOVED***'conjoint',
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***};
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***relationshipTypeForProfile***REMOVED***=***REMOVED***accentMap[relationshipType]***REMOVED***||***REMOVED***relationshipType;
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***let***REMOVED***relationshipTypeForProfile***REMOVED***=***REMOVED***accentMap[relationshipType]***REMOVED***||***REMOVED***relationshipType;
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(!validRelationshipTypes.includes(relationshipTypeForProfile))***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***relationshipTypeForProfile***REMOVED***=***REMOVED***'conjoint';
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
 
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***profileData:***REMOVED***ProfileData***REMOVED***=***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***authData.user.id,
@@ -322,6 +322,24 @@ export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED*
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</h3>
 
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<form***REMOVED***onSubmit={handleSubmit(onSubmit)}***REMOVED***className="space-y-4">
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{/****REMOVED***Sélection***REMOVED***du***REMOVED***rôle***REMOVED***Membre/Administrateur***REMOVED****/}
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Label***REMOVED***htmlFor="role">Rôle</Label>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Select
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***value={role}
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onValueChange={handleRoleChange}
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***disabled={isLoading}
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<SelectTrigger>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<SelectValue***REMOVED***/>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</SelectTrigger>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<SelectContent>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<SelectItem***REMOVED***value="user">Membre</SelectItem>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<SelectItem***REMOVED***value="admin">Administrateur</SelectItem>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</SelectContent>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Select>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
+
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{/****REMOVED***Avatar***REMOVED***Upload***REMOVED****/}
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="flex***REMOVED***flex-col***REMOVED***items-center***REMOVED***space-y-4">
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="relative">
