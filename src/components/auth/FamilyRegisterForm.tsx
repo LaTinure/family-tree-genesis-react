@@ -1,0 +1,4 @@
+
+import***REMOVED***{***REMOVED***FamilyRegisterForm***REMOVED***as***REMOVED***OriginalForm***REMOVED***}***REMOVED***from***REMOVED***'@/components/family/FamilyRegisterForm';
+
+export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED***OriginalForm;
