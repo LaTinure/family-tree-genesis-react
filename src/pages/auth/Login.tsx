@@ -25,22 +25,12 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const { error } = await signIn(formData.email, formData.password);
-      
-      if (error) {
-        toast({
-          title: 'Erreur de connexion',
-          description: error.message,
-          variant: 'destructive',
-        });
-        return;
-      }
-
+      await signIn(formData.email, formData.password);
       navigate(ROUTES.DASHBOARD.ROOT);
-    } catch (error) {
+    } catch (error: any) {
       toast({
-        title: 'Erreur',
-        description: 'Une erreur est survenue lors de la connexion',
+        title: 'Erreur de connexion',
+        description: error.message || 'Email ou mot de passe incorrect',
         variant: 'destructive',
       });
     } finally {

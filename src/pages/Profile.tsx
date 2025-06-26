@@ -63,6 +63,7 @@ const Profile = () => {
           .from('profiles')
           .insert([{
             id: user.id,
+            user_id: user.id,
             ...newProfile,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),

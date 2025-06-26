@@ -40,7 +40,7 @@ export const useFamilyMembers = () => {
         relationship_type: (profile.relationship_type as FamilyMember['relationship_type']) || 'fils',
         father_name: profile.father_name || undefined,
         mother_name: profile.mother_name || undefined,
-        spouse_name: profile.spouse_name || undefined,
+        spouse_name: '', // Set default empty string since it doesn't exist in DB
         is_admin: profile.is_admin || false,
         is_patriarch: profile.is_patriarch || false,
         civilite: profile.civilite || undefined,
@@ -74,6 +74,8 @@ export const useFamilyMembers = () => {
         .from('profiles')
         .insert([
           {
+            id: crypto.randomUUID(),
+            user_id: crypto.randomUUID(),
             ...memberData,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString()
@@ -102,7 +104,7 @@ export const useFamilyMembers = () => {
         relationship_type: (data.relationship_type as FamilyMember['relationship_type']) || 'fils',
         father_name: data.father_name,
         mother_name: data.mother_name,
-        spouse_name: data.spouse_name,
+        spouse_name: '', // Default empty string
         is_admin: data.is_admin || false,
         is_patriarch: data.is_patriarch || false,
         civilite: data.civilite,
