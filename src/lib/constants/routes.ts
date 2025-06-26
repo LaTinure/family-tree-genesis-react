@@ -1,3 +1,4 @@
+
 export***REMOVED***const***REMOVED***ROUTES***REMOVED***=***REMOVED***{
 ***REMOVED******REMOVED***HOME:***REMOVED***'/',
 ***REMOVED******REMOVED***AUTH:***REMOVED***{
@@ -15,6 +16,10 @@ export***REMOVED***const***REMOVED***ROUTES***REMOVED***=***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED***INVITE:***REMOVED***'/dashboard/invite',
 ***REMOVED******REMOVED******REMOVED******REMOVED***MESSAGES:***REMOVED***'/dashboard/messages',
 ***REMOVED******REMOVED******REMOVED******REMOVED***NOTIFICATIONS:***REMOVED***'/dashboard/notifications',
+***REMOVED******REMOVED******REMOVED******REMOVED***CHAT:***REMOVED***'/dashboard/chat',
+***REMOVED******REMOVED******REMOVED******REMOVED***EVENTS:***REMOVED***'/dashboard/events',
+***REMOVED******REMOVED******REMOVED******REMOVED***REPORT:***REMOVED***'/dashboard/report',
+***REMOVED******REMOVED******REMOVED******REMOVED***CONTACT_ADMIN:***REMOVED***'/dashboard/contact-admin',
 ***REMOVED******REMOVED***},
 ***REMOVED******REMOVED***PROFILE:***REMOVED***'/profile',
 }***REMOVED***as***REMOVED***const;
