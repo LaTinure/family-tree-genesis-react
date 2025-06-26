@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -9,6 +8,7 @@ interface AuthContextType {
   session: Session | null;
   profile: FamilyMember | null;
   loading: boolean;
+  signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
 }
 
@@ -67,7 +67,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         .from('profiles')
         .select('*')
         .eq('user_id', userId)
-        .single();
+        .maybeSingle();
 
       if (error) {
         console.error('Error fetching profile:', error);
@@ -91,12 +91,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           mother_id: data.mother_id,
           father_name: data.father_name,
           mother_name: data.mother_name,
-          spouse_name: data.spouse_name,
+          spouse_name: (data as any).spouse_name || '',
           is_admin: data.is_admin || false,
           is_patriarch: data.is_patriarch || false,
           is_parent: data.is_parent || false,
           situation: data.situation,
-          role: (data.role as any) || 'user',
+          role: (data as any).role || 'user',
           created_at: data.created_at,
           updated_at: data.updated_at,
         });
@@ -105,6 +105,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       console.error('Error fetching profile:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const signIn = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      throw error;
     }
   };
 
@@ -120,6 +131,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         session,
         profile,
         loading,
+        signIn,
         signOut,
       }}
     >

@@ -1,11 +1,10 @@
-
 import { z } from 'zod';
 import { RelationshipType, Civilite, UserRole } from '@/types/family';
 
 // Schémas de validation harmonisés
 export const relationshipTypes: RelationshipType[] = [
   'patriarche',
-  'matriarche', 
+  'matriarche',
   'conjoint',
   'fils',
   'fille',
@@ -66,7 +65,8 @@ export const familyRegisterSchema = z.object({
   birth_date: z.string().optional(),
   photo_url: z.string().optional(),
   relationship_type: z.enum(relationshipTypes as [RelationshipType, ...RelationshipType[]]),
-  situation: z.string().optional()
+  situation: z.string().optional(),
+  role: z.enum(['Membre', 'Administrateur']).default('Membre')
 });
 
 export const loginSchema = z.object({

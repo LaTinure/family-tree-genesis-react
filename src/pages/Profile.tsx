@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
@@ -27,7 +26,7 @@ const Profile = () => {
 
   useEffect(() => {
     if (authLoading) return;
-    
+
     if (!user) {
       navigate(ROUTES.HOME);
       return;
@@ -45,7 +44,7 @@ const Profile = () => {
         .from('profiles')
         .select('*')
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle();
 
       if (error) {
         const newProfile: Partial<ProfileData> = {
@@ -58,7 +57,7 @@ const Profile = () => {
           is_admin: user.user_metadata?.is_admin || false,
           is_patriarch: user.user_metadata?.is_patriarch || false,
         };
-        
+
         const { data: createdProfile, error: createError } = await supabase
           .from('profiles')
           .insert([{
@@ -69,7 +68,7 @@ const Profile = () => {
             updated_at: new Date().toISOString(),
           }])
           .select()
-          .single();
+          .maybeSingle();
 
         if (createError) throw createError;
         setProfile(createdProfile as ProfileData);
@@ -99,7 +98,7 @@ const Profile = () => {
         })
         .eq('id', profile.id)
         .select()
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
 

@@ -1,348 +1,422 @@
-
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { useFamilyMembers } from '@/hooks/useFamilyMembers';
-import { Navigate } from 'react-router-dom';
-import { ROUTES } from '@/lib/constants/routes';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { StatsCard } from '@/components/ui/stats-card';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { 
-  Users, 
-  Shield, 
-  UserCheck, 
-  UserX, 
-  Search, 
-  Filter,
-  MoreHorizontal,
-  Crown,
-  AlertTriangle,
-  CheckCircle,
-  XCircle
-} from 'lucide-react';
+import { UserAvatar } from '@/components/shared/UserAvatar';
 import { useToast } from '@/hooks/use-toast';
-import { FamilyMember } from '@/types/family';
+import { supabase } from '@/integrations/supabase/client';
+import { Edit, Trash2, Plus, Search, Shield, Crown, User } from 'lucide-react';
+import { formatRelationshipType } from '@/lib/utils';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@/lib/constants/routes';
 
-const Admin = () => {
-  const { user, loading } = useAuth();
-  const { members, isLoading, updateMember } = useFamilyMembers();
+interface AdminMember {
+  id: string;
+  user_id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  civilite: string;
+  phone?: string;
+  profession?: string;
+  current_location?: string;
+  birth_place?: string;
+  birth_date?: string;
+  avatar_url?: string;
+  photo_url?: string;
+  relationship_type: string;
+  father_id?: string;
+  mother_id?: string;
+  father_name?: string;
+  mother_name?: string;
+  spouse_name?: string;
+  is_admin: boolean;
+  is_patriarch: boolean;
+  is_parent: boolean;
+  situation?: string;
+  role: 'Simple Membre' | 'Patriarche';
+  created_at: string;
+  updated_at: string;
+}
+
+export const Admin = () => {
+  const { profile } = useAuth();
   const { toast } = useToast();
+  const [members, setMembers] = useState<AdminMember[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedTab, setSelectedTab] = useState('pending');
-  const [processingMembers, setProcessingMembers] = useState<Set<string>>(new Set());
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [selectedMember, setSelectedMember] = useState<AdminMember | null>(null);
+  const [editForm, setEditForm] = useState({
+    first_name: '',
+    last_name: '',
+    email: '',
+    role: 'Simple Membre' as 'Simple Membre' | 'Patriarche',
+    relationship_type: '',
+    situation: '',
+    profession: '',
+    current_location: '',
+    phone: ''
+  });
 
-  // Redirection si pas admin
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
-        <LoadingSpinner size="lg" />
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (profile?.is_admin) {
+      fetchMembers();
+    }
+  }, [profile]);
 
-  if (!user) {
-    return <Navigate to={ROUTES.AUTH.LOGIN} replace />;
-  }
-
-  // Filtrage des membres
-  const pendingMembers = members.filter(m => m.role === 'pending');
-  const activeMembers = members.filter(m => m.role === 'user' || m.role === 'admin');
-  const adminMembers = members.filter(m => m.is_admin);
-
-  const filteredMembers = (memberList: FamilyMember[]) => {
-    return memberList.filter(member => 
-      member.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      member.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      member.email.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  };
-
-  const handleMemberAction = async (
-    memberId: string, 
-    action: 'approve' | 'reject' | 'promote' | 'demote'
-  ) => {
-    if (processingMembers.has(memberId)) return;
-
-    setProcessingMembers(prev => new Set([...prev, memberId]));
-
+  const fetchMembers = async () => {
     try {
-      let updateData: Partial<FamilyMember> = {};
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .order('created_at', { ascending: false });
 
-      switch (action) {
-        case 'approve':
-          updateData = { role: 'user' };
-          break;
-        case 'reject':
-          updateData = { role: 'pending' }; // ou supprimer le membre
-          break;
-        case 'promote':
-          updateData = { is_admin: true, role: 'admin' };
-          break;
-        case 'demote':
-          updateData = { is_admin: false, role: 'user' };
-          break;
-      }
+      if (error) throw error;
 
-      await updateMember(memberId, updateData);
-      
-      toast({
-        title: 'Succès',
-        description: `Action effectuée avec succès`,
-      });
+      const adminMembers: AdminMember[] = data.map(member => ({
+        ...member,
+        role: (member as any).role || 'Simple Membre'
+      }));
+
+      setMembers(adminMembers);
     } catch (error) {
+      console.error('Erreur lors du chargement des membres:', error);
       toast({
         title: 'Erreur',
-        description: 'Une erreur est survenue lors de l\'opération',
+        description: 'Impossible de charger les membres',
         variant: 'destructive',
       });
     } finally {
-      setProcessingMembers(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(memberId);
-        return newSet;
+      setLoading(false);
+    }
+  };
+
+  const handleEdit = (member: AdminMember) => {
+    setSelectedMember(member);
+    setEditForm({
+      first_name: member.first_name,
+      last_name: member.last_name,
+      email: member.email,
+      role: member.role,
+      relationship_type: member.relationship_type,
+      situation: member.situation || '',
+      profession: member.profession || '',
+      current_location: member.current_location || '',
+      phone: member.phone || ''
+    });
+    setIsEditDialogOpen(true);
+  };
+
+  const handleSave = async () => {
+    if (!selectedMember) return;
+
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          first_name: editForm.first_name,
+          last_name: editForm.last_name,
+          email: editForm.email,
+          role: editForm.role,
+          relationship_type: editForm.relationship_type,
+          situation: editForm.situation,
+          profession: editForm.profession,
+          current_location: editForm.current_location,
+          phone: editForm.phone
+        })
+        .eq('id', selectedMember.id);
+
+      if (error) throw error;
+
+      toast({
+        title: 'Succès',
+        description: 'Membre mis à jour avec succès',
+      });
+
+      setIsEditDialogOpen(false);
+      fetchMembers();
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour:', error);
+      toast({
+        title: 'Erreur',
+        description: 'Impossible de mettre à jour le membre',
+        variant: 'destructive',
       });
     }
   };
 
-  const MemberCard = ({ member, actions }: { member: FamilyMember; actions: React.ReactNode }) => (
-    <Card className="hover:shadow-md transition-shadow">
-      <CardContent className="p-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white font-semibold">
-              {member.first_name[0]}{member.last_name[0]}
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h3 className="font-semibold text-gray-900">
-                  {member.first_name} {member.last_name}
-                </h3>
-                {member.is_patriarch && <Crown className="w-4 h-4 text-yellow-500" />}
-                {member.is_admin && <Shield className="w-4 h-4 text-blue-500" />}
-              </div>
-              <p className="text-sm text-gray-600">{member.email}</p>
-              <div className="flex items-center gap-2 mt-1">
-                <Badge variant="secondary" className="text-xs">
-                  {member.relationship_type}
-                </Badge>
-                <Badge 
-                  variant={
-                    member.role === 'pending' ? 'destructive' : 
-                    member.role === 'admin' ? 'default' : 'secondary'
-                  }
-                  className="text-xs"
-                >
-                  {member.role}
-                </Badge>
-              </div>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            {actions}
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+  const handleDelete = async (memberId: string) => {
+    if (!confirm('Êtes-vous sûr de vouloir supprimer ce membre ?')) return;
+
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .delete()
+        .eq('id', memberId);
+
+      if (error) throw error;
+
+      toast({
+        title: 'Succès',
+        description: 'Membre supprimé avec succès',
+      });
+
+      fetchMembers();
+    } catch (error) {
+      console.error('Erreur lors de la suppression:', error);
+      toast({
+        title: 'Erreur',
+        description: 'Impossible de supprimer le membre',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const filteredMembers = members.filter(member =>
+    member.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    member.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    member.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  if (isLoading) {
+  if (!profile?.is_admin) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
-        <LoadingSpinner size="lg" />
+      <div className="min-h-screen flex items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardContent className="p-6">
+            <div className="text-center">
+              <Shield className="w-16 h-16 mx-auto text-red-500 mb-4" />
+              <h2 className="text-xl font-bold mb-2">Accès refusé</h2>
+              <p className="text-gray-600">
+                Vous n'avez pas les permissions nécessaires pour accéder à cette page.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">
-      <div className="max-w-7xl mx-auto space-y-8">
-        {/* En-tête */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">
-              Administration Familiale
-            </h1>
-            <p className="text-lg text-gray-600">
-              Gérez les membres, validations et paramètres de la famille
-            </p>
-          </div>
-        </div>
-
-        {/* Statistiques */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <StatsCard
-            title="Membres en attente"
-            value={pendingMembers.length}
-            icon={AlertTriangle}
-            className={pendingMembers.length > 0 ? "border-orange-200 bg-orange-50" : ""}
-          />
-          <StatsCard
-            title="Membres actifs"
-            value={activeMembers.length}
-            icon={Users}
-          />
-          <StatsCard
-            title="Administrateurs"
-            value={adminMembers.length}
-            icon={Shield}
-          />
-          <StatsCard
-            title="Total membres"
-            value={members.length}
-            icon={UserCheck}
-          />
-        </div>
-
-        {/* Interface de gestion */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle>Gestion des Membres</CardTitle>
-                <CardDescription>
-                  Validez les nouveaux membres et gérez les permissions
-                </CardDescription>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                  <Input
-                    placeholder="Rechercher un membre..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 w-64"
-                  />
-                </div>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <Tabs value={selectedTab} onValueChange={setSelectedTab}>
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="pending" className="flex items-center gap-2">
-                  <AlertTriangle className="w-4 h-4" />
-                  En attente ({pendingMembers.length})
-                </TabsTrigger>
-                <TabsTrigger value="active" className="flex items-center gap-2">
-                  <Users className="w-4 h-4" />
-                  Membres actifs ({activeMembers.length})
-                </TabsTrigger>
-                <TabsTrigger value="admins" className="flex items-center gap-2">
-                  <Shield className="w-4 h-4" />
-                  Administrateurs ({adminMembers.length})
-                </TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="pending" className="space-y-4 mt-6">
-                {filteredMembers(pendingMembers).length === 0 ? (
-                  <div className="text-center py-12">
-                    <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                      Aucun membre en attente
-                    </h3>
-                    <p className="text-gray-600">
-                      Toutes les demandes ont été traitées.
-                    </p>
-                  </div>
-                ) : (
-                  filteredMembers(pendingMembers).map((member) => (
-                    <MemberCard
-                      key={member.id}
-                      member={member}
-                      actions={
-                        <div className="flex gap-2">
-                          <Button
-                            size="sm"
-                            onClick={() => handleMemberAction(member.id, 'approve')}
-                            disabled={processingMembers.has(member.id)}
-                            className="bg-green-600 hover:bg-green-700"
-                          >
-                            {processingMembers.has(member.id) ? (
-                              <LoadingSpinner size="sm" />
-                            ) : (
-                              <>
-                                <CheckCircle className="w-4 h-4 mr-1" />
-                                Approuver
-                              </>
-                            )}
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="destructive"
-                            onClick={() => handleMemberAction(member.id, 'reject')}
-                            disabled={processingMembers.has(member.id)}
-                          >
-                            <XCircle className="w-4 h-4 mr-1" />
-                            Rejeter
-                          </Button>
-                        </div>
-                      }
-                    />
-                  ))
-                )}
-              </TabsContent>
-
-              <TabsContent value="active" className="space-y-4 mt-6">
-                {filteredMembers(activeMembers).map((member) => (
-                  <MemberCard
-                    key={member.id}
-                    member={member}
-                    actions={
-                      <div className="flex gap-2">
-                        {!member.is_admin && (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleMemberAction(member.id, 'promote')}
-                            disabled={processingMembers.has(member.id)}
-                          >
-                            <Shield className="w-4 h-4 mr-1" />
-                            Promouvoir admin
-                          </Button>
-                        )}
-                        <Button size="sm" variant="ghost">
-                          <MoreHorizontal className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    }
-                  />
-                ))}
-              </TabsContent>
-
-              <TabsContent value="admins" className="space-y-4 mt-6">
-                {filteredMembers(adminMembers).map((member) => (
-                  <MemberCard
-                    key={member.id}
-                    member={member}
-                    actions={
-                      <div className="flex gap-2">
-                        {!member.is_patriarch && (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleMemberAction(member.id, 'demote')}
-                            disabled={processingMembers.has(member.id)}
-                          >
-                            <UserX className="w-4 h-4 mr-1" />
-                            Rétrograder
-                          </Button>
-                        )}
-                        <Button size="sm" variant="ghost">
-                          <MoreHorizontal className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    }
-                  />
-                ))}
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
+    <div className="container mx-auto px-4 py-8">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Administration</h1>
+        <p className="text-gray-600">Gestion des membres de la famille</p>
       </div>
+
+      {/* Barre de recherche */}
+      <div className="mb-6">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <Input
+            placeholder="Rechercher un membre..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+      </div>
+
+      {/* Tableau des membres */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Membres de la famille</CardTitle>
+          <CardDescription>
+            {filteredMembers.length} membre(s) trouvé(s)
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {loading ? (
+            <div className="text-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+              <p className="mt-2 text-gray-600">Chargement...</p>
+            </div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Membre</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Rôle</TableHead>
+                  <TableHead>Relation</TableHead>
+                  <TableHead>Situation</TableHead>
+                  <TableHead>Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredMembers.map((member) => (
+                  <TableRow key={member.id}>
+                    <TableCell>
+                      <div className="flex items-center space-x-3">
+                        <UserAvatar
+                          user={{
+                            first_name: member.first_name,
+                            last_name: member.last_name,
+                            avatar_url: member.avatar_url,
+                            photo_url: member.photo_url,
+                          }}
+                          size="sm"
+                        />
+                        <div>
+                          <p className="font-medium">
+                            {member.first_name} {member.last_name}
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            {member.profession || 'Non renseigné'}
+                          </p>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>{member.email}</TableCell>
+                    <TableCell>
+                      <Badge variant={member.role === 'Patriarche' ? 'default' : 'secondary'}>
+                        {member.role === 'Patriarche' ? (
+                          <Crown className="w-3 h-3 mr-1" />
+                        ) : (
+                          <User className="w-3 h-3 mr-1" />
+                        )}
+                        {member.role}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>{formatRelationshipType(member.relationship_type)}</TableCell>
+                    <TableCell>{member.situation || 'Non renseigné'}</TableCell>
+                    <TableCell>
+                      <div className="flex space-x-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleEdit(member)}
+                        >
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => handleDelete(member.id)}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Dialog d'édition */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Modifier le membre</DialogTitle>
+            <DialogDescription>
+              Modifiez les informations du membre sélectionné.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="first_name">Prénom</Label>
+              <Input
+                id="first_name"
+                value={editForm.first_name}
+                onChange={(e) => setEditForm({ ...editForm, first_name: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="last_name">Nom</Label>
+              <Input
+                id="last_name"
+                value={editForm.last_name}
+                onChange={(e) => setEditForm({ ...editForm, last_name: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                value={editForm.email}
+                onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="role">Rôle</Label>
+              <Select
+                value={editForm.role}
+                onValueChange={(value: 'Simple Membre' | 'Patriarche') =>
+                  setEditForm({ ...editForm, role: value })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Simple Membre">Simple Membre</SelectItem>
+                  <SelectItem value="Patriarche">Patriarche</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="relationship_type">Type de relation</Label>
+              <Input
+                id="relationship_type"
+                value={editForm.relationship_type}
+                onChange={(e) => setEditForm({ ...editForm, relationship_type: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="situation">Situation</Label>
+              <Input
+                id="situation"
+                value={editForm.situation}
+                onChange={(e) => setEditForm({ ...editForm, situation: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="profession">Profession</Label>
+              <Input
+                id="profession"
+                value={editForm.profession}
+                onChange={(e) => setEditForm({ ...editForm, profession: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="phone">Téléphone</Label>
+              <Input
+                id="phone"
+                value={editForm.phone}
+                onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
+              />
+            </div>
+            <div className="col-span-2 space-y-2">
+              <Label htmlFor="current_location">Résidence actuelle</Label>
+              <Input
+                id="current_location"
+                value={editForm.current_location}
+                onChange={(e) => setEditForm({ ...editForm, current_location: e.target.value })}
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+              Annuler
+            </Button>
+            <Button onClick={handleSave}>
+              Sauvegarder
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { FamilyMember, NewFamilyMember } from '@/types/family';
 
@@ -31,12 +30,10 @@ export const api = {
         mother_id: profile.mother_id,
         father_name: profile.father_name,
         mother_name: profile.mother_name,
-        spouse_name: profile.spouse_name,
         is_admin: profile.is_admin || false,
         is_patriarch: profile.is_patriarch || false,
         is_parent: profile.is_parent || false,
         situation: profile.situation,
-        role: (profile.role as any) || 'user',
         created_at: profile.created_at,
         updated_at: profile.updated_at,
       }));
@@ -71,7 +68,7 @@ export const api = {
           updated_at: new Date().toISOString(),
         })
         .select()
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
 
@@ -94,12 +91,10 @@ export const api = {
         mother_id: data.mother_id,
         father_name: data.father_name,
         mother_name: data.mother_name,
-        spouse_name: data.spouse_name,
         is_admin: data.is_admin,
         is_patriarch: data.is_patriarch,
         is_parent: data.is_parent,
         situation: data.situation,
-        role: data.role as any,
         created_at: data.created_at,
         updated_at: data.updated_at,
       };

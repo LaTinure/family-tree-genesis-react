@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,12 +7,13 @@ import { FamilyTree } from '@/components/family/FamilyTree';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useFamilyMembers } from '@/hooks/useFamilyMembers';
 import { useAuth } from '@/hooks/useAuth';
-import { 
-  Users, 
-  Crown, 
-  TreePine, 
-  UserPlus, 
-  MessageSquare, 
+import { formatRelationshipType } from '@/lib/utils';
+import {
+  Users,
+  Crown,
+  TreePine,
+  UserPlus,
+  MessageSquare,
   Calendar,
   Bell,
   Activity,
@@ -44,7 +44,7 @@ const Dashboard = () => {
       const recent = members
         .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
         .slice(0, 5);
-      
+
       // Calculer les générations (simplifié)
       const generations = new Set(members.map(m => m.relationship_type)).size;
 
@@ -145,8 +145,8 @@ const Dashboard = () => {
                   <div key={member.id} className="flex items-center gap-3 p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
                     <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                       {member.photo_url ? (
-                        <img 
-                          src={member.photo_url} 
+                        <img
+                          src={member.photo_url}
                           alt={`${member.first_name} ${member.last_name}`}
                           className="w-10 h-10 rounded-full object-cover"
                         />
@@ -159,7 +159,7 @@ const Dashboard = () => {
                         {member.first_name} {member.last_name}
                       </p>
                       <p className="text-xs text-gray-600">
-                        {member.relationship_type}
+                        {formatRelationshipType(member.relationship_type)}
                       </p>
                     </div>
                     {member.is_patriarch && (
@@ -191,9 +191,9 @@ const Dashboard = () => {
                       </div>
                     ))}
                   </div>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     className="mt-4 w-full border-orange-300 text-orange-800 hover:bg-orange-100"
                     onClick={() => navigate(ROUTES.DASHBOARD.ADMIN)}
                   >
@@ -212,24 +212,24 @@ const Dashboard = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="w-full justify-start"
                   onClick={() => navigate(ROUTES.DASHBOARD.MEMBERS)}
                 >
                   <Users className="w-4 h-4 mr-2" />
                   Voir tous les membres
                 </Button>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="w-full justify-start"
                   onClick={() => navigate(ROUTES.DASHBOARD.MESSAGES)}
                 >
                   <MessageSquare className="w-4 h-4 mr-2" />
                   Messages familiaux
                 </Button>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="w-full justify-start"
                   onClick={() => navigate(ROUTES.DASHBOARD.EVENTS)}
                 >

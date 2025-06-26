@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -11,6 +10,7 @@ import { ROUTES } from '@/lib/constants/routes';
 
 // Pages
 import Index from '@/pages/Index';
+import About from '@/pages/About';
 import Profile from '@/pages/Profile';
 import Dashboard from '@/pages/Dashboard';
 import AuthFamily from '@/pages/auth/AuthFamily';
@@ -27,6 +27,7 @@ import Chat from '@/pages/dashboard/Chat';
 import Events from '@/pages/dashboard/Events';
 import Report from '@/pages/dashboard/Report';
 import ContactAdmin from '@/pages/dashboard/ContactAdmin';
+import Settings from '@/pages/dashboard/Settings';
 
 // Configuration React Query
 const queryClient = new QueryClient({
@@ -63,6 +64,7 @@ function App() {
           <Routes>
             {/* Routes publiques */}
             <Route path={ROUTES.HOME} element={<Layout><Index /></Layout>} />
+            <Route path={ROUTES.ABOUT} element={<Layout><About /></Layout>} />
             <Route path={ROUTES.AUTH.FAMILY} element={<AuthFamily />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
@@ -169,6 +171,14 @@ function App() {
               <ProtectedRoute>
                 <Layout>
                   <ContactAdmin />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path={ROUTES.DASHBOARD.SETTINGS} element={
+              <ProtectedRoute>
+                <Layout>
+                  <Settings />
                 </Layout>
               </ProtectedRoute>
             } />

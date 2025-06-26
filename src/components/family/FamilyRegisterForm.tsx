@@ -11,41 +11,35 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Loader2, Eye, EyeOff, Upload, Camera, Clipboard, ClipboardCheck } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/hooks/useAuth';
 import { ROUTES } from '@/lib/constants/routes';
-import { familyRegisterSchema, FamilyRegisterFormData, relationshipTypes } from '@/lib/validations/familySchema';
+import { familyRegisterSchema, FamilyRegisterFormData } from '@/lib/validations/familySchema';
+import { relationshipTypeOptions } from '@/lib/constants/relationshipTypeOptions';
 import { supabase } from '@/integrations/supabase/client';
 
 // Options pour les listes de sélection
 const professionOptions = [
-  'Agriculteur',
-  'Architecte',
-  'Avocat',
-  'Comptable',
-  'Dentiste',
-  'Électricien',
-  'Enseignant',
-  'Ingénieur',
-  'Médecin',
-  'Plombier',
-  'Policier',
-  'Pompier',
-  'Vendeur',
-  'Autre'
+  'Fonction',
+  'Retraite',
+  'Etude'
 ];
 
 const situationOptions = [
-  'Célibataire',
-  'Marié(e)',
-  'Divorcé(e)',
-  'Veuf/Veuve',
   'En couple',
-  'Séparé(e)'
+  'Célibataire',
+  'Veuf(ve)'
 ];
+
+// Fonction pour générer un UUID
+const generateUUID = () => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+};
 
 export const FamilyRegisterForm = () => {
   const navigate = useNavigate();
-  const { signUp } = useAuth();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -53,7 +47,6 @@ export const FamilyRegisterForm = () => {
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [showRoleModal, setShowRoleModal] = useState(false);
   const [adminCode, setAdminCode] = useState('');
-  const [isAdminCodeValid, setIsAdminCodeValid] = useState(false);
   const [copiedDate, setCopiedDate] = useState(false);
 
   const {
@@ -66,66 +59,31 @@ export const FamilyRegisterForm = () => {
     resolver: zodResolver(familyRegisterSchema),
     defaultValues: {
       civilite: 'M.',
-      relationship_type: 'fils',
-      role: 'membre'
+      relationship_type: 'patriarche',
+      role: 'Membre'
     }
   });
 
   const watchedCivilite = watch('civilite');
-  const watchedRelationshipType = watch('relationship_type');
   const watchedRole = watch('role');
 
-  const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setPhotoFile(file);
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setPhotoPreview(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const uploadPhoto = async (file: File): Promise<string | null> => {
-    try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random()}.${fileExt}`;
-      const filePath = `avatars/${fileName}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from('avatars')
-        .upload(filePath, file);
-
-      if (uploadError) {
-        console.error('Upload error:', uploadError);
-        return null;
-      }
-
-      const { data } = supabase.storage
-        .from('avatars')
-        .getPublicUrl(filePath);
-
-      return data.publicUrl;
-    } catch (error) {
-      console.error('Photo upload failed:', error);
-      return null;
-    }
-  };
-
+  // Fonction pour gérer le changement de rôle
   const handleRoleChange = (value: string) => {
-    if (value === 'administrateur') {
+    console.log('👑 [handleRoleChange] Changement de rôle:', value);
+    if (value === 'Administrateur') {
       setShowRoleModal(true);
     } else {
-      setValue('role', value);
+      setValue('role', value as 'Membre' | 'Administrateur');
     }
   };
 
+  // Fonction pour valider le code administrateur
   const validateAdminCode = () => {
+    console.log('🔐 [validateAdminCode] Validation du code admin');
     if (adminCode === '1432') {
-      setIsAdminCodeValid(true);
-      setValue('role', 'administrateur');
+      setValue('role', 'Administrateur' as const);
       setShowRoleModal(false);
+      setAdminCode('');
       toast({
         title: 'Code validé',
         description: 'Rôle administrateur activé',
@@ -139,7 +97,121 @@ export const FamilyRegisterForm = () => {
     }
   };
 
+  // Fonction signUp manquante
+  const signUp = async (email: string, password: string, profileData: any) => {
+    console.log('🚀 [signUp] Début de l\'inscription avec:', { email, profileData });
+
+    try {
+      // Créer l'utilisateur dans Supabase Auth
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+
+      console.log('🔐 [signUp] Réponse auth:', { authData, authError });
+
+      if (authError) {
+        console.error('❌ [signUp] Erreur auth:', authError);
+        return { error: authError };
+      }
+
+      if (!authData.user) {
+        console.error('❌ [signUp] Aucun utilisateur créé');
+        return { error: { message: 'Erreur lors de la création du compte' } };
+      }
+
+      console.log('✅ [signUp] Utilisateur créé avec succès:', authData.user.id);
+
+      // Créer le profil dans la table profiles
+      const profileDataToInsert = {
+        id: authData.user.id,
+        user_id: authData.user.id,
+        email: email,
+        first_name: profileData.first_name,
+        last_name: profileData.last_name,
+        phone: profileData.phone,
+        profession: profileData.profession,
+        current_location: profileData.current_location,
+        birth_place: profileData.birth_place,
+        birth_date: profileData.birth_date,
+        photo_url: profileData.photo_url,
+        civilite: profileData.civilite,
+        relationship_type: profileData.relationship_type,
+        situation: profileData.situation,
+        role: profileData.role,
+        is_admin: profileData.role === 'Administrateur'
+      };
+
+      console.log('👤 [signUp] Données du profil à insérer:', profileDataToInsert);
+
+      const { data: profileResult, error: profileError } = await supabase
+        .from('profiles')
+        .insert(profileDataToInsert as any)
+        .select()
+        .maybeSingle();
+
+      console.log('👤 [signUp] Réponse profil:', { profileResult, profileError });
+
+      if (profileError) {
+        console.error('❌ [signUp] Erreur profil:', profileError);
+        return { error: profileError };
+      }
+
+      console.log('✅ [signUp] Profil créé avec succès');
+      return { data: profileResult, error: null };
+
+    } catch (error) {
+      console.error('❌ [signUp] Erreur générale:', error);
+      return { error: { message: 'Erreur inattendue lors de l\'inscription' } };
+    }
+  };
+
+  const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('📸 [handlePhotoChange] Changement de photo');
+    const file = event.target.files?.[0];
+    if (file) {
+      console.log('📸 [handlePhotoChange] Fichier sélectionné:', file.name);
+      setPhotoFile(file);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setPhotoPreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const uploadPhoto = async (file: File): Promise<string | null> => {
+    console.log('📤 [uploadPhoto] Début upload photo:', file.name);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random()}.${fileExt}`;
+      const filePath = `avatars/${fileName}`;
+
+      console.log('📤 [uploadPhoto] Chemin du fichier:', filePath);
+
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, file);
+
+      if (uploadError) {
+        console.error('❌ [uploadPhoto] Erreur upload:', uploadError);
+        return null;
+      }
+
+      const { data } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(filePath);
+
+      console.log('✅ [uploadPhoto] Photo uploadée avec succès:', data.publicUrl);
+      return data.publicUrl;
+    } catch (error) {
+      console.error('❌ [uploadPhoto] Erreur générale:', error);
+      return null;
+    }
+  };
+
   const pasteDateFromClipboard = async () => {
+    console.log('📋 [pasteDateFromClipboard] Collage depuis presse-papier');
     try {
       const text = await navigator.clipboard.readText();
       const dateMatch = text.match(/\d{4}-\d{2}-\d{2}/);
@@ -168,13 +240,20 @@ export const FamilyRegisterForm = () => {
   };
 
   const onSubmit = async (data: FamilyRegisterFormData) => {
+    console.log('🚀 [onSubmit] Début soumission formulaire');
+    console.log('📝 [onSubmit] Données du formulaire:', data);
+
     setLoading(true);
 
     try {
       let photoUrl = null;
       if (photoFile) {
+        console.log('📸 [onSubmit] Upload de la photo...');
         photoUrl = await uploadPhoto(photoFile);
+        console.log('📸 [onSubmit] URL de la photo:', photoUrl);
       }
+
+      console.log('🔐 [onSubmit] Appel signUp...');
 
       const { error } = await signUp(data.email, data.password, {
         first_name: data.first_name,
@@ -188,10 +267,14 @@ export const FamilyRegisterForm = () => {
         civilite: data.civilite,
         relationship_type: data.relationship_type,
         situation: data.situation,
-        role: data.role
+        role: data.role,
+        is_admin: data.role === 'Administrateur'
       });
 
+      console.log('🔐 [onSubmit] Réponse signUp:', { error });
+
       if (error) {
+        console.error('❌ [onSubmit] Erreur signUp:', error);
         if (error.message.includes('already registered')) {
           toast({
             title: 'Email déjà enregistré',
@@ -208,6 +291,7 @@ export const FamilyRegisterForm = () => {
         return;
       }
 
+      console.log('✅ [onSubmit] Inscription réussie');
       toast({
         title: 'Inscription réussie',
         description: 'Votre demande a été envoyée. Un administrateur validera votre compte.',
@@ -215,26 +299,16 @@ export const FamilyRegisterForm = () => {
 
       navigate(ROUTES.HOME);
     } catch (error) {
+      console.error('❌ [onSubmit] Erreur générale:', error);
       toast({
         title: 'Erreur',
         description: 'Une erreur est survenue lors de l\'inscription',
         variant: 'destructive',
       });
     } finally {
+      console.log('🏁 [onSubmit] Fin soumission');
       setLoading(false);
     }
-  };
-
-  // Filtrer les types de relation selon la civilité
-  const getAvailableRelationshipTypes = () => {
-    const baseTypes = relationshipTypes.filter(type => {
-      if (watchedCivilite === 'M.') {
-        return !['fille', 'mere', 'grand-mere', 'petite-fille', 'tante', 'niece', 'cousine', 'epouse', 'belle-mere', 'belle-fille'].includes(type);
-      } else {
-        return !['fils', 'pere', 'grand-pere', 'petit-fils', 'oncle', 'neveu', 'cousin', 'epoux', 'beau-pere', 'beau-fils'].includes(type);
-      }
-    });
-    return baseTypes;
   };
 
   return (
@@ -250,23 +324,6 @@ export const FamilyRegisterForm = () => {
 
       <CardContent className="space-y-6">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          {/* Rôle */}
-          <div className="space-y-2">
-            <Label htmlFor="role">Rôle *</Label>
-            <Select
-              value={watchedRole}
-              onValueChange={handleRoleChange}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="membre">Membre</SelectItem>
-                <SelectItem value="administrateur">Administrateur</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
           {/* Photo de profil */}
           <div className="space-y-2">
             <Label>Photo de profil</Label>
@@ -305,6 +362,23 @@ export const FamilyRegisterForm = () => {
             </div>
           </div>
 
+          {/* Rôle */}
+          <div className="space-y-2">
+            <Label htmlFor="role">Rôle *</Label>
+            <Select
+              value={watchedRole}
+              onValueChange={(value) => handleRoleChange(value)}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Membre">Membre</SelectItem>
+                <SelectItem value="Administrateur">Administrateur</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           {/* Civilité */}
           <div className="space-y-2">
             <Label htmlFor="civilite">Civilité *</Label>
@@ -318,6 +392,25 @@ export const FamilyRegisterForm = () => {
               <SelectContent>
                 <SelectItem value="M.">Monsieur</SelectItem>
                 <SelectItem value="Mme">Madame</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Type de relation */}
+          <div className="space-y-2">
+            <Label htmlFor="relationship_type">Type de relation *</Label>
+            <Select
+              onValueChange={(value) => setValue('relationship_type', value as any)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Sélectionner votre relation" />
+              </SelectTrigger>
+              <SelectContent>
+                {relationshipTypeOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -389,29 +482,6 @@ export const FamilyRegisterForm = () => {
             </div>
           </div>
 
-          {/* Type de parenté */}
-          <div className="space-y-2">
-            <Label htmlFor="relationship_type">Type de parenté *</Label>
-            <Select
-              value={watchedRelationshipType}
-              onValueChange={(value) => setValue('relationship_type', value as any)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {getAvailableRelationshipTypes().map((type) => (
-                  <SelectItem key={type} value={type}>
-                    {type.charAt(0).toUpperCase() + type.slice(1)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {errors.relationship_type && (
-              <p className="text-sm text-red-600">{errors.relationship_type.message}</p>
-            )}
-          </div>
-
           {/* Date de naissance et lieu de naissance */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -443,7 +513,7 @@ export const FamilyRegisterForm = () => {
             </div>
           </div>
 
-          {/* Résidence actuelle et profession */}
+          {/* Résidence actuelle et situation professionnelle */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="current_location">Résidence actuelle</Label>
@@ -455,12 +525,12 @@ export const FamilyRegisterForm = () => {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="profession">Profession</Label>
+              <Label htmlFor="profession">Sit. professionnelle </Label>
               <Select
                 onValueChange={(value) => setValue('profession', value)}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Sélectionner une profession" />
+                  <SelectValue placeholder="Sélectionner une situation" />
                 </SelectTrigger>
                 <SelectContent>
                   {professionOptions.map((profession) => (
@@ -473,7 +543,7 @@ export const FamilyRegisterForm = () => {
             </div>
           </div>
 
-          {/* Téléphone et situation familiale */}
+          {/* Téléphone et situation matrimoniale */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="phone">Téléphone</Label>
@@ -485,7 +555,7 @@ export const FamilyRegisterForm = () => {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="situation">Situation familiale</Label>
+              <Label htmlFor="situation">Situation Matrimoniale </Label>
               <Select
                 onValueChange={(value) => setValue('situation', value)}
               >

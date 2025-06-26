@@ -1,4 +1,3 @@
-
 import { useState, useCallback, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { FamilyMember, NewFamilyMember } from '@/types/family';
@@ -104,7 +103,7 @@ export const useFamilyMembers = () => {
           }
         ])
         .select()
-        .single();
+        .maybeSingle();
 
       if (insertError) {
         throw insertError;
@@ -149,7 +148,7 @@ export const useFamilyMembers = () => {
         })
         .eq('id', id)
         .select()
-        .single();
+        .maybeSingle();
 
       if (updateError) {
         throw updateError;

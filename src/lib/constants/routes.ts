@@ -1,6 +1,6 @@
-
 export const ROUTES = {
   HOME: '/',
+  ABOUT: '/about',
   AUTH: {
     LOGIN: '/auth-family',
     REGISTER: '/auth-family',
@@ -20,6 +20,7 @@ export const ROUTES = {
     EVENTS: '/dashboard/events',
     REPORT: '/dashboard/report',
     CONTACT_ADMIN: '/dashboard/contact-admin',
+    SETTINGS: '/dashboard/settings',
   },
   PROFILE: '/profile',
 } as const;

@@ -1,14 +1,34 @@
-
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Users, Plus, Search, Filter, Mail, Phone, MapPin, Briefcase } from 'lucide-react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import { useFamilyMembers } from '@/hooks/useFamilyMembers';
+import { formatRelationshipType } from '@/lib/utils';
+import {
+  Users,
+  Plus,
+  Search,
+  Filter,
+  Mail,
+  Phone,
+  MapPin,
+  Briefcase,
+  UserPlus,
+  Edit,
+  Trash2,
+  Crown,
+  Shield,
+  Eye
+} from 'lucide-react';
 import { api } from '@/services/api';
 import { FamilyMember } from '@/types/family';
 import { UserAvatar } from '@/components/shared/UserAvatar';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { ROUTES } from '@/lib/constants/routes';
 
 const Members = () => {
   const { profile } = useAuth();
@@ -54,6 +74,7 @@ const Members = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      {/* En-tête avec thème famille */}
       <div className="mb-8">
         <div className="flex items-center justify-between">
           <div>
@@ -160,7 +181,7 @@ const Members = () => {
                     {member.first_name} {member.last_name}
                   </CardTitle>
                   <CardDescription className="text-whatsapp-600">
-                    {member.relationship_type}
+                    {formatRelationshipType(member.relationship_type)}
                   </CardDescription>
                 </div>
               </div>
@@ -179,16 +200,16 @@ const Members = () => {
                     <span>{member.phone}</span>
                   </div>
                 )}
-                {member.profession && (
-                  <div className="flex items-center space-x-2 text-sm text-gray-600">
-                    <Briefcase className="h-4 w-4 text-whatsapp-600" />
-                    <span>{member.profession}</span>
-                  </div>
-                )}
                 {member.current_location && (
                   <div className="flex items-center space-x-2 text-sm text-gray-600">
                     <MapPin className="h-4 w-4 text-whatsapp-600" />
                     <span>{member.current_location}</span>
+                  </div>
+                )}
+                {member.profession && (
+                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                    <Briefcase className="h-4 w-4 text-whatsapp-600" />
+                    <span>{member.profession}</span>
                   </div>
                 )}
               </div>
