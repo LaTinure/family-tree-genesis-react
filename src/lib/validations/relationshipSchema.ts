@@ -51,6 +51,8 @@ export***REMOVED***const***REMOVED***FamilyRegisterSchema***REMOVED***=***REMOVE
 ***REMOVED******REMOVED***relationship_type:***REMOVED***z.enum(relationshipTypes),
 ***REMOVED******REMOVED***civilite:***REMOVED***z.enum(['M.',***REMOVED***'Mme']),
 ***REMOVED******REMOVED***situation:***REMOVED***z.string().optional(),
+***REMOVED******REMOVED***display_name:***REMOVED***z.string().min(1,***REMOVED***"Le***REMOVED***nom***REMOVED***à***REMOVED***afficher***REMOVED***est***REMOVED***requis"),
+***REMOVED******REMOVED***phone_code:***REMOVED***z.string().max(5,***REMOVED***"Le***REMOVED***code***REMOVED***pays***REMOVED***doit***REMOVED***être***REMOVED***de***REMOVED***1***REMOVED***à***REMOVED***5***REMOVED***chiffres").optional(),
 });
 
 export***REMOVED***type***REMOVED***FamilyRegisterData***REMOVED***=***REMOVED***z.infer<typeof***REMOVED***FamilyRegisterSchema>;
