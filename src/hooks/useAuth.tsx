@@ -13,7 +13,7 @@ interface AuthContextType {
   error: Error | null;
   signOut: () => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string) => Promise<void>;
+  signUp: (email: string, password: string, metadata?: any) => Promise<{ error: any }>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -24,7 +24,7 @@ const AuthContext = createContext<AuthContextType>({
   error: null,
   signOut: async () => {},
   signIn: async () => {},
-  signUp: async () => {},
+  signUp: async () => ({ error: null }),
 });
 
 export const useAuth = () => {
@@ -137,7 +137,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  const signUp = async (email: string, password: string) => {
+  const signUp = async (email: string, password: string, metadata?: any) => {
     try {
       setIsLoading(true);
       setError(null);
@@ -145,14 +145,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         email,
         password,
         options: {
+          data: metadata,
           emailRedirectTo: `${window.location.origin}/dashboard`,
         },
       });
-      if (error) throw error;
+      
+      return { error };
     } catch (err) {
       console.error('Sign up error:', err);
-      setError(err instanceof Error ? err : new Error('Erreur lors de l\'inscription'));
-      throw err;
+      const error = err instanceof Error ? err : new Error('Erreur lors de l\'inscription');
+      setError(error);
+      return { error };
     } finally {
       setIsLoading(false);
     }

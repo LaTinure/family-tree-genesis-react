@@ -1,167 +1,140 @@
-import React from 'react';
-import { useState, useContext } from 'react';
+
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Loader2, LogIn, UserPlus, TreePine, Star } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
+import { LogIn, UserPlus, TreePine, ArrowLeft } from 'lucide-react';
 import { ROUTES } from '@/lib/constants/routes';
 import { FormHeader } from '@/components/shared/FormHeader';
-import FamilyLoginForm from '@/components/auth/FamilyLoginForm';
-import FamilyRegisterForm from '@/components/auth/FamilyRegisterForm';
+import { FamilyLoginForm } from '@/components/auth/FamilyLoginForm';
+import { FamilyRegisterForm } from '@/components/auth/FamilyRegisterForm';
 import { Layout } from '@/components/layout/Layout';
 
 const AuthFamily = () => {
   const navigate = useNavigate();
-  const { signIn, signUp } = useAuth();
-  const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('login');
-  const [loginLoading, setLoginLoading] = useState(false);
-  const [registerLoading, setRegisterLoading] = useState(false);
-
-  // Login form data
-  const [loginData, setLoginData] = useState({
-    email: '',
-    password: '',
-  });
-
-  // Register form data
-  const [registerData, setRegisterData] = useState({
-    email: '',
-    password: '',
-    confirmPassword: '',
-    first_name: '',
-    last_name: '',
-    phone: '',
-    relationship_type: 'fils' as const,
-    title: 'Fils' as const,
-  });
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoginLoading(true);
-
-    try {
-      await signIn(loginData.email, loginData.password);
-
-      navigate(ROUTES.DASHBOARD.ROOT);
-    } catch (error) {
-      toast({
-        title: 'Erreur',
-        description: 'Une erreur est survenue lors de la connexion',
-        variant: 'destructive',
-      });
-    } finally {
-      setLoginLoading(false);
-    }
-  };
 
   return (
     <Layout>
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-whatsapp-50 via-green-50 to-emerald-50 px-4 py-8">
-        <div className="w-full max-w-md pt-16">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 px-4 py-8">
+        <div className="w-full max-w-4xl mx-auto pt-8">
           {/* Header avec logo et titre */}
           <div className="text-center mb-8">
-            <div className="flex flex-col items-center justify-center space-y-3 mb-4">
-              <img src="/tree-favicon.svg" alt="Logo arbre" className="w-28 h-28 mb-2" />
-              <h1 className="text-3xl font-bold text-whatsapp-700">Créer un compte Famille</h1>
-              <p className="text-gray-600 mb-2">
-                Rejoignez votre famille connectée et accédez à l'arbre généalogique, aux membres et plus encore !
-              </p>
+            <div className="flex flex-col items-center justify-center space-y-4 mb-6">
+              <div className="relative">
+                <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl">
+                  <TreePine className="w-12 h-12 text-white" />
+                </div>
+                <div className="absolute -top-2 -right-2 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center">
+                  <span className="text-xs font-bold">👑</span>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  Famille Connect
+                </h1>
+                <p className="text-lg text-gray-600 max-w-2xl">
+                  Rejoignez votre famille connectée et explorez votre arbre généalogique
+                </p>
+              </div>
             </div>
           </div>
 
-          <Card className="w-full shadow-xl border-0 bg-white/80 backdrop-blur-sm">
-            <CardHeader className="text-center pb-4">
-              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-2 bg-whatsapp-50">
-                  <TabsTrigger
-                    value="login"
-                    className="data-[state=active]:bg-whatsapp-600 data-[state=active]:text-white"
-                  >
-                    <LogIn className="w-4 h-4 mr-2" />
-                    Connexion
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="register"
-                    className="data-[state=active]:bg-whatsapp-600 data-[state=active]:text-white"
-                  >
-                    <UserPlus className="w-4 h-4 mr-2" />
-                    Inscription
-                  </TabsTrigger>
-                </TabsList>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+            {/* Formulaires */}
+            <div className="order-2 lg:order-1">
+              <Card className="shadow-2xl border-0 bg-white/80 backdrop-blur-sm">
+                <CardHeader className="pb-4">
+                  <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                    <TabsList className="grid w-full grid-cols-2 bg-gray-100 p-1 rounded-xl">
+                      <TabsTrigger
+                        value="login"
+                        className="data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-lg py-3 font-medium transition-all"
+                      >
+                        <LogIn className="w-4 h-4 mr-2" />
+                        Connexion
+                      </TabsTrigger>
+                      <TabsTrigger
+                        value="register"
+                        className="data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-lg py-3 font-medium transition-all"
+                      >
+                        <UserPlus className="w-4 h-4 mr-2" />
+                        Inscription
+                      </TabsTrigger>
+                    </TabsList>
 
-                {/* Login Tab */}
-                <TabsContent value="login" className="mt-6">
-                  <CardDescription className="text-center mb-6">
-                    Connectez-vous à votre compte Famille Connect
-                  </CardDescription>
+                    {/* Login Tab */}
+                    <TabsContent value="login" className="mt-6">
+                      <FamilyLoginForm />
+                    </TabsContent>
 
-                  <form onSubmit={handleLogin} className="space-y-4">
-                    <div>
-                      <Label htmlFor="login-email" className="text-gray-700">Email</Label>
-                      <Input
-                        id="login-email"
-                        type="email"
-                        value={loginData.email}
-                        onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
-                        required
-                        disabled={loginLoading}
-                        className="border-gray-300 focus:border-whatsapp-500 focus:ring-whatsapp-500"
-                      />
+                    {/* Register Tab */}
+                    <TabsContent value="register" className="mt-6">
+                      <FamilyRegisterForm />
+                    </TabsContent>
+                  </Tabs>
+                </CardHeader>
+              </Card>
+            </div>
+
+            {/* Informations et avantages */}
+            <div className="order-1 lg:order-2 space-y-6">
+              <Card className="bg-gradient-to-br from-blue-600 to-purple-600 text-white shadow-xl">
+                <CardContent className="p-8">
+                  <h3 className="text-2xl font-bold mb-4">Pourquoi rejoindre ?</h3>
+                  <ul className="space-y-3">
+                    <li className="flex items-center gap-3">
+                      <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
+                      <span>Explorez votre arbre généalogique interactif</span>
+                    </li>
+                    <li className="flex items-center gap-3">
+                      <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
+                      <span>Connectez-vous avec tous les membres</span>
+                    </li>
+                    <li className="flex items-center gap-3">
+                      <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
+                      <span>Partagez photos et souvenirs familiaux</span>
+                    </li>
+                    <li className="flex items-center gap-3">
+                      <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
+                      <span>Organisez des événements familiaux</span>
+                    </li>
+                  </ul>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-white shadow-lg">
+                <CardContent className="p-6">
+                  <h4 className="font-semibold text-gray-800 mb-3">💡 Comment ça marche ?</h4>
+                  <div className="space-y-3 text-sm text-gray-600">
+                    <div className="flex gap-3">
+                      <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold">1</span>
+                      <span>Créez votre profil avec vos informations</span>
                     </div>
-
-                    <div>
-                      <Label htmlFor="login-password" className="text-gray-700">Mot de passe</Label>
-                      <Input
-                        id="login-password"
-                        type="password"
-                        value={loginData.password}
-                        onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
-                        required
-                        disabled={loginLoading}
-                        className="border-gray-300 focus:border-whatsapp-500 focus:ring-whatsapp-500"
-                      />
+                    <div className="flex gap-3">
+                      <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold">2</span>
+                      <span>Attendez la validation d'un administrateur</span>
                     </div>
-
-                    <Button
-                      type="submit"
-                      className="w-full bg-gradient-to-r from-whatsapp-500 to-whatsapp-600 hover:from-whatsapp-600 hover:to-whatsapp-700"
-                      disabled={loginLoading}
-                    >
-                      {loginLoading ? (
-                        <>
-                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                          Connexion...
-                        </>
-                      ) : (
-                        'Se connecter'
-                      )}
-                    </Button>
-                  </form>
-                </TabsContent>
-
-                {/* Register Tab */}
-                <TabsContent value="register" className="mt-6">
-                  <FamilyRegisterForm />
-                </TabsContent>
-              </Tabs>
-            </CardHeader>
-          </Card>
+                    <div className="flex gap-3">
+                      <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold">3</span>
+                      <span>Explorez votre arbre familial !</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
 
           {/* Footer avec lien vers l'accueil */}
-          <div className="text-center mt-6">
+          <div className="text-center mt-8">
             <Button
               variant="ghost"
               onClick={() => navigate(ROUTES.HOME)}
-              className="text-whatsapp-600 hover:text-whatsapp-700"
+              className="text-gray-600 hover:text-gray-800 font-medium shadow-sm hover:shadow-md transition-all"
             >
-              ← Retour à l'accueil
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Retour à l'accueil
             </Button>
           </div>
         </div>

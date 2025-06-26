@@ -5,7 +5,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Loader2, Eye, EyeOff } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Loader2, Eye, EyeOff, LogIn } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { ROUTES } from '@/lib/constants/routes';
 
@@ -39,60 +40,76 @@ export const FamilyLoginForm = () => {
   };
 
   return (
-    <div className="space-y-4">
-      <h3 className="text-lg font-semibold text-center mb-4">
-        Connexion à votre compte famille
-      </h3>
+    <Card className="w-full max-w-md mx-auto shadow-xl">
+      <CardHeader className="text-center pb-6">
+        <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          Connexion
+        </CardTitle>
+        <CardDescription className="text-gray-600">
+          Accédez à votre espace famille
+        </CardDescription>
+      </CardHeader>
       
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <Label htmlFor="email">Email</Label>
-          <Input
-            id="email"
-            type="email"
-            value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            required
-            disabled={loading}
-          />
-        </div>
-        
-        <div>
-          <Label htmlFor="password">Mot de passe</Label>
-          <div className="relative">
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
             <Input
-              id="password"
-              type={showPassword ? 'text' : 'password'}
-              value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              id="email"
+              type="email"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              placeholder="votre@email.com"
               required
               disabled={loading}
+              className="rounded-lg"
             />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-whatsapp-600"
-            >
-              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-            </button>
           </div>
-        </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="password">Mot de passe</Label>
+            <div className="relative">
+              <Input
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                value={formData.password}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                placeholder="Votre mot de passe"
+                required
+                disabled={loading}
+                className="rounded-lg pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+          </div>
 
-        <Button
-          type="submit"
-          className="w-full bg-gradient-to-r from-whatsapp-500 to-whatsapp-600 hover:from-whatsapp-600 hover:to-whatsapp-700"
-          disabled={loading}
-        >
-          {loading ? (
-            <>
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Connexion...
-            </>
-          ) : (
-            'Se connecter'
-          )}
-        </Button>
-      </form>
-    </div>
+          <Button
+            type="submit"
+            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Connexion...
+              </>
+            ) : (
+              <>
+                <LogIn className="w-4 h-4 mr-2" />
+                Se connecter
+              </>
+            )}
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
   );
 };
+
+export default FamilyLoginForm;

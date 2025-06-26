@@ -1,81 +1,244 @@
 
-import React from 'react';
-import { Crown, Users, TreePine } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { StatsCard } from '@/components/ui/stats-card';
+import { FamilyTree } from '@/components/family/FamilyTree';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { useFamilyMembers } from '@/hooks/useFamilyMembers';
+import { useAuth } from '@/hooks/useAuth';
+import { 
+  Users, 
+  Crown, 
+  TreePine, 
+  UserPlus, 
+  MessageSquare, 
+  Calendar,
+  Bell,
+  Activity,
+  TrendingUp,
+  Shield
+} from 'lucide-react';
+import { ROUTES } from '@/lib/constants/routes';
+import { FamilyStats } from '@/types/family';
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { members, isLoading } = useFamilyMembers();
+  const [stats, setStats] = useState<FamilyStats>({
+    totalMembers: 0,
+    totalGenerations: 0,
+    totalPatriarchs: 0,
+    totalAdmins: 0,
+    recentMembers: [],
+    pendingMembers: []
+  });
+
+  useEffect(() => {
+    if (members.length > 0) {
+      const patriarchs = members.filter(m => m.is_patriarch);
+      const admins = members.filter(m => m.is_admin);
+      const pending = members.filter(m => m.role === 'pending');
+      const recent = members
+        .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+        .slice(0, 5);
+      
+      // Calculer les générations (simplifié)
+      const generations = new Set(members.map(m => m.relationship_type)).size;
+
+      setStats({
+        totalMembers: members.length,
+        totalGenerations: generations,
+        totalPatriarchs: patriarchs.length,
+        totalAdmins: admins.length,
+        recentMembers: recent,
+        pendingMembers: pending
+      });
+    }
+  }, [members]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+        <LoadingSpinner size="lg" />
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center mb-4">
-            <TreePine className="w-12 h-12 text-green-600 mr-3" />
-            <h1 className="text-4xl font-bold patriarch-text-gradient">
-              Arbre Généalogique Familial
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">
+      <div className="max-w-7xl mx-auto space-y-8">
+        {/* En-tête */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">
+              Tableau de Bord Familial
             </h1>
+            <p className="text-lg text-gray-600">
+              Bienvenue dans votre espace famille connecté
+            </p>
           </div>
-          <p className="text-xl text-gray-600">
-            Bienvenue dans votre espace famille
-          </p>
-        </div>
-
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <div className="family-card p-6 rounded-xl text-center">
-            <Crown className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
-            <h3 className="text-lg font-semibold text-gray-800">Patriarche/Matriarche</h3>
-            <p className="text-2xl font-bold text-yellow-600">1</p>
-          </div>
-          
-          <div className="family-card p-6 rounded-xl text-center">
-            <Users className="w-8 h-8 text-blue-600 mx-auto mb-2" />
-            <h3 className="text-lg font-semibold text-gray-800">Membres</h3>
-            <p className="text-2xl font-bold text-blue-600">1</p>
-          </div>
-          
-          <div className="family-card p-6 rounded-xl text-center">
-            <TreePine className="w-8 h-8 text-green-600 mx-auto mb-2" />
-            <h3 className="text-lg font-semibold text-gray-800">Générations</h3>
-            <p className="text-2xl font-bold text-green-600">1</p>
+          <div className="flex gap-3">
+            <Button onClick={() => navigate(ROUTES.DASHBOARD.INVITE)} className="bg-primary hover:bg-primary/90">
+              <UserPlus className="w-4 h-4 mr-2" />
+              Inviter un membre
+            </Button>
+            {user && (
+              <Button variant="outline" onClick={() => navigate(ROUTES.PROFILE)}>
+                <Shield className="w-4 h-4 mr-2" />
+                Mon Profil
+              </Button>
+            )}
           </div>
         </div>
 
-        {/* Welcome Message */}
-        <div className="family-card p-8 rounded-xl text-center mb-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">
-            🎉 Félicitations !
-          </h2>
-          <p className="text-lg text-gray-600 mb-6">
-            Votre profil a été créé avec succès. Vous êtes maintenant la racine de l'arbre familial !
-          </p>
-          <div className="patriarch-badge inline-block">
-            <Crown className="w-4 h-4 inline mr-2" />
-            Racine de l'Arbre Familial
-          </div>
+        {/* Statistiques */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <StatsCard
+            title="Membres Total"
+            value={stats.totalMembers}
+            icon={Users}
+            trend={{ value: 12, label: "ce mois" }}
+          />
+          <StatsCard
+            title="Générations"
+            value={stats.totalGenerations}
+            icon={TreePine}
+            trend={{ value: 0, label: "stable" }}
+          />
+          <StatsCard
+            title="Patriarches"
+            value={stats.totalPatriarchs}
+            icon={Crown}
+          />
+          <StatsCard
+            title="Administrateurs"
+            value={stats.totalAdmins}
+            icon={Shield}
+          />
         </div>
 
-        {/* Actions */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button
-            onClick={() => navigate('/')}
-            className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-          >
-            <TreePine className="w-5 h-5 mr-2" />
-            Voir l'arbre familial
-          </Button>
-          
-          <Button
-            onClick={() => navigate('/')}
-            variant="outline"
-            className="border-2 border-blue-500 text-blue-600 hover:bg-blue-50 px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-          >
-            <Users className="w-5 h-5 mr-2" />
-            Inviter des membres
-          </Button>
+        {/* Contenu principal */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Arbre familial */}
+          <div className="lg:col-span-2">
+            <FamilyTree />
+          </div>
+
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Membres récents */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Activity className="w-5 h-5" />
+                  Membres Récents
+                </CardTitle>
+                <CardDescription>
+                  Les derniers membres ajoutés à la famille
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {stats.recentMembers.map((member) => (
+                  <div key={member.id} className="flex items-center gap-3 p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                      {member.photo_url ? (
+                        <img 
+                          src={member.photo_url} 
+                          alt={`${member.first_name} ${member.last_name}`}
+                          className="w-10 h-10 rounded-full object-cover"
+                        />
+                      ) : (
+                        <Users className="w-5 h-5 text-primary" />
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-medium text-sm">
+                        {member.first_name} {member.last_name}
+                      </p>
+                      <p className="text-xs text-gray-600">
+                        {member.relationship_type}
+                      </p>
+                    </div>
+                    {member.is_patriarch && (
+                      <Crown className="w-4 h-4 text-yellow-500" />
+                    )}
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            {/* En attente de validation */}
+            {stats.pendingMembers.length > 0 && (
+              <Card className="border-orange-200 bg-orange-50">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-orange-800">
+                    <Bell className="w-5 h-5" />
+                    En Attente de Validation
+                  </CardTitle>
+                  <CardDescription className="text-orange-700">
+                    {stats.pendingMembers.length} membre(s) en attente
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {stats.pendingMembers.slice(0, 3).map((member) => (
+                      <div key={member.id} className="flex items-center gap-2 text-sm">
+                        <div className="w-2 h-2 rounded-full bg-orange-400"></div>
+                        <span>{member.first_name} {member.last_name}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="mt-4 w-full border-orange-300 text-orange-800 hover:bg-orange-100"
+                    onClick={() => navigate(ROUTES.DASHBOARD.ADMIN)}
+                  >
+                    Gérer les validations
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Actions rapides */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5" />
+                  Actions Rapides
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start"
+                  onClick={() => navigate(ROUTES.DASHBOARD.MEMBERS)}
+                >
+                  <Users className="w-4 h-4 mr-2" />
+                  Voir tous les membres
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start"
+                  onClick={() => navigate(ROUTES.DASHBOARD.MESSAGES)}
+                >
+                  <MessageSquare className="w-4 h-4 mr-2" />
+                  Messages familiaux
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start"
+                  onClick={() => navigate(ROUTES.DASHBOARD.EVENTS)}
+                >
+                  <Calendar className="w-4 h-4 mr-2" />
+                  Événements à venir
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </div>
