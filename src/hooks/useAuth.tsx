@@ -1,4 +1,3 @@
-
 import***REMOVED***{***REMOVED***createContext,***REMOVED***useContext,***REMOVED***useEffect,***REMOVED***useState,***REMOVED***ReactNode***REMOVED***}***REMOVED***from***REMOVED***'react';
 import***REMOVED***{***REMOVED***User,***REMOVED***Session***REMOVED***}***REMOVED***from***REMOVED***'@supabase/supabase-js';
 import***REMOVED***{***REMOVED***supabase***REMOVED***}***REMOVED***from***REMOVED***'@/integrations/supabase/client';
@@ -9,6 +8,7 @@ interface***REMOVED***AuthContextType***REMOVED***{
 ***REMOVED******REMOVED***session:***REMOVED***Session***REMOVED***|***REMOVED***null;
 ***REMOVED******REMOVED***profile:***REMOVED***FamilyMember***REMOVED***|***REMOVED***null;
 ***REMOVED******REMOVED***loading:***REMOVED***boolean;
+***REMOVED******REMOVED***signIn:***REMOVED***(email:***REMOVED***string,***REMOVED***password:***REMOVED***string)***REMOVED***=>***REMOVED***Promise<void>;
 ***REMOVED******REMOVED***signOut:***REMOVED***()***REMOVED***=>***REMOVED***Promise<void>;
 }
 
@@ -67,7 +67,7 @@ export***REMOVED***const***REMOVED***AuthProvider***REMOVED***=***REMOVED***({**
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.from('profiles')
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.select('*')
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.eq('user_id',***REMOVED***userId)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.single();
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.maybeSingle();
 
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(error)***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***console.error('Error***REMOVED***fetching***REMOVED***profile:',***REMOVED***error);
@@ -91,12 +91,12 @@ export***REMOVED***const***REMOVED***AuthProvider***REMOVED***=***REMOVED***({**
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***mother_id:***REMOVED***data.mother_id,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***father_name:***REMOVED***data.father_name,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***mother_name:***REMOVED***data.mother_name,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***spouse_name:***REMOVED***data.spouse_name,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***spouse_name:***REMOVED***(data***REMOVED***as***REMOVED***any).spouse_name***REMOVED***||***REMOVED***'',
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_admin:***REMOVED***data.is_admin***REMOVED***||***REMOVED***false,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_patriarch:***REMOVED***data.is_patriarch***REMOVED***||***REMOVED***false,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_parent:***REMOVED***data.is_parent***REMOVED***||***REMOVED***false,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***situation:***REMOVED***data.situation,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***role:***REMOVED***(data.role***REMOVED***as***REMOVED***any)***REMOVED***||***REMOVED***'user',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***role:***REMOVED***(data***REMOVED***as***REMOVED***any).role***REMOVED***||***REMOVED***'user',
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at:***REMOVED***data.created_at,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***updated_at:***REMOVED***data.updated_at,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***});
@@ -105,6 +105,17 @@ export***REMOVED***const***REMOVED***AuthProvider***REMOVED***=***REMOVED***({**
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***console.error('Error***REMOVED***fetching***REMOVED***profile:',***REMOVED***error);
 ***REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***finally***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setLoading(false);
+***REMOVED******REMOVED******REMOVED******REMOVED***}
+***REMOVED******REMOVED***};
+
+***REMOVED******REMOVED***const***REMOVED***signIn***REMOVED***=***REMOVED***async***REMOVED***(email:***REMOVED***string,***REMOVED***password:***REMOVED***string)***REMOVED***=>***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***error***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase.auth.signInWithPassword({
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***email,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***password,
+***REMOVED******REMOVED******REMOVED******REMOVED***});
+
+***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(error)***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***throw***REMOVED***error;
 ***REMOVED******REMOVED******REMOVED******REMOVED***}
 ***REMOVED******REMOVED***};
 
@@ -120,6 +131,7 @@ export***REMOVED***const***REMOVED***AuthProvider***REMOVED***=***REMOVED***({**
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***session,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***profile,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***loading,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***signIn,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***signOut,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}}
 ***REMOVED******REMOVED******REMOVED******REMOVED***>

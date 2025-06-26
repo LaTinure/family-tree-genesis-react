@@ -1,11 +1,10 @@
-
 import***REMOVED***{***REMOVED***z***REMOVED***}***REMOVED***from***REMOVED***'zod';
 import***REMOVED***{***REMOVED***RelationshipType,***REMOVED***Civilite,***REMOVED***UserRole***REMOVED***}***REMOVED***from***REMOVED***'@/types/family';
 
 //***REMOVED***Schémas***REMOVED***de***REMOVED***validation***REMOVED***harmonisés
 export***REMOVED***const***REMOVED***relationshipTypes:***REMOVED***RelationshipType[]***REMOVED***=***REMOVED***[
 ***REMOVED******REMOVED***'patriarche',
-***REMOVED******REMOVED***'matriarche',***REMOVED***
+***REMOVED******REMOVED***'matriarche',
 ***REMOVED******REMOVED***'conjoint',
 ***REMOVED******REMOVED***'fils',
 ***REMOVED******REMOVED***'fille',
@@ -66,7 +65,8 @@ export***REMOVED***const***REMOVED***familyRegisterSchema***REMOVED***=***REMOVE
 ***REMOVED******REMOVED***birth_date:***REMOVED***z.string().optional(),
 ***REMOVED******REMOVED***photo_url:***REMOVED***z.string().optional(),
 ***REMOVED******REMOVED***relationship_type:***REMOVED***z.enum(relationshipTypes***REMOVED***as***REMOVED***[RelationshipType,***REMOVED***...RelationshipType[]]),
-***REMOVED******REMOVED***situation:***REMOVED***z.string().optional()
+***REMOVED******REMOVED***situation:***REMOVED***z.string().optional(),
+***REMOVED******REMOVED***role:***REMOVED***z.enum(['Membre',***REMOVED***'Administrateur']).default('Membre')
 });
 
 export***REMOVED***const***REMOVED***loginSchema***REMOVED***=***REMOVED***z.object({
