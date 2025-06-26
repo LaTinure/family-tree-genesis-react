@@ -22,6 +22,11 @@ import Admin from '@/pages/dashboard/Admin';
 import Messages from '@/pages/dashboard/Messages';
 import Notifications from '@/pages/dashboard/Notifications';
 import Invite from '@/pages/dashboard/Invite';
+import DashboardProfile from '@/pages/dashboard/Profile';
+import Chat from '@/pages/dashboard/Chat';
+import Events from '@/pages/dashboard/Events';
+import Report from '@/pages/dashboard/Report';
+import ContactAdmin from '@/pages/dashboard/ContactAdmin';
 
 // Configuration React Query
 const queryClient = new QueryClient({
@@ -123,6 +128,47 @@ function App() {
               <ProtectedRoute>
                 <Layout>
                   <Invite />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path={ROUTES.DASHBOARD.PROFILE} element={
+              <ProtectedRoute>
+                <Layout>
+                  <DashboardProfile />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            {/* Nouvelles routes pour les pages du dashboard */}
+            <Route path="/dashboard/chat" element={
+              <ProtectedRoute>
+                <Layout>
+                  <Chat />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/dashboard/events" element={
+              <ProtectedRoute>
+                <Layout>
+                  <Events />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/dashboard/report" element={
+              <ProtectedRoute>
+                <Layout>
+                  <Report />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/dashboard/contact-admin" element={
+              <ProtectedRoute>
+                <Layout>
+                  <ContactAdmin />
                 </Layout>
               </ProtectedRoute>
             } />

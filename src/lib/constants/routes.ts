@@ -1,3 +1,4 @@
+
 export const ROUTES = {
   HOME: '/',
   AUTH: {
@@ -15,6 +16,10 @@ export const ROUTES = {
     INVITE: '/dashboard/invite',
     MESSAGES: '/dashboard/messages',
     NOTIFICATIONS: '/dashboard/notifications',
+    CHAT: '/dashboard/chat',
+    EVENTS: '/dashboard/events',
+    REPORT: '/dashboard/report',
+    CONTACT_ADMIN: '/dashboard/contact-admin',
   },
   PROFILE: '/profile',
 } as const;
