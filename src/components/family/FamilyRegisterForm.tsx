@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -9,12 +8,40 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import { Loader2, Eye, EyeOff, Upload, Camera } from 'lucide-react';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Loader2, Eye, EyeOff, Upload, Camera, Clipboard, ClipboardCheck } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { ROUTES } from '@/lib/constants/routes';
 import { familyRegisterSchema, FamilyRegisterFormData, relationshipTypes } from '@/lib/validations/familySchema';
 import { supabase } from '@/integrations/supabase/client';
+
+// Options pour les listes de sélection
+const professionOptions = [
+  'Agriculteur',
+  'Architecte',
+  'Avocat',
+  'Comptable',
+  'Dentiste',
+  'Électricien',
+  'Enseignant',
+  'Ingénieur',
+  'Médecin',
+  'Plombier',
+  'Policier',
+  'Pompier',
+  'Vendeur',
+  'Autre'
+];
+
+const situationOptions = [
+  'Célibataire',
+  'Marié(e)',
+  'Divorcé(e)',
+  'Veuf/Veuve',
+  'En couple',
+  'Séparé(e)'
+];
 
 export const FamilyRegisterForm = () => {
   const navigate = useNavigate();
@@ -24,6 +51,10 @@ export const FamilyRegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [showRoleModal, setShowRoleModal] = useState(false);
+  const [adminCode, setAdminCode] = useState('');
+  const [isAdminCodeValid, setIsAdminCodeValid] = useState(false);
+  const [copiedDate, setCopiedDate] = useState(false);
 
   const {
     register,
@@ -35,12 +66,14 @@ export const FamilyRegisterForm = () => {
     resolver: zodResolver(familyRegisterSchema),
     defaultValues: {
       civilite: 'M.',
-      relationship_type: 'fils'
+      relationship_type: 'fils',
+      role: 'membre'
     }
   });
 
   const watchedCivilite = watch('civilite');
   const watchedRelationshipType = watch('relationship_type');
+  const watchedRole = watch('role');
 
   const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -80,6 +113,60 @@ export const FamilyRegisterForm = () => {
     }
   };
 
+  const handleRoleChange = (value: string) => {
+    if (value === 'administrateur') {
+      setShowRoleModal(true);
+    } else {
+      setValue('role', value);
+    }
+  };
+
+  const validateAdminCode = () => {
+    if (adminCode === '1432') {
+      setIsAdminCodeValid(true);
+      setValue('role', 'administrateur');
+      setShowRoleModal(false);
+      toast({
+        title: 'Code validé',
+        description: 'Rôle administrateur activé',
+      });
+    } else {
+      toast({
+        title: 'Code incorrect',
+        description: 'Le code administrateur est incorrect',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const pasteDateFromClipboard = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      const dateMatch = text.match(/\d{4}-\d{2}-\d{2}/);
+      if (dateMatch) {
+        setValue('birth_date', dateMatch[0]);
+        setCopiedDate(true);
+        setTimeout(() => setCopiedDate(false), 2000);
+        toast({
+          title: 'Date collée',
+          description: 'La date a été collée depuis le presse-papier',
+        });
+      } else {
+        toast({
+          title: 'Format invalide',
+          description: 'Aucune date valide trouvée dans le presse-papier',
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      toast({
+        title: 'Erreur',
+        description: 'Impossible d\'accéder au presse-papier',
+        variant: 'destructive',
+      });
+    }
+  };
+
   const onSubmit = async (data: FamilyRegisterFormData) => {
     setLoading(true);
 
@@ -101,15 +188,23 @@ export const FamilyRegisterForm = () => {
         civilite: data.civilite,
         relationship_type: data.relationship_type,
         situation: data.situation,
-        role: 'pending' // Tous les nouveaux membres sont en attente
+        role: data.role
       });
 
       if (error) {
-        toast({
-          title: 'Erreur d\'inscription',
-          description: error.message,
-          variant: 'destructive',
-        });
+        if (error.message.includes('already registered')) {
+          toast({
+            title: 'Email déjà enregistré',
+            description: 'Cette adresse email est déjà utilisée. Veuillez vous connecter ou utiliser une autre adresse.',
+            variant: 'destructive',
+          });
+        } else {
+          toast({
+            title: 'Erreur d\'inscription',
+            description: error.message,
+            variant: 'destructive',
+          });
+        }
         return;
       }
 
@@ -152,9 +247,26 @@ export const FamilyRegisterForm = () => {
           Créez votre profil pour rejoindre l'arbre familial
         </CardDescription>
       </CardHeader>
-      
+
       <CardContent className="space-y-6">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          {/* Rôle */}
+          <div className="space-y-2">
+            <Label htmlFor="role">Rôle *</Label>
+            <Select
+              value={watchedRole}
+              onValueChange={handleRoleChange}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="membre">Membre</SelectItem>
+                <SelectItem value="administrateur">Administrateur</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           {/* Photo de profil */}
           <div className="space-y-2">
             <Label>Photo de profil</Label>
@@ -162,9 +274,9 @@ export const FamilyRegisterForm = () => {
               <div className="relative">
                 <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
                   {photoPreview ? (
-                    <img 
-                      src={photoPreview} 
-                      alt="Aperçu" 
+                    <img
+                      src={photoPreview}
+                      alt="Aperçu"
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -277,9 +389,9 @@ export const FamilyRegisterForm = () => {
             </div>
           </div>
 
-          {/* Relation familiale */}
+          {/* Type de parenté */}
           <div className="space-y-2">
-            <Label htmlFor="relationship_type">Relation familiale *</Label>
+            <Label htmlFor="relationship_type">Type de parenté *</Label>
             <Select
               value={watchedRelationshipType}
               onValueChange={(value) => setValue('relationship_type', value as any)}
@@ -300,7 +412,68 @@ export const FamilyRegisterForm = () => {
             )}
           </div>
 
-          {/* Informations supplémentaires */}
+          {/* Date de naissance et lieu de naissance */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="birth_date">Date de naissance</Label>
+              <div className="relative">
+                <Input
+                  id="birth_date"
+                  type="date"
+                  {...register('birth_date')}
+                  className="rounded-lg pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={pasteDateFromClipboard}
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  {copiedDate ? <ClipboardCheck className="w-4 h-4" /> : <Clipboard className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="birth_place">Lieu de naissance</Label>
+              <Input
+                id="birth_place"
+                {...register('birth_place')}
+                placeholder="Ville, Pays"
+                className="rounded-lg"
+              />
+            </div>
+          </div>
+
+          {/* Résidence actuelle et profession */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="current_location">Résidence actuelle</Label>
+              <Input
+                id="current_location"
+                {...register('current_location')}
+                placeholder="Ville actuelle"
+                className="rounded-lg"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="profession">Profession</Label>
+              <Select
+                onValueChange={(value) => setValue('profession', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Sélectionner une profession" />
+                </SelectTrigger>
+                <SelectContent>
+                  {professionOptions.map((profession) => (
+                    <SelectItem key={profession} value={profession}>
+                      {profession}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {/* Téléphone et situation familiale */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="phone">Téléphone</Label>
@@ -312,56 +485,22 @@ export const FamilyRegisterForm = () => {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="birth_date">Date de naissance</Label>
-              <Input
-                id="birth_date"
-                type="date"
-                {...register('birth_date')}
-                className="rounded-lg"
-              />
+              <Label htmlFor="situation">Situation familiale</Label>
+              <Select
+                onValueChange={(value) => setValue('situation', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Sélectionner une situation" />
+                </SelectTrigger>
+                <SelectContent>
+                  {situationOptions.map((situation) => (
+                    <SelectItem key={situation} value={situation}>
+                      {situation}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="birth_place">Lieu de naissance</Label>
-              <Input
-                id="birth_place"
-                {...register('birth_place')}
-                placeholder="Ville, Pays"
-                className="rounded-lg"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="current_location">Lieu actuel</Label>
-              <Input
-                id="current_location"
-                {...register('current_location')}
-                placeholder="Ville actuelle"
-                className="rounded-lg"
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="profession">Profession</Label>
-            <Input
-              id="profession"
-              {...register('profession')}
-              placeholder="Votre métier"
-              className="rounded-lg"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="situation">Situation familiale</Label>
-            <Textarea
-              id="situation"
-              {...register('situation')}
-              placeholder="Marié(e), célibataire, divorcé(e)..."
-              className="rounded-lg"
-              rows={2}
-            />
           </div>
 
           <Button
@@ -386,6 +525,35 @@ export const FamilyRegisterForm = () => {
           </p>
         </div>
       </CardContent>
+
+      {/* Modal pour le code administrateur */}
+      <Dialog open={showRoleModal} onOpenChange={setShowRoleModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Code Administrateur</DialogTitle>
+            <DialogDescription>
+              Veuillez saisir le code administrateur pour confirmer votre rôle.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <Input
+              type="password"
+              placeholder="Code administrateur"
+              value={adminCode}
+              onChange={(e) => setAdminCode(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && validateAdminCode()}
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowRoleModal(false)}>
+              Annuler
+            </Button>
+            <Button onClick={validateAdminCode}>
+              Valider
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 };
