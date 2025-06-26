@@ -217,6 +217,11 @@ export const FamilyRegisterForm = () => {
         : (data.relationship_type || 'fils');
 
       // Mapping des valeurs sans accents vers les valeurs attendues par le type (avec accents si besoin)
+      const validRelationshipTypes = [
+        'père', 'mère', 'grand-père', 'nièce', 'neveu', 'époux', 'épouse', 'grande-mère',
+        'petit-fils', 'petite-fille', 'oncle', 'tante', 'cousin', 'cousine',
+        'patriarche', 'matriarche', 'fils', 'fille', 'conjoint'
+      ];
       const accentMap: Record<string, string> = {
         frere: 'frère',
         soeur: 'sœur',
@@ -244,17 +249,12 @@ export const FamilyRegisterForm = () => {
         matriarche: 'matriarche',
         fils: 'fils',
         fille: 'fille',
-        'beau-pere': 'conjoint', // non utilisé dans le type cible, on mappe sur 'conjoint' (ou à ignorer)
-        beau_pere: 'conjoint',
-        'belle-mere': 'conjoint',
-        belle_mere: 'conjoint',
-        'beau-fils': 'conjoint',
-        beau_fils: 'conjoint',
-        'belle-fille': 'conjoint',
-        belle_fille: 'conjoint',
         conjoint: 'conjoint',
       };
-      const relationshipTypeForProfile = accentMap[relationshipType] || relationshipType;
+      let relationshipTypeForProfile = accentMap[relationshipType] || relationshipType;
+      if (!validRelationshipTypes.includes(relationshipTypeForProfile)) {
+        relationshipTypeForProfile = 'conjoint';
+      }
 
       const profileData: ProfileData = {
         id: authData.user.id,
@@ -322,6 +322,24 @@ export const FamilyRegisterForm = () => {
       </h3>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        {/* Sélection du rôle Membre/Administrateur */}
+        <div>
+          <Label htmlFor="role">Rôle</Label>
+          <Select
+            value={role}
+            onValueChange={handleRoleChange}
+            disabled={isLoading}
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="user">Membre</SelectItem>
+              <SelectItem value="admin">Administrateur</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
         {/* Avatar Upload */}
         <div className="flex flex-col items-center space-y-4">
           <div className="relative">
