@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -18,6 +17,7 @@ import { getRelationshipTypeOptions } from '@/lib/constants/relationshipTypeOpti
 import type { Title } from '@/types/family';
 import { supabase } from '@/integrations/supabase/client';
 import { passwordValidation } from '@/lib/validations/passwordValidation';
+import { SearchWithAutocomplete } from '@/components/shared/SearchWithAutocomplete';
 
 // Fonction utilitaire pour calculer la force du mot de passe
 function getPasswordStrength(password: string) {
@@ -55,6 +55,8 @@ export const FamilyRegisterForm = () => {
   const [isFirstUser, setIsFirstUser] = useState(false);
   const [roleError, setRoleError] = useState('');
   const [isAdminDialogOpen, setIsAdminDialogOpen] = useState(false);
+  const [parentRelation, setParentRelation] = useState<ProfileData | null>(null);
+  const [parentRelationError, setParentRelationError] = useState('');
 
   const {
     register,
@@ -72,12 +74,12 @@ export const FamilyRegisterForm = () => {
       password: '',
       phone_code: '+225',
       phone: '',
-      profession: '',
-      current_location: '',
-      birth_place: '',
+      profession: 'CADRE/RETRAITE',
+      current_location: 'Cocody/Rivier 3',
+      birth_place: 'SIKENSI',
       avatar_url: '',
       relationship_type: 'fils',
-      birth_date: '',
+      birth_date: '1952-10-01',
       display_name: '',
       situation: '',
     }
@@ -88,6 +90,7 @@ export const FamilyRegisterForm = () => {
   const passwordValue = watch('password');
   const passwordScore = getPasswordStrength(passwordValue || '');
   const { label: strengthLabel, color: strengthColor } = getStrengthLabel(passwordScore);
+  const watchedRelationshipType = watch('relationship_type');
 
   useEffect(() => {
     const checkProfilesExists = async () => {
@@ -138,7 +141,7 @@ export const FamilyRegisterForm = () => {
         });
         return;
       }
-      
+
       setProfilePhoto(URL.createObjectURL(file));
       setTempPhoto(URL.createObjectURL(file));
     }
@@ -200,7 +203,7 @@ export const FamilyRegisterForm = () => {
       let avatarUrl = '';
       if (data.avatar_url && data.avatar_url.startsWith('data:')) {
         try {
-          avatarUrl = await api.profiles.uploadAvatar(authData.user.id, 
+          avatarUrl = await api.profiles.uploadAvatar(authData.user.id,
             await (await fetch(data.avatar_url)).blob() as File);
         } catch (uploadError) {
           console.warn('Erreur upload avatar, continuons sans:', uploadError);
@@ -209,9 +212,49 @@ export const FamilyRegisterForm = () => {
 
       // 3. Créer le profil complet
       const isPatriarch = isFirstUser;
-      const relationshipType = isFirstUser 
-        ? (data.civilite === 'M.' ? 'patriarche' : 'matriarche') 
+      const relationshipType = isFirstUser
+        ? (data.civilite === 'M.' ? 'patriarche' : 'matriarche')
         : (data.relationship_type || 'fils');
+
+      // Mapping des valeurs sans accents vers les valeurs attendues par le type (avec accents si besoin)
+      const accentMap: Record<string, string> = {
+        frere: 'frère',
+        soeur: 'sœur',
+        pere: 'père',
+        mere: 'mère',
+        'grand-pere': 'grand-père',
+        'grand-mere': 'grand-mère',
+        grand_pere: 'grand-père',
+        grand_mere: 'grand-mère',
+        niece: 'nièce',
+        neveu: 'neveu',
+        epoux: 'époux',
+        epouse: 'épouse',
+        'grande-mere': 'grande-mère',
+        grande_mere: 'grande-mère',
+        'petit-fils': 'petit-fils',
+        petit_fils: 'petit-fils',
+        'petite-fille': 'petite-fille',
+        petite_fille: 'petite-fille',
+        oncle: 'oncle',
+        tante: 'tante',
+        cousin: 'cousin',
+        cousine: 'cousine',
+        patriarche: 'patriarche',
+        matriarche: 'matriarche',
+        fils: 'fils',
+        fille: 'fille',
+        'beau-pere': 'conjoint', // non utilisé dans le type cible, on mappe sur 'conjoint' (ou à ignorer)
+        beau_pere: 'conjoint',
+        'belle-mere': 'conjoint',
+        belle_mere: 'conjoint',
+        'beau-fils': 'conjoint',
+        beau_fils: 'conjoint',
+        'belle-fille': 'conjoint',
+        belle_fille: 'conjoint',
+        conjoint: 'conjoint',
+      };
+      const relationshipTypeForProfile = accentMap[relationshipType] || relationshipType;
 
       const profileData: ProfileData = {
         id: authData.user.id,
@@ -225,13 +268,13 @@ export const FamilyRegisterForm = () => {
         birth_place: data.birth_place || '',
         avatar_url: avatarUrl || data.avatar_url || '',
         photo_url: avatarUrl || data.avatar_url || '',
-        relationship_type: relationshipType as RelationshipType,
+        relationship_type: relationshipTypeForProfile as RelationshipType,
         father_name: '',
         mother_name: '',
         is_admin: isAdmin,
         birth_date: data.birth_date || null,
-        title: isFirstUser 
-          ? (data.civilite === 'M.' ? 'Patriarche' : 'Matriarche') 
+        title: isFirstUser
+          ? (data.civilite === 'M.' ? 'Patriarche' : 'Matriarche')
           : (data.civilite === 'M.' ? 'Fils' : 'Fille'),
         situation: data.situation || '',
         is_patriarch: isPatriarch,
@@ -277,7 +320,7 @@ export const FamilyRegisterForm = () => {
       <h3 className="text-lg font-semibold text-center mb-4">
         Créer votre compte famille
       </h3>
-      
+
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/* Avatar Upload */}
         <div className="flex flex-col items-center space-y-4">
@@ -303,7 +346,7 @@ export const FamilyRegisterForm = () => {
               </div>
             )}
           </div>
-          
+
           <div>
             <Label htmlFor="avatar" className="cursor-pointer bg-whatsapp-50 hover:bg-whatsapp-100 text-whatsapp-700 px-4 py-2 rounded-lg transition-colors">
               {profilePhoto ? 'Changer la photo' : 'Ajouter une photo'}
@@ -318,40 +361,94 @@ export const FamilyRegisterForm = () => {
           </div>
         </div>
 
-        {/* Informations personnelles */}
-        <div className="grid grid-cols-2 gap-4">
+        {/* Civilité, Prénom, Nom */}
+        <div className="space-y-4">
           <div>
-            <Label htmlFor="first_name">Prénom *</Label>
-            <Input
-              id="first_name"
-              {...register('first_name')}
+            <Label htmlFor="civilite">Civilité *</Label>
+            <Select
+              value={watch('civilite')}
+              onValueChange={(value: 'M.' | 'Mme') => setValue('civilite', value)}
               disabled={isLoading}
-            />
-            {errors.first_name && (
-              <p className="text-sm text-red-600 mt-1">{errors.first_name.message}</p>
-            )}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="M.">Monsieur</SelectItem>
+                <SelectItem value="Mme">Madame</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-          <div>
-            <Label htmlFor="last_name">Nom *</Label>
-            <Input
-              id="last_name"
-              {...register('last_name')}
-              disabled={isLoading}
-            />
-            {errors.last_name && (
-              <p className="text-sm text-red-600 mt-1">{errors.last_name.message}</p>
-            )}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="last_name">Nom *</Label>
+              <Input id="last_name" {...register('last_name')} disabled={isLoading} />
+              {errors.last_name && (
+                <p className="text-sm text-red-600 mt-1">{errors.last_name.message}</p>
+              )}
+            </div>
+            <div>
+              <Label htmlFor="first_name">Prénom *</Label>
+              <Input id="first_name" {...register('first_name')} disabled={isLoading} />
+              {errors.first_name && (
+                <p className="text-sm text-red-600 mt-1">{errors.first_name.message}</p>
+              )}
+            </div>
           </div>
         </div>
 
+        {/* Date/Lieu de naissance, Résidence/Profession */}
+        <div className="grid grid-cols-2 gap-4">
+          <div className="flex flex-col">
+            <Label htmlFor="birth_date">Date de naissance</Label>
+            <div className="relative flex items-center">
+              <Input
+                id="birth_date"
+                type="date"
+                {...register('birth_date')}
+                disabled={isLoading}
+              />
+              <button
+                type="button"
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-whatsapp-600"
+                onClick={async () => {
+                  try {
+                    const text = await navigator.clipboard.readText();
+                    // On tente de parser la date (format DD/MM/YYYY ou YYYY-MM-DD)
+                    let value = text;
+                    if (/^\d{2}\/\d{2}\/\d{4}$/.test(text)) {
+                      const [d, m, y] = text.split('/');
+                      value = `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
+                    }
+                    setValue('birth_date', value);
+                  } catch {
+                    // ignore
+                  }
+                }}
+                title="Coller la date du presse-papier"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 4V2a2 2 0 012-2h4a2 2 0 012 2v2m4 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2m2 0h4" /></svg>
+              </button>
+            </div>
+          </div>
+          <div>
+            <Label htmlFor="birth_place">Lieu de naissance</Label>
+            <Input id="birth_place" {...register('birth_place')} disabled={isLoading} />
+          </div>
+          <div>
+            <Label htmlFor="current_location">Résidence actuelle</Label>
+            <Input id="current_location" {...register('current_location')} disabled={isLoading} />
+          </div>
+          <div>
+            <Label htmlFor="profession">Profession</Label>
+            <Input id="profession" {...register('profession')} disabled={isLoading} />
+          </div>
+        </div>
+
+        {/* Email, Mot de passe, Téléphone, Type de parenté */}
         <div>
           <Label htmlFor="email">Email *</Label>
-          <Input
-            id="email"
-            type="email"
-            {...register('email')}
-            disabled={isLoading}
-          />
+          <Input id="email" type="email" {...register('email')} disabled={isLoading} />
           {errors.email && (
             <p className="text-sm text-red-600 mt-1">{errors.email.message}</p>
           )}
@@ -392,98 +489,58 @@ export const FamilyRegisterForm = () => {
           )}
         </div>
 
-        <div>
-          <Label htmlFor="phone">Téléphone</Label>
-          <Input
-            id="phone"
-            type="tel"
-            {...register('phone')}
-            disabled={isLoading}
-          />
-        </div>
-
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="civilite">Civilité *</Label>
-            <Select
-              value={watch('civilite')}
-              onValueChange={(value: 'M.' | 'Mme') => setValue('civilite', value)}
-              disabled={isLoading}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="M.">Monsieur</SelectItem>
-                <SelectItem value="Mme">Madame</SelectItem>
-              </SelectContent>
-            </Select>
+            <Label htmlFor="phone_code">Indicatif</Label>
+            <Input id="phone_code" {...register('phone_code')} disabled={isLoading} />
           </div>
           <div>
-            <Label htmlFor="relationship_type">Rôle dans la famille *</Label>
-            <Select
-              value={watch('relationship_type')}
-              onValueChange={(value) => setValue('relationship_type', value as RelationshipType)}
-              disabled={isLoading}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {relationshipOptions.map(option => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Label htmlFor="phone">Téléphone</Label>
+            <Input id="phone" type="tel" {...register('phone')} disabled={isLoading} />
           </div>
         </div>
 
+        {/* Type de parenté */}
         <div>
-          <Label htmlFor="birth_date">Date de naissance</Label>
-          <Input
-            id="birth_date"
-            type="date"
-            {...register('birth_date')}
+          <Label htmlFor="relationship_type">Type de parenté *</Label>
+          <Select
+            value={watch('relationship_type')}
+            onValueChange={(value) => setValue('relationship_type', value as RelationshipType)}
             disabled={isLoading}
-          />
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {relationshipOptions.map(option => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
-        <div>
-          <Label htmlFor="birth_place">Lieu de naissance</Label>
-          <Input
-            id="birth_place"
-            {...register('birth_place')}
-            disabled={isLoading}
-          />
-        </div>
-
-        <div>
-          <Label htmlFor="current_location">Résidence actuelle</Label>
-          <Input
-            id="current_location"
-            {...register('current_location')}
-            disabled={isLoading}
-          />
-        </div>
-
-        <div>
-          <Label htmlFor="profession">Profession</Label>
-          <Input
-            id="profession"
-            {...register('profession')}
-            disabled={isLoading}
-          />
-        </div>
+        {/* Parenté avec (autocomplétion) */}
+        {watchedRelationshipType !== 'patriarche' && watchedRelationshipType !== 'matriarche' && (
+          <div>
+            <Label>Parenté avec :</Label>
+            <SearchWithAutocomplete
+              onSelect={(member) => {
+                setParentRelation(member);
+                setParentRelationError('');
+              }}
+              placeholder="Rechercher un membre..."
+            />
+            {parentRelationError && (
+              <p className="text-sm text-red-600 mt-1">{parentRelationError}</p>
+            )}
+          </div>
+        )}
 
         <div>
           <Label htmlFor="display_name">Nom à afficher *</Label>
-          <Input
-            id="display_name"
-            {...register('display_name')}
-            disabled={isLoading}
-          />
+          <Input id="display_name" {...register('display_name')} disabled={isLoading} />
           {errors.display_name && (
             <p className="text-sm text-red-600 mt-1">{errors.display_name.message}</p>
           )}
