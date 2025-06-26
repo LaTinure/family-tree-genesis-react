@@ -13,7 +13,7 @@ interface***REMOVED***AuthContextType***REMOVED***{
 ***REMOVED******REMOVED***error:***REMOVED***Error***REMOVED***|***REMOVED***null;
 ***REMOVED******REMOVED***signOut:***REMOVED***()***REMOVED***=>***REMOVED***Promise<void>;
 ***REMOVED******REMOVED***signIn:***REMOVED***(email:***REMOVED***string,***REMOVED***password:***REMOVED***string)***REMOVED***=>***REMOVED***Promise<void>;
-***REMOVED******REMOVED***signUp:***REMOVED***(email:***REMOVED***string,***REMOVED***password:***REMOVED***string)***REMOVED***=>***REMOVED***Promise<void>;
+***REMOVED******REMOVED***signUp:***REMOVED***(email:***REMOVED***string,***REMOVED***password:***REMOVED***string,***REMOVED***metadata?:***REMOVED***any)***REMOVED***=>***REMOVED***Promise<{***REMOVED***error:***REMOVED***any***REMOVED***}>;
 }
 
 const***REMOVED***AuthContext***REMOVED***=***REMOVED***createContext<AuthContextType>({
@@ -24,7 +24,7 @@ const***REMOVED***AuthContext***REMOVED***=***REMOVED***createContext<AuthContex
 ***REMOVED******REMOVED***error:***REMOVED***null,
 ***REMOVED******REMOVED***signOut:***REMOVED***async***REMOVED***()***REMOVED***=>***REMOVED***{},
 ***REMOVED******REMOVED***signIn:***REMOVED***async***REMOVED***()***REMOVED***=>***REMOVED***{},
-***REMOVED******REMOVED***signUp:***REMOVED***async***REMOVED***()***REMOVED***=>***REMOVED***{},
+***REMOVED******REMOVED***signUp:***REMOVED***async***REMOVED***()***REMOVED***=>***REMOVED***({***REMOVED***error:***REMOVED***null***REMOVED***}),
 });
 
 export***REMOVED***const***REMOVED***useAuth***REMOVED***=***REMOVED***()***REMOVED***=>***REMOVED***{
@@ -137,7 +137,7 @@ export***REMOVED***const***REMOVED***AuthProvider***REMOVED***=***REMOVED***({**
 ***REMOVED******REMOVED******REMOVED******REMOVED***}
 ***REMOVED******REMOVED***};
 
-***REMOVED******REMOVED***const***REMOVED***signUp***REMOVED***=***REMOVED***async***REMOVED***(email:***REMOVED***string,***REMOVED***password:***REMOVED***string)***REMOVED***=>***REMOVED***{
+***REMOVED******REMOVED***const***REMOVED***signUp***REMOVED***=***REMOVED***async***REMOVED***(email:***REMOVED***string,***REMOVED***password:***REMOVED***string,***REMOVED***metadata?:***REMOVED***any)***REMOVED***=>***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED***try***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setIsLoading(true);
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setError(null);
@@ -145,14 +145,17 @@ export***REMOVED***const***REMOVED***AuthProvider***REMOVED***=***REMOVED***({**
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***email,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***password,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***options:***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data:***REMOVED***metadata,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***emailRedirectTo:***REMOVED***`${window.location.origin}/dashboard`,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***});
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(error)***REMOVED***throw***REMOVED***error;
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***{***REMOVED***error***REMOVED***};
 ***REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***catch***REMOVED***(err)***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***console.error('Sign***REMOVED***up***REMOVED***error:',***REMOVED***err);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setError(err***REMOVED***instanceof***REMOVED***Error***REMOVED***?***REMOVED***err***REMOVED***:***REMOVED***new***REMOVED***Error('Erreur***REMOVED***lors***REMOVED***de***REMOVED***l\'inscription'));
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***throw***REMOVED***err;
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***error***REMOVED***=***REMOVED***err***REMOVED***instanceof***REMOVED***Error***REMOVED***?***REMOVED***err***REMOVED***:***REMOVED***new***REMOVED***Error('Erreur***REMOVED***lors***REMOVED***de***REMOVED***l\'inscription');
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setError(error);
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***{***REMOVED***error***REMOVED***};
 ***REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***finally***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setIsLoading(false);
 ***REMOVED******REMOVED******REMOVED******REMOVED***}
