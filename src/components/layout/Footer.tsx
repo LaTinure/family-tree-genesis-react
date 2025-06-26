@@ -4,19 +4,19 @@ import { TreePine, Heart, Mail, Phone, MapPin } from 'lucide-react';
 
 export const Footer = () => {
   return (
-    <footer className="bg-gradient-to-r from-green-600 to-green-700 text-white">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer className="bg-whatsapp-700 text-white">
+      <div className="container mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Logo et description */}
-          <div className="col-span-1 md:col-span-2">
+          <div>
             <div className="flex items-center space-x-2 mb-4">
-              <TreePine className="h-8 w-8" />
-              <span className="text-2xl font-bold">Famille Connect</span>
+              <TreePine className="h-6 w-6" />
+              <span className="text-lg font-bold">Famille Connect</span>
             </div>
-            <p className="text-green-100 mb-4">
-              Créez, préservez et partagez l'histoire de votre famille avec une application moderne et sécurisée.
+            <p className="text-whatsapp-100 mb-4">
+              Créez, préservez et partagez l'histoire de votre famille.
             </p>
-            <div className="flex items-center space-x-2 text-green-100">
+            <div className="flex items-center space-x-2 text-whatsapp-100">
               <Heart className="h-4 w-4" />
               <span>Fait avec amour pour les familles</span>
             </div>
@@ -27,22 +27,22 @@ export const Footer = () => {
             <h3 className="text-lg font-semibold mb-4">Liens rapides</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/" className="text-green-100 hover:text-white transition-colors">
+                <Link to="/" className="text-whatsapp-100 hover:text-white transition-colors">
                   Accueil
                 </Link>
               </li>
               <li>
-                <Link to="/dashboard" className="text-green-100 hover:text-white transition-colors">
+                <Link to="/dashboard" className="text-whatsapp-100 hover:text-white transition-colors">
                   Dashboard
                 </Link>
               </li>
               <li>
-                <Link to="/dashboard/tree" className="text-green-100 hover:text-white transition-colors">
+                <Link to="/dashboard/tree" className="text-whatsapp-100 hover:text-white transition-colors">
                   Arbre généalogique
                 </Link>
               </li>
               <li>
-                <Link to="/dashboard/members" className="text-green-100 hover:text-white transition-colors">
+                <Link to="/dashboard/members" className="text-whatsapp-100 hover:text-white transition-colors">
                   Membres
                 </Link>
               </li>
@@ -53,24 +53,24 @@ export const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">Contact</h3>
             <ul className="space-y-2">
-              <li className="flex items-center space-x-2 text-green-100">
+              <li className="flex items-center space-x-2 text-whatsapp-100">
                 <Mail className="h-4 w-4" />
                 <span>contact@familleconnect.com</span>
               </li>
-              <li className="flex items-center space-x-2 text-green-100">
+              <li className="flex items-center space-x-2 text-whatsapp-100">
                 <Phone className="h-4 w-4" />
                 <span>+225 07 58 96 61 56</span>
               </li>
-              <li className="flex items-center space-x-2 text-green-100">
+              <li className="flex items-center space-x-2 text-whatsapp-100">
                 <MapPin className="h-4 w-4" />
-                <span>Abidjan Riviera 3</span>
+                <span>Abidjan, Côte d'Ivoire</span>
               </li>
             </ul>
           </div>
         </div>
 
         {/* Copyright */}
-        <div className="border-t border-green-500 mt-8 pt-8 text-center text-green-100">
+        <div className="border-t border-whatsapp-600 mt-8 pt-8 text-center text-whatsapp-100">
           <p>&copy; 2024 Famille Connect. Tous droits réservés.</p>
         </div>
       </div>

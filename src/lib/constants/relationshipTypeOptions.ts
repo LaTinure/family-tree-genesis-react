@@ -1,33 +1,30 @@
 
 import { RelationshipType } from '@/types/family';
 
-interface RelationshipOption {
-  value: RelationshipType;
-  label: string;
-}
-
-export const getRelationshipTypeOptions = (
-  title: 'M.' | 'Mme',
-  patriarchExists: boolean
-): RelationshipOption[] => {
-  const baseOptions: RelationshipOption[] = [
-    { value: 'fils', label: title === 'M.' ? 'Fils' : 'Fille' },
-    { value: 'conjoint', label: title === 'M.' ? 'Époux' : 'Épouse' },
-    { value: 'frere', label: title === 'M.' ? 'Frère' : 'Sœur' },
-    { value: 'pere', label: title === 'M.' ? 'Père' : 'Mère' },
-    { value: 'grand-père', label: title === 'M.' ? 'Grand-père' : 'Grand-mère' },
-    { value: 'petit-fils', label: title === 'M.' ? 'Petit-fils' : 'Petite-fille' },
-    { value: 'oncle', label: title === 'M.' ? 'Oncle' : 'Tante' },
-    { value: 'neveu', label: title === 'M.' ? 'Neveu' : 'Nièce' },
-    { value: 'cousin', label: title === 'M.' ? 'Cousin' : 'Cousine' },
-  ];
-
-  if (!patriarchExists) {
-    baseOptions.unshift({
-      value: title === 'M.' ? 'patriarche' : 'matriarche',
-      label: title === 'M.' ? 'Patriarche' : 'Matriarche'
-    });
-  }
-
-  return baseOptions;
-};
+export const relationshipTypeOptions: { value: RelationshipType; label: string }[] = [
+  { value: 'patriarche', label: 'Patriarche' },
+  { value: 'matriarche', label: 'Matriarche' },
+  { value: 'pere', label: 'Père' },
+  { value: 'mere', label: 'Mère' },
+  { value: 'fils', label: 'Fils' },
+  { value: 'fille', label: 'Fille' },
+  { value: 'frere', label: 'Frère' },
+  { value: 'soeur', label: 'Sœur' },
+  { value: 'grand-pere', label: 'Grand-père' },
+  { value: 'grand-mere', label: 'Grand-mère' },
+  { value: 'petit-fils', label: 'Petit-fils' },
+  { value: 'petite-fille', label: 'Petite-fille' },
+  { value: 'oncle', label: 'Oncle' },
+  { value: 'tante', label: 'Tante' },
+  { value: 'neveu', label: 'Neveu' },
+  { value: 'niece', label: 'Nièce' },
+  { value: 'cousin', label: 'Cousin' },
+  { value: 'cousine', label: 'Cousine' },
+  { value: 'epoux', label: 'Époux' },
+  { value: 'epouse', label: 'Épouse' },
+  { value: 'beau-pere', label: 'Beau-père' },
+  { value: 'belle-mere', label: 'Belle-mère' },
+  { value: 'beau-fils', label: 'Beau-fils' },
+  { value: 'belle-fille', label: 'Belle-fille' },
+  { value: 'conjoint', label: 'Conjoint' },
+];

@@ -12,19 +12,19 @@
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 147 86% 40%;
+    --primary-foreground: 0 0% 100%;
     --secondary: 210 40% 98%;
     --secondary-foreground: 222.2 82% 12%;
     --muted: 210 40% 98%;
     --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 98%;
-    --accent-foreground: 222.2 82% 12%;
+    --accent: 147 86% 95%;
+    --accent-foreground: 147 86% 20%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
+    --ring: 147 86% 40%;
     --radius: 0.75rem;
   }
 
@@ -35,7 +35,7 @@
     --card-foreground: 210 40% 98%;
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
+    --primary: 147 86% 50%;
     --primary-foreground: 222.2 84% 4.9%;
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
@@ -67,11 +67,11 @@
   }
   
   ::selection {
-    @apply bg-primary/20;
+    @apply bg-whatsapp-200;
   }
   
   :focus-visible {
-    @apply outline-none ring-2 ring-primary ring-offset-2;
+    @apply outline-none ring-2 ring-whatsapp-500 ring-offset-2;
   }
 }
 
@@ -89,82 +89,68 @@
     animation: scaleIn 0.3s ease-out;
   }
   
-  /* Ombres personnalisées */
-  .shadow-elegant {
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
-                0 2px 4px -1px rgba(0, 0, 0, 0.06),
-                0 0 0 1px rgba(0, 0, 0, 0.05);
+  /* Cards WhatsApp */
+  .whatsapp-card {
+    @apply bg-white rounded-xl shadow-lg border border-whatsapp-100 hover:shadow-xl transition-all duration-300;
   }
   
-  .shadow-elegant-lg {
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 
-                0 4px 6px -2px rgba(0, 0, 0, 0.05),
-                0 0 0 1px rgba(0, 0, 0, 0.05);
-  }
-  
-  /* Gradients personnalisés */
-  .bg-gradient-elegant {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  }
-  
-  .bg-gradient-family {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  }
-  
-  /* Boutons améliorés */
-  .btn-elegant {
-    @apply relative overflow-hidden transition-all duration-300 transform hover:scale-105 focus:scale-105;
-  }
-  
-  .btn-elegant::before {
-    content: '';
-    @apply absolute inset-0 bg-white opacity-0 transition-opacity duration-300;
-  }
-  
-  .btn-elegant:hover::before {
-    @apply opacity-10;
-  }
-  
-  /* Cards améliorées */
-  .card-elegant {
-    @apply bg-white rounded-xl shadow-elegant hover:shadow-elegant-lg transition-all duration-300 border border-gray-100;
-  }
-  
-  .card-elegant:hover {
+  .whatsapp-card:hover {
     @apply transform -translate-y-1;
   }
   
-  /* Inputs personnalisés */
-  .input-elegant {
-    @apply transition-all duration-200 border-gray-200 focus:border-primary focus:ring-primary/20 focus:ring-2 rounded-lg;
+  /* Boutons WhatsApp */
+  .btn-whatsapp {
+    @apply bg-whatsapp-600 hover:bg-whatsapp-700 text-white font-medium shadow-md hover:shadow-lg transition-all duration-300 rounded-lg;
   }
   
-  /* Loading states */
-  .loading-pulse {
-    @apply animate-pulse bg-gray-200 rounded;
+  .btn-whatsapp-outline {
+    @apply border-whatsapp-600 text-whatsapp-600 hover:bg-whatsapp-50 border-2 font-medium transition-all duration-300 rounded-lg;
+  }
+  
+  /* Inputs WhatsApp */
+  .input-whatsapp {
+    @apply transition-all duration-200 border-gray-200 focus:border-whatsapp-500 focus:ring-whatsapp-500/20 focus:ring-2 rounded-lg;
+  }
+  
+  /* Avatars avec anneau WhatsApp */
+  .avatar-whatsapp {
+    @apply ring-2 ring-whatsapp-200 hover:ring-whatsapp-400 transition-all duration-300;
   }
   
   /* Scrollbar personnalisée */
-  .scrollbar-thin {
+  .scrollbar-whatsapp {
     scrollbar-width: thin;
-    scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+    scrollbar-color: rgba(37, 211, 102, 0.3) transparent;
   }
   
-  .scrollbar-thin::-webkit-scrollbar {
+  .scrollbar-whatsapp::-webkit-scrollbar {
     width: 6px;
   }
   
-  .scrollbar-thin::-webkit-scrollbar-track {
+  .scrollbar-whatsapp::-webkit-scrollbar-track {
     background: transparent;
   }
   
-  .scrollbar-thin::-webkit-scrollbar-thumb {
-    background-color: rgba(156, 163, 175, 0.5);
+  .scrollbar-whatsapp::-webkit-scrollbar-thumb {
+    background-color: rgba(37, 211, 102, 0.3);
     border-radius: 3px;
   }
   
-  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(156, 163, 175, 0.7);
+  .scrollbar-whatsapp::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(37, 211, 102, 0.5);
+  }
+  
+  /* Badges WhatsApp */
+  .badge-whatsapp {
+    @apply bg-whatsapp-100 text-whatsapp-800 border border-whatsapp-200 rounded-full px-2 py-1 text-xs font-medium;
+  }
+  
+  .badge-admin {
+    @apply bg-blue-100 text-blue-800 border border-blue-200 rounded-full px-2 py-1 text-xs font-medium;
+  }
+  
+  .badge-patriarch {
+    @apply bg-yellow-100 text-yellow-800 border border-yellow-200 rounded-full px-2 py-1 text-xs font-medium;
   }
 }
 
@@ -203,15 +189,8 @@
 
 /* Responsive design */
 @media (max-width: 768px) {
-  .card-elegant {
+  .whatsapp-card {
     @apply mx-2;
-  }
-}
-
-/* Mode sombre */
-@media (prefers-color-scheme: dark) {
-  .card-elegant {
-    @apply bg-gray-800 border-gray-700;
   }
 }
 
@@ -219,13 +198,6 @@
 @media print {
   .no-print {
     display: none !important;
-  }
-}
-
-/* High contrast mode */
-@media (prefers-contrast: high) {
-  .card-elegant {
-    @apply border-2 border-gray-900;
   }
 }
 
