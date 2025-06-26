@@ -51,6 +51,8 @@ export const FamilyRegisterSchema = z.object({
   relationship_type: z.enum(relationshipTypes),
   civilite: z.enum(['M.', 'Mme']),
   situation: z.string().optional(),
+  display_name: z.string().min(1, "Le nom à afficher est requis"),
+  phone_code: z.string().max(5, "Le code pays doit être de 1 à 5 chiffres").optional(),
 });
 
 export type FamilyRegisterData = z.infer<typeof FamilyRegisterSchema>;

@@ -1,5 +1,6 @@
+
 import { useState, useEffect } from 'react';
-import { useForm, FormProvider } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -7,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Avatar } from '@/components/shared/Avatar';
-import { Camera, Eye, EyeOff, Loader2, UserPlus } from 'lucide-react';
+import { Camera, Eye, EyeOff, Loader2, X, Upload } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import type { ProfileData } from '@/types/profile';
@@ -15,36 +16,8 @@ import { api } from '@/services/api';
 import { FamilyRegisterSchema, FamilyRegisterData, RelationshipType } from '@/lib/validations/relationshipSchema';
 import { getRelationshipTypeOptions } from '@/lib/constants/relationshipTypeOptions';
 import type { Title } from '@/types/family';
-import { z } from 'zod';
 import { supabase } from '@/integrations/supabase/client';
 import { passwordValidation } from '@/lib/validations/passwordValidation';
-
-// Schéma de validation simplifié pour le formulaire
-const SimpleFamilyRegisterSchema = z.object({
-  title: z.enum(['M.', 'Mme']),
-  firstName: z.string().min(1, "Le prénom est requis"),
-  lastName: z.string().min(1, "Le nom est requis"),
-  email: z.string().email("Email invalide"),
-  password: passwordValidation,
-  phoneCode: z.string().optional(),
-  phone: z.string().optional(),
-  profession: z.string().optional(),
-  currentLocation: z.string().optional(),
-  birthPlace: z.string().optional(),
-  photoUrl: z.string().optional(),
-  relationship: z.string().optional(),
-  spouseName: z.string().optional(),
-  fatherName: z.string().optional(),
-  motherName: z.string().optional(),
-  birthDate: z.string().optional(),
-  display_name: z.string().min(1, "Le nom à afficher est requis"),
-  avatar_url: z.string().optional(),
-  civilite: z.enum(['M.', 'Mme']),
-  role: z.enum(['user', 'admin']),
-  phone_code: z.string().max(5, "Le code pays doit être de 1 à 5 chiffres"),
-});
-
-type SimpleFamilyRegisterData = z.infer<typeof SimpleFamilyRegisterSchema>;
 
 // Fonction utilitaire pour calculer la force du mot de passe
 function getPasswordStrength(password: string) {
@@ -83,36 +56,36 @@ export const FamilyRegisterForm = () => {
   const [roleError, setRoleError] = useState('');
   const [isAdminDialogOpen, setIsAdminDialogOpen] = useState(false);
 
-  const methods = useForm<SimpleFamilyRegisterData>({
-    resolver: zodResolver(SimpleFamilyRegisterSchema),
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors }
+  } = useForm<FamilyRegisterData>({
+    resolver: zodResolver(FamilyRegisterSchema),
     defaultValues: {
-      title: 'M.',
-      firstName: '',
-      lastName: '',
+      civilite: 'M.',
+      first_name: '',
+      last_name: '',
       email: '',
       password: '',
-      phoneCode: '+225',
+      phone_code: '+225',
       phone: '',
       profession: '',
-      currentLocation: '',
-      birthPlace: '',
-      photoUrl: '',
-      relationship: 'fils',
-      spouseName: '',
-      fatherName: '',
-      motherName: '',
-      birthDate: '',
-      display_name: '',
+      current_location: '',
+      birth_place: '',
       avatar_url: '',
-      civilite: 'M.',
-      role: 'user',
-      phone_code: '+225',
+      relationship_type: 'fils',
+      birth_date: '',
+      display_name: '',
+      situation: '',
     }
   });
 
-  const watchedTitle = methods.watch('title');
+  const watchedTitle = watch('civilite');
   const relationshipOptions = getRelationshipTypeOptions(watchedTitle, patriarchExists);
-  const passwordValue = methods.watch('password');
+  const passwordValue = watch('password');
   const passwordScore = getPasswordStrength(passwordValue || '');
   const { label: strengthLabel, color: strengthColor } = getStrengthLabel(passwordScore);
 
@@ -173,6 +146,7 @@ export const FamilyRegisterForm = () => {
 
   const confirmPhoto = () => {
     setProfilePhoto(tempPhoto);
+    setValue('avatar_url', tempPhoto);
     setTempPhoto('');
     setShowPhotoConfirm(false);
   };
@@ -183,13 +157,18 @@ export const FamilyRegisterForm = () => {
     setShowPhotoConfirm(false);
   };
 
-  const handleRoleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedRole = e.target.value as 'user' | 'admin';
+  const handleRoleChange = (selectedRole: 'user' | 'admin') => {
     setRole(selectedRole);
     setRoleError('');
+    if (selectedRole === 'admin') {
+      setIsAdminDialogOpen(true);
+    } else {
+      setIsAdmin(false);
+      setAdminCode('');
+    }
   };
 
-  const onSubmit = async (data: SimpleFamilyRegisterData) => {
+  const onSubmit = async (data: FamilyRegisterData) => {
     console.log('onSubmit appelé avec les données:', data);
     setIsLoading(true);
 
@@ -219,10 +198,10 @@ export const FamilyRegisterForm = () => {
 
       // 2. Upload de l'avatar si fourni
       let avatarUrl = '';
-      if (data.photoUrl && data.photoUrl.startsWith('data:')) {
+      if (data.avatar_url && data.avatar_url.startsWith('data:')) {
         try {
           avatarUrl = await api.profiles.uploadAvatar(authData.user.id, 
-            await (await fetch(data.photoUrl)).blob() as File);
+            await (await fetch(data.avatar_url)).blob() as File);
         } catch (uploadError) {
           console.warn('Erreur upload avatar, continuons sans:', uploadError);
         }
@@ -231,30 +210,30 @@ export const FamilyRegisterForm = () => {
       // 3. Créer le profil complet
       const isPatriarch = isFirstUser;
       const relationshipType = isFirstUser 
-        ? (data.title === 'M.' ? 'patriarche' : 'matriarche') 
-        : (data.relationship || 'fils');
+        ? (data.civilite === 'M.' ? 'patriarche' : 'matriarche') 
+        : (data.relationship_type || 'fils');
 
       const profileData: ProfileData = {
         id: authData.user.id,
         user_id: authData.user.id,
         email: data.email,
-        first_name: data.firstName,
-        last_name: data.lastName,
-        phone: data.phone ? `${data.phoneCode}${data.phone}` : '',
+        first_name: data.first_name,
+        last_name: data.last_name,
+        phone: data.phone ? `${data.phone_code}${data.phone}` : '',
         profession: data.profession || '',
-        current_location: data.currentLocation || '',
-        birth_place: data.birthPlace || '',
+        current_location: data.current_location || '',
+        birth_place: data.birth_place || '',
         avatar_url: avatarUrl || data.avatar_url || '',
         photo_url: avatarUrl || data.avatar_url || '',
         relationship_type: relationshipType as RelationshipType,
-        father_name: data.fatherName || '',
-        mother_name: data.motherName || '',
+        father_name: '',
+        mother_name: '',
         is_admin: isAdmin,
-        birth_date: data.birthDate || null,
+        birth_date: data.birth_date || null,
         title: isFirstUser 
-          ? (data.title === 'M.' ? 'Patriarche' : 'Matriarche') 
-          : (data.title === 'M.' ? 'Fils' : 'Fille'),
-        situation: '',
+          ? (data.civilite === 'M.' ? 'Patriarche' : 'Matriarche') 
+          : (data.civilite === 'M.' ? 'Fils' : 'Fille'),
+        situation: data.situation || '',
         is_patriarch: isPatriarch,
         is_parent: false,
         civilite: data.civilite,
@@ -299,7 +278,7 @@ export const FamilyRegisterForm = () => {
         Créer votre compte famille
       </h3>
       
-      <form onSubmit={onSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/* Avatar Upload */}
         <div className="flex flex-col items-center space-y-4">
           <div className="relative">
@@ -345,21 +324,23 @@ export const FamilyRegisterForm = () => {
             <Label htmlFor="first_name">Prénom *</Label>
             <Input
               id="first_name"
-              value={methods.watch('firstName')}
-              onChange={methods.register}
-              required
+              {...register('first_name')}
               disabled={isLoading}
             />
+            {errors.first_name && (
+              <p className="text-sm text-red-600 mt-1">{errors.first_name.message}</p>
+            )}
           </div>
           <div>
             <Label htmlFor="last_name">Nom *</Label>
             <Input
               id="last_name"
-              value={methods.watch('lastName')}
-              onChange={methods.register}
-              required
+              {...register('last_name')}
               disabled={isLoading}
             />
+            {errors.last_name && (
+              <p className="text-sm text-red-600 mt-1">{errors.last_name.message}</p>
+            )}
           </div>
         </div>
 
@@ -368,45 +349,47 @@ export const FamilyRegisterForm = () => {
           <Input
             id="email"
             type="email"
-            value={methods.watch('email')}
-            onChange={methods.register}
-            required
+            {...register('email')}
             disabled={isLoading}
           />
+          {errors.email && (
+            <p className="text-sm text-red-600 mt-1">{errors.email.message}</p>
+          )}
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <Label htmlFor="password">Mot de passe *</Label>
+        <div>
+          <Label htmlFor="password">Mot de passe *</Label>
+          <div className="relative">
             <Input
               id="password"
               type={showPassword ? 'text' : 'password'}
-              value={methods.watch('password')}
-              onChange={methods.register}
-              required
+              {...register('password')}
               disabled={isLoading}
               minLength={8}
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute -top-2 -right-2 text-whatsapp-700"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-whatsapp-600"
             >
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
-          <div>
-            <Label htmlFor="confirmPassword">Confirmer *</Label>
-            <Input
-              id="confirmPassword"
-              type="password"
-              value={methods.watch('password')}
-              onChange={methods.register}
-              required
-              disabled={isLoading}
-              minLength={8}
-            />
-          </div>
+          {/* Indicateur de force du mot de passe */}
+          {passwordValue && (
+            <div className="mt-2">
+              <div className="w-full h-2 rounded bg-gray-200 overflow-hidden">
+                <div
+                  className={`h-2 rounded transition-all duration-300 ${strengthColor}`}
+                  style={{ width: `${(passwordScore / 6) * 100}%` }}
+                />
+              </div>
+              <p className={`text-xs mt-1 font-semibold text-gray-600`}>Force : {strengthLabel}</p>
+            </div>
+          )}
+          {errors.password && (
+            <p className="text-sm text-red-600 mt-1">{errors.password.message}</p>
+          )}
         </div>
 
         <div>
@@ -414,8 +397,7 @@ export const FamilyRegisterForm = () => {
           <Input
             id="phone"
             type="tel"
-            value={methods.watch('phone')}
-            onChange={methods.register}
+            {...register('phone')}
             disabled={isLoading}
           />
         </div>
@@ -424,8 +406,8 @@ export const FamilyRegisterForm = () => {
           <div>
             <Label htmlFor="civilite">Civilité *</Label>
             <Select
-              value={methods.watch('title')}
-              onValueChange={(value: 'M.' | 'Mme') => methods.setValue('title', value)}
+              value={watch('civilite')}
+              onValueChange={(value: 'M.' | 'Mme') => setValue('civilite', value)}
               disabled={isLoading}
             >
               <SelectTrigger>
@@ -440,21 +422,19 @@ export const FamilyRegisterForm = () => {
           <div>
             <Label htmlFor="relationship_type">Rôle dans la famille *</Label>
             <Select
-              value={methods.watch('relationship')}
-              onValueChange={(value) => methods.setValue('relationship', value)}
+              value={watch('relationship_type')}
+              onValueChange={(value) => setValue('relationship_type', value as RelationshipType)}
               disabled={isLoading}
             >
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="patriarche">Patriarche</SelectItem>
-                <SelectItem value="matriarche">Matriarche</SelectItem>
-                <SelectItem value="fils">Fils</SelectItem>
-                <SelectItem value="fille">Fille</SelectItem>
-                <SelectItem value="pere">Père</SelectItem>
-                <SelectItem value="mere">Mère</SelectItem>
-                <SelectItem value="conjoint">Conjoint(e)</SelectItem>
+                {relationshipOptions.map(option => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -465,8 +445,7 @@ export const FamilyRegisterForm = () => {
           <Input
             id="birth_date"
             type="date"
-            value={methods.watch('birthDate')}
-            onChange={methods.register}
+            {...register('birth_date')}
             disabled={isLoading}
           />
         </div>
@@ -475,8 +454,7 @@ export const FamilyRegisterForm = () => {
           <Label htmlFor="birth_place">Lieu de naissance</Label>
           <Input
             id="birth_place"
-            value={methods.watch('birthPlace')}
-            onChange={methods.register}
+            {...register('birth_place')}
             disabled={isLoading}
           />
         </div>
@@ -485,8 +463,7 @@ export const FamilyRegisterForm = () => {
           <Label htmlFor="current_location">Résidence actuelle</Label>
           <Input
             id="current_location"
-            value={methods.watch('currentLocation')}
-            onChange={methods.register}
+            {...register('current_location')}
             disabled={isLoading}
           />
         </div>
@@ -495,66 +472,89 @@ export const FamilyRegisterForm = () => {
           <Label htmlFor="profession">Profession</Label>
           <Input
             id="profession"
-            value={methods.watch('profession')}
-            onChange={methods.register}
+            {...register('profession')}
             disabled={isLoading}
           />
         </div>
 
         <div>
-          <Label htmlFor="situation">Situation familiale</Label>
-          <Select
-            value={methods.watch('relationship')}
-            onValueChange={(value) => methods.setValue('relationship', value)}
-            disabled={isLoading}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Sélectionner..." />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Célibataire">Célibataire</SelectItem>
-              <SelectItem value="Marié(e)">Marié(e)</SelectItem>
-              <SelectItem value="Divorcé(e)">Divorcé(e)</SelectItem>
-              <SelectItem value="Veuf/Veuve">Veuf/Veuve</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div>
-          <Label htmlFor="display_name">Nom à afficher</Label>
+          <Label htmlFor="display_name">Nom à afficher *</Label>
           <Input
             id="display_name"
-            value={methods.watch('display_name')}
-            onChange={methods.register}
-            required
+            {...register('display_name')}
             disabled={isLoading}
           />
+          {errors.display_name && (
+            <p className="text-sm text-red-600 mt-1">{errors.display_name.message}</p>
+          )}
         </div>
 
-        <div>
-          <Label htmlFor="role">Rôle</Label>
-          <Select
-            value={role}
-            onValueChange={handleRoleChange}
-            disabled={isLoading}
-          >
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="user">Utilisateur</SelectItem>
-              <SelectItem value="admin">Administrateur</SelectItem>
-            </SelectContent>
-          </Select>
-          {roleError && <p className="text-red-500 mt-1">{roleError}</p>}
-        </div>
+        {/* Dialog pour code admin */}
+        <Dialog open={isAdminDialogOpen} onOpenChange={(open) => {
+          if (!open) {
+            setIsAdminDialogOpen(false);
+            setRole('user');
+            setAdminCode('');
+            setRoleError('');
+            setIsAdmin(false);
+          }
+        }}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Code Administrateur</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <Label htmlFor="admin-code" className="font-semibold">Veuillez entrer le code secret pour devenir administrateur :</Label>
+              <Input
+                id="admin-code"
+                type="password"
+                value={adminCode}
+                onChange={(e) => setAdminCode(e.target.value)}
+                placeholder="Code admin"
+                autoFocus
+              />
+              {roleError && <p className="text-sm text-red-600 mt-1">{roleError}</p>}
+              <div className="flex justify-end space-x-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setIsAdminDialogOpen(false);
+                    setRole('user');
+                    setAdminCode('');
+                    setRoleError('');
+                    setIsAdmin(false);
+                  }}
+                >
+                  Annuler
+                </Button>
+                <Button
+                  type="button"
+                  onClick={() => {
+                    if (adminCode === '1432') {
+                      setRole('admin');
+                      setIsAdmin(true);
+                      setIsAdminDialogOpen(false);
+                      setRoleError('');
+                    } else {
+                      setRoleError('Code administrateur incorrect');
+                    }
+                  }}
+                  className="bg-whatsapp-600 hover:bg-whatsapp-700"
+                >
+                  Valider
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
 
         <Button
           type="submit"
           className="w-full bg-gradient-to-r from-whatsapp-500 to-whatsapp-600 hover:from-whatsapp-600 hover:to-whatsapp-700"
           disabled={isLoading}
         >
-          {loading ? (
+          {isLoading ? (
             <>
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
               Création du compte...
