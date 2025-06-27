@@ -85,8 +85,8 @@ const Header = () => {
               className="relative"
             >
               <img
-                src="/images/papagogo.png"
-                alt="Papagogo Logo"
+                src="/images/profile01.png"
+                alt="profil Logo"
                 className="h-14 w-14 object-contain rounded-full drop-shadow-2xl filter brightness-110 contrast-125"
                 style={{
                   filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.3)) drop-shadow(0 4px 8px rgba(0,0,0,0.2))',

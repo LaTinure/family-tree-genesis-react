@@ -168,7 +168,7 @@ const Chat = () => {
     };
 
     setMessages(prev => [...prev, message]);
-    setNewMessage('');
+      setNewMessage('');
 
     // Simuler une réponse après 2 secondes
     setTimeout(() => {
@@ -185,8 +185,8 @@ const Chat = () => {
       setMessages(prev => [...prev, reply]);
     }, 2000);
 
-    toast({
-      title: 'Message envoyé',
+      toast({
+        title: 'Message envoyé',
       description: 'Votre message a été envoyé avec succès',
     });
   };
@@ -257,7 +257,7 @@ const Chat = () => {
                 className="pl-10"
               />
             </div>
-          </div>
+            </div>
 
           {/* Liste des contacts */}
           <ScrollArea className="flex-1">
@@ -272,11 +272,11 @@ const Chat = () => {
                     transition={{ duration: 0.2 }}
                   >
                     <div
-                      className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-colors ${
+                    className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-colors ${
                         selectedContact?.id === contact.id
                           ? 'bg-whatsapp-50 border border-whatsapp-200'
-                          : 'hover:bg-gray-50'
-                      }`}
+                        : 'hover:bg-gray-50'
+                    }`}
                       onClick={() => setSelectedContact(contact)}
                     >
                       <div className="relative">
@@ -306,7 +306,7 @@ const Chat = () => {
                           </h3>
                           <span className="text-xs text-gray-500">
                             {contact.last_message && formatTime(contact.last_message.timestamp)}
-                          </span>
+                        </span>
                         </div>
                         <p className="text-sm text-gray-600 truncate">
                           {contact.last_message?.content}
@@ -442,8 +442,8 @@ const Chat = () => {
                     <Input
                       ref={inputRef}
                       placeholder="Tapez votre message..."
-                      value={newMessage}
-                      onChange={(e) => setNewMessage(e.target.value)}
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
                       onKeyPress={handleKeyPress}
                       className="pr-20"
                     />
@@ -480,8 +480,8 @@ const Chat = () => {
                   Sélectionnez un membre pour commencer à discuter
                 </p>
               </div>
-            </div>
-          )}
+              </div>
+            )}
         </div>
       </div>
     </div>

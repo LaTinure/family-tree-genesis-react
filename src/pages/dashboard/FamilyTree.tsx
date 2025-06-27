@@ -4,13 +4,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { TreePine, Users, Plus, Search, Leaf, Crown, Heart, GitBranch } from 'lucide-react';
 import { api } from '@/services/api';
-import { ProfileData } from '@/types/profile';
+import { FamilyMember } from '@/types/family';
 import { UserAvatar } from '@/components/shared/UserAvatar';
 import { motion } from 'framer-motion';
 
 const FamilyTree = () => {
   const { profile } = useAuth();
-  const [members, setMembers] = useState<ProfileData[]>([]);
+  const [members, setMembers] = useState<FamilyMember[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -170,7 +170,7 @@ const FamilyTree = () => {
                         {member.first_name} {member.last_name}
                       </h3>
                       <p className="text-sm text-green-600">
-                        {member.title || member.relationship_type}
+                        {member.relationship_type}
                       </p>
                       {member.is_patriarch && (
                         <span className="inline-block px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full mt-1 border border-yellow-300">

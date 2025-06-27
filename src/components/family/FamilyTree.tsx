@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -20,28 +19,44 @@ export const FamilyTree = () => {
   const [selectedMember, setSelectedMember] = useState<FamilyTreeNode | null>(null);
   const [treeData, setTreeData] = useState<FamilyTreeNode | null>(null);
 
+  console.log('🌳 [FamilyTree] État actuel:', { members: members.length, isLoading, treeData });
+
   // Construire l'arbre familial
   useEffect(() => {
-    if (members.length === 0) return;
+    console.log('🔨 [FamilyTree] Construction de l\'arbre avec', members.length, 'membres');
+
+    if (members.length === 0) {
+      console.log('⚠️ [FamilyTree] Aucun membre disponible');
+      return;
+    }
 
     const memberMap = new Map<string, FamilyTreeNode>();
     members.forEach(member => {
       memberMap.set(member.id, { ...member, level: 0, children: [] });
     });
 
+    console.log('🗺️ [FamilyTree] Map des membres créée:', memberMap.size, 'membres');
+
     // Trouver la racine (patriarche/matriarche)
     const root = members.find(m => m.is_patriarch) || members[0];
-    if (!root) return;
+    if (!root) {
+      console.log('❌ [FamilyTree] Aucune racine trouvée');
+      return;
+    }
+
+    console.log('👑 [FamilyTree] Racine trouvée:', root.first_name, root.last_name);
 
     const buildTree = (member: FamilyTreeNode, level: number = 0): FamilyTreeNode => {
       member.level = level;
-      
+
       // Trouver les enfants
-      const children = members.filter(m => 
+      const children = members.filter(m =>
         m.father_id === member.id || m.mother_id === member.id
       );
 
-      member.children = children.map(child => 
+      console.log('👶 [FamilyTree] Enfants trouvés pour', member.first_name, ':', children.length);
+
+      member.children = children.map(child =>
         buildTree(memberMap.get(child.id)!, level + 1)
       );
 
@@ -49,6 +64,7 @@ export const FamilyTree = () => {
     };
 
     const tree = buildTree(memberMap.get(root.id)!);
+    console.log('🌳 [FamilyTree] Arbre construit:', tree);
     setTreeData(tree);
   }, [members]);
 
@@ -63,7 +79,7 @@ export const FamilyTree = () => {
     const nodeWidth = 160;
     const nodeHeight = 80;
     const spacing = 200;
-    
+
     const nodeX = x + (index - (node.children?.length || 0) / 2) * spacing;
     const nodeY = y;
 
@@ -73,7 +89,7 @@ export const FamilyTree = () => {
         {node.children?.map((child, childIndex) => {
           const childX = nodeX + (childIndex - (node.children?.length || 0) / 2) * spacing;
           const childY = nodeY + 150;
-          
+
           return (
             <line
               key={`${node.id}-${child.id}`}
@@ -87,7 +103,7 @@ export const FamilyTree = () => {
             />
           );
         })}
-        
+
         {/* Nœud principal */}
         <g
           className="cursor-pointer transition-transform duration-300 hover:scale-105"
@@ -104,7 +120,7 @@ export const FamilyTree = () => {
             strokeWidth={node.is_patriarch ? "3" : "2"}
             className="shadow-lg"
           />
-          
+
           {/* Avatar */}
           <circle
             cx={nodeX - nodeWidth / 2 + 30}
@@ -114,7 +130,7 @@ export const FamilyTree = () => {
             stroke="#e2e8f0"
             strokeWidth="2"
           />
-          
+
           {node.photo_url && (
             <defs>
               <pattern
@@ -134,7 +150,7 @@ export const FamilyTree = () => {
               </pattern>
             </defs>
           )}
-          
+
           {!node.photo_url && (
             <User
               x={nodeX - nodeWidth / 2 + 22}
@@ -144,7 +160,7 @@ export const FamilyTree = () => {
               className="text-gray-400"
             />
           )}
-          
+
           {/* Icône patriarche */}
           {node.is_patriarch && (
             <Crown
@@ -155,7 +171,7 @@ export const FamilyTree = () => {
               className="text-yellow-500"
             />
           )}
-          
+
           {/* Nom */}
           <text
             x={nodeX - nodeWidth / 2 + 55}
@@ -164,7 +180,7 @@ export const FamilyTree = () => {
           >
             {node.first_name} {node.last_name}
           </text>
-          
+
           {/* Relation */}
           <text
             x={nodeX - nodeWidth / 2 + 55}
@@ -173,7 +189,7 @@ export const FamilyTree = () => {
           >
             {node.relationship_type}
           </text>
-          
+
           {/* Localisation */}
           {node.current_location && (
             <text
@@ -185,9 +201,9 @@ export const FamilyTree = () => {
             </text>
           )}
         </g>
-        
+
         {/* Enfants */}
-        {node.children?.map((child, childIndex) => 
+        {node.children?.map((child, childIndex) =>
           renderNode(child, nodeX, nodeY + 150, childIndex)
         )}
       </g>

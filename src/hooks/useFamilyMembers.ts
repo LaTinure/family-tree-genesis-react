@@ -12,19 +12,26 @@ export const useFamilyMembers = () => {
       setIsLoading(true);
       setError(null);
 
+      console.log('🔍 [fetchMembers] Début de la récupération des membres');
+
       const { data: profiles, error: fetchError } = await supabase
         .from('profiles')
         .select('*')
         .order('created_at', { ascending: false });
+
+      console.log('📊 [fetchMembers] Réponse Supabase:', { profiles, fetchError });
 
       if (fetchError) {
         throw fetchError;
       }
 
       if (!profiles || profiles.length === 0) {
+        console.log('⚠️ [fetchMembers] Aucun profil trouvé');
         setMembers([]);
         return;
       }
+
+      console.log('✅ [fetchMembers] Profils trouvés:', profiles.length);
 
       const familyMembers: FamilyMember[] = profiles.map(profile => ({
         id: profile.id || '',
@@ -55,9 +62,11 @@ export const useFamilyMembers = () => {
         updated_at: profile.updated_at || new Date().toISOString()
       }));
 
+      console.log('👥 [fetchMembers] Membres transformés:', familyMembers);
+
       setMembers(familyMembers);
     } catch (err) {
-      console.error('Error fetching family members:', err);
+      console.error('❌ [fetchMembers] Erreur lors de la récupération:', err);
       setError(err instanceof Error ? err.message : 'Une erreur est survenue');
       setMembers([]);
     } finally {

@@ -18,7 +18,9 @@ import {
   Bell,
   Activity,
   TrendingUp,
-  Shield
+  Shield,
+  Database,
+  RefreshCw
 } from 'lucide-react';
 import { ROUTES } from '@/lib/constants/routes';
 import { FamilyStats } from '@/types/family';
@@ -129,6 +131,51 @@ const Dashboard = () => {
 
           {/* Sidebar */}
           <div className="space-y-6">
+            {/* Panel de Debug */}
+            <Card className="border-orange-200 bg-orange-50">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-orange-800">
+                  <Database className="w-5 h-5" />
+                  Debug - Membres
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <Users className="w-4 h-4" />
+                    <span className="font-medium">Membres: {members.length}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {isLoading ? (
+                      <RefreshCw className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <div className="w-4 h-4 rounded-full bg-green-500" />
+                    )}
+                    <span>{isLoading ? 'Chargement...' : 'Prêt'}</span>
+                  </div>
+                </div>
+
+                {members.length > 0 ? (
+                  <div className="space-y-2 max-h-40 overflow-y-auto">
+                    <h4 className="font-medium text-orange-800">Membres trouvés:</h4>
+                    {members.map((member, index) => (
+                      <div key={member.id} className="p-2 bg-white border border-orange-200 rounded text-sm">
+                        <p className="font-medium">
+                          {index + 1}. {member.first_name} {member.last_name}
+                        </p>
+                        <p className="text-xs text-gray-600">{member.email}</p>
+                        <p className="text-xs">Rôle: {member.role} | Patriarche: {member.is_patriarch ? 'Oui' : 'Non'}</p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-2 text-orange-700 text-sm">
+                    Aucun membre trouvé
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
             {/* Membres récents */}
             <Card>
               <CardHeader>
