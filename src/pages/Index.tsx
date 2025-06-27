@@ -5,35 +5,6 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 const Index = () => {
-  const [loading, setLoading] = useState(() => {
-    // Affiche le loader seulement si pas déjà vu dans cette session
-    return !sessionStorage.getItem('homeLoaderShown');
-  });
-
-  useEffect(() => {
-    if (loading) {
-      const timer = setTimeout(() => {
-        setLoading(false);
-        sessionStorage.setItem('homeLoaderShown', '1');
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [loading]);
-
-  if (loading) {
-    return (
-      <div className="fixed inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-whatsapp-50 via-green-50 to-emerald-50 z-50">
-        <h1 className="text-4xl font-bold text-gray-900 mb-6 animate-fade-in">Famille Connect</h1>
-        <div className="w-32 h-32 mb-6 animate-bounce-slow">
-          <img src="/tree-favicon.svg" alt="Arbre Généalogique" className="w-full h-full object-contain" />
-        </div>
-        <div className="w-64 h-3 bg-gray-200 rounded-full overflow-hidden">
-          <div className="h-full bg-green-500 animate-loader-bar" style={{ width: '100%' }} />
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-whatsapp-50 via-green-50 to-emerald-50 pt-16">
       {/* Hero Section */}

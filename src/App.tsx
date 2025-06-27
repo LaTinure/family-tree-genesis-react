@@ -28,6 +28,7 @@ import Events from '@/pages/dashboard/Events';
 import Report from '@/pages/dashboard/Report';
 import ContactAdmin from '@/pages/dashboard/ContactAdmin';
 import Settings from '@/pages/dashboard/Settings';
+import Gestion from '@/pages/dashboard/Gestion';
 
 // Configuration React Query
 const queryClient = new QueryClient({
@@ -142,8 +143,7 @@ function App() {
               </ProtectedRoute>
             } />
 
-            {/* Nouvelles routes pour les pages du dashboard */}
-            <Route path="/dashboard/chat" element={
+            <Route path={ROUTES.DASHBOARD.CHAT} element={
               <ProtectedRoute>
                 <Layout>
                   <Chat />
@@ -151,7 +151,7 @@ function App() {
               </ProtectedRoute>
             } />
 
-            <Route path="/dashboard/events" element={
+            <Route path={ROUTES.DASHBOARD.EVENTS} element={
               <ProtectedRoute>
                 <Layout>
                   <Events />
@@ -159,7 +159,7 @@ function App() {
               </ProtectedRoute>
             } />
 
-            <Route path="/dashboard/report" element={
+            <Route path={ROUTES.DASHBOARD.REPORT} element={
               <ProtectedRoute>
                 <Layout>
                   <Report />
@@ -167,7 +167,7 @@ function App() {
               </ProtectedRoute>
             } />
 
-            <Route path="/dashboard/contact-admin" element={
+            <Route path={ROUTES.DASHBOARD.CONTACT_ADMIN} element={
               <ProtectedRoute>
                 <Layout>
                   <ContactAdmin />
@@ -179,6 +179,14 @@ function App() {
               <ProtectedRoute>
                 <Layout>
                   <Settings />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path={ROUTES.DASHBOARD.GESTION} element={
+              <ProtectedRoute>
+                <Layout>
+                  <Gestion />
                 </Layout>
               </ProtectedRoute>
             } />

@@ -21,6 +21,7 @@ export const ROUTES = {
     REPORT: '/dashboard/report',
     CONTACT_ADMIN: '/dashboard/contact-admin',
     SETTINGS: '/dashboard/settings',
+    GESTION: '/dashboard/gestion',
   },
   PROFILE: '/profile',
 } as const;
