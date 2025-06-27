@@ -14,7 +14,7 @@ export***REMOVED***interface***REMOVED***ProfileData***REMOVED***{
 ***REMOVED******REMOVED***avatar_url?:***REMOVED***string;
 ***REMOVED******REMOVED***photo_url?:***REMOVED***string;
 ***REMOVED******REMOVED***title?:***REMOVED***'Patriarche'***REMOVED***|***REMOVED***'Matriarche'***REMOVED***|***REMOVED***'Père'***REMOVED***|***REMOVED***'Mère'***REMOVED***|***REMOVED***'Fils'***REMOVED***|***REMOVED***'Fille'***REMOVED***|***REMOVED***'Grand-père'***REMOVED***|***REMOVED***'Grand-mère'***REMOVED***|***REMOVED***'Petit-fils'***REMOVED***|***REMOVED***'Petite-fille'***REMOVED***|***REMOVED***'Oncle'***REMOVED***|***REMOVED***'Tante'***REMOVED***|***REMOVED***'Neveu'***REMOVED***|***REMOVED***'Nièce'***REMOVED***|***REMOVED***'Cousin'***REMOVED***|***REMOVED***'Cousine'***REMOVED***|***REMOVED***'Beau-père'***REMOVED***|***REMOVED***'Belle-mère'***REMOVED***|***REMOVED***'Beau-fils'***REMOVED***|***REMOVED***'Belle-fille'***REMOVED***|***REMOVED***'Frère'***REMOVED***|***REMOVED***'Sœur'***REMOVED***|***REMOVED***'Époux'***REMOVED***|***REMOVED***'Épouse';
-***REMOVED******REMOVED***relationship_type?:***REMOVED***'fils'***REMOVED***|***REMOVED***'fille'***REMOVED***|***REMOVED***'père'***REMOVED***|***REMOVED***'mère'***REMOVED***|***REMOVED***'cousin'***REMOVED***|***REMOVED***'cousine'***REMOVED***|***REMOVED***'tante'***REMOVED***|***REMOVED***'oncle'***REMOVED***|***REMOVED***'neveu'***REMOVED***|***REMOVED***'nièce'***REMOVED***|***REMOVED***'petit-fils'***REMOVED***|***REMOVED***'petite-fille'***REMOVED***|***REMOVED***'grand-père'***REMOVED***|***REMOVED***'grande-mère'***REMOVED***|***REMOVED***'époux'***REMOVED***|***REMOVED***'épouse'***REMOVED***|***REMOVED***'patriarche'***REMOVED***|***REMOVED***'matriarche'***REMOVED***|***REMOVED***'conjoint';
+***REMOVED******REMOVED***relationship_type?:***REMOVED***'fils'***REMOVED***|***REMOVED***'fille'***REMOVED***|***REMOVED***'père'***REMOVED***|***REMOVED***'mère'***REMOVED***|***REMOVED***'cousin'***REMOVED***|***REMOVED***'cousine'***REMOVED***|***REMOVED***'tante'***REMOVED***|***REMOVED***'oncle'***REMOVED***|***REMOVED***'neveu'***REMOVED***|***REMOVED***'nièce'***REMOVED***|***REMOVED***'petit-fils'***REMOVED***|***REMOVED***'petite-fille'***REMOVED***|***REMOVED***'grand-père'***REMOVED***|***REMOVED***'grande-mère'***REMOVED***|***REMOVED***'époux'***REMOVED***|***REMOVED***'épouse'***REMOVED***|***REMOVED***'patriarche'***REMOVED***|***REMOVED***'matriarche'***REMOVED***|***REMOVED***'conjoint'***REMOVED***|***REMOVED***'frere'***REMOVED***|***REMOVED***'soeur'***REMOVED***|***REMOVED***'beau-pere'***REMOVED***|***REMOVED***'belle-mere'***REMOVED***|***REMOVED***'beau-fils'***REMOVED***|***REMOVED***'belle-fille';
 ***REMOVED******REMOVED***father_name?:***REMOVED***string;
 ***REMOVED******REMOVED***mother_name?:***REMOVED***string;
 ***REMOVED******REMOVED***spouse_name?:***REMOVED***string;
@@ -26,6 +26,7 @@ export***REMOVED***interface***REMOVED***ProfileData***REMOVED***{
 ***REMOVED******REMOVED***civilite?:***REMOVED***string;
 ***REMOVED******REMOVED***father_id?:***REMOVED***string;
 ***REMOVED******REMOVED***mother_id?:***REMOVED***string;
+***REMOVED******REMOVED***role?:***REMOVED***'admin'***REMOVED***|***REMOVED***'user'***REMOVED***|***REMOVED***'pending';
 }
 
 export***REMOVED***interface***REMOVED***FamilyMember***REMOVED***{
@@ -60,15 +61,32 @@ export***REMOVED***interface***REMOVED***Message***REMOVED***{
 ***REMOVED******REMOVED***sender_id:***REMOVED***string;
 ***REMOVED******REMOVED***is_admin_message?:***REMOVED***boolean;
 ***REMOVED******REMOVED***created_at?:***REMOVED***string;
+***REMOVED******REMOVED***read?:***REMOVED***boolean;
 }
 
 export***REMOVED***interface***REMOVED***Notification***REMOVED***{
 ***REMOVED******REMOVED***id:***REMOVED***string;
 ***REMOVED******REMOVED***title:***REMOVED***string;
 ***REMOVED******REMOVED***message:***REMOVED***string;
-***REMOVED******REMOVED***type:***REMOVED***string;
+***REMOVED******REMOVED***type:***REMOVED***'info'***REMOVED***|***REMOVED***'warning'***REMOVED***|***REMOVED***'success'***REMOVED***|***REMOVED***'error';
 ***REMOVED******REMOVED***user_id:***REMOVED***string;
 ***REMOVED******REMOVED***data?:***REMOVED***any;
 ***REMOVED******REMOVED***read?:***REMOVED***boolean;
 ***REMOVED******REMOVED***created_at?:***REMOVED***string;
+}
+
+export***REMOVED***interface***REMOVED***ChatContact***REMOVED***{
+***REMOVED******REMOVED***id:***REMOVED***string;
+***REMOVED******REMOVED***profile:***REMOVED***ProfileData;
+***REMOVED******REMOVED***last_message?:***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***string;
+***REMOVED******REMOVED******REMOVED******REMOVED***sender_id:***REMOVED***string;
+***REMOVED******REMOVED******REMOVED******REMOVED***receiver_id:***REMOVED***string;
+***REMOVED******REMOVED******REMOVED******REMOVED***content:***REMOVED***string;
+***REMOVED******REMOVED******REMOVED******REMOVED***timestamp:***REMOVED***Date;
+***REMOVED******REMOVED******REMOVED******REMOVED***is_read:***REMOVED***boolean;
+***REMOVED******REMOVED******REMOVED******REMOVED***message_type:***REMOVED***'text';
+***REMOVED******REMOVED***};
+***REMOVED******REMOVED***unread_count:***REMOVED***number;
+***REMOVED******REMOVED***is_online:***REMOVED***boolean;
 }

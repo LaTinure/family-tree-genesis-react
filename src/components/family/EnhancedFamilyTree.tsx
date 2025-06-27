@@ -71,7 +71,6 @@ export***REMOVED***const***REMOVED***EnhancedFamilyTree***REMOVED***=***REMOVED*
 ***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***layout:***REMOVED***TreeLayout***REMOVED***=***REMOVED***{};
 ***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***centerX***REMOVED***=***REMOVED***600;
 ***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***centerY***REMOVED***=***REMOVED***400;
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***nodeRadius***REMOVED***=***REMOVED***60;
 ***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***levelSpacing***REMOVED***=***REMOVED***200;
 ***REMOVED******REMOVED******REMOVED******REMOVED***
 ***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Identifier***REMOVED***les***REMOVED***patriarches/matriarches***REMOVED***(niveau***REMOVED***0)
