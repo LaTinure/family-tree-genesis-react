@@ -71,7 +71,6 @@ export const EnhancedFamilyTree = () => {
     const layout: TreeLayout = {};
     const centerX = 600;
     const centerY = 400;
-    const nodeRadius = 60;
     const levelSpacing = 200;
     
     // Identifier les patriarches/matriarches (niveau 0)

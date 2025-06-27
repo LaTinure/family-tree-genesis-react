@@ -14,7 +14,7 @@ export interface ProfileData {
   avatar_url?: string;
   photo_url?: string;
   title?: 'Patriarche' | 'Matriarche' | 'Père' | 'Mère' | 'Fils' | 'Fille' | 'Grand-père' | 'Grand-mère' | 'Petit-fils' | 'Petite-fille' | 'Oncle' | 'Tante' | 'Neveu' | 'Nièce' | 'Cousin' | 'Cousine' | 'Beau-père' | 'Belle-mère' | 'Beau-fils' | 'Belle-fille' | 'Frère' | 'Sœur' | 'Époux' | 'Épouse';
-  relationship_type?: 'fils' | 'fille' | 'père' | 'mère' | 'cousin' | 'cousine' | 'tante' | 'oncle' | 'neveu' | 'nièce' | 'petit-fils' | 'petite-fille' | 'grand-père' | 'grande-mère' | 'époux' | 'épouse' | 'patriarche' | 'matriarche' | 'conjoint';
+  relationship_type?: 'fils' | 'fille' | 'père' | 'mère' | 'cousin' | 'cousine' | 'tante' | 'oncle' | 'neveu' | 'nièce' | 'petit-fils' | 'petite-fille' | 'grand-père' | 'grande-mère' | 'époux' | 'épouse' | 'patriarche' | 'matriarche' | 'conjoint' | 'frere' | 'soeur' | 'beau-pere' | 'belle-mere' | 'beau-fils' | 'belle-fille';
   father_name?: string;
   mother_name?: string;
   spouse_name?: string;
@@ -26,6 +26,7 @@ export interface ProfileData {
   civilite?: string;
   father_id?: string;
   mother_id?: string;
+  role?: 'admin' | 'user' | 'pending';
 }
 
 export interface FamilyMember {
@@ -60,15 +61,32 @@ export interface Message {
   sender_id: string;
   is_admin_message?: boolean;
   created_at?: string;
+  read?: boolean;
 }
 
 export interface Notification {
   id: string;
   title: string;
   message: string;
-  type: string;
+  type: 'info' | 'warning' | 'success' | 'error';
   user_id: string;
   data?: any;
   read?: boolean;
   created_at?: string;
+}
+
+export interface ChatContact {
+  id: string;
+  profile: ProfileData;
+  last_message?: {
+    id: string;
+    sender_id: string;
+    receiver_id: string;
+    content: string;
+    timestamp: Date;
+    is_read: boolean;
+    message_type: 'text';
+  };
+  unread_count: number;
+  is_online: boolean;
 }

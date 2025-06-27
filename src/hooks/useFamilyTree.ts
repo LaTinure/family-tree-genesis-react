@@ -42,7 +42,7 @@ export const useFamilyTree = () => {
           mother_id: profile.mother_id,
           father_name: profile.father_name,
           mother_name: profile.mother_name,
-          spouse_name: profile.spouse_name,
+          spouse_name: '', // Default value
           is_admin: profile.is_admin || false,
           is_patriarch: profile.is_patriarch || false,
           is_parent: profile.is_parent || false,
@@ -130,6 +130,7 @@ export const useFamilyTree = () => {
         current_location: 'Lyon',
         phone: '+33123456789',
         avatar_url: '/images/profile01.png',
+        spouse_name: '',
         is_admin: true,
         is_patriarch: true,
         is_parent: true,

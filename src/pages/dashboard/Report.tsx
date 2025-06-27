@@ -1,122 +1,121 @@
-import { useState, useEffect } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useToast } from '@/hooks/use-toast';
-import { api } from '@/services/api';
-import { ProfileData } from '@/types/profile';
-import { Flag, Send, AlertTriangle, Users } from 'lucide-react';
 
-const reportReasons = [
-  { value: 'spam', label: 'Spam ou contenu indésirable' },
-  { value: 'harassment', label: 'Harcèlement' },
-  { value: 'inappropriate', label: 'Contenu inapproprié' },
-  { value: 'fake', label: 'Fausses informations' },
-  { value: 'privacy', label: 'Violation de la vie privée' },
-  { value: 'other', label: 'Autre' },
-];
+import React, { useState, useEffect } from 'react';
+import DashboardLayout from '@/components/layout/DashboardLayout';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Flag, AlertTriangle } from 'lucide-react';
+import { api } from '@/services/api';
+import { FamilyMember } from '@/types/family';
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 
 const Report = () => {
-  const { user } = useAuth();
+  const [members, setMembers] = useState<FamilyMember[]>([]);
+  const [reportedMember, setReportedMember] = useState<string>('');
+  const [reportType, setReportType] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const [members, setMembers] = useState<ProfileData[]>([]);
-  const [selectedMember, setSelectedMember] = useState<ProfileData | null>(null);
-  const [reportReason, setReportReason] = useState('');
-  const [description, setDescription] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { user } = useAuth();
+
+  const reportTypes = [
+    { value: 'inappropriate_content', label: 'Contenu inapproprié' },
+    { value: 'harassment', label: 'Harcèlement' },
+    { value: 'fake_profile', label: 'Faux profil' },
+    { value: 'spam', label: 'Spam' },
+    { value: 'other', label: 'Autre' }
+  ];
 
   useEffect(() => {
     const fetchMembers = async () => {
       try {
-        const allMembers = await api.profiles.getAll();
-        setMembers(allMembers);
+        const fetchedMembers = await api.profiles.getAll();
+        setMembers(fetchedMembers);
       } catch (error) {
         console.error('Erreur lors de la récupération des membres:', error);
       }
     };
-
     fetchMembers();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!selectedMember || !reportReason || !description.trim()) {
+    if (!reportedMember || !reportType || !description) {
       toast({
         title: 'Erreur',
-        description: 'Veuillez remplir tous les champs obligatoires.',
+        description: 'Veuillez remplir tous les champs',
         variant: 'destructive',
       });
       return;
     }
 
-    setIsSubmitting(true);
-
+    setIsLoading(true);
     try {
       // Créer une notification pour les admins
       await api.notifications.create({
-        user_id: user?.id || '',
-        type: 'warning',
         title: 'Nouveau signalement',
-        message: `Signalement de ${selectedMember.first_name} ${selectedMember.last_name} pour: ${reportReasons.find(r => r.value === reportReason)?.label}`,
+        message: `Membre signalé: ${reportedMember}\nType: ${reportType}\nDescription: ${description}\nSignalé par: ${user?.email}`,
+        type: 'warning',
+        user_id: 'admin',
         read: false,
-        data: {
-          reported_user_id: selectedMember.user_id,
-          reported_user_name: `${selectedMember.first_name} ${selectedMember.last_name}`,
-          reason: reportReason,
-          description: description,
-          reporter_id: user?.id || '',
-        },
       });
 
       toast({
         title: 'Signalement envoyé',
-        description: 'Votre signalement a été transmis aux administrateurs.',
+        description: 'Votre signalement a été transmis aux administrateurs',
       });
 
-      // Réinitialiser le formulaire
-      setSelectedMember(null);
-      setReportReason('');
+      // Reset form
+      setReportedMember('');
+      setReportType('');
       setDescription('');
     } catch (error) {
       console.error('Erreur lors du signalement:', error);
       toast({
         title: 'Erreur',
-        description: 'Impossible d\'envoyer le signalement. Veuillez réessayer.',
+        description: 'Impossible d\'envoyer le signalement',
         variant: 'destructive',
       });
     } finally {
-      setIsSubmitting(false);
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50 p-6">
-      <div className="container mx-auto max-w-2xl">
-        <Card className="border-red-200 shadow-lg">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-3 text-red-700">
-              <Flag className="w-6 h-6" />
-              Signaler un membre
+    <DashboardLayout>
+      <div className="container mx-auto px-4 py-6">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-red-600 flex items-center">
+            <Flag className="mr-3 h-8 w-8" />
+            Signaler un Problème
+          </h1>
+          <p className="text-gray-600 mt-2">
+            Signalez tout comportement inapproprié ou problème dans la communauté
+          </p>
+        </div>
+
+        <Card className="max-w-2xl mx-auto border-red-200">
+          <CardHeader className="bg-red-50">
+            <CardTitle className="text-red-700 flex items-center">
+              <AlertTriangle className="mr-2 h-5 w-5" />
+              Formulaire de Signalement
             </CardTitle>
             <CardDescription>
-              Signalez un comportement inapproprié ou du contenu problématique. 
-              Votre signalement sera examiné par les administrateurs.
+              Utilisez ce formulaire de manière responsable. Les faux signalements peuvent entraîner des sanctions.
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-6">
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="member">Membre à signaler *</Label>
-                <Select value={selectedMember?.id || ''} onValueChange={(value) => {
-                  const member = members.find(m => m.id === value);
-                  setSelectedMember(member || null);
-                }}>
-                  <SelectTrigger className="border-red-200 focus:border-red-500">
-                    <SelectValue placeholder="Sélectionner un membre" />
+              <div>
+                <label htmlFor="reported-member" className="block text-sm font-medium text-gray-700 mb-2">
+                  Membre à signaler *
+                </label>
+                <Select value={reportedMember} onValueChange={setReportedMember}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Sélectionner le membre à signaler..." />
                   </SelectTrigger>
                   <SelectContent>
                     {members.map((member) => (
@@ -128,79 +127,63 @@ const Report = () => {
                 </Select>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="reason">Raison du signalement *</Label>
-                <Select value={reportReason} onValueChange={setReportReason}>
-                  <SelectTrigger className="border-red-200 focus:border-red-500">
-                    <SelectValue placeholder="Sélectionner une raison" />
+              <div>
+                <label htmlFor="report-type" className="block text-sm font-medium text-gray-700 mb-2">
+                  Type de signalement *
+                </label>
+                <Select value={reportType} onValueChange={setReportType}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Sélectionner le type de problème..." />
                   </SelectTrigger>
                   <SelectContent>
-                    {reportReasons.map((reason) => (
-                      <SelectItem key={reason.value} value={reason.value}>
-                        {reason.label}
+                    {reportTypes.map((type) => (
+                      <SelectItem key={type.value} value={type.value}>
+                        {type.label}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="description">Description détaillée *</Label>
+              <div>
+                <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+                  Description détaillée *
+                </label>
                 <Textarea
                   id="description"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Décrivez en détail le problème rencontré..."
+                  placeholder="Décrivez le problème en détail, incluez des dates et contextes si possible..."
+                  rows={6}
                   required
-                  rows={5}
-                  className="border-red-200 focus:border-red-500"
                 />
               </div>
 
-              <div className="flex items-center gap-3 p-4 bg-amber-50 rounded-lg border border-amber-200">
-                <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0" />
-                <p className="text-sm text-amber-800">
-                  Les signalements abusifs ou répétés peuvent entraîner des sanctions. 
-                  Utilisez cette fonction de manière responsable.
-                </p>
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                <div className="flex items-start">
+                  <AlertTriangle className="h-5 w-5 text-yellow-400 mt-0.5 mr-3" />
+                  <div className="text-sm">
+                    <p className="font-medium text-yellow-800">Rappel Important</p>
+                    <p className="text-yellow-700 mt-1">
+                      Ce signalement sera examiné par l'équipe d'administration. 
+                      Assurez-vous de fournir des informations exactes et vérifiables.
+                    </p>
+                  </div>
+                </div>
               </div>
 
-              <div className="flex justify-end">
-                <Button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="bg-red-600 hover:bg-red-700 text-white"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <div className="w-4 h-4 mr-2 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      Envoi en cours...
-                    </>
-                  ) : (
-                    <>
-                      <Send className="w-4 h-4 mr-2" />
-                      Envoyer le signalement
-                    </>
-                  )}
-                </Button>
-              </div>
+              <Button 
+                type="submit" 
+                className="w-full bg-red-600 hover:bg-red-700"
+                disabled={isLoading}
+              >
+                {isLoading ? 'Envoi du signalement...' : 'Envoyer le signalement'}
+              </Button>
             </form>
-
-            <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <div className="flex items-center gap-2 mb-2">
-                <Users className="w-4 h-4 text-blue-600" />
-                <span className="text-sm font-medium text-blue-800">
-                  Membres disponibles ({members.length})
-                </span>
-              </div>
-              <p className="text-xs text-blue-700">
-                Vous pouvez signaler tout membre de la famille en cas de comportement inapproprié.
-              </p>
-            </div>
           </CardContent>
         </Card>
       </div>
-    </div>
+    </DashboardLayout>
   );
 };
 
