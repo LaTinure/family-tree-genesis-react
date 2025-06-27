@@ -1,3 +1,4 @@
+
 import***REMOVED***{***REMOVED***Avatar***REMOVED***}***REMOVED***from***REMOVED***'@/components/shared/Avatar';
 
 interface***REMOVED***UserAvatarProps***REMOVED***{

@@ -28,6 +28,13 @@ export***REMOVED***const***REMOVED***Avatar***REMOVED***=***REMOVED***({***REMOV
 ***REMOVED******REMOVED******REMOVED******REMOVED***xl:***REMOVED***'w-12***REMOVED***h-12'
 ***REMOVED******REMOVED***};
 
+***REMOVED******REMOVED***const***REMOVED***textSizes***REMOVED***=***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED***sm:***REMOVED***'text-xs',
+***REMOVED******REMOVED******REMOVED******REMOVED***md:***REMOVED***'text-sm',
+***REMOVED******REMOVED******REMOVED******REMOVED***lg:***REMOVED***'text-base',
+***REMOVED******REMOVED******REMOVED******REMOVED***xl:***REMOVED***'text-xl'
+***REMOVED******REMOVED***};
+
 ***REMOVED******REMOVED***return***REMOVED***(
 ***REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className={cn(
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***'relative***REMOVED***rounded-full***REMOVED***overflow-hidden***REMOVED***bg-gradient-to-br***REMOVED***from-whatsapp-100***REMOVED***to-whatsapp-200***REMOVED***flex***REMOVED***items-center***REMOVED***justify-center***REMOVED***border-2***REMOVED***border-white***REMOVED***shadow-md',
@@ -42,8 +49,11 @@ export***REMOVED***const***REMOVED***Avatar***REMOVED***=***REMOVED***({***REMOV
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onError={()***REMOVED***=>***REMOVED***setImageError(true)}
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***/>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)***REMOVED***:***REMOVED***fallback***REMOVED***?***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="flex***REMOVED***items-center***REMOVED***justify-center***REMOVED***w-full***REMOVED***h-full***REMOVED***bg-gradient-to-br***REMOVED***from-whatsapp-400***REMOVED***to-whatsapp-500***REMOVED***text-white***REMOVED***font-semibold">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{fallback}
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className={cn(
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***'flex***REMOVED***items-center***REMOVED***justify-center***REMOVED***w-full***REMOVED***h-full***REMOVED***bg-gradient-to-br***REMOVED***from-whatsapp-400***REMOVED***to-whatsapp-500***REMOVED***text-white***REMOVED***font-semibold',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***textSizes[size]
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{fallback.toUpperCase()}
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)***REMOVED***:***REMOVED***(
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<User***REMOVED***className={cn('text-whatsapp-600',***REMOVED***iconSizes[size])}***REMOVED***/>
