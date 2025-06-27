@@ -12,19 +12,26 @@ export***REMOVED***const***REMOVED***useFamilyMembers***REMOVED***=***REMOVED***
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setIsLoading(true);
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setError(null);
 
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***console.log('🔍***REMOVED***[fetchMembers]***REMOVED***Début***REMOVED***de***REMOVED***la***REMOVED***récupération***REMOVED***des***REMOVED***membres');
+
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***data:***REMOVED***profiles,***REMOVED***error:***REMOVED***fetchError***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.from('profiles')
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.select('*')
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.order('created_at',***REMOVED***{***REMOVED***ascending:***REMOVED***false***REMOVED***});
+
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***console.log('📊***REMOVED***[fetchMembers]***REMOVED***Réponse***REMOVED***Supabase:',***REMOVED***{***REMOVED***profiles,***REMOVED***fetchError***REMOVED***});
 
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(fetchError)***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***throw***REMOVED***fetchError;
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
 
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(!profiles***REMOVED***||***REMOVED***profiles.length***REMOVED***===***REMOVED***0)***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***console.log('⚠️***REMOVED***[fetchMembers]***REMOVED***Aucun***REMOVED***profil***REMOVED***trouvé');
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setMembers([]);
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return;
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
+
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***console.log('✅***REMOVED***[fetchMembers]***REMOVED***Profils***REMOVED***trouvés:',***REMOVED***profiles.length);
 
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***familyMembers:***REMOVED***FamilyMember[]***REMOVED***=***REMOVED***profiles.map(profile***REMOVED***=>***REMOVED***({
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***profile.id***REMOVED***||***REMOVED***'',
@@ -55,9 +62,11 @@ export***REMOVED***const***REMOVED***useFamilyMembers***REMOVED***=***REMOVED***
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***updated_at:***REMOVED***profile.updated_at***REMOVED***||***REMOVED***new***REMOVED***Date().toISOString()
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}));
 
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***console.log('👥***REMOVED***[fetchMembers]***REMOVED***Membres***REMOVED***transformés:',***REMOVED***familyMembers);
+
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setMembers(familyMembers);
 ***REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***catch***REMOVED***(err)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***console.error('Error***REMOVED***fetching***REMOVED***family***REMOVED***members:',***REMOVED***err);
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***console.error('❌***REMOVED***[fetchMembers]***REMOVED***Erreur***REMOVED***lors***REMOVED***de***REMOVED***la***REMOVED***récupération:',***REMOVED***err);
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setError(err***REMOVED***instanceof***REMOVED***Error***REMOVED***?***REMOVED***err.message***REMOVED***:***REMOVED***'Une***REMOVED***erreur***REMOVED***est***REMOVED***survenue');
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setMembers([]);
 ***REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***finally***REMOVED***{

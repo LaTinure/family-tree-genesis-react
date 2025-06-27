@@ -4,13 +4,13 @@ import***REMOVED***{***REMOVED***Card,***REMOVED***CardContent,***REMOVED***Card
 import***REMOVED***{***REMOVED***Button***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/button';
 import***REMOVED***{***REMOVED***TreePine,***REMOVED***Users,***REMOVED***Plus,***REMOVED***Search,***REMOVED***Leaf,***REMOVED***Crown,***REMOVED***Heart,***REMOVED***GitBranch***REMOVED***}***REMOVED***from***REMOVED***'lucide-react';
 import***REMOVED***{***REMOVED***api***REMOVED***}***REMOVED***from***REMOVED***'@/services/api';
-import***REMOVED***{***REMOVED***ProfileData***REMOVED***}***REMOVED***from***REMOVED***'@/types/profile';
+import***REMOVED***{***REMOVED***FamilyMember***REMOVED***}***REMOVED***from***REMOVED***'@/types/family';
 import***REMOVED***{***REMOVED***UserAvatar***REMOVED***}***REMOVED***from***REMOVED***'@/components/shared/UserAvatar';
 import***REMOVED***{***REMOVED***motion***REMOVED***}***REMOVED***from***REMOVED***'framer-motion';
 
 const***REMOVED***FamilyTree***REMOVED***=***REMOVED***()***REMOVED***=>***REMOVED***{
 ***REMOVED******REMOVED***const***REMOVED***{***REMOVED***profile***REMOVED***}***REMOVED***=***REMOVED***useAuth();
-***REMOVED******REMOVED***const***REMOVED***[members,***REMOVED***setMembers]***REMOVED***=***REMOVED***useState<ProfileData[]>([]);
+***REMOVED******REMOVED***const***REMOVED***[members,***REMOVED***setMembers]***REMOVED***=***REMOVED***useState<FamilyMember[]>([]);
 ***REMOVED******REMOVED***const***REMOVED***[loading,***REMOVED***setLoading]***REMOVED***=***REMOVED***useState(true);
 
 ***REMOVED******REMOVED***useEffect(()***REMOVED***=>***REMOVED***{
@@ -170,7 +170,7 @@ const***REMOVED***FamilyTree***REMOVED***=***REMOVED***()***REMOVED***=>***REMOV
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{member.first_name}***REMOVED***{member.last_name}
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</h3>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<p***REMOVED***className="text-sm***REMOVED***text-green-600">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{member.title***REMOVED***||***REMOVED***member.relationship_type}
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{member.relationship_type}
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</p>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{member.is_patriarch***REMOVED***&&***REMOVED***(
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<span***REMOVED***className="inline-block***REMOVED***px-2***REMOVED***py-1***REMOVED***text-xs***REMOVED***bg-yellow-100***REMOVED***text-yellow-800***REMOVED***rounded-full***REMOVED***mt-1***REMOVED***border***REMOVED***border-yellow-300">

@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+#***REMOVED***Local***REMOVED***Netlify***REMOVED***folder
+.netlify
