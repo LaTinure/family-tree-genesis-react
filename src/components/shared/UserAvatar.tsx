@@ -1,3 +1,4 @@
+
 import { Avatar } from '@/components/shared/Avatar';
 
 interface UserAvatarProps {

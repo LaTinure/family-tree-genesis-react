@@ -155,6 +155,7 @@ export type Database = {
           photo_url: string | null
           profession: string | null
           relationship_type: string | null
+          role: string | null
           role_radio: string | null
           situation: string | null
           updated_at: string | null
@@ -186,6 +187,7 @@ export type Database = {
           photo_url?: string | null
           profession?: string | null
           relationship_type?: string | null
+          role?: string | null
           role_radio?: string | null
           situation?: string | null
           updated_at?: string | null
@@ -217,6 +219,7 @@ export type Database = {
           photo_url?: string | null
           profession?: string | null
           relationship_type?: string | null
+          role?: string | null
           role_radio?: string | null
           situation?: string | null
           updated_at?: string | null

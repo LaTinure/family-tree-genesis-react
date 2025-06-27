@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,6 +9,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useFamilyMembers } from '@/hooks/useFamilyMembers';
 import { useAuth } from '@/hooks/useAuth';
 import { formatRelationshipType } from '@/lib/utils';
+import { UserAvatar } from '@/components/shared/UserAvatar';
 import {
   Users,
   Crown,
@@ -61,32 +63,32 @@ const Dashboard = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-whatsapp-50 to-white flex items-center justify-center">
         <LoadingSpinner size="lg" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-whatsapp-50 to-white p-6">
       <div className="max-w-7xl mx-auto space-y-8">
         {/* En-tête */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">
+            <h1 className="text-4xl font-bold text-whatsapp-800 mb-2">
               Tableau de Bord Familial
             </h1>
-            <p className="text-lg text-gray-600">
+            <p className="text-lg text-whatsapp-600">
               Bienvenue dans votre espace famille connecté
             </p>
           </div>
           <div className="flex gap-3">
-            <Button onClick={() => navigate(ROUTES.DASHBOARD.INVITE)} className="bg-primary hover:bg-primary/90">
+            <Button onClick={() => navigate(ROUTES.DASHBOARD.INVITE)} className="bg-whatsapp-600 hover:bg-whatsapp-700">
               <UserPlus className="w-4 h-4 mr-2" />
               Inviter un membre
             </Button>
             {user && (
-              <Button variant="outline" onClick={() => navigate(ROUTES.PROFILE)}>
+              <Button variant="outline" onClick={() => navigate(ROUTES.PROFILE)} className="border-whatsapp-300 text-whatsapp-700 hover:bg-whatsapp-50">
                 <Shield className="w-4 h-4 mr-2" />
                 Mon Profil
               </Button>
@@ -130,9 +132,9 @@ const Dashboard = () => {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Membres récents */}
-            <Card>
+            <Card className="border-whatsapp-200">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2 text-whatsapp-700">
                   <Activity className="w-5 h-5" />
                   Membres Récents
                 </CardTitle>
@@ -142,23 +144,21 @@ const Dashboard = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 {stats.recentMembers.map((member) => (
-                  <div key={member.id} className="flex items-center gap-3 p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
-                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                      {member.photo_url ? (
-                        <img
-                          src={member.photo_url}
-                          alt={`${member.first_name} ${member.last_name}`}
-                          className="w-10 h-10 rounded-full object-cover"
-                        />
-                      ) : (
-                        <Users className="w-5 h-5 text-primary" />
-                      )}
-                    </div>
+                  <div key={member.id} className="flex items-center gap-3 p-3 rounded-lg bg-whatsapp-50 hover:bg-whatsapp-100 transition-colors border border-whatsapp-100">
+                    <UserAvatar
+                      user={{
+                        first_name: member.first_name,
+                        last_name: member.last_name,
+                        photo_url: member.photo_url,
+                        avatar_url: member.avatar_url,
+                      }}
+                      size="sm"
+                    />
                     <div className="flex-1">
-                      <p className="font-medium text-sm">
+                      <p className="font-medium text-sm text-whatsapp-800">
                         {member.first_name} {member.last_name}
                       </p>
-                      <p className="text-xs text-gray-600">
+                      <p className="text-xs text-whatsapp-600">
                         {formatRelationshipType(member.relationship_type)}
                       </p>
                     </div>
@@ -187,7 +187,15 @@ const Dashboard = () => {
                     {stats.pendingMembers.slice(0, 3).map((member) => (
                       <div key={member.id} className="flex items-center gap-2 text-sm">
                         <div className="w-2 h-2 rounded-full bg-orange-400"></div>
-                        <span>{member.first_name} {member.last_name}</span>
+                        <UserAvatar
+                          user={{
+                            first_name: member.first_name,
+                            last_name: member.last_name,
+                            photo_url: member.photo_url,
+                          }}
+                          size="sm"
+                        />
+                        <span className="text-orange-800">{member.first_name} {member.last_name}</span>
                       </div>
                     ))}
                   </div>
@@ -204,9 +212,9 @@ const Dashboard = () => {
             )}
 
             {/* Actions rapides */}
-            <Card>
+            <Card className="border-whatsapp-200">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2 text-whatsapp-700">
                   <TrendingUp className="w-5 h-5" />
                   Actions Rapides
                 </CardTitle>
@@ -214,7 +222,7 @@ const Dashboard = () => {
               <CardContent className="space-y-3">
                 <Button
                   variant="outline"
-                  className="w-full justify-start"
+                  className="w-full justify-start border-whatsapp-300 text-whatsapp-700 hover:bg-whatsapp-50"
                   onClick={() => navigate(ROUTES.DASHBOARD.MEMBERS)}
                 >
                   <Users className="w-4 h-4 mr-2" />
@@ -222,7 +230,7 @@ const Dashboard = () => {
                 </Button>
                 <Button
                   variant="outline"
-                  className="w-full justify-start"
+                  className="w-full justify-start border-whatsapp-300 text-whatsapp-700 hover:bg-whatsapp-50"
                   onClick={() => navigate(ROUTES.DASHBOARD.MESSAGES)}
                 >
                   <MessageSquare className="w-4 h-4 mr-2" />
@@ -230,7 +238,7 @@ const Dashboard = () => {
                 </Button>
                 <Button
                   variant="outline"
-                  className="w-full justify-start"
+                  className="w-full justify-start border-whatsapp-300 text-whatsapp-700 hover:bg-whatsapp-50"
                   onClick={() => navigate(ROUTES.DASHBOARD.EVENTS)}
                 >
                   <Calendar className="w-4 h-4 mr-2" />

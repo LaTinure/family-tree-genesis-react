@@ -28,6 +28,13 @@ export const Avatar = ({ src, alt, size = 'md', className, fallback }: AvatarPro
     xl: 'w-12 h-12'
   };
 
+  const textSizes = {
+    sm: 'text-xs',
+    md: 'text-sm',
+    lg: 'text-base',
+    xl: 'text-xl'
+  };
+
   return (
     <div className={cn(
       'relative rounded-full overflow-hidden bg-gradient-to-br from-whatsapp-100 to-whatsapp-200 flex items-center justify-center border-2 border-white shadow-md',
@@ -42,8 +49,11 @@ export const Avatar = ({ src, alt, size = 'md', className, fallback }: AvatarPro
           onError={() => setImageError(true)}
         />
       ) : fallback ? (
-        <div className="flex items-center justify-center w-full h-full bg-gradient-to-br from-whatsapp-400 to-whatsapp-500 text-white font-semibold">
-          {fallback}
+        <div className={cn(
+          'flex items-center justify-center w-full h-full bg-gradient-to-br from-whatsapp-400 to-whatsapp-500 text-white font-semibold',
+          textSizes[size]
+        )}>
+          {fallback.toUpperCase()}
         </div>
       ) : (
         <User className={cn('text-whatsapp-600', iconSizes[size])} />
