@@ -6,8 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Calendar, Plus, MapPin, Clock, Users } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { api } from '@/services/api';
-import { ProfileData } from '@/types/profile';
+import { FamilyMember } from '@/types/family';
 import { UserAvatar } from '@/components/shared/UserAvatar';
+import DashboardLayout from '@/components/layout/DashboardLayout';
 
 interface FamilyEvent {
   id: string;
@@ -15,13 +16,13 @@ interface FamilyEvent {
   description: string;
   date: string;
   location: string;
-  organizer: ProfileData;
-  attendees: ProfileData[];
+  organizer: FamilyMember;
+  attendees: FamilyMember[];
 }
 
 const Events = () => {
   const { user } = useAuth();
-  const [currentProfile, setCurrentProfile] = useState<ProfileData | null>(null);
+  const [currentProfile, setCurrentProfile] = useState<FamilyMember | null>(null);
   const [events, setEvents] = useState<FamilyEvent[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
@@ -33,28 +34,29 @@ const Events = () => {
           const profile = await api.profiles.getCurrent();
           setCurrentProfile(profile);
           
-          // Simuler quelques événements pour la démo
-          const mockEvents: FamilyEvent[] = [
-            {
-              id: '1',
-              title: 'Réunion familiale annuelle',
-              description: 'Grande réunion de toute la famille pour célébrer les fêtes',
-              date: '2024-12-25',
-              location: 'Maison familiale, Paris',
-              organizer: profile,
-              attendees: [profile]
-            },
-            {
-              id: '2',
-              title: 'Anniversaire de Grand-mère',
-              description: 'Célébration des 80 ans de notre chère grand-mère',
-              date: '2024-07-15',
-              location: 'Restaurant Le Jardin',
-              organizer: profile,
-              attendees: [profile]
-            }
-          ];
-          setEvents(mockEvents);
+          if (profile) {
+            const mockEvents: FamilyEvent[] = [
+              {
+                id: '1',
+                title: 'Réunion familiale annuelle',
+                description: 'Grande réunion de toute la famille pour célébrer les fêtes',
+                date: '2024-12-25',
+                location: 'Maison familiale, Paris',
+                organizer: profile,
+                attendees: [profile]
+              },
+              {
+                id: '2',
+                title: 'Anniversaire de Grand-mère',
+                description: 'Célébration des 80 ans de notre chère grand-mère',
+                date: '2024-07-15',
+                location: 'Restaurant Le Jardin',
+                organizer: profile,
+                attendees: [profile]
+              }
+            ];
+            setEvents(mockEvents);
+          }
         }
       } catch (error) {
         console.error('Erreur lors de la récupération des données:', error);
@@ -83,15 +85,17 @@ const Events = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 p-8 pt-24">
-        <div className="text-center">Chargement...</div>
-      </div>
+      <DashboardLayout>
+        <div className="container mx-auto px-4 py-6">
+          <div className="text-center">Chargement...</div>
+        </div>
+      </DashboardLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 p-8 pt-24">
-      <div className="max-w-4xl mx-auto">
+    <DashboardLayout>
+      <div className="container mx-auto px-4 py-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <div className="flex items-center gap-2">
@@ -153,6 +157,7 @@ const Events = () => {
                                 first_name: event.organizer.first_name,
                                 last_name: event.organizer.last_name,
                                 avatar_url: event.organizer.avatar_url,
+                                photo_url: event.organizer.photo_url,
                               }}
                               size="sm"
                             />
@@ -173,6 +178,7 @@ const Events = () => {
                                   first_name: attendee.first_name,
                                   last_name: attendee.last_name,
                                   avatar_url: attendee.avatar_url,
+                                  photo_url: attendee.photo_url,
                                 }}
                                 size="sm"
                                 className="border-2 border-white"
@@ -202,7 +208,7 @@ const Events = () => {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </DashboardLayout>
   );
 };
 

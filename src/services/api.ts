@@ -169,16 +169,16 @@ export const api = {
       }));
     },
 
-    async create(content: string, isAdmin = false): Promise<Message> {
+    async create(messageData: { content: string; sender_id: string; is_admin_message: boolean }): Promise<Message> {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Non authentifié');
 
       const { data, error } = await supabase
         .from('messages')
         .insert({
-          content,
-          sender_id: user.id,
-          is_admin_message: isAdmin
+          content: messageData.content,
+          sender_id: messageData.sender_id,
+          is_admin_message: messageData.is_admin_message
         })
         .select()
         .maybeSingle();
@@ -196,7 +196,6 @@ export const api = {
     },
 
     async markAsRead(messageId: string): Promise<void> {
-      // Simulate marking as read (no actual column exists)
       console.log('Message marked as read:', messageId);
     }
   },
@@ -206,6 +205,27 @@ export const api = {
       const { data, error } = await supabase
         .from('notifications')
         .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      return (data || []).map(notif => ({
+        id: notif.id,
+        title: notif.title,
+        message: notif.message,
+        type: (notif.type as any) || 'info',
+        user_id: notif.user_id,
+        data: notif.data,
+        read: notif.read || false,
+        created_at: notif.created_at
+      }));
+    },
+
+    async getByUserId(userId: string): Promise<Notification[]> {
+      const { data, error } = await supabase
+        .from('notifications')
+        .select('*')
+        .eq('user_id', userId)
         .order('created_at', { ascending: false });
 
       if (error) throw error;

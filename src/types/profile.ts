@@ -14,7 +14,7 @@ export interface ProfileData {
   avatar_url?: string;
   photo_url?: string;
   title?: 'Patriarche' | 'Matriarche' | 'Père' | 'Mère' | 'Fils' | 'Fille' | 'Grand-père' | 'Grand-mère' | 'Petit-fils' | 'Petite-fille' | 'Oncle' | 'Tante' | 'Neveu' | 'Nièce' | 'Cousin' | 'Cousine' | 'Beau-père' | 'Belle-mère' | 'Beau-fils' | 'Belle-fille' | 'Frère' | 'Sœur' | 'Époux' | 'Épouse';
-  relationship_type?: 'fils' | 'fille' | 'père' | 'mère' | 'cousin' | 'cousine' | 'tante' | 'oncle' | 'neveu' | 'nièce' | 'petit-fils' | 'petite-fille' | 'grand-père' | 'grande-mère' | 'époux' | 'épouse' | 'patriarche' | 'matriarche' | 'conjoint' | 'frere' | 'soeur' | 'beau-pere' | 'belle-mere' | 'beau-fils' | 'belle-fille';
+  relationship_type?: 'fils' | 'fille' | 'père' | 'mère' | 'cousin' | 'cousine' | 'tante' | 'oncle' | 'neveu' | 'nièce' | 'petit-fils' | 'petite-fille' | 'grand-père' | 'grand-mère' | 'époux' | 'épouse' | 'patriarche' | 'matriarche' | 'conjoint' | 'frere' | 'soeur' | 'beau-pere' | 'belle-mere' | 'beau-fils' | 'belle-fille' | 'pere' | 'mere' | 'epoux' | 'epouse';
   father_name?: string;
   mother_name?: string;
   spouse_name?: string;
