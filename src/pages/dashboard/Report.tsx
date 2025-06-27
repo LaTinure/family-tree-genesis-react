@@ -1,273 +1,201 @@
-
 import { useState, useEffect } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+import { useAuth } from '@/hooks/useAuth';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Flag, AlertTriangle, Send, Search } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/use-toast';
 import { api } from '@/services/api';
 import { ProfileData } from '@/types/profile';
-import { UserAvatar } from '@/components/shared/UserAvatar';
-import { useToast } from '@/hooks/use-toast';
+import { Flag, Send, AlertTriangle, Users } from 'lucide-react';
+
+const reportReasons = [
+  { value: 'spam', label: 'Spam ou contenu indésirable' },
+  { value: 'harassment', label: 'Harcèlement' },
+  { value: 'inappropriate', label: 'Contenu inapproprié' },
+  { value: 'fake', label: 'Fausses informations' },
+  { value: 'privacy', label: 'Violation de la vie privée' },
+  { value: 'other', label: 'Autre' },
+];
 
 const Report = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [members, setMembers] = useState<ProfileData[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
   const [selectedMember, setSelectedMember] = useState<ProfileData | null>(null);
   const [reportReason, setReportReason] = useState('');
-  const [reportDescription, setReportDescription] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
-
-  const reportReasons = [
-    { value: 'inappropriate_content', label: 'Contenu inapproprié' },
-    { value: 'harassment', label: 'Harcèlement' },
-    { value: 'spam', label: 'Spam' },
-    { value: 'fake_profile', label: 'Faux profil' },
-    { value: 'other', label: 'Autre' }
-  ];
+  const [description, setDescription] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const fetchMembers = async () => {
       try {
-        const data = await api.profiles.getAll();
-        setMembers(data.filter(member => member.user_id !== user?.id));
+        const allMembers = await api.profiles.getAll();
+        setMembers(allMembers);
       } catch (error) {
         console.error('Erreur lors de la récupération des membres:', error);
-      } finally {
-        setLoading(false);
       }
     };
 
-    if (user) {
-      fetchMembers();
-    }
-  }, [user]);
+    fetchMembers();
+  }, []);
 
-  const filteredMembers = members.filter(member =>
-    `${member.first_name} ${member.last_name}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    member.email?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const handleSubmitReport = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedMember || !reportReason || !reportDescription.trim()) {
+
+    if (!selectedMember || !reportReason || !description.trim()) {
       toast({
         title: 'Erreur',
-        description: 'Veuillez remplir tous les champs obligatoires',
+        description: 'Veuillez remplir tous les champs obligatoires.',
         variant: 'destructive',
       });
       return;
     }
 
-    setSubmitting(true);
+    setIsSubmitting(true);
+
     try {
       // Créer une notification pour les admins
       await api.notifications.create({
         user_id: user?.id || '',
-        type: 'report',
+        type: 'warning',
         title: 'Nouveau signalement',
         message: `Signalement de ${selectedMember.first_name} ${selectedMember.last_name} pour: ${reportReasons.find(r => r.value === reportReason)?.label}`,
+        read: false,
         data: {
-          reported_user_id: selectedMember.id,
+          reported_user_id: selectedMember.user_id,
           reported_user_name: `${selectedMember.first_name} ${selectedMember.last_name}`,
           reason: reportReason,
-          description: reportDescription,
-          reporter_id: user?.id
-        }
+          description: description,
+          reporter_id: user?.id || '',
+        },
       });
 
       toast({
         title: 'Signalement envoyé',
-        description: 'Votre signalement a été transmis aux administrateurs',
+        description: 'Votre signalement a été transmis aux administrateurs.',
       });
 
-      // Reset du formulaire
+      // Réinitialiser le formulaire
       setSelectedMember(null);
       setReportReason('');
-      setReportDescription('');
-      setSearchQuery('');
+      setDescription('');
     } catch (error) {
+      console.error('Erreur lors du signalement:', error);
       toast({
         title: 'Erreur',
-        description: 'Impossible d\'envoyer le signalement',
+        description: 'Impossible d\'envoyer le signalement. Veuillez réessayer.',
         variant: 'destructive',
       });
     } finally {
-      setSubmitting(false);
+      setIsSubmitting(false);
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 p-8 pt-24">
-        <div className="text-center">Chargement...</div>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 p-8 pt-24">
-      <div className="max-w-4xl mx-auto">
-        <Card>
-          <CardHeader className="flex flex-row items-center gap-2">
-            <Flag className="w-8 h-8 text-red-600" />
-            <div>
-              <CardTitle>Signaler un membre</CardTitle>
-              <p className="text-sm text-gray-600 mt-1">
-                Utilisez ce formulaire pour signaler un comportement inapproprié
-              </p>
-            </div>
+    <div className="min-h-screen bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50 p-6">
+      <div className="container mx-auto max-w-2xl">
+        <Card className="border-red-200 shadow-lg">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-3 text-red-700">
+              <Flag className="w-6 h-6" />
+              Signaler un membre
+            </CardTitle>
+            <CardDescription>
+              Signalez un comportement inapproprié ou du contenu problématique. 
+              Votre signalement sera examiné par les administrateurs.
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-6">
-              {/* Alerte d'information */}
-              <div className="flex items-start space-x-3 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                <AlertTriangle className="w-5 h-5 text-yellow-600 mt-0.5" />
-                <div className="text-sm text-yellow-800">
-                  <p className="font-medium">Information importante</p>
-                  <p>
-                    Les signalements sont traités de manière confidentielle par notre équipe d'administration. 
-                    Veillez à fournir des informations précises et détaillées.
-                  </p>
-                </div>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="member">Membre à signaler *</Label>
+                <Select value={selectedMember?.id || ''} onValueChange={(value) => {
+                  const member = members.find(m => m.id === value);
+                  setSelectedMember(member || null);
+                }}>
+                  <SelectTrigger className="border-red-200 focus:border-red-500">
+                    <SelectValue placeholder="Sélectionner un membre" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {members.map((member) => (
+                      <SelectItem key={member.id} value={member.id}>
+                        {member.first_name} {member.last_name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
-              {/* Recherche de membre */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Rechercher le membre à signaler
-                </label>
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                  <Input
-                    placeholder="Nom, prénom ou email du membre..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="reason">Raison du signalement *</Label>
+                <Select value={reportReason} onValueChange={setReportReason}>
+                  <SelectTrigger className="border-red-200 focus:border-red-500">
+                    <SelectValue placeholder="Sélectionner une raison" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {reportReasons.map((reason) => (
+                      <SelectItem key={reason.value} value={reason.value}>
+                        {reason.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
-              {/* Liste des membres filtrés */}
-              {searchQuery && (
-                <div className="space-y-2 max-h-40 overflow-y-auto">
-                  {filteredMembers.map((member) => (
-                    <div
-                      key={member.id}
-                      onClick={() => {
-                        setSelectedMember(member);
-                        setSearchQuery(`${member.first_name} ${member.last_name}`);
-                      }}
-                      className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-colors ${
-                        selectedMember?.id === member.id
-                          ? 'bg-red-50 border border-red-200'
-                          : 'hover:bg-gray-50 border border-gray-200'
-                      }`}
-                    >
-                      <UserAvatar
-                        user={{
-                          first_name: member.first_name,
-                          last_name: member.last_name,
-                          avatar_url: member.avatar_url,
-                        }}
-                        size="sm"
-                      />
-                      <div>
-                        <p className="font-medium text-gray-800">
-                          {member.first_name} {member.last_name}
-                        </p>
-                        <p className="text-sm text-gray-600">{member.email}</p>
-                      </div>
-                    </div>
-                  ))}
-                  {filteredMembers.length === 0 && (
-                    <p className="text-center text-gray-500 py-4">Aucun membre trouvé</p>
+              <div className="space-y-2">
+                <Label htmlFor="description">Description détaillée *</Label>
+                <Textarea
+                  id="description"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Décrivez en détail le problème rencontré..."
+                  required
+                  rows={5}
+                  className="border-red-200 focus:border-red-500"
+                />
+              </div>
+
+              <div className="flex items-center gap-3 p-4 bg-amber-50 rounded-lg border border-amber-200">
+                <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0" />
+                <p className="text-sm text-amber-800">
+                  Les signalements abusifs ou répétés peuvent entraîner des sanctions. 
+                  Utilisez cette fonction de manière responsable.
+                </p>
+              </div>
+
+              <div className="flex justify-end">
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="bg-red-600 hover:bg-red-700 text-white"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <div className="w-4 h-4 mr-2 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Envoi en cours...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4 mr-2" />
+                      Envoyer le signalement
+                    </>
                   )}
-                </div>
-              )}
+                </Button>
+              </div>
+            </form>
 
-              {/* Formulaire de signalement */}
-              {selectedMember && (
-                <form onSubmit={handleSubmitReport} className="space-y-4 p-4 bg-gray-50 rounded-lg">
-                  <h3 className="font-semibold text-gray-800">
-                    Signalement de {selectedMember.first_name} {selectedMember.last_name}
-                  </h3>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Motif du signalement *
-                    </label>
-                    <Select value={reportReason} onValueChange={setReportReason}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Sélectionnez un motif" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {reportReasons.map((reason) => (
-                          <SelectItem key={reason.value} value={reason.value}>
-                            {reason.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Description détaillée *
-                    </label>
-                    <Textarea
-                      placeholder="Décrivez précisément le comportement ou le contenu que vous souhaitez signaler..."
-                      value={reportDescription}
-                      onChange={(e) => setReportDescription(e.target.value)}
-                      rows={4}
-                      required
-                    />
-                  </div>
-
-                  <div className="flex justify-end space-x-2 pt-4">
-                    <Button 
-                      type="button" 
-                      variant="outline"
-                      onClick={() => {
-                        setSelectedMember(null);
-                        setReportReason('');
-                        setReportDescription('');
-                        setSearchQuery('');
-                      }}
-                    >
-                      Annuler
-                    </Button>
-                    <Button 
-                      type="submit"
-                      disabled={submitting || !reportReason || !reportDescription.trim()}
-                      className="bg-red-600 hover:bg-red-700"
-                    >
-                      {submitting ? (
-                        <>
-                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                          Envoi...
-                        </>
-                      ) : (
-                        <>
-                          <Send className="w-4 h-4 mr-2" />
-                          Envoyer le signalement
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                </form>
-              )}
-
-              {!selectedMember && !searchQuery && (
-                <div className="w-full mt-6 text-center text-gray-500">
-                  Recherchez d'abord le membre que vous souhaitez signaler
-                </div>
-              )}
+            <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <div className="flex items-center gap-2 mb-2">
+                <Users className="w-4 h-4 text-blue-600" />
+                <span className="text-sm font-medium text-blue-800">
+                  Membres disponibles ({members.length})
+                </span>
+              </div>
+              <p className="text-xs text-blue-700">
+                Vous pouvez signaler tout membre de la famille en cas de comportement inapproprié.
+              </p>
             </div>
           </CardContent>
         </Card>

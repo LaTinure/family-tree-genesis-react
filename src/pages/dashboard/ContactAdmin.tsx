@@ -1,278 +1,201 @@
-
 import { useState, useEffect } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Shield, Send, Search, HelpCircle, Bug, MessageSquare } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
-import { api } from '@/services/api';
-import { ProfileData } from '@/types/profile';
-import { UserAvatar } from '@/components/shared/UserAvatar';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
+import { api } from '@/services/api';
+import { FamilyMember } from '@/types/family';
+import { ProfileData } from '@/types/profile';
+import { MessageCircle, Send, AlertCircle, CheckCircle } from 'lucide-react';
 
 const ContactAdmin = () => {
-  const { user } = useAuth();
+  const { user, profile: currentProfile } = useAuth();
   const { toast } = useToast();
-  const [currentProfile, setCurrentProfile] = useState<ProfileData | null>(null);
-  const [admins, setAdmins] = useState<ProfileData[]>([]);
-  const [messageType, setMessageType] = useState('');
   const [subject, setSubject] = useState('');
-  const [messageContent, setMessageContent] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
-
-  const messageTypes = [
-    { value: 'question', label: 'Question générale', icon: HelpCircle },
-    { value: 'bug_report', label: 'Signaler un bug', icon: Bug },
-    { value: 'feedback', label: 'Suggestion d\'amélioration', icon: MessageSquare },
-    { value: 'account_issue', label: 'Problème de compte', icon: Shield },
-    { value: 'other', label: 'Autre', icon: MessageSquare }
-  ];
+  const [message, setMessage] = useState('');
+  const [priority, setPriority] = useState('normal');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [admins, setAdmins] = useState<ProfileData[]>([]);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchAdmins = async () => {
       try {
-        if (user) {
-          const profile = await api.profiles.getCurrent();
-          setCurrentProfile(profile);
-          
-          const allProfiles = await api.profiles.getAll();
-          const adminProfiles = allProfiles.filter(p => p.is_admin);
-          setAdmins(adminProfiles);
-        }
+        const allMembers = await api.profiles.getAll();
+        const adminMembers = allMembers.filter((member: FamilyMember) => member.is_admin);
+        setAdmins(adminMembers);
       } catch (error) {
-        console.error('Erreur lors de la récupération des données:', error);
-      } finally {
-        setLoading(false);
+        console.error('Erreur lors de la récupération des admins:', error);
       }
     };
 
-    fetchData();
-  }, [user]);
+    fetchAdmins();
+  }, []);
 
-  const handleSubmitMessage = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!messageType || !subject.trim() || !messageContent.trim()) {
+
+    if (!subject.trim() || !message.trim()) {
       toast({
         title: 'Erreur',
-        description: 'Veuillez remplir tous les champs obligatoires',
+        description: 'Veuillez remplir tous les champs obligatoires.',
         variant: 'destructive',
       });
       return;
     }
 
-    setSubmitting(true);
-    try {
-      // Envoyer un message aux admins
-      await api.messages.create({
-        content: `[${messageTypes.find(t => t.value === messageType)?.label}] ${subject}\n\n${messageContent}`,
-        sender_id: user?.id || '',
-        is_admin_message: false,
+    if (!currentProfile) {
+      toast({
+        title: 'Erreur',
+        description: 'Profil utilisateur non trouvé.',
+        variant: 'destructive',
       });
+      return;
+    }
 
-      // Créer une notification pour tous les admins
+    setIsSubmitting(true);
+
+    try {
+      // Envoyer le message aux admins
       for (const admin of admins) {
         await api.notifications.create({
           user_id: admin.user_id,
-          type: 'admin_contact',
+          type: 'info',
           title: 'Nouveau message pour l\'administration',
           message: `${currentProfile?.first_name} ${currentProfile?.last_name} a envoyé un message: ${subject}`,
+          read: false,
           data: {
-            sender_id: user?.id,
-            sender_name: `${currentProfile?.first_name} ${currentProfile?.last_name}`,
-            message_type: messageType,
-            subject: subject
-          }
+            sender_id: currentProfile.user_id,
+            sender_name: `${currentProfile.first_name} ${currentProfile.last_name}`,
+            message_type: 'admin_contact',
+            subject: subject,
+          },
         });
       }
 
       toast({
         title: 'Message envoyé',
-        description: 'Votre message a été transmis aux administrateurs',
+        description: 'Votre message a été envoyé aux administrateurs.',
       });
 
-      // Reset du formulaire
-      setMessageType('');
+      // Réinitialiser le formulaire
       setSubject('');
-      setMessageContent('');
+      setMessage('');
+      setPriority('normal');
     } catch (error) {
+      console.error('Erreur lors de l\'envoi:', error);
       toast({
         title: 'Erreur',
-        description: 'Impossible d\'envoyer le message',
+        description: 'Impossible d\'envoyer le message. Veuillez réessayer.',
         variant: 'destructive',
       });
     } finally {
-      setSubmitting(false);
+      setIsSubmitting(false);
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 p-8 pt-24">
-        <div className="text-center">Chargement...</div>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 p-8 pt-24">
-      <div className="max-w-4xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Informations sur les admins */}
-          <Card className="lg:col-span-1">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Shield className="w-6 h-6 text-blue-600" />
-                Administrateurs
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {admins.length === 0 ? (
-                <p className="text-gray-500 text-center">Aucun administrateur disponible</p>
-              ) : (
-                <div className="space-y-3">
-                  {admins.map((admin) => (
-                    <div key={admin.id} className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
-                      <UserAvatar
-                        user={{
-                          first_name: admin.first_name,
-                          last_name: admin.last_name,
-                          avatar_url: admin.avatar_url,
-                        }}
-                        size="md"
-                      />
-                      <div>
-                        <h4 className="font-semibold text-gray-800">
-                          {admin.first_name} {admin.last_name}
-                        </h4>
-                        <p className="text-sm text-blue-600">Administrateur</p>
-                        {admin.is_patriarch && (
-                          <span className="inline-block px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full mt-1">
-                            Patriarche
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
+    <div className="min-h-screen bg-gradient-to-br from-whatsapp-50 via-green-50 to-emerald-50 p-6">
+      <div className="container mx-auto max-w-2xl">
+        <Card className="border-whatsapp-200 shadow-lg">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-3 text-whatsapp-700">
+              <MessageCircle className="w-6 h-6" />
+              Contacter l'Administration
+            </CardTitle>
+            <CardDescription>
+              Envoyez un message aux administrateurs de la famille. Ils vous répondront dans les plus brefs délais.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="subject">Sujet *</Label>
+                <Input
+                  id="subject"
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                  placeholder="Objet de votre message"
+                  required
+                  className="border-whatsapp-200 focus:border-whatsapp-500"
+                />
+              </div>
 
-          {/* Formulaire de contact */}
-          <Card className="lg:col-span-2">
-            <CardHeader className="flex flex-row items-center gap-2">
-              <Shield className="w-8 h-8 text-blue-600" />
-              <div>
-                <CardTitle>Contacter l'Administration</CardTitle>
-                <p className="text-sm text-gray-600 mt-1">
-                  Posez vos questions ou signalez un problème aux administrateurs
+              <div className="space-y-2">
+                <Label htmlFor="priority">Priorité</Label>
+                <Select value={priority} onValueChange={setPriority}>
+                  <SelectTrigger className="border-whatsapp-200 focus:border-whatsapp-500">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">Basse</SelectItem>
+                    <SelectItem value="normal">Normale</SelectItem>
+                    <SelectItem value="high">Haute</SelectItem>
+                    <SelectItem value="urgent">Urgente</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="message">Message *</Label>
+                <Textarea
+                  id="message"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Décrivez votre demande ou question..."
+                  required
+                  rows={6}
+                  className="border-whatsapp-200 focus:border-whatsapp-500"
+                />
+              </div>
+
+              <div className="flex items-center gap-3 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0" />
+                <p className="text-sm text-blue-800">
+                  Votre message sera envoyé à tous les administrateurs de la famille. 
+                  Vous recevrez une réponse par notification.
                 </p>
               </div>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmitMessage} className="space-y-6">
-                {/* Type de message */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Type de message *
-                  </label>
-                  <Select value={messageType} onValueChange={setMessageType}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Sélectionnez le type de votre message" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {messageTypes.map((type) => {
-                        const IconComponent = type.icon;
-                        return (
-                          <SelectItem key={type.value} value={type.value}>
-                            <div className="flex items-center space-x-2">
-                              <IconComponent className="w-4 h-4" />
-                              <span>{type.label}</span>
-                            </div>
-                          </SelectItem>
-                        );
-                      })}
-                    </SelectContent>
-                  </Select>
-                </div>
 
-                {/* Sujet */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Sujet *
-                  </label>
-                  <Input
-                    placeholder="Résumez votre demande en quelques mots..."
-                    value={subject}
-                    onChange={(e) => setSubject(e.target.value)}
-                    required
-                  />
-                </div>
+              <div className="flex justify-end">
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="bg-whatsapp-600 hover:bg-whatsapp-700 text-white"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <div className="w-4 h-4 mr-2 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Envoi en cours...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4 mr-2" />
+                      Envoyer le message
+                    </>
+                  )}
+                </Button>
+              </div>
+            </form>
 
-                {/* Message */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Message *
-                  </label>
-                  <Textarea
-                    placeholder="Décrivez votre demande de manière détaillée..."
-                    value={messageContent}
-                    onChange={(e) => setMessageContent(e.target.value)}
-                    rows={6}
-                    required
-                  />
+            {admins.length > 0 && (
+              <div className="mt-6 p-4 bg-green-50 rounded-lg border border-green-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <CheckCircle className="w-4 h-4 text-green-600" />
+                  <span className="text-sm font-medium text-green-800">
+                    Administrateurs disponibles ({admins.length})
+                  </span>
                 </div>
-
-                {/* Informations du demandeur */}
-                {currentProfile && (
-                  <div className="p-4 bg-gray-50 rounded-lg">
-                    <h4 className="font-medium text-gray-800 mb-2">Vos informations</h4>
-                    <div className="flex items-center space-x-3">
-                      <UserAvatar
-                        user={{
-                          first_name: currentProfile.first_name,
-                          last_name: currentProfile.last_name,
-                          avatar_url: currentProfile.avatar_url,
-                        }}
-                        size="sm"
-                      />
-                      <div>
-                        <p className="font-medium">
-                          {currentProfile.first_name} {currentProfile.last_name}
-                        </p>
-                        <p className="text-sm text-gray-600">{currentProfile.email}</p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Bouton d'envoi */}
-                <div className="flex justify-end">
-                  <Button 
-                    type="submit"
-                    disabled={submitting || !messageType || !subject.trim() || !messageContent.trim()}
-                    className="bg-blue-600 hover:bg-blue-700"
-                  >
-                    {submitting ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                        Envoi...
-                      </>
-                    ) : (
-                      <>
-                        <Send className="w-4 h-4 mr-2" />
-                        Envoyer le message
-                      </>
-                    )}
-                  </Button>
+                <div className="text-xs text-green-700">
+                  {admins.map(admin => `${admin.first_name} ${admin.last_name}`).join(', ')}
                 </div>
-              </form>
-            </CardContent>
-          </Card>
-        </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
