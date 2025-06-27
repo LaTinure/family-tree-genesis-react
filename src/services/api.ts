@@ -169,16 +169,16 @@ export***REMOVED***const***REMOVED***api***REMOVED***=***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}));
 ***REMOVED******REMOVED******REMOVED******REMOVED***},
 
-***REMOVED******REMOVED******REMOVED******REMOVED***async***REMOVED***create(content:***REMOVED***string,***REMOVED***isAdmin***REMOVED***=***REMOVED***false):***REMOVED***Promise<Message>***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED***async***REMOVED***create(messageData:***REMOVED***{***REMOVED***content:***REMOVED***string;***REMOVED***sender_id:***REMOVED***string;***REMOVED***is_admin_message:***REMOVED***boolean***REMOVED***}):***REMOVED***Promise<Message>***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***data:***REMOVED***{***REMOVED***user***REMOVED***}***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase.auth.getUser();
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(!user)***REMOVED***throw***REMOVED***new***REMOVED***Error('Non***REMOVED***authentifié');
 
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***data,***REMOVED***error***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.from('messages')
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.insert({
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***content,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***sender_id:***REMOVED***user.id,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_admin_message:***REMOVED***isAdmin
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***content:***REMOVED***messageData.content,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***sender_id:***REMOVED***messageData.sender_id,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_admin_message:***REMOVED***messageData.is_admin_message
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***})
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.select()
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.maybeSingle();
@@ -196,7 +196,6 @@ export***REMOVED***const***REMOVED***api***REMOVED***=***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED***},
 
 ***REMOVED******REMOVED******REMOVED******REMOVED***async***REMOVED***markAsRead(messageId:***REMOVED***string):***REMOVED***Promise<void>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Simulate***REMOVED***marking***REMOVED***as***REMOVED***read***REMOVED***(no***REMOVED***actual***REMOVED***column***REMOVED***exists)
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***console.log('Message***REMOVED***marked***REMOVED***as***REMOVED***read:',***REMOVED***messageId);
 ***REMOVED******REMOVED******REMOVED******REMOVED***}
 ***REMOVED******REMOVED***},
@@ -206,6 +205,27 @@ export***REMOVED***const***REMOVED***api***REMOVED***=***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***data,***REMOVED***error***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.from('notifications')
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.select('*')
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.order('created_at',***REMOVED***{***REMOVED***ascending:***REMOVED***false***REMOVED***});
+
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(error)***REMOVED***throw***REMOVED***error;
+
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***(data***REMOVED***||***REMOVED***[]).map(notif***REMOVED***=>***REMOVED***({
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***notif.id,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***title:***REMOVED***notif.title,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***message:***REMOVED***notif.message,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***type:***REMOVED***(notif.type***REMOVED***as***REMOVED***any)***REMOVED***||***REMOVED***'info',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_id:***REMOVED***notif.user_id,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data:***REMOVED***notif.data,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***read:***REMOVED***notif.read***REMOVED***||***REMOVED***false,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at:***REMOVED***notif.created_at
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}));
+***REMOVED******REMOVED******REMOVED******REMOVED***},
+
+***REMOVED******REMOVED******REMOVED******REMOVED***async***REMOVED***getByUserId(userId:***REMOVED***string):***REMOVED***Promise<Notification[]>***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***data,***REMOVED***error***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.from('notifications')
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.select('*')
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.eq('user_id',***REMOVED***userId)
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.order('created_at',***REMOVED***{***REMOVED***ascending:***REMOVED***false***REMOVED***});
 
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(error)***REMOVED***throw***REMOVED***error;
