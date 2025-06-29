@@ -10,7 +10,7 @@ import***REMOVED***{***REMOVED***ROUTES***REMOVED***}***REMOVED***from***REMOVED
 import***REMOVED***{***REMOVED***useAuth***REMOVED***}***REMOVED***from***REMOVED***'@/hooks/useAuth';
 import***REMOVED***{***REMOVED***useToast***REMOVED***}***REMOVED***from***REMOVED***'@/hooks/use-toast';
 import***REMOVED***{***REMOVED***FamilyRegisterForm***REMOVED***}***REMOVED***from***REMOVED***'@/components/family/FamilyRegisterForm';
-import***REMOVED***{***REMOVED***Layout***REMOVED***}***REMOVED***from***REMOVED***'@/components/layout/Layout';
+import***REMOVED***{***REMOVED***PublicHeader***REMOVED***}***REMOVED***from***REMOVED***'@/components/layout/PublicHeader';
 
 const***REMOVED***AuthFamily***REMOVED***=***REMOVED***()***REMOVED***=>***REMOVED***{
 ***REMOVED******REMOVED***const***REMOVED***navigate***REMOVED***=***REMOVED***useNavigate();
@@ -45,9 +45,11 @@ const***REMOVED***AuthFamily***REMOVED***=***REMOVED***()***REMOVED***=>***REMOV
 ***REMOVED******REMOVED***};
 
 ***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<Layout***REMOVED***showHeader={false}>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="min-h-screen***REMOVED***flex***REMOVED***items-center***REMOVED***justify-center***REMOVED***bg-gradient-to-br***REMOVED***from-whatsapp-50***REMOVED***via-green-50***REMOVED***to-emerald-50***REMOVED***px-4***REMOVED***py-8">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="w-full***REMOVED***max-w-md***REMOVED***pt-16">
+***REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="min-h-screen***REMOVED***bg-gradient-to-br***REMOVED***from-whatsapp-50***REMOVED***via-green-50***REMOVED***to-emerald-50">
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<PublicHeader***REMOVED***/>
+
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="flex***REMOVED***items-center***REMOVED***justify-center***REMOVED***px-4***REMOVED***py-8***REMOVED***pt-20">
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="w-full***REMOVED***max-w-md">
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{/****REMOVED***Header***REMOVED***avec***REMOVED***logo***REMOVED***et***REMOVED***titre***REMOVED****/}
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="text-center***REMOVED***mb-8">
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="flex***REMOVED***flex-col***REMOVED***items-center***REMOVED***justify-center***REMOVED***space-y-3***REMOVED***mb-4">
@@ -161,7 +163,7 @@ const***REMOVED***AuthFamily***REMOVED***=***REMOVED***()***REMOVED***=>***REMOV
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED***</Layout>
+***REMOVED******REMOVED******REMOVED******REMOVED***</div>
 ***REMOVED******REMOVED***);
 };
 

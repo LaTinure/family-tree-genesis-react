@@ -3,10 +3,13 @@ import***REMOVED***{***REMOVED***Card,***REMOVED***CardContent,***REMOVED***Card
 import***REMOVED***{***REMOVED***TreePine,***REMOVED***Users,***REMOVED***Heart,***REMOVED***Shield***REMOVED***}***REMOVED***from***REMOVED***"lucide-react";
 import***REMOVED***{***REMOVED***Link***REMOVED***}***REMOVED***from***REMOVED***"react-router-dom";
 import***REMOVED***{***REMOVED***useEffect,***REMOVED***useState***REMOVED***}***REMOVED***from***REMOVED***"react";
+import***REMOVED***{***REMOVED***PublicHeader***REMOVED***}***REMOVED***from***REMOVED***"@/components/layout/PublicHeader";
 
 const***REMOVED***Index***REMOVED***=***REMOVED***()***REMOVED***=>***REMOVED***{
 ***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="min-h-screen***REMOVED***bg-gradient-to-br***REMOVED***from-whatsapp-50***REMOVED***via-green-50***REMOVED***to-emerald-50***REMOVED***pt-16">
+***REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="min-h-screen***REMOVED***bg-gradient-to-br***REMOVED***from-whatsapp-50***REMOVED***via-green-50***REMOVED***to-emerald-50">
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<PublicHeader***REMOVED***/>
+
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{/****REMOVED***Hero***REMOVED***Section***REMOVED****/}
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<section***REMOVED***className="pt-20***REMOVED***pb-16***REMOVED***px-4">
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="max-w-6xl***REMOVED***mx-auto***REMOVED***text-center">
