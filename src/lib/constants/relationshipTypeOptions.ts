@@ -1,5 +1,4 @@
-
-import { RelationshipType } from '@/types/family';
+import { RelationshipType } from '@/lib/validations/familySchema';
 
 export const relationshipTypeOptions: { value: RelationshipType; label: string }[] = [
   { value: 'patriarche', label: 'Patriarche' },

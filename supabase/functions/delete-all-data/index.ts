@@ -1,4 +1,3 @@
-
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -14,91 +13,82 @@ serve(async (req) => {
   }
 
   try {
-    // Create a Supabase client with service role key for admin operations
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!
-    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-    
-    const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false
+    // Create a Supabase client with the Auth context of the function
+    const supabaseClient = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+      {
+        global: {
+          headers: { Authorization: req.headers.get('Authorization')! },
+        },
       }
-    })
+    )
 
-    console.log('Début de la suppression des données...')
+    // Get the user from the request
+    const {
+      data: { user },
+      error: userError,
+    } = await supabaseClient.auth.getUser()
 
-    // 1. Supprimer tous les utilisateurs authentifiés
-    console.log('Suppression des utilisateurs auth...')
-    const { data: users, error: usersError } = await supabaseAdmin.auth.admin.listUsers()
-    
-    if (usersError) {
-      throw new Error(`Erreur lors de la récupération des utilisateurs: ${usersError.message}`)
+    if (userError || !user) {
+      throw new Error('Unauthorized')
     }
 
-    if (users && users.users.length > 0) {
-      for (const user of users.users) {
-        const { error: deleteUserError } = await supabaseAdmin.auth.admin.deleteUser(user.id)
-        if (deleteUserError) {
-          console.error(`Erreur lors de la suppression de l'utilisateur ${user.id}:`, deleteUserError)
-        } else {
-          console.log(`Utilisateur ${user.id} supprimé`)
-        }
-      }
+    // Check if user is admin or patriarch
+    const { data: profile, error: profileError } = await supabaseClient
+      .from('profiles')
+      .select('is_admin, is_patriarch')
+      .eq('user_id', user.id)
+      .single()
+
+    if (profileError || (!profile?.is_admin && !profile?.is_patriarch)) {
+      throw new Error('Insufficient permissions')
     }
 
-    // 2. Supprimer les données des tables publiques dans l'ordre correct (à cause des clés étrangères)
+    // Delete all data in the correct order to respect foreign key constraints
     const tablesToDelete = [
-      'family_members',
-      'relationships', 
-      'messages',
-      'notifications',
-      'profiles',
-      'family_trees',
-      'site_settings'
+      'family_relations',
+      'family_messages',
+      'family_events',
+      'family_invitations',
+      'family_notifications',
+      'profiles'
     ]
 
     for (const table of tablesToDelete) {
-      console.log(`Suppression de la table ${table}...`)
-      const { error } = await supabaseAdmin.from(table).delete().neq('id', 'impossible-id')
-      
+      const { error } = await supabaseClient
+        .from(table)
+        .delete()
+        .neq('id', '00000000-0000-0000-0000-000000000000') // Keep at least one record if needed
+
       if (error) {
-        console.error(`Erreur lors de la suppression de ${table}:`, error)
-      } else {
-        console.log(`Table ${table} vidée avec succès`)
+        console.error(`Error deleting from ${table}:`, error)
+        throw new Error(`Failed to delete from ${table}`)
       }
     }
 
-    console.log('Suppression terminée avec succès')
-
     return new Response(
-      JSON.stringify({ 
-        success: true, 
-        message: 'Toutes les données ont été supprimées avec succès',
-        deletedTables: tablesToDelete.length,
-        deletedUsers: users?.users.length || 0
+      JSON.stringify({
+        message: 'All data deleted successfully',
+        deletedTables: tablesToDelete
       }),
-      { 
-        headers: { 
-          ...corsHeaders, 
-          'Content-Type': 'application/json' 
-        } 
+      {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 200
       }
     )
 
   } catch (error) {
-    console.error('Erreur lors de la suppression:', error)
-    
+    console.error('Error in delete-all-data function:', error)
+
     return new Response(
-      JSON.stringify({ 
-        success: false, 
-        error: error.message 
+      JSON.stringify({
+        error: error.message || 'Internal server error'
       }),
-      { 
-        status: 500,
-        headers: { 
-          ...corsHeaders, 
-          'Content-Type': 'application/json' 
-        } 
+      {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: error.message === 'Unauthorized' ? 401 :
+               error.message === 'Insufficient permissions' ? 403 : 500
       }
     )
   }

@@ -1,6 +1,7 @@
 export const ROUTES = {
   HOME: '/',
   ABOUT: '/about',
+  HELP: '/help',
   AUTH: {
     LOGIN: '/auth-family',
     REGISTER: '/auth-family',

@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { FamilyMember } from '@/types/family';
+import { Civilite, RelationshipType, UserRole } from '@/lib/validations/familySchema';
 
 interface AuthContextType {
   user: User | null;
@@ -78,7 +79,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           first_name: data.first_name || '',
           last_name: data.last_name || '',
           email: data.email || '',
-          civilite: data.civilite as 'M.' | 'Mme' || 'M.',
+          civilite: (data.civilite as Civilite) || 'M.',
           phone: data.phone,
           profession: data.profession,
           current_location: data.current_location,
@@ -86,7 +87,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           birth_date: data.birth_date,
           avatar_url: data.avatar_url,
           photo_url: data.photo_url,
-          relationship_type: data.relationship_type as any || 'conjoint',
+          relationship_type: (data.relationship_type as RelationshipType) || 'patriarche',
           father_id: data.father_id,
           mother_id: data.mother_id,
           father_name: data.father_name,
@@ -96,7 +97,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           is_patriarch: data.is_patriarch || false,
           is_parent: data.is_parent || false,
           situation: data.situation,
-          role: (data as any).role || 'user',
+          role: (data.role as UserRole) || 'Membre',
           created_at: data.created_at,
           updated_at: data.updated_at,
         });

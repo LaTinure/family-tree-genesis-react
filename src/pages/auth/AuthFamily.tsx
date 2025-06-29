@@ -1,28 +1,58 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { LogIn, UserPlus, TreePine, ArrowLeft } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { LogIn, UserPlus, TreePine, ArrowLeft, Loader2, Eye, EyeOff } from 'lucide-react';
 import { ROUTES } from '@/lib/constants/routes';
-import { FormHeader } from '@/components/shared/FormHeader';
+import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/use-toast';
 import { FamilyRegisterForm } from '@/components/family/FamilyRegisterForm';
 import { Layout } from '@/components/layout/Layout';
 
 const AuthFamily = () => {
   const navigate = useNavigate();
+  const { signIn } = useAuth();
+  const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('login');
+  const [loginData, setLoginData] = useState({ email: '', password: '' });
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginLoading(true);
+
+    try {
+      await signIn(loginData.email, loginData.password);
+      toast({
+        title: 'Connexion réussie',
+        description: 'Bienvenue dans votre espace familial !',
+      });
+      navigate(ROUTES.DASHBOARD.ROOT);
+    } catch (error: any) {
+      console.error('Erreur de connexion:', error);
+      toast({
+        title: 'Erreur de connexion',
+        description: error.message || 'Email ou mot de passe incorrect',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoginLoading(false);
+    }
+  };
 
   return (
-    <Layout>
+    <Layout showHeader={false}>
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-whatsapp-50 via-green-50 to-emerald-50 px-4 py-8">
         <div className="w-full max-w-md pt-16">
           {/* Header avec logo et titre */}
           <div className="text-center mb-8">
             <div className="flex flex-col items-center justify-center space-y-3 mb-4">
               <img src="/tree-favicon.svg" alt="Logo arbre" className="w-28 h-28 mb-2" />
-              <h1 className="text-3xl font-bold text-whatsapp-700">Créer un compte Famille</h1>
+              <h1 className="text-3xl font-bold text-whatsapp-700">Famille Connect</h1>
               <p className="text-gray-600 mb-2">
                 Rejoignez votre famille connectée et accédez à l'arbre généalogique, aux membres et plus encore !
               </p>
@@ -66,20 +96,31 @@ const AuthFamily = () => {
                         required
                         disabled={loginLoading}
                         className="border-gray-300 focus:border-whatsapp-500 focus:ring-whatsapp-500"
+                        placeholder="votre@email.com"
                       />
                     </div>
 
                     <div>
                       <Label htmlFor="login-password" className="text-gray-700">Mot de passe</Label>
-                      <Input
-                        id="login-password"
-                        type="password"
-                        value={loginData.password}
-                        onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
-                        required
-                        disabled={loginLoading}
-                        className="border-gray-300 focus:border-whatsapp-500 focus:ring-whatsapp-500"
-                      />
+                      <div className="relative">
+                        <Input
+                          id="login-password"
+                          type={showPassword ? 'text' : 'password'}
+                          value={loginData.password}
+                          onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+                          required
+                          disabled={loginLoading}
+                          className="border-gray-300 focus:border-whatsapp-500 focus:ring-whatsapp-500 pr-10"
+                          placeholder="Votre mot de passe"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                        >
+                          {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                      </div>
                     </div>
 
                     <Button
@@ -101,7 +142,7 @@ const AuthFamily = () => {
 
                 {/* Register Tab */}
                 <TabsContent value="register" className="mt-6">
-                  <FamilyRegisterForm />
+                  <FamilyRegisterForm onSuccess={() => setActiveTab('login')} />
                 </TabsContent>
               </Tabs>
             </CardHeader>
@@ -114,7 +155,8 @@ const AuthFamily = () => {
               onClick={() => navigate(ROUTES.HOME)}
               className="text-whatsapp-600 hover:text-whatsapp-700"
             >
-              ← Retour à l'accueil
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Retour à l'accueil
             </Button>
           </div>
         </div>

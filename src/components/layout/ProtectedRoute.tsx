@@ -1,33 +1,30 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { Loader2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/lib/constants/routes';
+import { Loader2 } from 'lucide-react';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requireAuth?: boolean;
 }
 
-export const ProtectedRoute = ({ children, requireAuth = true }: ProtectedRouteProps) => {
+export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!loading && requireAuth && !user) {
-      navigate(ROUTES.AUTH.FAMILY);
-    }
-  }, [user, loading, requireAuth, navigate]);
-
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-whatsapp-50 via-green-50 to-emerald-50">
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-whatsapp-600" />
+          <p className="text-gray-600">Chargement...</p>
+        </div>
       </div>
     );
   }
 
-  if (requireAuth && !user) {
+  if (!user) {
+    navigate(ROUTES.AUTH.FAMILY);
     return null;
   }
 

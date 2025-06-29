@@ -11,9 +11,11 @@ import { ROUTES } from '@/lib/constants/routes';
 // Pages
 import Index from '@/pages/Index';
 import About from '@/pages/About';
+import Help from '@/pages/Help';
 import Profile from '@/pages/Profile';
 import Dashboard from '@/pages/Dashboard';
 import AuthFamily from '@/pages/auth/AuthFamily';
+
 import Login from '@/pages/auth/Login';
 import Register from '@/pages/auth/Register';
 import FamilyTree from '@/pages/dashboard/FamilyTree';
@@ -66,6 +68,7 @@ function App() {
             {/* Routes publiques */}
             <Route path={ROUTES.HOME} element={<Layout><Index /></Layout>} />
             <Route path={ROUTES.ABOUT} element={<Layout><About /></Layout>} />
+            <Route path={ROUTES.HELP} element={<Layout><Help /></Layout>} />
             <Route path={ROUTES.AUTH.FAMILY} element={<AuthFamily />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
