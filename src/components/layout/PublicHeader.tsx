@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger } from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/hooks/useAuth';
 import { ROUTES } from '@/lib/constants/routes';
 import { useToast } from '@/hooks/use-toast';
@@ -23,20 +23,19 @@ import {
   ChevronDown,
   Trash2,
   Database,
-  Flag,
-  MessageCircle,
-  Home,
-  UserPlus,
   Facebook,
   Twitter,
   Instagram,
   Linkedin,
+  MessageCircle,
+  Home,
+  UserPlus,
   Loader2
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
 
-export const Header: React.FC = () => {
+export const PublicHeader: React.FC = () => {
   const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -154,12 +153,12 @@ export const Header: React.FC = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo et titre animé */}
           <div className="flex items-center space-x-8">
-              <motion.div
+            <motion.div
               className="relative flex items-center space-x-3"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5 }}
-              >
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+            >
               {/* Logo du projet */}
               <div className="w-12 h-12 rounded-full overflow-hidden shadow-lg">
                 <img
@@ -275,7 +274,26 @@ export const Header: React.FC = () => {
               </div>
             </div>
 
-            {/* Avatar et menu utilisateur - Toujours affiché après connexion */}
+            {/* Boutons de connexion/inscription pour utilisateurs non connectés */}
+            {!user && (
+              <div className="flex items-center space-x-3">
+                <Button
+                  variant="ghost"
+                  onClick={() => navigate(ROUTES.AUTH.FAMILY)}
+                  className="text-white/80 hover:text-white hover:bg-white/10"
+                >
+                  Se connecter
+                </Button>
+                <Button
+                  onClick={() => navigate(ROUTES.AUTH.FAMILY)}
+                  className="bg-white text-whatsapp-600 hover:bg-gray-100"
+                >
+                  Rejoindre
+                </Button>
+              </div>
+            )}
+
+            {/* Avatar et menu utilisateur - Pour utilisateurs connectés */}
             {user && profile && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -289,7 +307,7 @@ export const Header: React.FC = () => {
                     <div className="flex flex-col items-start">
                       <span className="text-sm font-medium text-white">
                         {profile.first_name} {profile.last_name}
-                  </span>
+                      </span>
                       <div className="flex items-center space-x-1">
                         {getUserRoleIcon()}
                         <span className="text-xs text-white/80">{getUserRoleText()}</span>
@@ -324,75 +342,35 @@ export const Header: React.FC = () => {
                   <DropdownMenuSeparator />
 
                   {/* Menu Personnel */}
-                  <DropdownMenuSub>
-                    <DropdownMenuSubTrigger>
-                      <User className="mr-2 h-4 w-4" />
-                      <span>Mon Profil</span>
-                    </DropdownMenuSubTrigger>
-                    <DropdownMenuSubContent>
-                      <DropdownMenuItem onClick={() => navigate(ROUTES.DASHBOARD.PROFILE)}>
-                        <User className="mr-2 h-4 w-4" />
-                        <span>Voir mon profil</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => navigate(ROUTES.DASHBOARD.SETTINGS)}>
-                        <Settings className="mr-2 h-4 w-4" />
-                        <span>Paramètres</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuSubContent>
-                  </DropdownMenuSub>
-
-                  {/* Menu Communication */}
-                  <DropdownMenuSub>
-                    <DropdownMenuSubTrigger>
-                      <MessageSquare className="mr-2 h-4 w-4" />
-                      <span>Communication</span>
-                    </DropdownMenuSubTrigger>
-                    <DropdownMenuSubContent>
-                      <DropdownMenuItem onClick={() => navigate(ROUTES.DASHBOARD.MESSAGES)}>
-                        <MessageSquare className="mr-2 h-4 w-4" />
-                        <span>Messages</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => navigate(ROUTES.DASHBOARD.CHAT)}>
-                        <MessageCircle className="mr-2 h-4 w-4" />
-                        <span>Chat</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => navigate(ROUTES.DASHBOARD.NOTIFICATIONS)}>
-                        <Bell className="mr-2 h-4 w-4" />
-                        <span>Notifications</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuSubContent>
-                  </DropdownMenuSub>
+                  <DropdownMenuItem onClick={() => navigate(ROUTES.DASHBOARD.PROFILE)}>
+                    <User className="mr-2 h-4 w-4" />
+                    <span>Mon Profil</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate(ROUTES.DASHBOARD.SETTINGS)}>
+                    <Settings className="mr-2 h-4 w-4" />
+                    <span>Paramètres</span>
+                  </DropdownMenuItem>
 
                   {/* Menu Administration - Visible pour patriarche/matriarche et admin */}
                   {(profile?.is_patriarch || profile?.is_admin) && (
-                    <DropdownMenuSub>
-                      <DropdownMenuSubTrigger>
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={() => navigate(ROUTES.DASHBOARD.ADMIN)}>
                         <Shield className="mr-2 h-4 w-4" />
                         <span>Administration</span>
-                      </DropdownMenuSubTrigger>
-                      <DropdownMenuSubContent>
-                        <DropdownMenuItem onClick={() => navigate(ROUTES.DASHBOARD.ADMIN)}>
-                          <Shield className="mr-2 h-4 w-4" />
-                          <span>Gestion utilisateurs</span>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => navigate(ROUTES.DASHBOARD.GESTION)}>
-                          <Database className="mr-2 h-4 w-4" />
-                          <span>Gestion données</span>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => navigate(ROUTES.DASHBOARD.INVITE)}>
-                          <Users className="mr-2 h-4 w-4" />
-                          <span>Inviter membres</span>
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                          onClick={() => setShowDeleteDialog(true)}
-                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                        >
-                          <Trash2 className="mr-2 h-4 w-4" />
-                          <span>Delete All</span>
-                        </DropdownMenuItem>
-                      </DropdownMenuSubContent>
-                    </DropdownMenuSub>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => navigate(ROUTES.DASHBOARD.GESTION)}>
+                        <Database className="mr-2 h-4 w-4" />
+                        <span>Gestion données</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => setShowDeleteDialog(true)}
+                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        <span>Delete All</span>
+                      </DropdownMenuItem>
+                    </>
                   )}
 
                   <DropdownMenuSeparator />
@@ -418,107 +396,126 @@ export const Header: React.FC = () => {
       </div>
 
       {/* Menu Mobile */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-      <motion.div
-            className="lg:hidden bg-white shadow-lg border-t border-white/20"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="px-4 py-3 space-y-1">
-              <Button
-                variant={isActiveRoute(ROUTES.DASHBOARD.ROOT) ? "default" : "ghost"}
-                className="w-full justify-start"
-                onClick={() => {
-                  navigate(ROUTES.DASHBOARD.ROOT);
-                  setIsMobileMenuOpen(false);
-                }}
-              >
-                <Users className="w-4 h-4 mr-2" />
-                Dashboard
-              </Button>
-              <Button
-                variant={isActiveRoute(ROUTES.DASHBOARD.TREE) ? "default" : "ghost"}
-                className="w-full justify-start"
-                onClick={() => {
-                  navigate(ROUTES.DASHBOARD.TREE);
-                  setIsMobileMenuOpen(false);
-                }}
-              >
-                <TreePine className="w-4 h-4 mr-2" />
-                Arbre généalogique
-              </Button>
-              <Button
-                variant={isActiveRoute(ROUTES.DASHBOARD.MEMBERS) ? "default" : "ghost"}
-                className="w-full justify-start"
-                onClick={() => {
-                  navigate(ROUTES.DASHBOARD.MEMBERS);
-                  setIsMobileMenuOpen(false);
-                }}
-              >
-                <Users className="w-4 h-4 mr-2" />
-                Membres
-              </Button>
-              <Button
-                variant={isActiveRoute(ROUTES.DASHBOARD.INVITE) ? "default" : "ghost"}
-                className="w-full justify-start"
-                onClick={() => {
-                  navigate(ROUTES.DASHBOARD.INVITE);
-                  setIsMobileMenuOpen(false);
-                }}
-              >
-                <UserPlus className="w-4 h-4 mr-2" />
-                Inviter un membre
-              </Button>
+      {isMobileMenuOpen && (
+        <div className="lg:hidden bg-white shadow-lg border-t border-white/20">
+          <div className="px-4 py-3 space-y-1">
+            {user ? (
+              <>
+                <Button
+                  variant={isActiveRoute(ROUTES.DASHBOARD.ROOT) ? "default" : "ghost"}
+                  className="w-full justify-start"
+                  onClick={() => {
+                    navigate(ROUTES.DASHBOARD.ROOT);
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
+                  <Users className="w-4 h-4 mr-2" />
+                  Dashboard
+                </Button>
+                <Button
+                  variant={isActiveRoute(ROUTES.DASHBOARD.TREE) ? "default" : "ghost"}
+                  className="w-full justify-start"
+                  onClick={() => {
+                    navigate(ROUTES.DASHBOARD.TREE);
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
+                  <TreePine className="w-4 h-4 mr-2" />
+                  Arbre généalogique
+                </Button>
+                <Button
+                  variant={isActiveRoute(ROUTES.DASHBOARD.MEMBERS) ? "default" : "ghost"}
+                  className="w-full justify-start"
+                  onClick={() => {
+                    navigate(ROUTES.DASHBOARD.MEMBERS);
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
+                  <Users className="w-4 h-4 mr-2" />
+                  Membres
+                </Button>
+                <Button
+                  variant={isActiveRoute(ROUTES.DASHBOARD.INVITE) ? "default" : "ghost"}
+                  className="w-full justify-start"
+                  onClick={() => {
+                    navigate(ROUTES.DASHBOARD.INVITE);
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
+                  <UserPlus className="w-4 h-4 mr-2" />
+                  Inviter un membre
+                </Button>
 
-              {/* Menu Administration Mobile */}
-              {(profile?.is_patriarch || profile?.is_admin) && (
-                <>
-                  <div className="border-t border-gray-200 my-2"></div>
-                  <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                    Administration
-                  </div>
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start text-blue-600"
-                    onClick={() => {
-                      navigate(ROUTES.DASHBOARD.ADMIN);
-                      setIsMobileMenuOpen(false);
-                    }}
-                  >
-                    <Shield className="w-4 h-4 mr-2" />
-                    Gestion utilisateurs
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start text-blue-600"
-                    onClick={() => {
-                      navigate(ROUTES.DASHBOARD.GESTION);
-                      setIsMobileMenuOpen(false);
-                    }}
-                  >
-                    <Database className="w-4 h-4 mr-2" />
-                    Gestion données
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start text-red-600"
-                    onClick={() => {
-                      setShowDeleteDialog(true);
-                      setIsMobileMenuOpen(false);
-                    }}
-                  >
-                    <Trash2 className="w-4 h-4 mr-2" />
-                    Delete All
-                  </Button>
-            </>
-          )}
+                {/* Menu Administration Mobile */}
+                {(profile?.is_patriarch || profile?.is_admin) && (
+                  <>
+                    <div className="border-t border-gray-200 my-2"></div>
+                    <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      Administration
+                    </div>
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start text-blue-600"
+                      onClick={() => {
+                        navigate(ROUTES.DASHBOARD.ADMIN);
+                        setIsMobileMenuOpen(false);
+                      }}
+                    >
+                      <Shield className="w-4 h-4 mr-2" />
+                      Gestion utilisateurs
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start text-blue-600"
+                      onClick={() => {
+                        navigate(ROUTES.DASHBOARD.GESTION);
+                        setIsMobileMenuOpen(false);
+                      }}
+                    >
+                      <Database className="w-4 h-4 mr-2" />
+                      Gestion données
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start text-red-600"
+                      onClick={() => {
+                        setShowDeleteDialog(true);
+                        setIsMobileMenuOpen(false);
+                      }}
+                    >
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Delete All
+                    </Button>
+                  </>
+                )}
+              </>
+            ) : (
+              <>
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start"
+                  onClick={() => {
+                    navigate(ROUTES.AUTH.FAMILY);
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
+                  Se connecter
+                </Button>
+                <Button
+                  variant="default"
+                  className="w-full justify-start"
+                  onClick={() => {
+                    navigate(ROUTES.AUTH.FAMILY);
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
+                  Rejoindre ma famille
+                </Button>
+              </>
+            )}
+          </div>
         </div>
-      </motion.div>
-        )}
-      </AnimatePresence>
+      )}
 
       {/* Modal de confirmation Delete All */}
       {showDeleteDialog && (
@@ -535,18 +532,18 @@ export const Header: React.FC = () => {
               <label htmlFor="delete-code" className="block text-sm font-medium text-gray-700 mb-1">
                 Code secret
               </label>
-            <input
-              id="delete-code"
-              type="password"
-              value={deleteCode}
-              onChange={e => { setDeleteCode(e.target.value); setDeleteCodeError(''); }}
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400"
-              placeholder="Entrer le code secret pour confirmer"
-              disabled={isDeleting}
-              autoFocus
-            />
-            {deleteCodeError && <p className="text-red-500 text-xs mt-1">{deleteCodeError}</p>}
-          </div>
+              <input
+                id="delete-code"
+                type="password"
+                value={deleteCode}
+                onChange={e => { setDeleteCode(e.target.value); setDeleteCodeError(''); }}
+                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400"
+                placeholder="Entrer le code secret pour confirmer"
+                disabled={isDeleting}
+                autoFocus
+              />
+              {deleteCodeError && <p className="text-red-500 text-xs mt-1">{deleteCodeError}</p>}
+            </div>
             <div className="flex justify-end space-x-3">
               <Button
                 variant="outline"
@@ -568,7 +565,7 @@ export const Header: React.FC = () => {
                 ) : (
                   'Confirmer'
                 )}
-            </Button>
+              </Button>
             </div>
           </div>
         </div>

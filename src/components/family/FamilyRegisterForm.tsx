@@ -201,7 +201,7 @@ export const FamilyRegisterForm = ({ onSuccess }: FamilyRegisterFormProps) => {
       if (onSuccess) {
         onSuccess();
       } else {
-        navigate(ROUTES.HOME);
+      navigate(ROUTES.HOME);
       }
     } catch (error) {
       console.error('Erreur générale:', error);
@@ -225,251 +225,251 @@ export const FamilyRegisterForm = ({ onSuccess }: FamilyRegisterFormProps) => {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        {/* Photo de profil */}
-        <div className="space-y-2">
+          {/* Photo de profil */}
+          <div className="space-y-2">
           <Label>Photo de profil (optionnel)</Label>
-          <div className="flex items-center gap-4">
-            <div className="relative">
+            <div className="flex items-center gap-4">
+              <div className="relative">
               <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
-                {photoPreview ? (
-                  <img
-                    src={photoPreview}
-                    alt="Aperçu"
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
+                  {photoPreview ? (
+                    <img
+                      src={photoPreview}
+                      alt="Aperçu"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
                   <Camera className="w-6 h-6 text-gray-400" />
-                )}
+                  )}
+                </div>
+              </div>
+              <div className="flex-1">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handlePhotoChange}
+                  className="hidden"
+                  id="photo-upload"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                size="sm"
+                  onClick={() => document.getElementById('photo-upload')?.click()}
+                  className="w-full"
+                >
+                  <Upload className="w-4 h-4 mr-2" />
+                  Choisir une photo
+                </Button>
               </div>
             </div>
-            <div className="flex-1">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handlePhotoChange}
-                className="hidden"
-                id="photo-upload"
-              />
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => document.getElementById('photo-upload')?.click()}
-                className="w-full"
-              >
-                <Upload className="w-4 h-4 mr-2" />
-                Choisir une photo
-              </Button>
-            </div>
           </div>
-        </div>
 
-        {/* Civilité */}
-        <div className="space-y-2">
-          <Label htmlFor="civilite">Civilité *</Label>
-          <Select
-            value={watchedCivilite}
-            onValueChange={(value) => setValue('civilite', value as 'M.' | 'Mme')}
-          >
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="M.">Monsieur</SelectItem>
-              <SelectItem value="Mme">Madame</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Type de relation */}
-        <div className="space-y-2">
-          <Label htmlFor="relationship_type">Type de relation *</Label>
-          <Select
-            onValueChange={(value) => setValue('relationship_type', value as any)}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Sélectionner votre relation" />
-            </SelectTrigger>
-            <SelectContent>
-              {relationshipTypeOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Nom et prénom */}
-        <div className="grid grid-cols-2 gap-4">
+          {/* Civilité */}
           <div className="space-y-2">
-            <Label htmlFor="first_name">Prénom *</Label>
-            <Input
-              id="first_name"
-              {...register('first_name')}
-              placeholder="Votre prénom"
-              className="rounded-lg"
-            />
-            {errors.first_name && (
-              <p className="text-sm text-red-600">{errors.first_name.message}</p>
-            )}
+            <Label htmlFor="civilite">Civilité *</Label>
+            <Select
+              value={watchedCivilite}
+              onValueChange={(value) => setValue('civilite', value as 'M.' | 'Mme')}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="M.">Monsieur</SelectItem>
+                <SelectItem value="Mme">Madame</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="last_name">Nom *</Label>
-            <Input
-              id="last_name"
-              {...register('last_name')}
-              placeholder="Votre nom de famille"
-              className="rounded-lg"
-            />
-            {errors.last_name && (
-              <p className="text-sm text-red-600">{errors.last_name.message}</p>
-            )}
-          </div>
-        </div>
 
-        {/* Email et mot de passe */}
-        <div className="space-y-4">
+          {/* Type de relation */}
           <div className="space-y-2">
-            <Label htmlFor="email">Email *</Label>
-            <Input
-              id="email"
-              type="email"
-              {...register('email')}
-              placeholder="votre@email.com"
-              className="rounded-lg"
-            />
-            {errors.email && (
-              <p className="text-sm text-red-600">{errors.email.message}</p>
-            )}
+            <Label htmlFor="relationship_type">Type de relation *</Label>
+            <Select
+              onValueChange={(value) => setValue('relationship_type', value as any)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Sélectionner votre relation" />
+              </SelectTrigger>
+              <SelectContent>
+                {relationshipTypeOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">Mot de passe *</Label>
-            <div className="relative">
+
+          {/* Nom et prénom */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="first_name">Prénom *</Label>
               <Input
-                id="password"
-                type={showPassword ? 'text' : 'password'}
-                {...register('password')}
-                placeholder="Mot de passe sécurisé"
-                className="rounded-lg pr-10"
+                id="first_name"
+                {...register('first_name')}
+                placeholder="Votre prénom"
+                className="rounded-lg"
               />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-              >
-                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-              </button>
+              {errors.first_name && (
+                <p className="text-sm text-red-600">{errors.first_name.message}</p>
+              )}
             </div>
-            {errors.password && (
-              <p className="text-sm text-red-600">{errors.password.message}</p>
-            )}
+            <div className="space-y-2">
+              <Label htmlFor="last_name">Nom *</Label>
+              <Input
+                id="last_name"
+                {...register('last_name')}
+                placeholder="Votre nom de famille"
+                className="rounded-lg"
+              />
+              {errors.last_name && (
+                <p className="text-sm text-red-600">{errors.last_name.message}</p>
+              )}
+            </div>
           </div>
-        </div>
 
-        {/* Date de naissance et lieu de naissance */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="birth_date">Date de naissance</Label>
-            <Input
-              id="birth_date"
-              type="date"
-              {...register('birth_date')}
-              className="rounded-lg"
-            />
+          {/* Email et mot de passe */}
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email *</Label>
+              <Input
+                id="email"
+                type="email"
+                {...register('email')}
+                placeholder="votre@email.com"
+                className="rounded-lg"
+              />
+              {errors.email && (
+                <p className="text-sm text-red-600">{errors.email.message}</p>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">Mot de passe *</Label>
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  {...register('password')}
+                  placeholder="Mot de passe sécurisé"
+                  className="rounded-lg pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+              {errors.password && (
+                <p className="text-sm text-red-600">{errors.password.message}</p>
+              )}
+            </div>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="birth_place">Lieu de naissance</Label>
-            <Input
-              id="birth_place"
-              {...register('birth_place')}
-              placeholder="Ville, Pays"
-              className="rounded-lg"
-            />
-          </div>
-        </div>
 
-        {/* Résidence actuelle et situation professionnelle */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="current_location">Résidence actuelle</Label>
-            <Input
-              id="current_location"
-              {...register('current_location')}
-              placeholder="Ville actuelle"
-              className="rounded-lg"
-            />
+          {/* Date de naissance et lieu de naissance */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="birth_date">Date de naissance</Label>
+              <Input
+                id="birth_date"
+                type="date"
+                {...register('birth_date')}
+                className="rounded-lg"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="birth_place">Lieu de naissance</Label>
+              <Input
+                id="birth_place"
+                {...register('birth_place')}
+                placeholder="Ville, Pays"
+                className="rounded-lg"
+              />
+            </div>
           </div>
-          <div className="space-y-2">
+
+          {/* Résidence actuelle et situation professionnelle */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="current_location">Résidence actuelle</Label>
+              <Input
+                id="current_location"
+                {...register('current_location')}
+                placeholder="Ville actuelle"
+                className="rounded-lg"
+              />
+            </div>
+            <div className="space-y-2">
             <Label htmlFor="profession">Sit. professionnelle</Label>
-            <Select
-              onValueChange={(value) => setValue('profession', value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Sélectionner une situation" />
-              </SelectTrigger>
-              <SelectContent>
-                {professionOptions.map((profession) => (
-                  <SelectItem key={profession} value={profession}>
-                    {profession}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              <Select
+                onValueChange={(value) => setValue('profession', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Sélectionner une situation" />
+                </SelectTrigger>
+                <SelectContent>
+                  {professionOptions.map((profession) => (
+                    <SelectItem key={profession} value={profession}>
+                      {profession}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
-        </div>
 
-        {/* Téléphone et situation matrimoniale */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="phone">Téléphone</Label>
-            <Input
-              id="phone"
-              {...register('phone')}
-              placeholder="+33 6 12 34 56 78"
-              className="rounded-lg"
-            />
-          </div>
-          <div className="space-y-2">
+          {/* Téléphone et situation matrimoniale */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="phone">Téléphone</Label>
+              <Input
+                id="phone"
+                {...register('phone')}
+                placeholder="+33 6 12 34 56 78"
+                className="rounded-lg"
+              />
+            </div>
+            <div className="space-y-2">
             <Label htmlFor="situation">Situation Matrimoniale</Label>
-            <Select
-              onValueChange={(value) => setValue('situation', value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Sélectionner une situation" />
-              </SelectTrigger>
-              <SelectContent>
-                {situationOptions.map((situation) => (
-                  <SelectItem key={situation} value={situation}>
-                    {situation}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              <Select
+                onValueChange={(value) => setValue('situation', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Sélectionner une situation" />
+                </SelectTrigger>
+                <SelectContent>
+                  {situationOptions.map((situation) => (
+                    <SelectItem key={situation} value={situation}>
+                      {situation}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
-        </div>
 
-        <Button
-          type="submit"
+          <Button
+            type="submit"
           className="w-full bg-gradient-to-r from-whatsapp-500 to-whatsapp-600 hover:from-whatsapp-600 hover:to-whatsapp-700 text-white py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
-          disabled={loading}
-        >
-          {loading ? (
-            <>
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Inscription en cours...
-            </>
-          ) : (
-            'Créer mon profil'
-          )}
-        </Button>
-      </form>
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Inscription en cours...
+              </>
+            ) : (
+              'Créer mon profil'
+            )}
+          </Button>
+        </form>
 
-      <div className="text-center text-sm text-gray-600">
-        <p>
+        <div className="text-center text-sm text-gray-600">
+          <p>
           En créant votre compte, vous acceptez nos conditions d'utilisation.
-        </p>
-      </div>
-    </div>
+          </p>
+        </div>
+          </div>
   );
 };

@@ -10,7 +10,7 @@ import { ROUTES } from '@/lib/constants/routes';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { FamilyRegisterForm } from '@/components/family/FamilyRegisterForm';
-import { Layout } from '@/components/layout/Layout';
+import { PublicHeader } from '@/components/layout/PublicHeader';
 
 const AuthFamily = () => {
   const navigate = useNavigate();
@@ -45,9 +45,11 @@ const AuthFamily = () => {
   };
 
   return (
-    <Layout showHeader={false}>
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-whatsapp-50 via-green-50 to-emerald-50 px-4 py-8">
-        <div className="w-full max-w-md pt-16">
+    <div className="min-h-screen bg-gradient-to-br from-whatsapp-50 via-green-50 to-emerald-50">
+      <PublicHeader />
+
+      <div className="flex items-center justify-center px-4 py-8 pt-20">
+        <div className="w-full max-w-md">
           {/* Header avec logo et titre */}
           <div className="text-center mb-8">
             <div className="flex flex-col items-center justify-center space-y-3 mb-4">
@@ -161,7 +163,7 @@ const AuthFamily = () => {
           </div>
         </div>
       </div>
-    </Layout>
+    </div>
   );
 };
 
