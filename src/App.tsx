@@ -11,9 +11,11 @@ import***REMOVED***{***REMOVED***ROUTES***REMOVED***}***REMOVED***from***REMOVED
 //***REMOVED***Pages
 import***REMOVED***Index***REMOVED***from***REMOVED***'@/pages/Index';
 import***REMOVED***About***REMOVED***from***REMOVED***'@/pages/About';
+import***REMOVED***Help***REMOVED***from***REMOVED***'@/pages/Help';
 import***REMOVED***Profile***REMOVED***from***REMOVED***'@/pages/Profile';
 import***REMOVED***Dashboard***REMOVED***from***REMOVED***'@/pages/Dashboard';
 import***REMOVED***AuthFamily***REMOVED***from***REMOVED***'@/pages/auth/AuthFamily';
+
 import***REMOVED***Login***REMOVED***from***REMOVED***'@/pages/auth/Login';
 import***REMOVED***Register***REMOVED***from***REMOVED***'@/pages/auth/Register';
 import***REMOVED***FamilyTree***REMOVED***from***REMOVED***'@/pages/dashboard/FamilyTree';
@@ -66,6 +68,7 @@ function***REMOVED***App()***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{/****REMOVED***Routes***REMOVED***publiques***REMOVED****/}
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.HOME}***REMOVED***element={<Layout><Index***REMOVED***/></Layout>}***REMOVED***/>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.ABOUT}***REMOVED***element={<Layout><About***REMOVED***/></Layout>}***REMOVED***/>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.HELP}***REMOVED***element={<Layout><Help***REMOVED***/></Layout>}***REMOVED***/>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.AUTH.FAMILY}***REMOVED***element={<AuthFamily***REMOVED***/>}***REMOVED***/>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path="/login"***REMOVED***element={<Login***REMOVED***/>}***REMOVED***/>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path="/register"***REMOVED***element={<Register***REMOVED***/>}***REMOVED***/>

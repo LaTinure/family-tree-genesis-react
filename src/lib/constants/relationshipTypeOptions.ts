@@ -1,5 +1,4 @@
-
-import***REMOVED***{***REMOVED***RelationshipType***REMOVED***}***REMOVED***from***REMOVED***'@/types/family';
+import***REMOVED***{***REMOVED***RelationshipType***REMOVED***}***REMOVED***from***REMOVED***'@/lib/validations/familySchema';
 
 export***REMOVED***const***REMOVED***relationshipTypeOptions:***REMOVED***{***REMOVED***value:***REMOVED***RelationshipType;***REMOVED***label:***REMOVED***string***REMOVED***}[]***REMOVED***=***REMOVED***[
 ***REMOVED******REMOVED***{***REMOVED***value:***REMOVED***'patriarche',***REMOVED***label:***REMOVED***'Patriarche'***REMOVED***},

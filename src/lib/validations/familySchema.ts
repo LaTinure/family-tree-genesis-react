@@ -1,8 +1,7 @@
 import***REMOVED***{***REMOVED***z***REMOVED***}***REMOVED***from***REMOVED***'zod';
-import***REMOVED***{***REMOVED***RelationshipType,***REMOVED***Civilite,***REMOVED***UserRole***REMOVED***}***REMOVED***from***REMOVED***'@/types/family';
 
 //***REMOVED***Schémas***REMOVED***de***REMOVED***validation***REMOVED***harmonisés
-export***REMOVED***const***REMOVED***relationshipTypes:***REMOVED***RelationshipType[]***REMOVED***=***REMOVED***[
+export***REMOVED***const***REMOVED***relationshipTypes***REMOVED***=***REMOVED***[
 ***REMOVED******REMOVED***'patriarche',
 ***REMOVED******REMOVED***'matriarche',
 ***REMOVED******REMOVED***'conjoint',
@@ -28,16 +27,16 @@ export***REMOVED***const***REMOVED***relationshipTypes:***REMOVED***Relationship
 ***REMOVED******REMOVED***'belle-mere',
 ***REMOVED******REMOVED***'beau-fils',
 ***REMOVED******REMOVED***'belle-fille'
-];
+]***REMOVED***as***REMOVED***const;
 
-export***REMOVED***const***REMOVED***civiliteOptions:***REMOVED***Civilite[]***REMOVED***=***REMOVED***['M.',***REMOVED***'Mme'];
-export***REMOVED***const***REMOVED***roleOptions:***REMOVED***UserRole[]***REMOVED***=***REMOVED***['admin',***REMOVED***'user',***REMOVED***'pending'];
+export***REMOVED***const***REMOVED***civiliteOptions***REMOVED***=***REMOVED***['M.',***REMOVED***'Mme']***REMOVED***as***REMOVED***const;
+export***REMOVED***const***REMOVED***roleOptions***REMOVED***=***REMOVED***['Membre',***REMOVED***'Administrateur']***REMOVED***as***REMOVED***const;
 
 export***REMOVED***const***REMOVED***familyMemberSchema***REMOVED***=***REMOVED***z.object({
 ***REMOVED******REMOVED***first_name:***REMOVED***z.string().min(1,***REMOVED***"Le***REMOVED***prénom***REMOVED***est***REMOVED***requis"),
 ***REMOVED******REMOVED***last_name:***REMOVED***z.string().min(1,***REMOVED***"Le***REMOVED***nom***REMOVED***est***REMOVED***requis"),
 ***REMOVED******REMOVED***email:***REMOVED***z.string().email("Email***REMOVED***invalide"),
-***REMOVED******REMOVED***civilite:***REMOVED***z.enum(['M.',***REMOVED***'Mme']),
+***REMOVED******REMOVED***civilite:***REMOVED***z.enum(civiliteOptions),
 ***REMOVED******REMOVED***phone:***REMOVED***z.string().optional(),
 ***REMOVED******REMOVED***profession:***REMOVED***z.string().optional(),
 ***REMOVED******REMOVED***current_location:***REMOVED***z.string().optional(),
@@ -45,11 +44,11 @@ export***REMOVED***const***REMOVED***familyMemberSchema***REMOVED***=***REMOVED*
 ***REMOVED******REMOVED***birth_date:***REMOVED***z.string().optional(),
 ***REMOVED******REMOVED***avatar_url:***REMOVED***z.string().optional(),
 ***REMOVED******REMOVED***photo_url:***REMOVED***z.string().optional(),
-***REMOVED******REMOVED***relationship_type:***REMOVED***z.enum(relationshipTypes***REMOVED***as***REMOVED***[RelationshipType,***REMOVED***...RelationshipType[]]),
+***REMOVED******REMOVED***relationship_type:***REMOVED***z.enum(relationshipTypes),
 ***REMOVED******REMOVED***father_id:***REMOVED***z.string().optional(),
 ***REMOVED******REMOVED***mother_id:***REMOVED***z.string().optional(),
 ***REMOVED******REMOVED***situation:***REMOVED***z.string().optional(),
-***REMOVED******REMOVED***role:***REMOVED***z.enum(['admin',***REMOVED***'user',***REMOVED***'pending']).default('pending')
+***REMOVED******REMOVED***role:***REMOVED***z.enum(roleOptions).default('Membre')
 });
 
 export***REMOVED***const***REMOVED***familyRegisterSchema***REMOVED***=***REMOVED***z.object({
@@ -57,16 +56,16 @@ export***REMOVED***const***REMOVED***familyRegisterSchema***REMOVED***=***REMOVE
 ***REMOVED******REMOVED***last_name:***REMOVED***z.string().min(1,***REMOVED***"Le***REMOVED***nom***REMOVED***est***REMOVED***requis"),
 ***REMOVED******REMOVED***email:***REMOVED***z.string().email("Email***REMOVED***invalide"),
 ***REMOVED******REMOVED***password:***REMOVED***z.string().min(6,***REMOVED***"Le***REMOVED***mot***REMOVED***de***REMOVED***passe***REMOVED***doit***REMOVED***contenir***REMOVED***au***REMOVED***moins***REMOVED***6***REMOVED***caractères"),
-***REMOVED******REMOVED***civilite:***REMOVED***z.enum(['M.',***REMOVED***'Mme']),
+***REMOVED******REMOVED***civilite:***REMOVED***z.enum(civiliteOptions),
 ***REMOVED******REMOVED***phone:***REMOVED***z.string().optional(),
 ***REMOVED******REMOVED***profession:***REMOVED***z.string().optional(),
 ***REMOVED******REMOVED***current_location:***REMOVED***z.string().optional(),
 ***REMOVED******REMOVED***birth_place:***REMOVED***z.string().optional(),
 ***REMOVED******REMOVED***birth_date:***REMOVED***z.string().optional(),
 ***REMOVED******REMOVED***photo_url:***REMOVED***z.string().optional(),
-***REMOVED******REMOVED***relationship_type:***REMOVED***z.enum(relationshipTypes***REMOVED***as***REMOVED***[RelationshipType,***REMOVED***...RelationshipType[]]),
+***REMOVED******REMOVED***relationship_type:***REMOVED***z.enum(relationshipTypes),
 ***REMOVED******REMOVED***situation:***REMOVED***z.string().optional(),
-***REMOVED******REMOVED***role:***REMOVED***z.enum(['Membre',***REMOVED***'Administrateur']).default('Membre')
+***REMOVED******REMOVED***role:***REMOVED***z.enum(roleOptions).default('Membre')
 });
 
 export***REMOVED***const***REMOVED***loginSchema***REMOVED***=***REMOVED***z.object({
@@ -74,6 +73,9 @@ export***REMOVED***const***REMOVED***loginSchema***REMOVED***=***REMOVED***z.obj
 ***REMOVED******REMOVED***password:***REMOVED***z.string().min(1,***REMOVED***"Le***REMOVED***mot***REMOVED***de***REMOVED***passe***REMOVED***est***REMOVED***requis")
 });
 
+export***REMOVED***type***REMOVED***RelationshipType***REMOVED***=***REMOVED***typeof***REMOVED***relationshipTypes[number];
+export***REMOVED***type***REMOVED***Civilite***REMOVED***=***REMOVED***typeof***REMOVED***civiliteOptions[number];
+export***REMOVED***type***REMOVED***UserRole***REMOVED***=***REMOVED***typeof***REMOVED***roleOptions[number];
 export***REMOVED***type***REMOVED***FamilyMemberFormData***REMOVED***=***REMOVED***z.infer<typeof***REMOVED***familyMemberSchema>;
 export***REMOVED***type***REMOVED***FamilyRegisterFormData***REMOVED***=***REMOVED***z.infer<typeof***REMOVED***familyRegisterSchema>;
 export***REMOVED***type***REMOVED***LoginFormData***REMOVED***=***REMOVED***z.infer<typeof***REMOVED***loginSchema>;
