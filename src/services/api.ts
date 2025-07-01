@@ -177,7 +177,12 @@ export***REMOVED***const***REMOVED***notificationApi***REMOVED***=***REMOVED***{
 
 ***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***(data***REMOVED***||***REMOVED***[]).map(notification***REMOVED***=>***REMOVED***({
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***...notification,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***family_id:***REMOVED***'default-family'***REMOVED***//***REMOVED***Valeur***REMOVED***par***REMOVED***défaut***REMOVED***pour***REMOVED***family_id
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***family_id:***REMOVED***notification.family_id***REMOVED***||***REMOVED***'default-family',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***type:***REMOVED***(notification.type***REMOVED***as***REMOVED***'error'***REMOVED***|***REMOVED***'info'***REMOVED***|***REMOVED***'warning'***REMOVED***|***REMOVED***'success')***REMOVED***||***REMOVED***'info',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***read:***REMOVED***notification.read***REMOVED***||***REMOVED***false,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at:***REMOVED***notification.created_at***REMOVED***||***REMOVED***new***REMOVED***Date().toISOString(),
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_id:***REMOVED***notification.user_id***REMOVED***||***REMOVED***'',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data:***REMOVED***notification.data***REMOVED***||***REMOVED***null
 ***REMOVED******REMOVED******REMOVED******REMOVED***}));
 ***REMOVED******REMOVED***},
 
@@ -192,7 +197,12 @@ export***REMOVED***const***REMOVED***notificationApi***REMOVED***=***REMOVED***{
 
 ***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***(data***REMOVED***||***REMOVED***[]).map(notification***REMOVED***=>***REMOVED***({
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***...notification,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***family_id:***REMOVED***'default-family'***REMOVED***//***REMOVED***Valeur***REMOVED***par***REMOVED***défaut***REMOVED***pour***REMOVED***family_id
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***family_id:***REMOVED***notification.family_id***REMOVED***||***REMOVED***'default-family',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***type:***REMOVED***(notification.type***REMOVED***as***REMOVED***'error'***REMOVED***|***REMOVED***'info'***REMOVED***|***REMOVED***'warning'***REMOVED***|***REMOVED***'success')***REMOVED***||***REMOVED***'info',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***read:***REMOVED***notification.read***REMOVED***||***REMOVED***false,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at:***REMOVED***notification.created_at***REMOVED***||***REMOVED***new***REMOVED***Date().toISOString(),
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_id:***REMOVED***notification.user_id***REMOVED***||***REMOVED***'',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data:***REMOVED***notification.data***REMOVED***||***REMOVED***null
 ***REMOVED******REMOVED******REMOVED******REMOVED***}));
 ***REMOVED******REMOVED***},
 
@@ -223,15 +233,34 @@ export***REMOVED***const***REMOVED***notificationApi***REMOVED***=***REMOVED***{
 
 ***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***...data,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***family_id:***REMOVED***notification.family_id***REMOVED***||***REMOVED***'default-family'
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***family_id:***REMOVED***notification.family_id***REMOVED***||***REMOVED***'default-family',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***type:***REMOVED***notification.type,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***read:***REMOVED***data.read***REMOVED***||***REMOVED***false,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at:***REMOVED***data.created_at***REMOVED***||***REMOVED***new***REMOVED***Date().toISOString(),
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_id:***REMOVED***data.user_id***REMOVED***||***REMOVED***'',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data:***REMOVED***data.data***REMOVED***||***REMOVED***null
 ***REMOVED******REMOVED******REMOVED******REMOVED***};
+***REMOVED******REMOVED***}
+};
+
+//***REMOVED***Ajouter***REMOVED***l'API***REMOVED***des***REMOVED***messages***REMOVED***pour***REMOVED***corriger***REMOVED***les***REMOVED***erreurs
+export***REMOVED***const***REMOVED***messageApi***REMOVED***=***REMOVED***{
+***REMOVED******REMOVED***async***REMOVED***getAll():***REMOVED***Promise<any[]>***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Placeholder***REMOVED***pour***REMOVED***l'API***REMOVED***des***REMOVED***messages***REMOVED***-***REMOVED***à***REMOVED***implémenter***REMOVED***selon***REMOVED***vos***REMOVED***besoins
+***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***[];
+***REMOVED******REMOVED***},
+
+***REMOVED******REMOVED***async***REMOVED***create(messageData:***REMOVED***any):***REMOVED***Promise<any>***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Placeholder***REMOVED***pour***REMOVED***créer***REMOVED***un***REMOVED***message***REMOVED***-***REMOVED***à***REMOVED***implémenter***REMOVED***selon***REMOVED***vos***REMOVED***besoins
+***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***messageData;
 ***REMOVED******REMOVED***}
 };
 
 //***REMOVED***Export***REMOVED***par***REMOVED***défaut***REMOVED***pour***REMOVED***compatibilité***REMOVED***avec***REMOVED***les***REMOVED***imports***REMOVED***existants
 export***REMOVED***const***REMOVED***api***REMOVED***=***REMOVED***{
 ***REMOVED******REMOVED***profiles:***REMOVED***familyApi,
-***REMOVED******REMOVED***notifications:***REMOVED***notificationApi
+***REMOVED******REMOVED***notifications:***REMOVED***notificationApi,
+***REMOVED******REMOVED***messages:***REMOVED***messageApi
 };
 
 //***REMOVED***Exports***REMOVED***nommés***REMOVED***pour***REMOVED***maintenir***REMOVED***la***REMOVED***compatibilité
