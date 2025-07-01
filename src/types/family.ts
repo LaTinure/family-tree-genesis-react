@@ -1,3 +1,4 @@
+
 //***REMOVED***Types***REMOVED***harmonisés***REMOVED***pour***REMOVED***la***REMOVED***gestion***REMOVED***familiale
 import***REMOVED***{***REMOVED***RelationshipType,***REMOVED***Civilite,***REMOVED***UserRole***REMOVED***}***REMOVED***from***REMOVED***'@/lib/validations/familySchema';
 
@@ -28,6 +29,34 @@ export***REMOVED***interface***REMOVED***FamilyMember***REMOVED***{
 ***REMOVED******REMOVED***role:***REMOVED***UserRole;
 ***REMOVED******REMOVED***created_at:***REMOVED***string;
 ***REMOVED******REMOVED***updated_at:***REMOVED***string;
+}
+
+export***REMOVED***interface***REMOVED***NewFamilyMember***REMOVED***{
+***REMOVED******REMOVED***first_name:***REMOVED***string;
+***REMOVED******REMOVED***last_name:***REMOVED***string;
+***REMOVED******REMOVED***email:***REMOVED***string;
+***REMOVED******REMOVED***civilite:***REMOVED***Civilite;
+***REMOVED******REMOVED***phone?:***REMOVED***string;
+***REMOVED******REMOVED***profession?:***REMOVED***string;
+***REMOVED******REMOVED***current_location?:***REMOVED***string;
+***REMOVED******REMOVED***birth_place?:***REMOVED***string;
+***REMOVED******REMOVED***birth_date?:***REMOVED***string;
+***REMOVED******REMOVED***avatar_url?:***REMOVED***string;
+***REMOVED******REMOVED***photo_url?:***REMOVED***string;
+***REMOVED******REMOVED***relationship_type:***REMOVED***RelationshipType;
+***REMOVED******REMOVED***father_id?:***REMOVED***string;
+***REMOVED******REMOVED***mother_id?:***REMOVED***string;
+***REMOVED******REMOVED***situation?:***REMOVED***string;
+***REMOVED******REMOVED***role?:***REMOVED***UserRole;
+}
+
+export***REMOVED***interface***REMOVED***FamilyTreeNode***REMOVED***{
+***REMOVED******REMOVED***id:***REMOVED***string;
+***REMOVED******REMOVED***member:***REMOVED***FamilyMember;
+***REMOVED******REMOVED***children:***REMOVED***FamilyTreeNode[];
+***REMOVED******REMOVED***level:***REMOVED***number;
+***REMOVED******REMOVED***x:***REMOVED***number;
+***REMOVED******REMOVED***y:***REMOVED***number;
 }
 
 export***REMOVED***interface***REMOVED***FamilyTree***REMOVED***{
@@ -122,6 +151,12 @@ export***REMOVED***interface***REMOVED***FamilyStats***REMOVED***{
 ***REMOVED******REMOVED***pending_invitations:***REMOVED***number;
 ***REMOVED******REMOVED***upcoming_events:***REMOVED***number;
 ***REMOVED******REMOVED***recent_messages:***REMOVED***number;
+***REMOVED******REMOVED***totalMembers:***REMOVED***number;
+***REMOVED******REMOVED***totalGenerations:***REMOVED***number;
+***REMOVED******REMOVED***totalPatriarchs:***REMOVED***number;
+***REMOVED******REMOVED***totalAdmins:***REMOVED***number;
+***REMOVED******REMOVED***recentMembers:***REMOVED***FamilyMember[];
+***REMOVED******REMOVED***pendingMembers:***REMOVED***FamilyMember[];
 }
 
 //***REMOVED***Types***REMOVED***pour***REMOVED***les***REMOVED***notifications
@@ -135,3 +170,9 @@ export***REMOVED***interface***REMOVED***FamilyNotification***REMOVED***{
 ***REMOVED******REMOVED***read:***REMOVED***boolean;
 ***REMOVED******REMOVED***created_at:***REMOVED***string;
 }
+
+//***REMOVED***Export***REMOVED***des***REMOVED***types***REMOVED***de***REMOVED***titre***REMOVED***pour***REMOVED***compatibilité
+export***REMOVED***type***REMOVED***Title***REMOVED***=***REMOVED***'Patriarche'***REMOVED***|***REMOVED***'Matriarche'***REMOVED***|***REMOVED***'Père'***REMOVED***|***REMOVED***'Mère'***REMOVED***|***REMOVED***'Fils'***REMOVED***|***REMOVED***'Fille'***REMOVED***|***REMOVED***
+***REMOVED******REMOVED***'Grand-père'***REMOVED***|***REMOVED***'Grand-mère'***REMOVED***|***REMOVED***'Petit-fils'***REMOVED***|***REMOVED***'Petite-fille'***REMOVED***|***REMOVED***'Oncle'***REMOVED***|***REMOVED***'Tante'***REMOVED***|***REMOVED***
+***REMOVED******REMOVED***'Neveu'***REMOVED***|***REMOVED***'Nièce'***REMOVED***|***REMOVED***'Cousin'***REMOVED***|***REMOVED***'Cousine'***REMOVED***|***REMOVED***'Beau-père'***REMOVED***|***REMOVED***'Belle-mère'***REMOVED***|***REMOVED***
+***REMOVED******REMOVED***'Beau-fils'***REMOVED***|***REMOVED***'Belle-fille'***REMOVED***|***REMOVED***'Frère'***REMOVED***|***REMOVED***'Sœur'***REMOVED***|***REMOVED***'Époux'***REMOVED***|***REMOVED***'Épouse';
