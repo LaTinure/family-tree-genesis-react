@@ -176,13 +176,14 @@ export***REMOVED***const***REMOVED***notificationApi***REMOVED***=***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(error)***REMOVED***throw***REMOVED***error;
 
 ***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***(data***REMOVED***||***REMOVED***[]).map(notification***REMOVED***=>***REMOVED***({
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***...notification,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***family_id:***REMOVED***notification.family_id***REMOVED***||***REMOVED***'default-family',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***notification.id,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***title:***REMOVED***notification.title,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***message:***REMOVED***notification.message,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***type:***REMOVED***(notification.type***REMOVED***as***REMOVED***'error'***REMOVED***|***REMOVED***'info'***REMOVED***|***REMOVED***'warning'***REMOVED***|***REMOVED***'success')***REMOVED***||***REMOVED***'info',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_id:***REMOVED***notification.user_id***REMOVED***||***REMOVED***'',
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***read:***REMOVED***notification.read***REMOVED***||***REMOVED***false,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at:***REMOVED***notification.created_at***REMOVED***||***REMOVED***new***REMOVED***Date().toISOString(),
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_id:***REMOVED***notification.user_id***REMOVED***||***REMOVED***'',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data:***REMOVED***notification.data***REMOVED***||***REMOVED***null
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***family_id:***REMOVED***'default-family'***REMOVED***//***REMOVED***Default***REMOVED***value***REMOVED***since***REMOVED***it's***REMOVED***not***REMOVED***in***REMOVED***the***REMOVED***database
 ***REMOVED******REMOVED******REMOVED******REMOVED***}));
 ***REMOVED******REMOVED***},
 
@@ -196,13 +197,14 @@ export***REMOVED***const***REMOVED***notificationApi***REMOVED***=***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(error)***REMOVED***throw***REMOVED***error;
 
 ***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***(data***REMOVED***||***REMOVED***[]).map(notification***REMOVED***=>***REMOVED***({
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***...notification,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***family_id:***REMOVED***notification.family_id***REMOVED***||***REMOVED***'default-family',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***notification.id,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***title:***REMOVED***notification.title,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***message:***REMOVED***notification.message,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***type:***REMOVED***(notification.type***REMOVED***as***REMOVED***'error'***REMOVED***|***REMOVED***'info'***REMOVED***|***REMOVED***'warning'***REMOVED***|***REMOVED***'success')***REMOVED***||***REMOVED***'info',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_id:***REMOVED***notification.user_id***REMOVED***||***REMOVED***'',
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***read:***REMOVED***notification.read***REMOVED***||***REMOVED***false,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at:***REMOVED***notification.created_at***REMOVED***||***REMOVED***new***REMOVED***Date().toISOString(),
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_id:***REMOVED***notification.user_id***REMOVED***||***REMOVED***'',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data:***REMOVED***notification.data***REMOVED***||***REMOVED***null
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***family_id:***REMOVED***'default-family'***REMOVED***//***REMOVED***Default***REMOVED***value***REMOVED***since***REMOVED***it's***REMOVED***not***REMOVED***in***REMOVED***the***REMOVED***database
 ***REMOVED******REMOVED******REMOVED******REMOVED***}));
 ***REMOVED******REMOVED***},
 
@@ -232,13 +234,14 @@ export***REMOVED***const***REMOVED***notificationApi***REMOVED***=***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(error)***REMOVED***throw***REMOVED***error;
 
 ***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***...data,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***family_id:***REMOVED***notification.family_id***REMOVED***||***REMOVED***'default-family',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***type:***REMOVED***notification.type,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***data.id,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***title:***REMOVED***data.title,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***message:***REMOVED***data.message,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***type:***REMOVED***data.type***REMOVED***as***REMOVED***'error'***REMOVED***|***REMOVED***'info'***REMOVED***|***REMOVED***'warning'***REMOVED***|***REMOVED***'success',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_id:***REMOVED***data.user_id,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***read:***REMOVED***data.read***REMOVED***||***REMOVED***false,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at:***REMOVED***data.created_at***REMOVED***||***REMOVED***new***REMOVED***Date().toISOString(),
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_id:***REMOVED***data.user_id***REMOVED***||***REMOVED***'',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data:***REMOVED***data.data***REMOVED***||***REMOVED***null
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at:***REMOVED***data.created_at,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***family_id:***REMOVED***'default-family'***REMOVED***//***REMOVED***Default***REMOVED***value***REMOVED***since***REMOVED***it's***REMOVED***not***REMOVED***in***REMOVED***the***REMOVED***database
 ***REMOVED******REMOVED******REMOVED******REMOVED***};
 ***REMOVED******REMOVED***}
 };
