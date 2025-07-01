@@ -11,7 +11,7 @@ import***REMOVED***{***REMOVED***Camera,***REMOVED***Eye,***REMOVED***EyeOff,***
 import***REMOVED***{***REMOVED***useToast***REMOVED***}***REMOVED***from***REMOVED***'@/hooks/use-toast';
 import***REMOVED***{***REMOVED***Dialog,***REMOVED***DialogContent,***REMOVED***DialogHeader,***REMOVED***DialogTitle***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/dialog';
 import***REMOVED***type***REMOVED***{***REMOVED***ProfileData***REMOVED***}***REMOVED***from***REMOVED***'@/types/profile';
-import***REMOVED***{***REMOVED***api***REMOVED***}***REMOVED***from***REMOVED***'@/services/api';
+import***REMOVED***{***REMOVED***familyApi***REMOVED***}***REMOVED***from***REMOVED***'@/services/api';
 import***REMOVED***{***REMOVED***RelationshipType***REMOVED***}***REMOVED***from***REMOVED***'@/lib/validations/relationshipSchema';
 import***REMOVED***{***REMOVED***getRelationshipTypeOptions***REMOVED***}***REMOVED***from***REMOVED***'@/lib/constants/relationshipTypeOptions';
 import***REMOVED***type***REMOVED***{***REMOVED***Title***REMOVED***}***REMOVED***from***REMOVED***'@/types/family';
@@ -111,7 +111,7 @@ export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED*
 ***REMOVED******REMOVED***});
 
 ***REMOVED******REMOVED***const***REMOVED***watchedTitle***REMOVED***=***REMOVED***methods.watch('title');
-***REMOVED******REMOVED***const***REMOVED***relationshipOptions***REMOVED***=***REMOVED***getRelationshipTypeOptions(watchedTitle,***REMOVED***patriarchExists);
+***REMOVED******REMOVED***const***REMOVED***relationshipOptions***REMOVED***=***REMOVED***getRelationshipTypeOptions();
 ***REMOVED******REMOVED***const***REMOVED***passwordValue***REMOVED***=***REMOVED***methods.watch('password');
 ***REMOVED******REMOVED***const***REMOVED***passwordScore***REMOVED***=***REMOVED***getPasswordStrength(passwordValue***REMOVED***||***REMOVED***'');
 ***REMOVED******REMOVED***const***REMOVED***{***REMOVED***label:***REMOVED***strengthLabel,***REMOVED***color:***REMOVED***strengthColor***REMOVED***}***REMOVED***=***REMOVED***getStrengthLabel(passwordScore);
@@ -233,8 +233,9 @@ export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED*
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***let***REMOVED***avatarUrl***REMOVED***=***REMOVED***'';
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(data.photoUrl***REMOVED***&&***REMOVED***data.photoUrl.startsWith('data:'))***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***try***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***avatarUrl***REMOVED***=***REMOVED***await***REMOVED***api.profiles.uploadAvatar(authData.user.id,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***await***REMOVED***(await***REMOVED***fetch(data.photoUrl)).blob()***REMOVED***as***REMOVED***File);
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***blob***REMOVED***=***REMOVED***await***REMOVED***fetch(data.photoUrl).then(r***REMOVED***=>***REMOVED***r.blob());
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***file***REMOVED***=***REMOVED***new***REMOVED***File([blob],***REMOVED***'avatar.jpg',***REMOVED***{***REMOVED***type:***REMOVED***'image/jpeg'***REMOVED***});
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***avatarUrl***REMOVED***=***REMOVED***await***REMOVED***familyApi.uploadAvatar(file);
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***catch***REMOVED***(uploadError)***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***console.warn('Erreur***REMOVED***upload***REMOVED***avatar,***REMOVED***continuons***REMOVED***sans:',***REMOVED***uploadError);
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
@@ -258,7 +259,7 @@ export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED*
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***mother_name:***REMOVED***data.motherName***REMOVED***||***REMOVED***'',
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_admin:***REMOVED***isAdmin,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***birth_date:***REMOVED***data.birthDate***REMOVED***||***REMOVED***null,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***title:***REMOVED***data.title***REMOVED***===***REMOVED***'M.'***REMOVED***?***REMOVED***'Fils'***REMOVED***:***REMOVED***data.title***REMOVED***===***REMOVED***'Mme'***REMOVED***?***REMOVED***'Fille'***REMOVED***:***REMOVED***'Membre',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***title:***REMOVED***data.title***REMOVED***===***REMOVED***'M.'***REMOVED***?***REMOVED***'Fils'***REMOVED***:***REMOVED***'Fille',
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***situation:***REMOVED***'',
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_patriarch:***REMOVED***false,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_parent:***REMOVED***false,
@@ -267,7 +268,7 @@ export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED*
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***};
 
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***4.***REMOVED***Sauvegarder***REMOVED***le***REMOVED***profil
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***await***REMOVED***api.profiles.createProfile(profileData);
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***await***REMOVED***familyApi.createProfile(profileData);
 
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***5.***REMOVED***Connexion***REMOVED***automatique
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***error:***REMOVED***signInError***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase.auth.signInWithPassword({

@@ -1,3 +1,4 @@
+
 import***REMOVED***React,***REMOVED***{***REMOVED***useState,***REMOVED***useEffect***REMOVED***}***REMOVED***from***REMOVED***'react';
 import***REMOVED***{***REMOVED***useNavigate***REMOVED***}***REMOVED***from***REMOVED***'react-router-dom';
 import***REMOVED***{***REMOVED***Card,***REMOVED***CardContent,***REMOVED***CardDescription,***REMOVED***CardHeader,***REMOVED***CardTitle***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/card';
@@ -29,6 +30,11 @@ const***REMOVED***Dashboard***REMOVED***=***REMOVED***()***REMOVED***=>***REMOVE
 ***REMOVED******REMOVED***const***REMOVED***{***REMOVED***user***REMOVED***}***REMOVED***=***REMOVED***useAuth();
 ***REMOVED******REMOVED***const***REMOVED***{***REMOVED***members,***REMOVED***isLoading***REMOVED***}***REMOVED***=***REMOVED***useFamilyMembers();
 ***REMOVED******REMOVED***const***REMOVED***[stats,***REMOVED***setStats]***REMOVED***=***REMOVED***useState<FamilyStats>({
+***REMOVED******REMOVED******REMOVED******REMOVED***total_members:***REMOVED***0,
+***REMOVED******REMOVED******REMOVED******REMOVED***active_members:***REMOVED***0,
+***REMOVED******REMOVED******REMOVED******REMOVED***pending_invitations:***REMOVED***0,
+***REMOVED******REMOVED******REMOVED******REMOVED***upcoming_events:***REMOVED***0,
+***REMOVED******REMOVED******REMOVED******REMOVED***recent_messages:***REMOVED***0,
 ***REMOVED******REMOVED******REMOVED******REMOVED***totalMembers:***REMOVED***0,
 ***REMOVED******REMOVED******REMOVED******REMOVED***totalGenerations:***REMOVED***0,
 ***REMOVED******REMOVED******REMOVED******REMOVED***totalPatriarchs:***REMOVED***0,
@@ -41,7 +47,7 @@ const***REMOVED***Dashboard***REMOVED***=***REMOVED***()***REMOVED***=>***REMOVE
 ***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(members.length***REMOVED***>***REMOVED***0)***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***patriarchs***REMOVED***=***REMOVED***members.filter(m***REMOVED***=>***REMOVED***m.is_patriarch);
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***admins***REMOVED***=***REMOVED***members.filter(m***REMOVED***=>***REMOVED***m.is_admin);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***pending***REMOVED***=***REMOVED***members.filter(m***REMOVED***=>***REMOVED***m.role***REMOVED***===***REMOVED***'pending');
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***pending***REMOVED***=***REMOVED***members.filter(m***REMOVED***=>***REMOVED***m.role***REMOVED***===***REMOVED***'En***REMOVED***attente'***REMOVED***||***REMOVED***m.role***REMOVED***===***REMOVED***'Pending');
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***recent***REMOVED***=***REMOVED***members
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.sort((a,***REMOVED***b)***REMOVED***=>***REMOVED***new***REMOVED***Date(b.created_at).getTime()***REMOVED***-***REMOVED***new***REMOVED***Date(a.created_at).getTime())
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.slice(0,***REMOVED***5);
@@ -50,6 +56,11 @@ const***REMOVED***Dashboard***REMOVED***=***REMOVED***()***REMOVED***=>***REMOVE
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***generations***REMOVED***=***REMOVED***new***REMOVED***Set(members.map(m***REMOVED***=>***REMOVED***m.relationship_type)).size;
 
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setStats({
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***total_members:***REMOVED***members.length,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***active_members:***REMOVED***members.length***REMOVED***-***REMOVED***pending.length,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***pending_invitations:***REMOVED***pending.length,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***upcoming_events:***REMOVED***0,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***recent_messages:***REMOVED***0,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***totalMembers:***REMOVED***members.length,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***totalGenerations:***REMOVED***generations,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***totalPatriarchs:***REMOVED***patriarchs.length,

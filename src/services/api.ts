@@ -175,7 +175,10 @@ export***REMOVED***const***REMOVED***notificationApi***REMOVED***=***REMOVED***{
 
 ***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(error)***REMOVED***throw***REMOVED***error;
 
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***data***REMOVED***||***REMOVED***[];
+***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***(data***REMOVED***||***REMOVED***[]).map(notification***REMOVED***=>***REMOVED***({
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***...notification,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***family_id:***REMOVED***'default-family'***REMOVED***//***REMOVED***Valeur***REMOVED***par***REMOVED***défaut***REMOVED***pour***REMOVED***family_id
+***REMOVED******REMOVED******REMOVED******REMOVED***}));
 ***REMOVED******REMOVED***},
 
 ***REMOVED******REMOVED***async***REMOVED***getByUserId(userId:***REMOVED***string):***REMOVED***Promise<FamilyNotification[]>***REMOVED***{
@@ -187,7 +190,10 @@ export***REMOVED***const***REMOVED***notificationApi***REMOVED***=***REMOVED***{
 
 ***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(error)***REMOVED***throw***REMOVED***error;
 
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***data***REMOVED***||***REMOVED***[];
+***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***(data***REMOVED***||***REMOVED***[]).map(notification***REMOVED***=>***REMOVED***({
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***...notification,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***family_id:***REMOVED***'default-family'***REMOVED***//***REMOVED***Valeur***REMOVED***par***REMOVED***défaut***REMOVED***pour***REMOVED***family_id
+***REMOVED******REMOVED******REMOVED******REMOVED***}));
 ***REMOVED******REMOVED***},
 
 ***REMOVED******REMOVED***async***REMOVED***markAsRead(id:***REMOVED***string):***REMOVED***Promise<void>***REMOVED***{
@@ -203,7 +209,11 @@ export***REMOVED***const***REMOVED***notificationApi***REMOVED***=***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***data,***REMOVED***error***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.from('notifications')
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.insert([{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***...notification,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***title:***REMOVED***notification.title,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***message:***REMOVED***notification.message,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***type:***REMOVED***notification.type,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_id:***REMOVED***notification.user_id,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***read:***REMOVED***notification.read***REMOVED***||***REMOVED***false,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at:***REMOVED***new***REMOVED***Date().toISOString()
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}])
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.select()
@@ -211,6 +221,18 @@ export***REMOVED***const***REMOVED***notificationApi***REMOVED***=***REMOVED***{
 
 ***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(error)***REMOVED***throw***REMOVED***error;
 
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***data;
+***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***...data,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***family_id:***REMOVED***notification.family_id***REMOVED***||***REMOVED***'default-family'
+***REMOVED******REMOVED******REMOVED******REMOVED***};
 ***REMOVED******REMOVED***}
 };
+
+//***REMOVED***Export***REMOVED***par***REMOVED***défaut***REMOVED***pour***REMOVED***compatibilité***REMOVED***avec***REMOVED***les***REMOVED***imports***REMOVED***existants
+export***REMOVED***const***REMOVED***api***REMOVED***=***REMOVED***{
+***REMOVED******REMOVED***profiles:***REMOVED***familyApi,
+***REMOVED******REMOVED***notifications:***REMOVED***notificationApi
+};
+
+//***REMOVED***Exports***REMOVED***nommés***REMOVED***pour***REMOVED***maintenir***REMOVED***la***REMOVED***compatibilité
+export***REMOVED***{***REMOVED***familyApi***REMOVED***as***REMOVED***default***REMOVED***};
