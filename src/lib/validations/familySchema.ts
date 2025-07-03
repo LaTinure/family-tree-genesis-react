@@ -1,6 +1,16 @@
+
 import***REMOVED***{***REMOVED***z***REMOVED***}***REMOVED***from***REMOVED***'zod';
 
-//***REMOVED***Schémas***REMOVED***de***REMOVED***validation***REMOVED***harmonisés
+//***REMOVED***Nouveaux***REMOVED***rôles***REMOVED***utilisateurs
+export***REMOVED***const***REMOVED***userRoles***REMOVED***=***REMOVED***[
+***REMOVED******REMOVED***'Administrateur',
+***REMOVED******REMOVED***'Patriarche',***REMOVED***
+***REMOVED******REMOVED***'Matriarche',
+***REMOVED******REMOVED***'Membre',
+***REMOVED******REMOVED***'Visiteur',
+***REMOVED******REMOVED***'Invité'
+]***REMOVED***as***REMOVED***const;
+
 export***REMOVED***const***REMOVED***relationshipTypes***REMOVED***=***REMOVED***[
 ***REMOVED******REMOVED***'patriarche',
 ***REMOVED******REMOVED***'matriarche',
@@ -30,7 +40,6 @@ export***REMOVED***const***REMOVED***relationshipTypes***REMOVED***=***REMOVED**
 ]***REMOVED***as***REMOVED***const;
 
 export***REMOVED***const***REMOVED***civiliteOptions***REMOVED***=***REMOVED***['M.',***REMOVED***'Mme']***REMOVED***as***REMOVED***const;
-export***REMOVED***const***REMOVED***roleOptions***REMOVED***=***REMOVED***['Membre',***REMOVED***'Administrateur']***REMOVED***as***REMOVED***const;
 
 export***REMOVED***const***REMOVED***familyMemberSchema***REMOVED***=***REMOVED***z.object({
 ***REMOVED******REMOVED***first_name:***REMOVED***z.string().min(1,***REMOVED***"Le***REMOVED***prénom***REMOVED***est***REMOVED***requis"),
@@ -48,7 +57,7 @@ export***REMOVED***const***REMOVED***familyMemberSchema***REMOVED***=***REMOVED*
 ***REMOVED******REMOVED***father_id:***REMOVED***z.string().optional(),
 ***REMOVED******REMOVED***mother_id:***REMOVED***z.string().optional(),
 ***REMOVED******REMOVED***situation:***REMOVED***z.string().optional(),
-***REMOVED******REMOVED***role:***REMOVED***z.enum(roleOptions).default('Membre')
+***REMOVED******REMOVED***user_role:***REMOVED***z.enum(userRoles).default('Membre')
 });
 
 export***REMOVED***const***REMOVED***familyRegisterSchema***REMOVED***=***REMOVED***z.object({
@@ -65,7 +74,7 @@ export***REMOVED***const***REMOVED***familyRegisterSchema***REMOVED***=***REMOVE
 ***REMOVED******REMOVED***photo_url:***REMOVED***z.string().optional(),
 ***REMOVED******REMOVED***relationship_type:***REMOVED***z.enum(relationshipTypes),
 ***REMOVED******REMOVED***situation:***REMOVED***z.string().optional(),
-***REMOVED******REMOVED***role:***REMOVED***z.enum(roleOptions).default('Membre')
+***REMOVED******REMOVED***user_role:***REMOVED***z.enum(userRoles).default('Membre')
 });
 
 export***REMOVED***const***REMOVED***loginSchema***REMOVED***=***REMOVED***z.object({
@@ -75,7 +84,7 @@ export***REMOVED***const***REMOVED***loginSchema***REMOVED***=***REMOVED***z.obj
 
 export***REMOVED***type***REMOVED***RelationshipType***REMOVED***=***REMOVED***typeof***REMOVED***relationshipTypes[number];
 export***REMOVED***type***REMOVED***Civilite***REMOVED***=***REMOVED***typeof***REMOVED***civiliteOptions[number];
-export***REMOVED***type***REMOVED***UserRole***REMOVED***=***REMOVED***typeof***REMOVED***roleOptions[number];
+export***REMOVED***type***REMOVED***UserRole***REMOVED***=***REMOVED***typeof***REMOVED***userRoles[number];
 export***REMOVED***type***REMOVED***FamilyMemberFormData***REMOVED***=***REMOVED***z.infer<typeof***REMOVED***familyMemberSchema>;
 export***REMOVED***type***REMOVED***FamilyRegisterFormData***REMOVED***=***REMOVED***z.infer<typeof***REMOVED***familyRegisterSchema>;
 export***REMOVED***type***REMOVED***LoginFormData***REMOVED***=***REMOVED***z.infer<typeof***REMOVED***loginSchema>;

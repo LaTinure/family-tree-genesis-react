@@ -1,8 +1,8 @@
+
 import***REMOVED***{***REMOVED***createContext,***REMOVED***useContext,***REMOVED***useEffect,***REMOVED***useState,***REMOVED***ReactNode***REMOVED***}***REMOVED***from***REMOVED***'react';
 import***REMOVED***{***REMOVED***User,***REMOVED***Session***REMOVED***}***REMOVED***from***REMOVED***'@supabase/supabase-js';
 import***REMOVED***{***REMOVED***supabase***REMOVED***}***REMOVED***from***REMOVED***'@/integrations/supabase/client';
 import***REMOVED***{***REMOVED***FamilyMember***REMOVED***}***REMOVED***from***REMOVED***'@/types/family';
-import***REMOVED***{***REMOVED***Civilite,***REMOVED***RelationshipType,***REMOVED***UserRole***REMOVED***}***REMOVED***from***REMOVED***'@/lib/validations/familySchema';
 
 interface***REMOVED***AuthContextType***REMOVED***{
 ***REMOVED******REMOVED***user:***REMOVED***User***REMOVED***|***REMOVED***null;
@@ -79,7 +79,7 @@ export***REMOVED***const***REMOVED***AuthProvider***REMOVED***=***REMOVED***({**
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***first_name:***REMOVED***data.first_name***REMOVED***||***REMOVED***'',
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***last_name:***REMOVED***data.last_name***REMOVED***||***REMOVED***'',
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***email:***REMOVED***data.email***REMOVED***||***REMOVED***'',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***civilite:***REMOVED***(data.civilite***REMOVED***as***REMOVED***Civilite)***REMOVED***||***REMOVED***'M.',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***civilite:***REMOVED***(data.civilite***REMOVED***as***REMOVED***'M.'***REMOVED***|***REMOVED***'Mme')***REMOVED***||***REMOVED***'M.',
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***phone:***REMOVED***data.phone,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***profession:***REMOVED***data.profession,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***current_location:***REMOVED***data.current_location,
@@ -87,17 +87,17 @@ export***REMOVED***const***REMOVED***AuthProvider***REMOVED***=***REMOVED***({**
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***birth_date:***REMOVED***data.birth_date,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***avatar_url:***REMOVED***data.avatar_url,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***photo_url:***REMOVED***data.photo_url,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***relationship_type:***REMOVED***(data.relationship_type***REMOVED***as***REMOVED***RelationshipType)***REMOVED***||***REMOVED***'patriarche',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***relationship_type:***REMOVED***(data.relationship_type***REMOVED***as***REMOVED***any)***REMOVED***||***REMOVED***'patriarche',
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***father_id:***REMOVED***data.father_id,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***mother_id:***REMOVED***data.mother_id,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***father_name:***REMOVED***data.father_name,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***mother_name:***REMOVED***data.mother_name,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***spouse_name:***REMOVED***(data***REMOVED***as***REMOVED***any).spouse_name***REMOVED***||***REMOVED***'',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***spouse_name:***REMOVED***'',
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_admin:***REMOVED***data.is_admin***REMOVED***||***REMOVED***false,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_patriarch:***REMOVED***data.is_patriarch***REMOVED***||***REMOVED***false,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_parent:***REMOVED***data.is_parent***REMOVED***||***REMOVED***false,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***situation:***REMOVED***data.situation,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***role:***REMOVED***(data.role***REMOVED***as***REMOVED***UserRole)***REMOVED***||***REMOVED***'Membre',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_role:***REMOVED***(data.user_role***REMOVED***as***REMOVED***any)***REMOVED***||***REMOVED***'Membre',
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at:***REMOVED***data.created_at,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***updated_at:***REMOVED***data.updated_at,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***});

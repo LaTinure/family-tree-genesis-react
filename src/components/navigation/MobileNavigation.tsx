@@ -12,7 +12,8 @@ import***REMOVED***{
 ***REMOVED******REMOVED***HelpCircle,
 ***REMOVED******REMOVED***Info,
 ***REMOVED******REMOVED***LogIn,
-***REMOVED******REMOVED***UserCheck
+***REMOVED******REMOVED***UserCheck,
+***REMOVED******REMOVED***Play
 }***REMOVED***from***REMOVED***'lucide-react';
 
 interface***REMOVED***NavItem***REMOVED***{
@@ -70,6 +71,12 @@ export***REMOVED***const***REMOVED***MobileNavigation:***REMOVED***React.FC***RE
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***path:***REMOVED***ROUTES.DASHBOARD.MEMBERS,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***label:***REMOVED***'Membres',
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***icon:***REMOVED***<Users***REMOVED***className="w-4***REMOVED***h-4"***REMOVED***/>,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***requiresAuth:***REMOVED***true,
+***REMOVED******REMOVED******REMOVED******REMOVED***},
+***REMOVED******REMOVED******REMOVED******REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***path:***REMOVED***ROUTES.DASHBOARD.MEDIA,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***label:***REMOVED***'Média',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***icon:***REMOVED***<Play***REMOVED***className="w-4***REMOVED***h-4"***REMOVED***/>,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***requiresAuth:***REMOVED***true,
 ***REMOVED******REMOVED******REMOVED******REMOVED***},
 ***REMOVED******REMOVED******REMOVED******REMOVED***{

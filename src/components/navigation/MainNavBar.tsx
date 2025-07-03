@@ -1,3 +1,4 @@
+
 import***REMOVED***React***REMOVED***from***REMOVED***'react';
 import***REMOVED***{***REMOVED***useNavigate,***REMOVED***useLocation***REMOVED***}***REMOVED***from***REMOVED***'react-router-dom';
 import***REMOVED***{***REMOVED***Button***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/button';
@@ -13,7 +14,8 @@ import***REMOVED***{
 ***REMOVED******REMOVED***Shield,
 ***REMOVED******REMOVED***Crown,
 ***REMOVED******REMOVED***Settings,
-***REMOVED******REMOVED***User
+***REMOVED******REMOVED***User,
+***REMOVED******REMOVED***Play
 }***REMOVED***from***REMOVED***'lucide-react';
 import***REMOVED***{***REMOVED***useAuth***REMOVED***}***REMOVED***from***REMOVED***'@/hooks/useAuth';
 
@@ -51,17 +53,23 @@ export***REMOVED***const***REMOVED***MainNavBar:***REMOVED***React.FC***REMOVED*
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***requiresAuth:***REMOVED***true
 ***REMOVED******REMOVED******REMOVED******REMOVED***},
 ***REMOVED******REMOVED******REMOVED******REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***path:***REMOVED***ROUTES.DASHBOARD.MEDIA,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***label:***REMOVED***'Média',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***icon:***REMOVED***<Play***REMOVED***className="w-4***REMOVED***h-4"***REMOVED***/>,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***requiresAuth:***REMOVED***true
+***REMOVED******REMOVED******REMOVED******REMOVED***},
+***REMOVED******REMOVED******REMOVED******REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***path:***REMOVED***ROUTES.DASHBOARD.MESSAGES,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***label:***REMOVED***'Messages',
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***icon:***REMOVED***<MessageSquare***REMOVED***className="w-4***REMOVED***h-4"***REMOVED***/>,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***badge:***REMOVED***3,***REMOVED***//***REMOVED***Exemple***REMOVED***de***REMOVED***badge
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***requiresAuth:***REMOVED***true
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***badge:***REMOVED***3,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***requiresAuth:***REMOVED***true,
 ***REMOVED******REMOVED******REMOVED******REMOVED***},
 ***REMOVED******REMOVED******REMOVED******REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***path:***REMOVED***ROUTES.DASHBOARD.NOTIFICATIONS,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***label:***REMOVED***'Notifications',
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***icon:***REMOVED***<Bell***REMOVED***className="w-4***REMOVED***h-4"***REMOVED***/>,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***badge:***REMOVED***5,***REMOVED***//***REMOVED***Exemple***REMOVED***de***REMOVED***badge
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***badge:***REMOVED***5,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***requiresAuth:***REMOVED***true
 ***REMOVED******REMOVED******REMOVED******REMOVED***},
 ***REMOVED******REMOVED******REMOVED******REMOVED***{
@@ -111,7 +119,6 @@ export***REMOVED***const***REMOVED***MainNavBar:***REMOVED***React.FC***REMOVED*
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{item.badge}
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Badge>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{/****REMOVED***Indicateur***REMOVED***de***REMOVED***rôle***REMOVED***pour***REMOVED***les***REMOVED***items***REMOVED***admin***REMOVED****/}
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{item.adminOnly***REMOVED***&&***REMOVED***(profile?.is_patriarch***REMOVED***?***REMOVED***(
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Crown***REMOVED***className="w-3***REMOVED***h-3***REMOVED***text-yellow-600"***REMOVED***/>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)***REMOVED***:***REMOVED***(
