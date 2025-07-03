@@ -30,6 +30,9 @@ import***REMOVED***ContactAdmin***REMOVED***from***REMOVED***'@/pages/dashboard/
 import***REMOVED***Settings***REMOVED***from***REMOVED***'@/pages/dashboard/Settings';
 import***REMOVED***Gestion***REMOVED***from***REMOVED***'@/pages/dashboard/Gestion';
 import***REMOVED***Help***REMOVED***from***REMOVED***'@/pages/Help';
+import***REMOVED***DynastySelector***REMOVED***from***REMOVED***'@/pages/DynastySelector';
+import***REMOVED***DynastyCreateForm***REMOVED***from***REMOVED***'@/pages/DynastyCreateForm';
+import***REMOVED***DynastyInviteHandler***REMOVED***from***REMOVED***'@/components/DynastyInviteHandler';
 
 //***REMOVED***Configuration***REMOVED***React***REMOVED***Query
 const***REMOVED***queryClient***REMOVED***=***REMOVED***new***REMOVED***QueryClient({
@@ -71,6 +74,9 @@ function***REMOVED***App()***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path="/login"***REMOVED***element={<Login***REMOVED***/>}***REMOVED***/>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path="/register"***REMOVED***element={<Register***REMOVED***/>}***REMOVED***/>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.HELP}***REMOVED***element={<Layout><Help***REMOVED***/></Layout>}***REMOVED***/>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.DYNASTY.SELECTOR}***REMOVED***element={<DynastySelector***REMOVED***/>}***REMOVED***/>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.DYNASTY.CREATE}***REMOVED***element={<DynastyCreateForm***REMOVED***/>}***REMOVED***/>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.INVITE}***REMOVED***element={<DynastyInviteHandler***REMOVED***/>}***REMOVED***/>
 
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{/****REMOVED***Routes***REMOVED***protégées***REMOVED****/}
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.PROFILE}***REMOVED***element={

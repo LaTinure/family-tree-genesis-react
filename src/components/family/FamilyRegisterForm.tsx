@@ -1,5 +1,5 @@
 
-import***REMOVED***React,***REMOVED***{***REMOVED***useState***REMOVED***}***REMOVED***from***REMOVED***'react';
+import***REMOVED***React,***REMOVED***{***REMOVED***useState,***REMOVED***useEffect***REMOVED***}***REMOVED***from***REMOVED***'react';
 import***REMOVED***{***REMOVED***useNavigate***REMOVED***}***REMOVED***from***REMOVED***'react-router-dom';
 import***REMOVED***{***REMOVED***useForm***REMOVED***}***REMOVED***from***REMOVED***'react-hook-form';
 import***REMOVED***{***REMOVED***zodResolver***REMOVED***}***REMOVED***from***REMOVED***'@hookform/resolvers/zod';
@@ -7,14 +7,27 @@ import***REMOVED***{***REMOVED***Button***REMOVED***}***REMOVED***from***REMOVED
 import***REMOVED***{***REMOVED***Input***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/input';
 import***REMOVED***{***REMOVED***Label***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/label';
 import***REMOVED***{***REMOVED***Select,***REMOVED***SelectContent,***REMOVED***SelectItem,***REMOVED***SelectTrigger,***REMOVED***SelectValue***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/select';
-import***REMOVED***{***REMOVED***Loader2,***REMOVED***Eye,***REMOVED***EyeOff,***REMOVED***Upload,***REMOVED***Camera***REMOVED***}***REMOVED***from***REMOVED***'lucide-react';
+import***REMOVED***{***REMOVED***Badge***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/badge';
+import***REMOVED***{***REMOVED***Alert,***REMOVED***AlertDescription***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/alert';
+import***REMOVED***{***REMOVED***Loader2,***REMOVED***Eye,***REMOVED***EyeOff,***REMOVED***Upload,***REMOVED***Camera,***REMOVED***Crown,***REMOVED***Lock***REMOVED***}***REMOVED***from***REMOVED***'lucide-react';
 import***REMOVED***{***REMOVED***useToast***REMOVED***}***REMOVED***from***REMOVED***'@/hooks/use-toast';
 import***REMOVED***{***REMOVED***ROUTES***REMOVED***}***REMOVED***from***REMOVED***'@/lib/constants/routes';
 import***REMOVED***{***REMOVED***familyRegisterSchema,***REMOVED***FamilyRegisterFormData,***REMOVED***userRoles***REMOVED***}***REMOVED***from***REMOVED***'@/lib/validations/familySchema';
 import***REMOVED***{***REMOVED***supabase***REMOVED***}***REMOVED***from***REMOVED***'@/integrations/supabase/client';
 
+interface***REMOVED***InvitationData***REMOVED***{
+***REMOVED******REMOVED***id:***REMOVED***string;
+***REMOVED******REMOVED***token:***REMOVED***string;
+***REMOVED******REMOVED***dynasty_id:***REMOVED***string;
+***REMOVED******REMOVED***dynasty_name:***REMOVED***string;
+***REMOVED******REMOVED***user_role:***REMOVED***string;
+***REMOVED******REMOVED***expires_at:***REMOVED***string;
+***REMOVED******REMOVED***used:***REMOVED***boolean;
+}
+
 interface***REMOVED***FamilyRegisterFormProps***REMOVED***{
 ***REMOVED******REMOVED***onSuccess?:***REMOVED***()***REMOVED***=>***REMOVED***void;
+***REMOVED******REMOVED***invitationData?:***REMOVED***InvitationData***REMOVED***|***REMOVED***null;
 }
 
 const***REMOVED***professionOptions***REMOVED***=***REMOVED***[
@@ -29,7 +42,7 @@ const***REMOVED***situationOptions***REMOVED***=***REMOVED***[
 ***REMOVED******REMOVED***'Veuf(ve)'
 ];
 
-export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED***({***REMOVED***onSuccess***REMOVED***}:***REMOVED***FamilyRegisterFormProps)***REMOVED***=>***REMOVED***{
+export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED***({***REMOVED***onSuccess,***REMOVED***invitationData***REMOVED***}:***REMOVED***FamilyRegisterFormProps)***REMOVED***=>***REMOVED***{
 ***REMOVED******REMOVED***const***REMOVED***navigate***REMOVED***=***REMOVED***useNavigate();
 ***REMOVED******REMOVED***const***REMOVED***{***REMOVED***toast***REMOVED***}***REMOVED***=***REMOVED***useToast();
 ***REMOVED******REMOVED***const***REMOVED***[loading,***REMOVED***setLoading]***REMOVED***=***REMOVED***useState(false);
@@ -48,9 +61,22 @@ export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED*
 ***REMOVED******REMOVED******REMOVED******REMOVED***defaultValues:***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***civilite:***REMOVED***'M.',
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***relationship_type:***REMOVED***'patriarche',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_role:***REMOVED***'Membre'
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_role:***REMOVED***invitationData?.user_role***REMOVED***||***REMOVED***'Membre'
 ***REMOVED******REMOVED******REMOVED******REMOVED***}
 ***REMOVED******REMOVED***});
+
+***REMOVED******REMOVED***//***REMOVED***Préremplir***REMOVED***les***REMOVED***champs***REMOVED***si***REMOVED***une***REMOVED***invitation***REMOVED***est***REMOVED***présente
+***REMOVED******REMOVED***useEffect(()***REMOVED***=>***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(invitationData)***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setValue('user_role',***REMOVED***invitationData.user_role);
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Ajuster***REMOVED***la***REMOVED***civilité***REMOVED***selon***REMOVED***le***REMOVED***rôle***REMOVED***si***REMOVED***nécessaire
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(invitationData.user_role***REMOVED***===***REMOVED***'Matriarche')***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setValue('civilite',***REMOVED***'Mme');
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***else***REMOVED***if***REMOVED***(invitationData.user_role***REMOVED***===***REMOVED***'Patriarche')***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setValue('civilite',***REMOVED***'M.');
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
+***REMOVED******REMOVED******REMOVED******REMOVED***}
+***REMOVED******REMOVED***},***REMOVED***[invitationData,***REMOVED***setValue]);
 
 ***REMOVED******REMOVED***const***REMOVED***watchedCivilite***REMOVED***=***REMOVED***watch('civilite');
 ***REMOVED******REMOVED***const***REMOVED***watchedUserRole***REMOVED***=***REMOVED***watch('user_role');
@@ -128,7 +154,9 @@ export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED*
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***situation:***REMOVED***profileData.situation,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_role:***REMOVED***profileData.user_role,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_admin:***REMOVED***profileData.user_role***REMOVED***===***REMOVED***'Administrateur',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_patriarch:***REMOVED***profileData.user_role***REMOVED***===***REMOVED***'Patriarche'***REMOVED***||***REMOVED***profileData.user_role***REMOVED***===***REMOVED***'Matriarche'
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_patriarch:***REMOVED***profileData.user_role***REMOVED***===***REMOVED***'Patriarche'***REMOVED***||***REMOVED***profileData.user_role***REMOVED***===***REMOVED***'Matriarche',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Ajouter***REMOVED***l'ID***REMOVED***de***REMOVED***la***REMOVED***dynastie***REMOVED***si***REMOVED***une***REMOVED***invitation***REMOVED***est***REMOVED***présente
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***...(invitationData***REMOVED***&&***REMOVED***{***REMOVED***dynasty_id:***REMOVED***invitationData.dynasty_id***REMOVED***})
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***};
 
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***error:***REMOVED***profileError***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase
@@ -222,9 +250,28 @@ export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED*
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="text-center">
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<h3***REMOVED***className="text-lg***REMOVED***font-semibold***REMOVED***text-gray-900">Créer***REMOVED***votre***REMOVED***profil***REMOVED***familial</h3>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<p***REMOVED***className="text-sm***REMOVED***text-gray-600***REMOVED***mt-1">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Remplissez***REMOVED***les***REMOVED***informations***REMOVED***pour***REMOVED***rejoindre***REMOVED***votre***REMOVED***famille
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{invitationData
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***`Rejoindre***REMOVED***la***REMOVED***dynastie***REMOVED***${invitationData.dynasty_name}`
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***'Remplissez***REMOVED***les***REMOVED***informations***REMOVED***pour***REMOVED***rejoindre***REMOVED***votre***REMOVED***famille'
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</p>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
+
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{/****REMOVED***Affichage***REMOVED***de***REMOVED***l'invitation***REMOVED***si***REMOVED***présente***REMOVED****/}
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{invitationData***REMOVED***&&***REMOVED***(
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Alert***REMOVED***className="border-green-200***REMOVED***bg-green-50">
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Crown***REMOVED***className="h-4***REMOVED***w-4"***REMOVED***/>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<AlertDescription>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="flex***REMOVED***items-center***REMOVED***justify-between">
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<span>Vous***REMOVED***rejoignez***REMOVED***la***REMOVED***dynastie***REMOVED***<strong>{invitationData.dynasty_name}</strong></span>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Badge***REMOVED***variant="secondary"***REMOVED***className="ml-2">
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Crown***REMOVED***className="w-3***REMOVED***h-3***REMOVED***mr-1"***REMOVED***/>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{invitationData.user_role}
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Badge>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</AlertDescription>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Alert>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
 
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<form***REMOVED***onSubmit={handleSubmit(onSubmit)}***REMOVED***className="space-y-4">
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{/****REMOVED***Photo***REMOVED***de***REMOVED***profil***REMOVED****/}
@@ -272,6 +319,7 @@ export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED*
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Select
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***value={watchedCivilite}
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onValueChange={(value)***REMOVED***=>***REMOVED***setValue('civilite',***REMOVED***value***REMOVED***as***REMOVED***'M.'***REMOVED***|***REMOVED***'Mme')}
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***disabled={invitationData?.user_role***REMOVED***===***REMOVED***'Matriarche'***REMOVED***||***REMOVED***invitationData?.user_role***REMOVED***===***REMOVED***'Patriarche'}
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<SelectTrigger>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<SelectValue***REMOVED***/>
@@ -281,6 +329,18 @@ export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED*
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<SelectItem***REMOVED***value="Mme">Madame</SelectItem>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</SelectContent>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Select>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{invitationData?.user_role***REMOVED***===***REMOVED***'Matriarche'***REMOVED***&&***REMOVED***(
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<p***REMOVED***className="text-sm***REMOVED***text-blue-600***REMOVED***flex***REMOVED***items-center">
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Lock***REMOVED***className="w-3***REMOVED***h-3***REMOVED***mr-1"***REMOVED***/>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Civilité***REMOVED***verrouillée***REMOVED***pour***REMOVED***le***REMOVED***rôle***REMOVED***Matriarche
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</p>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{invitationData?.user_role***REMOVED***===***REMOVED***'Patriarche'***REMOVED***&&***REMOVED***(
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<p***REMOVED***className="text-sm***REMOVED***text-blue-600***REMOVED***flex***REMOVED***items-center">
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Lock***REMOVED***className="w-3***REMOVED***h-3***REMOVED***mr-1"***REMOVED***/>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Civilité***REMOVED***verrouillée***REMOVED***pour***REMOVED***le***REMOVED***rôle***REMOVED***Patriarche
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</p>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
 
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{/****REMOVED***Rôle***REMOVED***dans***REMOVED***la***REMOVED***famille***REMOVED****/}
@@ -288,6 +348,7 @@ export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED*
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Label***REMOVED***htmlFor="user_role">Rôle***REMOVED***dans***REMOVED***la***REMOVED***famille***REMOVED****</Label>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Select
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onValueChange={(value)***REMOVED***=>***REMOVED***setValue('user_role',***REMOVED***value***REMOVED***as***REMOVED***any)}
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***disabled={!!invitationData}
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<SelectTrigger>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<SelectValue***REMOVED***placeholder="Sélectionner***REMOVED***votre***REMOVED***rôle"***REMOVED***/>
@@ -300,12 +361,18 @@ export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED*
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***))}
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</SelectContent>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Select>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{watchedUserRole***REMOVED***===***REMOVED***'Patriarche'***REMOVED***&&***REMOVED***watchedCivilite***REMOVED***===***REMOVED***'Mme'***REMOVED***&&***REMOVED***(
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{invitationData***REMOVED***&&***REMOVED***(
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<p***REMOVED***className="text-sm***REMOVED***text-blue-600***REMOVED***flex***REMOVED***items-center">
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Lock***REMOVED***className="w-3***REMOVED***h-3***REMOVED***mr-1"***REMOVED***/>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Rôle***REMOVED***verrouillé***REMOVED***par***REMOVED***l'invitation
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</p>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{!invitationData***REMOVED***&&***REMOVED***watchedUserRole***REMOVED***===***REMOVED***'Patriarche'***REMOVED***&&***REMOVED***watchedCivilite***REMOVED***===***REMOVED***'Mme'***REMOVED***&&***REMOVED***(
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<p***REMOVED***className="text-sm***REMOVED***text-amber-600">
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Attention:***REMOVED***Vous***REMOVED***avez***REMOVED***sélectionné***REMOVED***"Patriarche"***REMOVED***avec***REMOVED***la***REMOVED***civilité***REMOVED***"Mme".***REMOVED***Considérez***REMOVED***"Matriarche"***REMOVED***à***REMOVED***la***REMOVED***place.
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</p>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{watchedUserRole***REMOVED***===***REMOVED***'Matriarche'***REMOVED***&&***REMOVED***watchedCivilite***REMOVED***===***REMOVED***'M.'***REMOVED***&&***REMOVED***(
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{!invitationData***REMOVED***&&***REMOVED***watchedUserRole***REMOVED***===***REMOVED***'Matriarche'***REMOVED***&&***REMOVED***watchedCivilite***REMOVED***===***REMOVED***'M.'***REMOVED***&&***REMOVED***(
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<p***REMOVED***className="text-sm***REMOVED***text-amber-600">
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Attention:***REMOVED***Vous***REMOVED***avez***REMOVED***sélectionné***REMOVED***"Matriarche"***REMOVED***avec***REMOVED***la***REMOVED***civilité***REMOVED***"M.".***REMOVED***Considérez***REMOVED***"Patriarche"***REMOVED***à***REMOVED***la***REMOVED***place.
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</p>

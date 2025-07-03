@@ -2,6 +2,11 @@ export***REMOVED***const***REMOVED***ROUTES***REMOVED***=***REMOVED***{
 ***REMOVED******REMOVED***HOME:***REMOVED***'/',
 ***REMOVED******REMOVED***ABOUT:***REMOVED***'/about',
 ***REMOVED******REMOVED***HELP:***REMOVED***'/help',
+***REMOVED******REMOVED***DYNASTY:***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED***SELECTOR:***REMOVED***'/dynasty',
+***REMOVED******REMOVED******REMOVED******REMOVED***CREATE:***REMOVED***'/dynasty/create',
+***REMOVED******REMOVED***},
+***REMOVED******REMOVED***INVITE:***REMOVED***'/invite',
 ***REMOVED******REMOVED***AUTH:***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED***LOGIN:***REMOVED***'/auth-family',
 ***REMOVED******REMOVED******REMOVED******REMOVED***REGISTER:***REMOVED***'/auth-family',
