@@ -1,6 +1,7 @@
 export***REMOVED***const***REMOVED***ROUTES***REMOVED***=***REMOVED***{
 ***REMOVED******REMOVED***HOME:***REMOVED***'/',
 ***REMOVED******REMOVED***ABOUT:***REMOVED***'/about',
+***REMOVED******REMOVED***HELP:***REMOVED***'/help',
 ***REMOVED******REMOVED***AUTH:***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED***LOGIN:***REMOVED***'/auth-family',
 ***REMOVED******REMOVED******REMOVED******REMOVED***REGISTER:***REMOVED***'/auth-family',
