@@ -1,3 +1,4 @@
+
 import***REMOVED***React,***REMOVED***{***REMOVED***useEffect***REMOVED***}***REMOVED***from***REMOVED***'react';
 import***REMOVED***{***REMOVED***useNavigate,***REMOVED***useLocation***REMOVED***}***REMOVED***from***REMOVED***'react-router-dom';
 import***REMOVED***{***REMOVED***useAuth***REMOVED***}***REMOVED***from***REMOVED***'@/hooks/useAuth';
@@ -43,13 +44,14 @@ export***REMOVED***const***REMOVED***AuthRedirect:***REMOVED***React.FC<AuthRedi
 
 ***REMOVED******REMOVED***//***REMOVED***Routes***REMOVED***qui***REMOVED***ne***REMOVED***nécessitent***REMOVED***pas***REMOVED***de***REMOVED***redirection
 ***REMOVED******REMOVED***const***REMOVED***publicRoutes***REMOVED***=***REMOVED***[
-***REMOVED******REMOVED******REMOVED******REMOVED***ROUTES.LANDING,
+***REMOVED******REMOVED******REMOVED******REMOVED***ROUTES.HOME,***REMOVED***//***REMOVED***/dynasty***REMOVED***devient***REMOVED***la***REMOVED***page***REMOVED***d'accueil
+***REMOVED******REMOVED******REMOVED******REMOVED***ROUTES.DYNASTY.SELECTOR,
+***REMOVED******REMOVED******REMOVED******REMOVED***'/index',
 ***REMOVED******REMOVED******REMOVED******REMOVED***ROUTES.ABOUT,
 ***REMOVED******REMOVED******REMOVED******REMOVED***ROUTES.HELP,
 ***REMOVED******REMOVED******REMOVED******REMOVED***ROUTES.AUTH.FAMILY,
 ***REMOVED******REMOVED******REMOVED******REMOVED***'/login',
 ***REMOVED******REMOVED******REMOVED******REMOVED***'/register',
-***REMOVED******REMOVED******REMOVED******REMOVED***ROUTES.HOME,
 ***REMOVED******REMOVED******REMOVED******REMOVED***ROUTES.DYNASTY.CREATE,
 ***REMOVED******REMOVED******REMOVED******REMOVED***ROUTES.INVITE,
 ***REMOVED******REMOVED***];
@@ -70,6 +72,7 @@ export***REMOVED***const***REMOVED***AuthRedirect:***REMOVED***React.FC<AuthRedi
 ***REMOVED******REMOVED******REMOVED******REMOVED***ROUTES.DASHBOARD.CONTACT_ADMIN,
 ***REMOVED******REMOVED******REMOVED******REMOVED***ROUTES.DASHBOARD.SETTINGS,
 ***REMOVED******REMOVED******REMOVED******REMOVED***ROUTES.DASHBOARD.GESTION,
+***REMOVED******REMOVED******REMOVED******REMOVED***ROUTES.DASHBOARD.MEDIA,
 ***REMOVED******REMOVED******REMOVED******REMOVED***ROUTES.PROFILE,
 ***REMOVED******REMOVED***];
 
@@ -84,9 +87,9 @@ export***REMOVED***const***REMOVED***AuthRedirect:***REMOVED***React.FC<AuthRedi
 
 ***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Si***REMOVED***l'utilisateur***REMOVED***n'est***REMOVED***pas***REMOVED***connecté
 ***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(!user)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Si***REMOVED***on***REMOVED***est***REMOVED***sur***REMOVED***une***REMOVED***route***REMOVED***protégée,***REMOVED***rediriger***REMOVED***vers***REMOVED***la***REMOVED***page***REMOVED***d'accueil
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Si***REMOVED***on***REMOVED***est***REMOVED***sur***REMOVED***une***REMOVED***route***REMOVED***protégée,***REMOVED***rediriger***REMOVED***vers***REMOVED***la***REMOVED***page***REMOVED***d'accueil***REMOVED***(/dynasty)
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(isProtectedRoute)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***navigate(ROUTES.LANDING);
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***navigate(ROUTES.HOME);
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return;
 ***REMOVED******REMOVED******REMOVED******REMOVED***}
@@ -102,10 +105,11 @@ export***REMOVED***const***REMOVED***AuthRedirect:***REMOVED***React.FC<AuthRedi
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return;
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Si***REMOVED***l'utilisateur***REMOVED***a***REMOVED***une***REMOVED***dynastie
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Si***REMOVED***l'utilisateur***REMOVED***a***REMOVED***une***REMOVED***dynastie***REMOVED***et***REMOVED***tente***REMOVED***d'accéder***REMOVED***aux***REMOVED***pages***REMOVED***publiques
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(hasDynasty)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Si***REMOVED***on***REMOVED***est***REMOVED***sur***REMOVED***une***REMOVED***route***REMOVED***publique***REMOVED***(sauf***REMOVED***les***REMOVED***pages***REMOVED***d'aide),***REMOVED***rediriger***REMOVED***vers***REMOVED***le***REMOVED***dashboard
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(isPublicRoute***REMOVED***&&***REMOVED***location.pathname***REMOVED***!==***REMOVED***ROUTES.ABOUT***REMOVED***&&***REMOVED***location.pathname***REMOVED***!==***REMOVED***ROUTES.HELP)***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Rediriger***REMOVED***vers***REMOVED***le***REMOVED***dashboard***REMOVED***si***REMOVED***on***REMOVED***essaie***REMOVED***d'accéder***REMOVED***aux***REMOVED***pages***REMOVED***publiques***REMOVED***principales
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***redirectRoutes***REMOVED***=***REMOVED***[ROUTES.LANDING,***REMOVED***ROUTES.AUTH.FAMILY,***REMOVED***ROUTES.HOME,***REMOVED***ROUTES.DYNASTY.SELECTOR];
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(redirectRoutes.includes(location.pathname))***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***navigate(ROUTES.DASHBOARD.ROOT);
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return;

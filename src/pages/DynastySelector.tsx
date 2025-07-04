@@ -1,3 +1,4 @@
+
 import***REMOVED***React***REMOVED***from***REMOVED***'react';
 import***REMOVED***{***REMOVED***useNavigate***REMOVED***}***REMOVED***from***REMOVED***'react-router-dom';
 import***REMOVED***{***REMOVED***Card,***REMOVED***CardContent,***REMOVED***CardDescription,***REMOVED***CardHeader,***REMOVED***CardTitle***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/card';
@@ -23,7 +24,6 @@ const***REMOVED***DynastySelector***REMOVED***=***REMOVED***()***REMOVED***=>***
 ***REMOVED******REMOVED***};
 
 ***REMOVED******REMOVED***const***REMOVED***handleJoinDynasty***REMOVED***=***REMOVED***()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Redirection***REMOVED***vers***REMOVED***la***REMOVED***page***REMOVED***d'authentification***REMOVED***avec***REMOVED***indication***REMOVED***qu'il***REMOVED***faut***REMOVED***rejoindre
 ***REMOVED******REMOVED******REMOVED******REMOVED***navigate(ROUTES.AUTH.FAMILY);
 ***REMOVED******REMOVED***};
 
