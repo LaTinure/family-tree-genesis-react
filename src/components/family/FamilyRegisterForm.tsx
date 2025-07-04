@@ -28,6 +28,7 @@ interface***REMOVED***InvitationData***REMOVED***{
 interface***REMOVED***FamilyRegisterFormProps***REMOVED***{
 ***REMOVED******REMOVED***onSuccess?:***REMOVED***()***REMOVED***=>***REMOVED***void;
 ***REMOVED******REMOVED***invitationData?:***REMOVED***InvitationData***REMOVED***|***REMOVED***null;
+***REMOVED******REMOVED***mode?:***REMOVED***string***REMOVED***|***REMOVED***null;
 }
 
 const***REMOVED***professionOptions***REMOVED***=***REMOVED***[
@@ -42,7 +43,7 @@ const***REMOVED***situationOptions***REMOVED***=***REMOVED***[
 ***REMOVED******REMOVED***'Veuf(ve)'
 ];
 
-export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED***({***REMOVED***onSuccess,***REMOVED***invitationData***REMOVED***}:***REMOVED***FamilyRegisterFormProps)***REMOVED***=>***REMOVED***{
+export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED***({***REMOVED***onSuccess,***REMOVED***invitationData,***REMOVED***mode***REMOVED***}:***REMOVED***FamilyRegisterFormProps)***REMOVED***=>***REMOVED***{
 ***REMOVED******REMOVED***const***REMOVED***navigate***REMOVED***=***REMOVED***useNavigate();
 ***REMOVED******REMOVED***const***REMOVED***{***REMOVED***toast***REMOVED***}***REMOVED***=***REMOVED***useToast();
 ***REMOVED******REMOVED***const***REMOVED***[loading,***REMOVED***setLoading]***REMOVED***=***REMOVED***useState(false);
@@ -61,14 +62,14 @@ export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED*
 ***REMOVED******REMOVED******REMOVED******REMOVED***defaultValues:***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***civilite:***REMOVED***'M.',
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***relationship_type:***REMOVED***'patriarche',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_role:***REMOVED***invitationData?.user_role***REMOVED***||***REMOVED***'Membre'
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_role:***REMOVED***mode***REMOVED***===***REMOVED***'create'***REMOVED***?***REMOVED***'Patriarche'***REMOVED***:***REMOVED***(invitationData?.user_role***REMOVED***as***REMOVED***any***REMOVED***||***REMOVED***'Membre')
 ***REMOVED******REMOVED******REMOVED******REMOVED***}
 ***REMOVED******REMOVED***});
 
 ***REMOVED******REMOVED***//***REMOVED***Préremplir***REMOVED***les***REMOVED***champs***REMOVED***si***REMOVED***une***REMOVED***invitation***REMOVED***est***REMOVED***présente
 ***REMOVED******REMOVED***useEffect(()***REMOVED***=>***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(invitationData)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setValue('user_role',***REMOVED***invitationData.user_role);
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setValue('user_role',***REMOVED***invitationData.user_role***REMOVED***as***REMOVED***any);
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Ajuster***REMOVED***la***REMOVED***civilité***REMOVED***selon***REMOVED***le***REMOVED***rôle***REMOVED***si***REMOVED***nécessaire
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(invitationData.user_role***REMOVED***===***REMOVED***'Matriarche')***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setValue('civilite',***REMOVED***'Mme');
@@ -137,6 +138,15 @@ export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED*
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***{***REMOVED***error:***REMOVED***{***REMOVED***message:***REMOVED***'Erreur***REMOVED***lors***REMOVED***de***REMOVED***la***REMOVED***création***REMOVED***du***REMOVED***compte'***REMOVED***}***REMOVED***};
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
 
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***let***REMOVED***dynastyId***REMOVED***=***REMOVED***null;
+
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Si***REMOVED***mode***REMOVED***create,***REMOVED***créer***REMOVED***une***REMOVED***nouvelle***REMOVED***dynastie
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(mode***REMOVED***===***REMOVED***'create')***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***TODO:***REMOVED***Implémenter***REMOVED***la***REMOVED***création***REMOVED***de***REMOVED***dynastie***REMOVED***avec***REMOVED***les***REMOVED***vraies***REMOVED***tables
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***console.log('Mode***REMOVED***création***REMOVED***de***REMOVED***dynastie***REMOVED***activé');
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***dynastyId***REMOVED***=***REMOVED***'temp-dynasty-id';
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
+
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***profileDataToInsert***REMOVED***=***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***authData.user.id,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_id:***REMOVED***authData.user.id,
@@ -155,8 +165,9 @@ export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED*
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_role:***REMOVED***profileData.user_role,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_admin:***REMOVED***profileData.user_role***REMOVED***===***REMOVED***'Administrateur',
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_patriarch:***REMOVED***profileData.user_role***REMOVED***===***REMOVED***'Patriarche'***REMOVED***||***REMOVED***profileData.user_role***REMOVED***===***REMOVED***'Matriarche',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Ajouter***REMOVED***l'ID***REMOVED***de***REMOVED***la***REMOVED***dynastie***REMOVED***si***REMOVED***une***REMOVED***invitation***REMOVED***est***REMOVED***présente
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***...(invitationData***REMOVED***&&***REMOVED***{***REMOVED***dynasty_id:***REMOVED***invitationData.dynasty_id***REMOVED***})
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Ajouter***REMOVED***l'ID***REMOVED***de***REMOVED***la***REMOVED***dynastie***REMOVED***si***REMOVED***une***REMOVED***invitation***REMOVED***est***REMOVED***présente***REMOVED***ou***REMOVED***si***REMOVED***on***REMOVED***crée***REMOVED***une***REMOVED***dynastie
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***...(invitationData***REMOVED***&&***REMOVED***{***REMOVED***dynasty_id:***REMOVED***invitationData.dynasty_id***REMOVED***}),
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***...(dynastyId***REMOVED***&&***REMOVED***{***REMOVED***dynasty_id:***REMOVED***dynastyId***REMOVED***})
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***};
 
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***error:***REMOVED***profileError***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase
@@ -219,14 +230,16 @@ export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED*
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
 
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***toast({
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***title:***REMOVED***'Inscription***REMOVED***réussie',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***description:***REMOVED***'Votre***REMOVED***compte***REMOVED***a***REMOVED***été***REMOVED***créé***REMOVED***avec***REMOVED***succès***REMOVED***!***REMOVED***Vous***REMOVED***pouvez***REMOVED***maintenant***REMOVED***vous***REMOVED***connecter.',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***title:***REMOVED***mode***REMOVED***===***REMOVED***'create'***REMOVED***?***REMOVED***'Dynastie***REMOVED***créée***REMOVED***avec***REMOVED***succès'***REMOVED***:***REMOVED***'Inscription***REMOVED***réussie',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***description:***REMOVED***mode***REMOVED***===***REMOVED***'create'
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***'Votre***REMOVED***dynastie***REMOVED***a***REMOVED***été***REMOVED***créée***REMOVED***avec***REMOVED***succès***REMOVED***!***REMOVED***Vous***REMOVED***pouvez***REMOVED***maintenant***REMOVED***vous***REMOVED***connecter.'
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***'Votre***REMOVED***compte***REMOVED***a***REMOVED***été***REMOVED***créé***REMOVED***avec***REMOVED***succès***REMOVED***!***REMOVED***Vous***REMOVED***pouvez***REMOVED***maintenant***REMOVED***vous***REMOVED***connecter.',
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***});
 
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(onSuccess)***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onSuccess();
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***else***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***navigate(ROUTES.HOME);
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***navigate(ROUTES.LANDING);
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
 ***REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***catch***REMOVED***(error)***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***console.error('Erreur***REMOVED***générale:',***REMOVED***error);
@@ -248,9 +261,13 @@ export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED*
 ***REMOVED******REMOVED***return***REMOVED***(
 ***REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="space-y-6">
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="text-center">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<h3***REMOVED***className="text-lg***REMOVED***font-semibold***REMOVED***text-gray-900">Créer***REMOVED***votre***REMOVED***profil***REMOVED***familial</h3>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<h3***REMOVED***className="text-lg***REMOVED***font-semibold***REMOVED***text-gray-900">
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{mode***REMOVED***===***REMOVED***'create'***REMOVED***?***REMOVED***'Créer***REMOVED***une***REMOVED***nouvelle***REMOVED***dynastie'***REMOVED***:***REMOVED***'Créer***REMOVED***votre***REMOVED***profil***REMOVED***familial'}
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</h3>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<p***REMOVED***className="text-sm***REMOVED***text-gray-600***REMOVED***mt-1">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{invitationData
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{mode***REMOVED***===***REMOVED***'create'
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***'Créez***REMOVED***votre***REMOVED***propre***REMOVED***dynastie***REMOVED***familiale***REMOVED***et***REMOVED***devenez***REMOVED***le***REMOVED***patriarche'
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***invitationData
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***`Rejoindre***REMOVED***la***REMOVED***dynastie***REMOVED***${invitationData.dynasty_name}`
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***'Remplissez***REMOVED***les***REMOVED***informations***REMOVED***pour***REMOVED***rejoindre***REMOVED***votre***REMOVED***famille'
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
@@ -569,10 +586,10 @@ export***REMOVED***const***REMOVED***FamilyRegisterForm***REMOVED***=***REMOVED*
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{loading***REMOVED***?***REMOVED***(
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Loader2***REMOVED***className="w-4***REMOVED***h-4***REMOVED***mr-2***REMOVED***animate-spin"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Inscription***REMOVED***en***REMOVED***cours...
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{mode***REMOVED***===***REMOVED***'create'***REMOVED***?***REMOVED***'Création***REMOVED***en***REMOVED***cours...'***REMOVED***:***REMOVED***'Inscription***REMOVED***en***REMOVED***cours...'}
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)***REMOVED***:***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***'Créer***REMOVED***mon***REMOVED***profil'
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***mode***REMOVED***===***REMOVED***'create'***REMOVED***?***REMOVED***'Créer***REMOVED***ma***REMOVED***dynastie'***REMOVED***:***REMOVED***'Créer***REMOVED***mon***REMOVED***profil'
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Button>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</form>

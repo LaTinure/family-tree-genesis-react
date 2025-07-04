@@ -1,5 +1,6 @@
 export***REMOVED***const***REMOVED***ROUTES***REMOVED***=***REMOVED***{
-***REMOVED******REMOVED***HOME:***REMOVED***'/',
+***REMOVED******REMOVED***LANDING:***REMOVED***'/',
+***REMOVED******REMOVED***HOME:***REMOVED***'/dynasty',
 ***REMOVED******REMOVED***ABOUT:***REMOVED***'/about',
 ***REMOVED******REMOVED***HELP:***REMOVED***'/help',
 ***REMOVED******REMOVED***DYNASTY:***REMOVED***{

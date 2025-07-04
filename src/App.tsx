@@ -6,6 +6,7 @@ import***REMOVED***{***REMOVED***AuthProvider***REMOVED***}***REMOVED***from***R
 import***REMOVED***{***REMOVED***ProtectedRoute***REMOVED***}***REMOVED***from***REMOVED***'@/components/layout/ProtectedRoute';
 import***REMOVED***{***REMOVED***Layout***REMOVED***}***REMOVED***from***REMOVED***'@/components/layout/Layout';
 import***REMOVED***{***REMOVED***AppLoader***REMOVED***}***REMOVED***from***REMOVED***'@/components/shared/AppLoader';
+import***REMOVED***{***REMOVED***AuthRedirect***REMOVED***}***REMOVED***from***REMOVED***'@/components/auth/AuthRedirect';
 import***REMOVED***{***REMOVED***ROUTES***REMOVED***}***REMOVED***from***REMOVED***'@/lib/constants/routes';
 
 //***REMOVED***Pages
@@ -66,17 +67,19 @@ function***REMOVED***App()***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED***<QueryClientProvider***REMOVED***client={queryClient}>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Router>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<AuthProvider>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Routes>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<AuthRedirect>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Routes>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{/****REMOVED***Routes***REMOVED***publiques***REMOVED****/}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.HOME}***REMOVED***element={<Layout><Index***REMOVED***/></Layout>}***REMOVED***/>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.LANDING}***REMOVED***element={<Layout><Index***REMOVED***/></Layout>}***REMOVED***/>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.HOME}***REMOVED***element={<Layout><DynastySelector***REMOVED***/></Layout>}***REMOVED***/>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.ABOUT}***REMOVED***element={<Layout><About***REMOVED***/></Layout>}***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.AUTH.FAMILY}***REMOVED***element={<AuthFamily***REMOVED***/>}***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path="/login"***REMOVED***element={<Login***REMOVED***/>}***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path="/register"***REMOVED***element={<Register***REMOVED***/>}***REMOVED***/>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.AUTH.FAMILY}***REMOVED***element={<Layout><AuthFamily***REMOVED***/></Layout>}***REMOVED***/>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path="/login"***REMOVED***element={<Layout><Login***REMOVED***/></Layout>}***REMOVED***/>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path="/register"***REMOVED***element={<Layout><Register***REMOVED***/></Layout>}***REMOVED***/>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.HELP}***REMOVED***element={<Layout><Help***REMOVED***/></Layout>}***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.DYNASTY.SELECTOR}***REMOVED***element={<DynastySelector***REMOVED***/>}***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.DYNASTY.CREATE}***REMOVED***element={<DynastyCreateForm***REMOVED***/>}***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.INVITE}***REMOVED***element={<DynastyInviteHandler***REMOVED***/>}***REMOVED***/>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.DYNASTY.SELECTOR}***REMOVED***element={<Layout><DynastySelector***REMOVED***/></Layout>}***REMOVED***/>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.DYNASTY.CREATE}***REMOVED***element={<Layout><DynastyCreateForm***REMOVED***/></Layout>}***REMOVED***/>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.INVITE}***REMOVED***element={<Layout><DynastyInviteHandler***REMOVED***/></Layout>}***REMOVED***/>
 
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{/****REMOVED***Routes***REMOVED***protégées***REMOVED****/}
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.PROFILE}***REMOVED***element={
@@ -200,6 +203,7 @@ function***REMOVED***App()***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</ProtectedRoute>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***/>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Routes>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</AuthRedirect>
 
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Toaster***REMOVED***/>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</AuthProvider>

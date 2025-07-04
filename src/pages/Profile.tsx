@@ -28,7 +28,7 @@ const***REMOVED***Profile***REMOVED***=***REMOVED***()***REMOVED***=>***REMOVED*
 ***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(authLoading)***REMOVED***return;
 
 ***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(!user)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***navigate(ROUTES.HOME);
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***navigate(ROUTES.LANDING);
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return;
 ***REMOVED******REMOVED******REMOVED******REMOVED***}
 

@@ -19,7 +19,7 @@ const***REMOVED***DynastyInviteHandler***REMOVED***=***REMOVED***()***REMOVED***
 ***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(token)***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setInviteToken(token);
 ***REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***else***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***navigate(ROUTES.DYNASTY.SELECTOR);
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***navigate(ROUTES.HOME);
 ***REMOVED******REMOVED******REMOVED******REMOVED***}
 ***REMOVED******REMOVED***},***REMOVED***[searchParams,***REMOVED***navigate]);
 
@@ -67,7 +67,7 @@ const***REMOVED***DynastyInviteHandler***REMOVED***=***REMOVED***()***REMOVED***
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<CardDescription>Cette***REMOVED***invitation***REMOVED***n'est***REMOVED***plus***REMOVED***valide***REMOVED***ou***REMOVED***a***REMOVED***expiré.</CardDescription>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</CardHeader>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<CardContent***REMOVED***className="text-center">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Button***REMOVED***onClick={()***REMOVED***=>***REMOVED***navigate(ROUTES.DYNASTY.SELECTOR)}***REMOVED***className="w-full">
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Button***REMOVED***onClick={()***REMOVED***=>***REMOVED***navigate(ROUTES.HOME)}***REMOVED***className="w-full">
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Retour***REMOVED***à***REMOVED***la***REMOVED***sélection
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Button>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</CardContent>
@@ -94,7 +94,7 @@ const***REMOVED***DynastyInviteHandler***REMOVED***=***REMOVED***()***REMOVED***
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Button***REMOVED***onClick={handleAcceptInvite}***REMOVED***className="w-full***REMOVED***bg-whatsapp-600***REMOVED***hover:bg-whatsapp-700">
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Accepter***REMOVED***l'Invitation
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Button>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Button***REMOVED***onClick={()***REMOVED***=>***REMOVED***navigate(ROUTES.DYNASTY.SELECTOR)}***REMOVED***variant="outline"***REMOVED***className="w-full">
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Button***REMOVED***onClick={()***REMOVED***=>***REMOVED***navigate(ROUTES.HOME)}***REMOVED***variant="outline"***REMOVED***className="w-full">
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Décliner
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Button>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
