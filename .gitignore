@@ -25,3 +25,11 @@ dist-ssr
 
 #***REMOVED***Local***REMOVED***Netlify***REMOVED***folder
 .netlify
+
+#***REMOVED***Sensitive***REMOVED***files
+docs/Stripe_Key.txt
+*.key
+*.pem
+.env
+.env.local
+.env.production
