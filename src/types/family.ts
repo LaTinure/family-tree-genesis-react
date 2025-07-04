@@ -98,3 +98,15 @@ export***REMOVED***interface***REMOVED***Dynasty***REMOVED***{
 ***REMOVED******REMOVED***created_at:***REMOVED***string;
 ***REMOVED******REMOVED***updated_at:***REMOVED***string;
 }
+
+export***REMOVED***interface***REMOVED***DynastyCreationToken***REMOVED***{
+***REMOVED******REMOVED***id:***REMOVED***string;
+***REMOVED******REMOVED***token:***REMOVED***string;
+***REMOVED******REMOVED***stripe_session_id?:***REMOVED***string;
+***REMOVED******REMOVED***code_promo?:***REMOVED***string;
+***REMOVED******REMOVED***is_used:***REMOVED***boolean;
+***REMOVED******REMOVED***used_at?:***REMOVED***string;
+***REMOVED******REMOVED***created_by?:***REMOVED***string;
+***REMOVED******REMOVED***expires_at:***REMOVED***string;
+***REMOVED******REMOVED***created_at:***REMOVED***string;
+}

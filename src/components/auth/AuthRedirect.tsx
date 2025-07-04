@@ -49,6 +49,7 @@ export***REMOVED***const***REMOVED***AuthRedirect:***REMOVED***React.FC<AuthRedi
 ***REMOVED******REMOVED******REMOVED******REMOVED***'/login',
 ***REMOVED******REMOVED******REMOVED******REMOVED***'/register',
 ***REMOVED******REMOVED******REMOVED******REMOVED***ROUTES.DYNASTY.CREATE,
+***REMOVED******REMOVED******REMOVED******REMOVED***'/dynasty/payment',
 ***REMOVED******REMOVED******REMOVED******REMOVED***ROUTES.INVITE,
 ***REMOVED******REMOVED***];
 

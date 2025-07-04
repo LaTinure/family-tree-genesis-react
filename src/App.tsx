@@ -34,6 +34,7 @@ import***REMOVED***Gestion***REMOVED***from***REMOVED***'@/pages/dashboard/Gesti
 import***REMOVED***Help***REMOVED***from***REMOVED***'@/pages/Help';
 import***REMOVED***DynastySelector***REMOVED***from***REMOVED***'@/pages/DynastySelector';
 import***REMOVED***DynastyCreateForm***REMOVED***from***REMOVED***'@/pages/DynastyCreateForm';
+import***REMOVED***DynastyPayment***REMOVED***from***REMOVED***'@/pages/DynastyPayment';
 import***REMOVED***DynastyInviteHandler***REMOVED***from***REMOVED***'@/components/DynastyInviteHandler';
 import***REMOVED***Media***REMOVED***from***REMOVED***'@/pages/dashboard/Media';
 
@@ -82,6 +83,7 @@ function***REMOVED***App()***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.HELP}***REMOVED***element={<Layout><Help***REMOVED***/></Layout>}***REMOVED***/>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.DYNASTY.SELECTOR}***REMOVED***element={<Layout><DynastySelector***REMOVED***/></Layout>}***REMOVED***/>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.DYNASTY.CREATE}***REMOVED***element={<Layout><DynastyCreateForm***REMOVED***/></Layout>}***REMOVED***/>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path="/dynasty/payment"***REMOVED***element={<Layout><DynastyPayment***REMOVED***/></Layout>}***REMOVED***/>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.INVITE}***REMOVED***element={<Layout><DynastyInviteHandler***REMOVED***/></Layout>}***REMOVED***/>
 
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{/****REMOVED***Routes***REMOVED***protégées***REMOVED****/}
