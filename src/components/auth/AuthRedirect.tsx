@@ -11,10 +11,12 @@ interface***REMOVED***AuthRedirectProps***REMOVED***{
 ***REMOVED******REMOVED***children:***REMOVED***React.ReactNode;
 }
 
+//***REMOVED***Ce***REMOVED***composant***REMOVED***protège***REMOVED***les***REMOVED***routes***REMOVED***publiques***REMOVED***et***REMOVED***redirige***REMOVED***les***REMOVED***utilisateurs***REMOVED***connectés
+//***REMOVED***vers***REMOVED***la***REMOVED***page***REMOVED***d'accueil***REMOVED***(dynasty),***REMOVED***sauf***REMOVED***pour***REMOVED***les***REMOVED***pages***REMOVED***d'inscription/paiement***REMOVED***Stripe
 export***REMOVED***const***REMOVED***AuthRedirect:***REMOVED***React.FC<AuthRedirectProps>***REMOVED***=***REMOVED***({***REMOVED***children***REMOVED***})***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***navigate***REMOVED***=***REMOVED***useNavigate();
+***REMOVED******REMOVED***const***REMOVED***{***REMOVED***user,***REMOVED***loading***REMOVED***}***REMOVED***=***REMOVED***useAuth();
 ***REMOVED******REMOVED***const***REMOVED***location***REMOVED***=***REMOVED***useLocation();
-***REMOVED******REMOVED***const***REMOVED***{***REMOVED***user,***REMOVED***loading:***REMOVED***authLoading***REMOVED***}***REMOVED***=***REMOVED***useAuth();
+***REMOVED******REMOVED***const***REMOVED***navigate***REMOVED***=***REMOVED***useNavigate();
 
 ***REMOVED******REMOVED***//***REMOVED***Vérifier***REMOVED***si***REMOVED***l'utilisateur***REMOVED***a***REMOVED***une***REMOVED***dynastie
 ***REMOVED******REMOVED***const***REMOVED***{***REMOVED***data:***REMOVED***hasDynasty,***REMOVED***isLoading:***REMOVED***dynastyLoading***REMOVED***}***REMOVED***=***REMOVED***useQuery({
@@ -77,47 +79,25 @@ export***REMOVED***const***REMOVED***AuthRedirect:***REMOVED***React.FC<AuthRedi
 ***REMOVED******REMOVED***const***REMOVED***isProtectedRoute***REMOVED***=***REMOVED***protectedRoutes.some(route***REMOVED***=>***REMOVED***location.pathname.startsWith(route));
 
 ***REMOVED******REMOVED***useEffect(()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Attendre***REMOVED***que***REMOVED***l'authentification***REMOVED***et***REMOVED***la***REMOVED***vérification***REMOVED***de***REMOVED***dynastie***REMOVED***soient***REMOVED***terminées
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(authLoading***REMOVED***||***REMOVED***(user***REMOVED***&&***REMOVED***dynastyLoading))***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Laisser***REMOVED***passer***REMOVED***l'inscription***REMOVED***premium***REMOVED***et***REMOVED***le***REMOVED***paiement***REMOVED***Stripe
+***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***location.pathname***REMOVED***===***REMOVED***'/register-before-payment'***REMOVED***||
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***location.pathname***REMOVED***===***REMOVED***'/dynasty/payment'
+***REMOVED******REMOVED******REMOVED******REMOVED***)***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return;
 ***REMOVED******REMOVED******REMOVED******REMOVED***}
-
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Si***REMOVED***l'utilisateur***REMOVED***n'est***REMOVED***pas***REMOVED***connecté
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(!user)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Si***REMOVED***on***REMOVED***est***REMOVED***sur***REMOVED***une***REMOVED***route***REMOVED***protégée,***REMOVED***rediriger***REMOVED***vers***REMOVED***la***REMOVED***page***REMOVED***d'accueil***REMOVED***(/dynasty)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(isProtectedRoute)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***navigate(ROUTES.HOME);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return;
+***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Rediriger***REMOVED***les***REMOVED***utilisateurs***REMOVED***connectés***REMOVED***vers***REMOVED***/dynasty
+***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(user***REMOVED***&&***REMOVED***!loading)***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***navigate('/dynasty',***REMOVED***{***REMOVED***replace:***REMOVED***true***REMOVED***});
 ***REMOVED******REMOVED******REMOVED******REMOVED***}
-
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Si***REMOVED***l'utilisateur***REMOVED***est***REMOVED***connecté
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(user)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Si***REMOVED***l'utilisateur***REMOVED***n'a***REMOVED***pas***REMOVED***de***REMOVED***dynastie
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(!hasDynasty)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Si***REMOVED***on***REMOVED***n'est***REMOVED***pas***REMOVED***déjà***REMOVED***sur***REMOVED***la***REMOVED***page***REMOVED***de***REMOVED***sélection***REMOVED***de***REMOVED***dynastie
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(location.pathname***REMOVED***!==***REMOVED***ROUTES.HOME)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***navigate(ROUTES.HOME);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return;
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Si***REMOVED***l'utilisateur***REMOVED***a***REMOVED***une***REMOVED***dynastie***REMOVED***et***REMOVED***tente***REMOVED***d'accéder***REMOVED***aux***REMOVED***pages***REMOVED***publiques
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(hasDynasty)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Rediriger***REMOVED***vers***REMOVED***le***REMOVED***dashboard***REMOVED***si***REMOVED***on***REMOVED***essaie***REMOVED***d'accéder***REMOVED***aux***REMOVED***pages***REMOVED***publiques***REMOVED***principales
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***redirectRoutes***REMOVED***=***REMOVED***[ROUTES.LANDING,***REMOVED***ROUTES.HOME,***REMOVED***ROUTES.DYNASTY.SELECTOR];
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(redirectRoutes.includes(location.pathname))***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***navigate(ROUTES.DASHBOARD.ROOT);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return;
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED***},***REMOVED***[user,***REMOVED***hasDynasty,***REMOVED***authLoading,***REMOVED***dynastyLoading,***REMOVED***location.pathname,***REMOVED***navigate,***REMOVED***isPublicRoute,***REMOVED***isProtectedRoute]);
+***REMOVED******REMOVED***},***REMOVED***[user,***REMOVED***loading,***REMOVED***location.pathname,***REMOVED***navigate]);
 
 ***REMOVED******REMOVED***//***REMOVED***Afficher***REMOVED***le***REMOVED***loader***REMOVED***pendant***REMOVED***le***REMOVED***chargement
-***REMOVED******REMOVED***if***REMOVED***(authLoading***REMOVED***||***REMOVED***(user***REMOVED***&&***REMOVED***dynastyLoading))***REMOVED***{
+***REMOVED******REMOVED***if***REMOVED***(loading***REMOVED***||***REMOVED***(user***REMOVED***&&***REMOVED***dynastyLoading))***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***<AppLoader***REMOVED***onComplete={()***REMOVED***=>***REMOVED***{}}***REMOVED***/>;
 ***REMOVED******REMOVED***}
 
 ***REMOVED******REMOVED***return***REMOVED***<>{children}</>;
 };
+
+export***REMOVED***default***REMOVED***AuthRedirect;
