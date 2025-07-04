@@ -22,8 +22,6 @@ export***REMOVED***const***REMOVED***AuthRedirect:***REMOVED***React.FC<AuthRedi
 ***REMOVED******REMOVED******REMOVED******REMOVED***queryFn:***REMOVED***async***REMOVED***()***REMOVED***=>***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(!user)***REMOVED***return***REMOVED***false;
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***TODO:***REMOVED***Implémenter***REMOVED***la***REMOVED***vraie***REMOVED***vérification***REMOVED***de***REMOVED***dynastie
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Pour***REMOVED***l'instant,***REMOVED***on***REMOVED***considère***REMOVED***que***REMOVED***l'utilisateur***REMOVED***a***REMOVED***une***REMOVED***dynastie***REMOVED***s'il***REMOVED***a***REMOVED***un***REMOVED***profil
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***data,***REMOVED***error***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.from('profiles')
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.select('id')
@@ -35,8 +33,6 @@ export***REMOVED***const***REMOVED***AuthRedirect:***REMOVED***React.FC<AuthRedi
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***false;
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***TODO:***REMOVED***Vérifier***REMOVED***si***REMOVED***le***REMOVED***profil***REMOVED***a***REMOVED***une***REMOVED***dynastie***REMOVED***associée
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Pour***REMOVED***l'instant,***REMOVED***on***REMOVED***retourne***REMOVED***true***REMOVED***si***REMOVED***le***REMOVED***profil***REMOVED***existe
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***!!data;
 ***REMOVED******REMOVED******REMOVED******REMOVED***},
 ***REMOVED******REMOVED******REMOVED******REMOVED***enabled:***REMOVED***!!user,
@@ -44,7 +40,7 @@ export***REMOVED***const***REMOVED***AuthRedirect:***REMOVED***React.FC<AuthRedi
 
 ***REMOVED******REMOVED***//***REMOVED***Routes***REMOVED***qui***REMOVED***ne***REMOVED***nécessitent***REMOVED***pas***REMOVED***de***REMOVED***redirection
 ***REMOVED******REMOVED***const***REMOVED***publicRoutes***REMOVED***=***REMOVED***[
-***REMOVED******REMOVED******REMOVED******REMOVED***ROUTES.HOME,***REMOVED***//***REMOVED***/dynasty***REMOVED***devient***REMOVED***la***REMOVED***page***REMOVED***d'accueil
+***REMOVED******REMOVED******REMOVED******REMOVED***ROUTES.HOME,
 ***REMOVED******REMOVED******REMOVED******REMOVED***ROUTES.DYNASTY.SELECTOR,
 ***REMOVED******REMOVED******REMOVED******REMOVED***'/index',
 ***REMOVED******REMOVED******REMOVED******REMOVED***ROUTES.ABOUT,
@@ -119,7 +115,7 @@ export***REMOVED***const***REMOVED***AuthRedirect:***REMOVED***React.FC<AuthRedi
 
 ***REMOVED******REMOVED***//***REMOVED***Afficher***REMOVED***le***REMOVED***loader***REMOVED***pendant***REMOVED***le***REMOVED***chargement
 ***REMOVED******REMOVED***if***REMOVED***(authLoading***REMOVED***||***REMOVED***(user***REMOVED***&&***REMOVED***dynastyLoading))***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***<AppLoader***REMOVED***/>;
+***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***<AppLoader***REMOVED***onComplete={()***REMOVED***=>***REMOVED***{}}***REMOVED***/>;
 ***REMOVED******REMOVED***}
 
 ***REMOVED******REMOVED***return***REMOVED***<>{children}</>;
