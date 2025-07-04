@@ -1,3 +1,4 @@
+
 export***REMOVED***const***REMOVED***ROUTES***REMOVED***=***REMOVED***{
 ***REMOVED******REMOVED***LANDING:***REMOVED***'/',
 ***REMOVED******REMOVED***HOME:***REMOVED***'/dynasty',
@@ -29,6 +30,7 @@ export***REMOVED***const***REMOVED***ROUTES***REMOVED***=***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED***CONTACT_ADMIN:***REMOVED***'/dashboard/contact-admin',
 ***REMOVED******REMOVED******REMOVED******REMOVED***SETTINGS:***REMOVED***'/dashboard/settings',
 ***REMOVED******REMOVED******REMOVED******REMOVED***GESTION:***REMOVED***'/dashboard/gestion',
+***REMOVED******REMOVED******REMOVED******REMOVED***MEDIA:***REMOVED***'/dashboard/media',
 ***REMOVED******REMOVED***},
 ***REMOVED******REMOVED***PROFILE:***REMOVED***'/profile',
 }***REMOVED***as***REMOVED***const;

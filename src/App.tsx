@@ -1,3 +1,4 @@
+
 import***REMOVED***{***REMOVED***useState,***REMOVED***useEffect***REMOVED***}***REMOVED***from***REMOVED***'react';
 import***REMOVED***{***REMOVED***BrowserRouter***REMOVED***as***REMOVED***Router,***REMOVED***Routes,***REMOVED***Route***REMOVED***}***REMOVED***from***REMOVED***'react-router-dom';
 import***REMOVED***{***REMOVED***QueryClient,***REMOVED***QueryClientProvider***REMOVED***}***REMOVED***from***REMOVED***'@tanstack/react-query';
@@ -33,7 +34,9 @@ import***REMOVED***Gestion***REMOVED***from***REMOVED***'@/pages/dashboard/Gesti
 import***REMOVED***Help***REMOVED***from***REMOVED***'@/pages/Help';
 import***REMOVED***DynastySelector***REMOVED***from***REMOVED***'@/pages/DynastySelector';
 import***REMOVED***DynastyCreateForm***REMOVED***from***REMOVED***'@/pages/DynastyCreateForm';
+import***REMOVED***DynastyPayment***REMOVED***from***REMOVED***'@/pages/DynastyPayment';
 import***REMOVED***DynastyInviteHandler***REMOVED***from***REMOVED***'@/components/DynastyInviteHandler';
+import***REMOVED***Media***REMOVED***from***REMOVED***'@/pages/dashboard/Media';
 
 //***REMOVED***Configuration***REMOVED***React***REMOVED***Query
 const***REMOVED***queryClient***REMOVED***=***REMOVED***new***REMOVED***QueryClient({
@@ -69,9 +72,10 @@ function***REMOVED***App()***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<AuthProvider>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<AuthRedirect>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Routes>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{/****REMOVED***Routes***REMOVED***publiques***REMOVED****/}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.LANDING}***REMOVED***element={<Layout><Index***REMOVED***/></Layout>}***REMOVED***/>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{/****REMOVED***Routes***REMOVED***publiques***REMOVED***-***REMOVED***/dynasty***REMOVED***devient***REMOVED***la***REMOVED***page***REMOVED***d'accueil***REMOVED***par***REMOVED***défaut***REMOVED****/}
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.LANDING}***REMOVED***element={<Layout><DynastySelector***REMOVED***/></Layout>}***REMOVED***/>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.HOME}***REMOVED***element={<Layout><DynastySelector***REMOVED***/></Layout>}***REMOVED***/>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path="/index"***REMOVED***element={<Layout><Index***REMOVED***/></Layout>}***REMOVED***/>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.ABOUT}***REMOVED***element={<Layout><About***REMOVED***/></Layout>}***REMOVED***/>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.AUTH.FAMILY}***REMOVED***element={<Layout><AuthFamily***REMOVED***/></Layout>}***REMOVED***/>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path="/login"***REMOVED***element={<Layout><Login***REMOVED***/></Layout>}***REMOVED***/>
@@ -79,6 +83,7 @@ function***REMOVED***App()***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.HELP}***REMOVED***element={<Layout><Help***REMOVED***/></Layout>}***REMOVED***/>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.DYNASTY.SELECTOR}***REMOVED***element={<Layout><DynastySelector***REMOVED***/></Layout>}***REMOVED***/>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.DYNASTY.CREATE}***REMOVED***element={<Layout><DynastyCreateForm***REMOVED***/></Layout>}***REMOVED***/>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path="/dynasty/payment"***REMOVED***element={<Layout><DynastyPayment***REMOVED***/></Layout>}***REMOVED***/>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.INVITE}***REMOVED***element={<Layout><DynastyInviteHandler***REMOVED***/></Layout>}***REMOVED***/>
 
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{/****REMOVED***Routes***REMOVED***protégées***REMOVED****/}
@@ -150,6 +155,14 @@ function***REMOVED***App()***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<ProtectedRoute>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Layout>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<DashboardProfile***REMOVED***/>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Layout>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</ProtectedRoute>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***/>
+
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Route***REMOVED***path={ROUTES.DASHBOARD.MEDIA}***REMOVED***element={
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<ProtectedRoute>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Layout>
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Media***REMOVED***/>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Layout>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</ProtectedRoute>
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***/>
