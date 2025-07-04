@@ -7,6 +7,7 @@ export***REMOVED***const***REMOVED***ROUTES***REMOVED***=***REMOVED***{
 ***REMOVED******REMOVED***DYNASTY:***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED***SELECTOR:***REMOVED***'/dynasty',
 ***REMOVED******REMOVED******REMOVED******REMOVED***CREATE:***REMOVED***'/dynasty/create',
+***REMOVED******REMOVED******REMOVED******REMOVED***PAYMENT:***REMOVED***'/dynasty/payment',
 ***REMOVED******REMOVED***},
 ***REMOVED******REMOVED***INVITE:***REMOVED***'/invite',
 ***REMOVED******REMOVED***AUTH:***REMOVED***{

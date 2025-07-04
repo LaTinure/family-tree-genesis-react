@@ -1,4 +1,3 @@
-
 import***REMOVED***{***REMOVED***useState***REMOVED***}***REMOVED***from***REMOVED***'react';
 import***REMOVED***{***REMOVED***loadStripe***REMOVED***}***REMOVED***from***REMOVED***'@stripe/stripe-js';
 import***REMOVED***{***REMOVED***Button***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/button';
@@ -6,15 +5,13 @@ import***REMOVED***{***REMOVED***Card,***REMOVED***CardContent,***REMOVED***Card
 import***REMOVED***{***REMOVED***Badge***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/badge';
 import***REMOVED***{***REMOVED***CheckCircle,***REMOVED***CreditCard,***REMOVED***Shield,***REMOVED***Zap***REMOVED***}***REMOVED***from***REMOVED***'lucide-react';
 import***REMOVED***{***REMOVED***motion***REMOVED***}***REMOVED***from***REMOVED***'framer-motion';
-import***REMOVED***{***REMOVED***useToast***REMOVED***}***REMOVED***from***REMOVED***'@/hooks/use-toast';
 
 const***REMOVED***stripePromise***REMOVED***=***REMOVED***loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY!);
 
-export***REMOVED***default***REMOVED***function***REMOVED***DynastyPayment()***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***{***REMOVED***toast***REMOVED***}***REMOVED***=***REMOVED***useToast();
+export***REMOVED***default***REMOVED***function***REMOVED***PaymentPage()***REMOVED***{
 ***REMOVED******REMOVED***const***REMOVED***[isLoading,***REMOVED***setIsLoading]***REMOVED***=***REMOVED***useState(false);
 
-***REMOVED******REMOVED***const***REMOVED***handleCheckout***REMOVED***=***REMOVED***async***REMOVED***()***REMOVED***=>***REMOVED***{
+***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***handleCheckout***REMOVED***=***REMOVED***async***REMOVED***()***REMOVED***=>***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED***setIsLoading(true);
 ***REMOVED******REMOVED******REMOVED******REMOVED***try***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***stripe***REMOVED***=***REMOVED***await***REMOVED***stripePromise;
@@ -44,11 +41,6 @@ export***REMOVED***default***REMOVED***function***REMOVED***DynastyPayment()***R
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
 ***REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***catch***REMOVED***(error)***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***console.error('Erreur***REMOVED***lors***REMOVED***du***REMOVED***paiement:',***REMOVED***error);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***toast({
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***title:***REMOVED***'Erreur***REMOVED***de***REMOVED***paiement',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***description:***REMOVED***'Une***REMOVED***erreur***REMOVED***est***REMOVED***survenue***REMOVED***lors***REMOVED***du***REMOVED***traitement***REMOVED***du***REMOVED***paiement.',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***variant:***REMOVED***'destructive',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***});
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setIsLoading(false);
 ***REMOVED******REMOVED******REMOVED******REMOVED***}
 ***REMOVED******REMOVED***};
