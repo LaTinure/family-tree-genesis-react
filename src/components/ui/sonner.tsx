@@ -1,29 +1,29 @@
-import***REMOVED***{***REMOVED***useTheme***REMOVED***}***REMOVED***from***REMOVED***"next-themes"
-import***REMOVED***{***REMOVED***Toaster***REMOVED***as***REMOVED***Sonner,***REMOVED***toast***REMOVED***}***REMOVED***from***REMOVED***"sonner"
+import { useTheme } from "next-themes"
+import { Toaster as Sonner, toast } from "sonner"
 
-type***REMOVED***ToasterProps***REMOVED***=***REMOVED***React.ComponentProps<typeof***REMOVED***Sonner>
+type ToasterProps = React.ComponentProps<typeof Sonner>
 
-const***REMOVED***Toaster***REMOVED***=***REMOVED***({***REMOVED***...props***REMOVED***}:***REMOVED***ToasterProps)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***{***REMOVED***theme***REMOVED***=***REMOVED***"system"***REMOVED***}***REMOVED***=***REMOVED***useTheme()
+const Toaster = ({ ...props }: ToasterProps) => {
+  const { theme = "system" } = useTheme()
 
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<Sonner
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***theme={theme***REMOVED***as***REMOVED***ToasterProps["theme"]}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className="toaster***REMOVED***group"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***toastOptions={{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***classNames:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***toast:
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"group***REMOVED***toast***REMOVED***group-[.toaster]:bg-background***REMOVED***group-[.toaster]:text-foreground***REMOVED***group-[.toaster]:border-border***REMOVED***group-[.toaster]:shadow-lg",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***description:***REMOVED***"group-[.toast]:text-muted-foreground",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***actionButton:
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"group-[.toast]:bg-primary***REMOVED***group-[.toast]:text-primary-foreground",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***cancelButton:
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"group-[.toast]:bg-muted***REMOVED***group-[.toast]:text-muted-foreground",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED***)
+  return (
+    <Sonner
+      theme={theme as ToasterProps["theme"]}
+      className="toaster group"
+      toastOptions={{
+        classNames: {
+          toast:
+            "group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-lg",
+          description: "group-[.toast]:text-muted-foreground",
+          actionButton:
+            "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",
+          cancelButton:
+            "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground",
+        },
+      }}
+      {...props}
+    />
+  )
 }
 
-export***REMOVED***{***REMOVED***Toaster,***REMOVED***toast***REMOVED***}
+export { Toaster, toast }

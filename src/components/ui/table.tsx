@@ -1,117 +1,117 @@
-import***REMOVED*******REMOVED***as***REMOVED***React***REMOVED***from***REMOVED***"react"
+import * as React from "react"
 
-import***REMOVED***{***REMOVED***cn***REMOVED***}***REMOVED***from***REMOVED***"@/lib/utils"
+import { cn } from "@/lib/utils"
 
-const***REMOVED***Table***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLTableElement,
-***REMOVED******REMOVED***React.HTMLAttributes<HTMLTableElement>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<div***REMOVED***className="relative***REMOVED***w-full***REMOVED***overflow-auto">
-***REMOVED******REMOVED******REMOVED******REMOVED***<table
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn("w-full***REMOVED***caption-bottom***REMOVED***text-sm",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED***</div>
+const Table = React.forwardRef<
+  HTMLTableElement,
+  React.HTMLAttributes<HTMLTableElement>
+>(({ className, ...props }, ref) => (
+  <div className="relative w-full overflow-auto">
+    <table
+      ref={ref}
+      className={cn("w-full caption-bottom text-sm", className)}
+      {...props}
+    />
+  </div>
 ))
-Table.displayName***REMOVED***=***REMOVED***"Table"
+Table.displayName = "Table"
 
-const***REMOVED***TableHeader***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLTableSectionElement,
-***REMOVED******REMOVED***React.HTMLAttributes<HTMLTableSectionElement>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<thead***REMOVED***ref={ref}***REMOVED***className={cn("[&_tr]:border-b",***REMOVED***className)}***REMOVED***{...props}***REMOVED***/>
+const TableHeader = React.forwardRef<
+  HTMLTableSectionElement,
+  React.HTMLAttributes<HTMLTableSectionElement>
+>(({ className, ...props }, ref) => (
+  <thead ref={ref} className={cn("[&_tr]:border-b", className)} {...props} />
 ))
-TableHeader.displayName***REMOVED***=***REMOVED***"TableHeader"
+TableHeader.displayName = "TableHeader"
 
-const***REMOVED***TableBody***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLTableSectionElement,
-***REMOVED******REMOVED***React.HTMLAttributes<HTMLTableSectionElement>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<tbody
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn("[&_tr:last-child]:border-0",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const TableBody = React.forwardRef<
+  HTMLTableSectionElement,
+  React.HTMLAttributes<HTMLTableSectionElement>
+>(({ className, ...props }, ref) => (
+  <tbody
+    ref={ref}
+    className={cn("[&_tr:last-child]:border-0", className)}
+    {...props}
+  />
 ))
-TableBody.displayName***REMOVED***=***REMOVED***"TableBody"
+TableBody.displayName = "TableBody"
 
-const***REMOVED***TableFooter***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLTableSectionElement,
-***REMOVED******REMOVED***React.HTMLAttributes<HTMLTableSectionElement>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<tfoot
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"border-t***REMOVED***bg-muted/50***REMOVED***font-medium***REMOVED***[&>tr]:last:border-b-0",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const TableFooter = React.forwardRef<
+  HTMLTableSectionElement,
+  React.HTMLAttributes<HTMLTableSectionElement>
+>(({ className, ...props }, ref) => (
+  <tfoot
+    ref={ref}
+    className={cn(
+      "border-t bg-muted/50 font-medium [&>tr]:last:border-b-0",
+      className
+    )}
+    {...props}
+  />
 ))
-TableFooter.displayName***REMOVED***=***REMOVED***"TableFooter"
+TableFooter.displayName = "TableFooter"
 
-const***REMOVED***TableRow***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLTableRowElement,
-***REMOVED******REMOVED***React.HTMLAttributes<HTMLTableRowElement>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<tr
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"border-b***REMOVED***transition-colors***REMOVED***hover:bg-muted/50***REMOVED***data-[state=selected]:bg-muted",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const TableRow = React.forwardRef<
+  HTMLTableRowElement,
+  React.HTMLAttributes<HTMLTableRowElement>
+>(({ className, ...props }, ref) => (
+  <tr
+    ref={ref}
+    className={cn(
+      "border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted",
+      className
+    )}
+    {...props}
+  />
 ))
-TableRow.displayName***REMOVED***=***REMOVED***"TableRow"
+TableRow.displayName = "TableRow"
 
-const***REMOVED***TableHead***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLTableCellElement,
-***REMOVED******REMOVED***React.ThHTMLAttributes<HTMLTableCellElement>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<th
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"h-12***REMOVED***px-4***REMOVED***text-left***REMOVED***align-middle***REMOVED***font-medium***REMOVED***text-muted-foreground***REMOVED***[&:has([role=checkbox])]:pr-0",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const TableHead = React.forwardRef<
+  HTMLTableCellElement,
+  React.ThHTMLAttributes<HTMLTableCellElement>
+>(({ className, ...props }, ref) => (
+  <th
+    ref={ref}
+    className={cn(
+      "h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0",
+      className
+    )}
+    {...props}
+  />
 ))
-TableHead.displayName***REMOVED***=***REMOVED***"TableHead"
+TableHead.displayName = "TableHead"
 
-const***REMOVED***TableCell***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLTableCellElement,
-***REMOVED******REMOVED***React.TdHTMLAttributes<HTMLTableCellElement>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<td
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn("p-4***REMOVED***align-middle***REMOVED***[&:has([role=checkbox])]:pr-0",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const TableCell = React.forwardRef<
+  HTMLTableCellElement,
+  React.TdHTMLAttributes<HTMLTableCellElement>
+>(({ className, ...props }, ref) => (
+  <td
+    ref={ref}
+    className={cn("p-4 align-middle [&:has([role=checkbox])]:pr-0", className)}
+    {...props}
+  />
 ))
-TableCell.displayName***REMOVED***=***REMOVED***"TableCell"
+TableCell.displayName = "TableCell"
 
-const***REMOVED***TableCaption***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLTableCaptionElement,
-***REMOVED******REMOVED***React.HTMLAttributes<HTMLTableCaptionElement>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<caption
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn("mt-4***REMOVED***text-sm***REMOVED***text-muted-foreground",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const TableCaption = React.forwardRef<
+  HTMLTableCaptionElement,
+  React.HTMLAttributes<HTMLTableCaptionElement>
+>(({ className, ...props }, ref) => (
+  <caption
+    ref={ref}
+    className={cn("mt-4 text-sm text-muted-foreground", className)}
+    {...props}
+  />
 ))
-TableCaption.displayName***REMOVED***=***REMOVED***"TableCaption"
+TableCaption.displayName = "TableCaption"
 
-export***REMOVED***{
-***REMOVED******REMOVED***Table,
-***REMOVED******REMOVED***TableHeader,
-***REMOVED******REMOVED***TableBody,
-***REMOVED******REMOVED***TableFooter,
-***REMOVED******REMOVED***TableHead,
-***REMOVED******REMOVED***TableRow,
-***REMOVED******REMOVED***TableCell,
-***REMOVED******REMOVED***TableCaption,
+export {
+  Table,
+  TableHeader,
+  TableBody,
+  TableFooter,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableCaption,
 }

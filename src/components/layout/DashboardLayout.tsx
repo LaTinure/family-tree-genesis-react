@@ -1,19 +1,19 @@
-import***REMOVED***{***REMOVED***ReactNode***REMOVED***}***REMOVED***from***REMOVED***'react';
-import***REMOVED***{***REMOVED***Header***REMOVED***}***REMOVED***from***REMOVED***'@/components/layout/Header';
+import { ReactNode } from 'react';
+import { Header } from '@/components/layout/Header';
 
-interface***REMOVED***DashboardLayoutProps***REMOVED***{
-***REMOVED******REMOVED***children:***REMOVED***ReactNode;
+interface DashboardLayoutProps {
+  children: ReactNode;
 }
 
-const***REMOVED***DashboardLayout***REMOVED***=***REMOVED***({***REMOVED***children***REMOVED***}:***REMOVED***DashboardLayoutProps)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="min-h-screen***REMOVED***bg-gradient-to-br***REMOVED***from-whatsapp-50***REMOVED***via-green-50***REMOVED***to-emerald-50">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Header***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<main***REMOVED***className="pt-4">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{children}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</main>
-***REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED***);
+const DashboardLayout = ({ children }: DashboardLayoutProps) => {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-whatsapp-50 via-green-50 to-emerald-50">
+      <Header />
+      <main className="pt-4">
+        {children}
+      </main>
+    </div>
+  );
 };
 
-export***REMOVED***default***REMOVED***DashboardLayout;
+export default DashboardLayout;

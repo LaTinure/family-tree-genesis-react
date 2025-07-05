@@ -1,41 +1,41 @@
-import***REMOVED***fs***REMOVED***from***REMOVED***'fs';
-import***REMOVED***path***REMOVED***from***REMOVED***'path';
-import***REMOVED***{***REMOVED***fileURLToPath***REMOVED***}***REMOVED***from***REMOVED***'url';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-//***REMOVED***Convertir***REMOVED***les***REMOVED***URL***REMOVED***en***REMOVED***chemins***REMOVED***de***REMOVED***fichiers***REMOVED***(nécessaire***REMOVED***pour***REMOVED***ESM)
-const***REMOVED***__filename***REMOVED***=***REMOVED***fileURLToPath(import.meta.url);
-const***REMOVED***__dirname***REMOVED***=***REMOVED***path.dirname(__filename);
+// Convertir les URL en chemins de fichiers (nécessaire pour ESM)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-//***REMOVED***Configuration
-const***REMOVED***rootDir***REMOVED***=***REMOVED***'.';
-const***REMOVED***exclusions***REMOVED***=***REMOVED***['node_modules',***REMOVED***'dist',***REMOVED***'public',***REMOVED***'nhost',***REMOVED***'.vscode',***REMOVED***'.nuxt',***REMOVED***'.output',***REMOVED***'.git',***REMOVED***'.bolt',***REMOVED***'.next'];
-let***REMOVED***outputFile***REMOVED***=***REMOVED***'project_structure.txt';
+// Configuration
+const rootDir = '.';
+const exclusions = ['node_modules', 'dist', 'public', 'nhost', '.vscode', '.nuxt', '.output', '.git', '.bolt', '.next'];
+let outputFile = 'project_structure.txt';
 
-//***REMOVED***Vérifier***REMOVED***si***REMOVED***le***REMOVED***fichier***REMOVED***existe***REMOVED***déjà***REMOVED***et***REMOVED***l'incrémenter
-let***REMOVED***counter***REMOVED***=***REMOVED***1;
-while***REMOVED***(fs.existsSync(outputFile))***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***outputFile***REMOVED***=***REMOVED***`project_structure_${counter++}.txt`;
+// Vérifier si le fichier existe déjà et l'incrémenter
+let counter = 1;
+while (fs.existsSync(outputFile)) {
+    outputFile = `project_structure_${counter++}.txt`;
 }
 
-//***REMOVED***Fonction***REMOVED***récursive***REMOVED***pour***REMOVED***lister***REMOVED***la***REMOVED***structure***REMOVED***avec***REMOVED***indentation
-function***REMOVED***listDir(dir,***REMOVED***indent***REMOVED***=***REMOVED***'')***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***items***REMOVED***=***REMOVED***fs.readdirSync(dir);
+// Fonction récursive pour lister la structure avec indentation
+function listDir(dir, indent = '') {
+    const items = fs.readdirSync(dir);
 
-***REMOVED******REMOVED******REMOVED******REMOVED***for***REMOVED***(const***REMOVED***item***REMOVED***of***REMOVED***items)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***fullPath***REMOVED***=***REMOVED***path.join(dir,***REMOVED***item);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***isDirectory***REMOVED***=***REMOVED***fs.statSync(fullPath).isDirectory();
+    for (const item of items) {
+        const fullPath = path.join(dir, item);
+        const isDirectory = fs.statSync(fullPath).isDirectory();
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(exclusions.includes(item))***REMOVED***continue;
+        if (exclusions.includes(item)) continue;
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***fs.appendFileSync(outputFile,***REMOVED***`${indent}${isDirectory***REMOVED***?***REMOVED***'📁'***REMOVED***:***REMOVED***'📄'}***REMOVED***${item}\n`);
+        fs.appendFileSync(outputFile, `${indent}${isDirectory ? '📁' : '📄'} ${item}\n`);
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(isDirectory)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***listDir(fullPath,***REMOVED***indent***REMOVED***+***REMOVED***'***REMOVED******REMOVED***');
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***}
+        if (isDirectory) {
+            listDir(fullPath, indent + '  ');
+        }
+    }
 }
 
-//***REMOVED***Exécuter***REMOVED***la***REMOVED***fonction
-fs.writeFileSync(outputFile,***REMOVED***`Structure***REMOVED***du***REMOVED***projet***REMOVED***(exclusions***REMOVED***:***REMOVED***${exclusions.join(',***REMOVED***')})\n========================================\n\n`);
+// Exécuter la fonction
+fs.writeFileSync(outputFile, `Structure du projet (exclusions : ${exclusions.join(', ')})\n========================================\n\n`);
 listDir(rootDir);
-console.log(`La***REMOVED***structure***REMOVED***du***REMOVED***projet***REMOVED***a***REMOVED***été***REMOVED***enregistrée***REMOVED***dans***REMOVED***"${outputFile}"`);
+console.log(`La structure du projet a été enregistrée dans "${outputFile}"`);

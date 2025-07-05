@@ -1,363 +1,363 @@
-import***REMOVED*******REMOVED***as***REMOVED***React***REMOVED***from***REMOVED***"react"
-import***REMOVED*******REMOVED***as***REMOVED***RechartsPrimitive***REMOVED***from***REMOVED***"recharts"
+import * as React from "react"
+import * as RechartsPrimitive from "recharts"
 
-import***REMOVED***{***REMOVED***cn***REMOVED***}***REMOVED***from***REMOVED***"@/lib/utils"
+import { cn } from "@/lib/utils"
 
-//***REMOVED***Format:***REMOVED***{***REMOVED***THEME_NAME:***REMOVED***CSS_SELECTOR***REMOVED***}
-const***REMOVED***THEMES***REMOVED***=***REMOVED***{***REMOVED***light:***REMOVED***"",***REMOVED***dark:***REMOVED***".dark"***REMOVED***}***REMOVED***as***REMOVED***const
+// Format: { THEME_NAME: CSS_SELECTOR }
+const THEMES = { light: "", dark: ".dark" } as const
 
-export***REMOVED***type***REMOVED***ChartConfig***REMOVED***=***REMOVED***{
-***REMOVED******REMOVED***[k***REMOVED***in***REMOVED***string]:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***label?:***REMOVED***React.ReactNode
-***REMOVED******REMOVED******REMOVED******REMOVED***icon?:***REMOVED***React.ComponentType
-***REMOVED******REMOVED***}***REMOVED***&***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***{***REMOVED***color?:***REMOVED***string;***REMOVED***theme?:***REMOVED***never***REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***{***REMOVED***color?:***REMOVED***never;***REMOVED***theme:***REMOVED***Record<keyof***REMOVED***typeof***REMOVED***THEMES,***REMOVED***string>***REMOVED***}
-***REMOVED******REMOVED***)
+export type ChartConfig = {
+  [k in string]: {
+    label?: React.ReactNode
+    icon?: React.ComponentType
+  } & (
+    | { color?: string; theme?: never }
+    | { color?: never; theme: Record<keyof typeof THEMES, string> }
+  )
 }
 
-type***REMOVED***ChartContextProps***REMOVED***=***REMOVED***{
-***REMOVED******REMOVED***config:***REMOVED***ChartConfig
+type ChartContextProps = {
+  config: ChartConfig
 }
 
-const***REMOVED***ChartContext***REMOVED***=***REMOVED***React.createContext<ChartContextProps***REMOVED***|***REMOVED***null>(null)
+const ChartContext = React.createContext<ChartContextProps | null>(null)
 
-function***REMOVED***useChart()***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***context***REMOVED***=***REMOVED***React.useContext(ChartContext)
+function useChart() {
+  const context = React.useContext(ChartContext)
 
-***REMOVED******REMOVED***if***REMOVED***(!context)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***throw***REMOVED***new***REMOVED***Error("useChart***REMOVED***must***REMOVED***be***REMOVED***used***REMOVED***within***REMOVED***a***REMOVED***<ChartContainer***REMOVED***/>")
-***REMOVED******REMOVED***}
+  if (!context) {
+    throw new Error("useChart must be used within a <ChartContainer />")
+  }
 
-***REMOVED******REMOVED***return***REMOVED***context
+  return context
 }
 
-const***REMOVED***ChartContainer***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLDivElement,
-***REMOVED******REMOVED***React.ComponentProps<"div">***REMOVED***&***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***config:***REMOVED***ChartConfig
-***REMOVED******REMOVED******REMOVED******REMOVED***children:***REMOVED***React.ComponentProps<
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***typeof***REMOVED***RechartsPrimitive.ResponsiveContainer
-***REMOVED******REMOVED******REMOVED******REMOVED***>["children"]
-***REMOVED******REMOVED***}
->(({***REMOVED***id,***REMOVED***className,***REMOVED***children,***REMOVED***config,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***uniqueId***REMOVED***=***REMOVED***React.useId()
-***REMOVED******REMOVED***const***REMOVED***chartId***REMOVED***=***REMOVED***`chart-${id***REMOVED***||***REMOVED***uniqueId.replace(/:/g,***REMOVED***"")}`
+const ChartContainer = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<"div"> & {
+    config: ChartConfig
+    children: React.ComponentProps<
+      typeof RechartsPrimitive.ResponsiveContainer
+    >["children"]
+  }
+>(({ id, className, children, config, ...props }, ref) => {
+  const uniqueId = React.useId()
+  const chartId = `chart-${id || uniqueId.replace(/:/g, "")}`
 
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<ChartContext.Provider***REMOVED***value={{***REMOVED***config***REMOVED***}}>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data-chart={chartId}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"flex***REMOVED***aspect-video***REMOVED***justify-center***REMOVED***text-xs***REMOVED***[&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground***REMOVED***[&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50***REMOVED***[&_.recharts-curve.recharts-tooltip-cursor]:stroke-border***REMOVED***[&_.recharts-dot[stroke='#fff']]:stroke-transparent***REMOVED***[&_.recharts-layer]:outline-none***REMOVED***[&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border***REMOVED***[&_.recharts-radial-bar-background-sector]:fill-muted***REMOVED***[&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted***REMOVED***[&_.recharts-reference-line_[stroke='#ccc']]:stroke-border***REMOVED***[&_.recharts-sector[stroke='#fff']]:stroke-transparent***REMOVED***[&_.recharts-sector]:outline-none***REMOVED***[&_.recharts-surface]:outline-none",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<ChartStyle***REMOVED***id={chartId}***REMOVED***config={config}***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<RechartsPrimitive.ResponsiveContainer>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{children}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</RechartsPrimitive.ResponsiveContainer>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED***</ChartContext.Provider>
-***REMOVED******REMOVED***)
+  return (
+    <ChartContext.Provider value={{ config }}>
+      <div
+        data-chart={chartId}
+        ref={ref}
+        className={cn(
+          "flex aspect-video justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-none [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-sector]:outline-none [&_.recharts-surface]:outline-none",
+          className
+        )}
+        {...props}
+      >
+        <ChartStyle id={chartId} config={config} />
+        <RechartsPrimitive.ResponsiveContainer>
+          {children}
+        </RechartsPrimitive.ResponsiveContainer>
+      </div>
+    </ChartContext.Provider>
+  )
 })
-ChartContainer.displayName***REMOVED***=***REMOVED***"Chart"
+ChartContainer.displayName = "Chart"
 
-const***REMOVED***ChartStyle***REMOVED***=***REMOVED***({***REMOVED***id,***REMOVED***config***REMOVED***}:***REMOVED***{***REMOVED***id:***REMOVED***string;***REMOVED***config:***REMOVED***ChartConfig***REMOVED***})***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***colorConfig***REMOVED***=***REMOVED***Object.entries(config).filter(
-***REMOVED******REMOVED******REMOVED******REMOVED***([_,***REMOVED***config])***REMOVED***=>***REMOVED***config.theme***REMOVED***||***REMOVED***config.color
-***REMOVED******REMOVED***)
+const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
+  const colorConfig = Object.entries(config).filter(
+    ([_, config]) => config.theme || config.color
+  )
 
-***REMOVED******REMOVED***if***REMOVED***(!colorConfig.length)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***null
-***REMOVED******REMOVED***}
+  if (!colorConfig.length) {
+    return null
+  }
 
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<style
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***dangerouslySetInnerHTML={{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***__html:***REMOVED***Object.entries(THEMES)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.map(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***([theme,***REMOVED***prefix])***REMOVED***=>***REMOVED***`
-${prefix}***REMOVED***[data-chart=${id}]***REMOVED***{
+  return (
+    <style
+      dangerouslySetInnerHTML={{
+        __html: Object.entries(THEMES)
+          .map(
+            ([theme, prefix]) => `
+${prefix} [data-chart=${id}] {
 ${colorConfig
-***REMOVED******REMOVED***.map(([key,***REMOVED***itemConfig])***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***color***REMOVED***=
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***itemConfig.theme?.[theme***REMOVED***as***REMOVED***keyof***REMOVED***typeof***REMOVED***itemConfig.theme]***REMOVED***||
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***itemConfig.color
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***color***REMOVED***?***REMOVED***`***REMOVED******REMOVED***--color-${key}:***REMOVED***${color};`***REMOVED***:***REMOVED***null
-***REMOVED******REMOVED***})
-***REMOVED******REMOVED***.join("\n")}
+  .map(([key, itemConfig]) => {
+    const color =
+      itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ||
+      itemConfig.color
+    return color ? `  --color-${key}: ${color};` : null
+  })
+  .join("\n")}
 }
 `
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.join("\n"),
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}}
-***REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED***)
+          )
+          .join("\n"),
+      }}
+    />
+  )
 }
 
-const***REMOVED***ChartTooltip***REMOVED***=***REMOVED***RechartsPrimitive.Tooltip
+const ChartTooltip = RechartsPrimitive.Tooltip
 
-const***REMOVED***ChartTooltipContent***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLDivElement,
-***REMOVED******REMOVED***React.ComponentProps<typeof***REMOVED***RechartsPrimitive.Tooltip>***REMOVED***&
-***REMOVED******REMOVED******REMOVED******REMOVED***React.ComponentProps<"div">***REMOVED***&***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***hideLabel?:***REMOVED***boolean
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***hideIndicator?:***REMOVED***boolean
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***indicator?:***REMOVED***"line"***REMOVED***|***REMOVED***"dot"***REMOVED***|***REMOVED***"dashed"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***nameKey?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***labelKey?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED***}
+const ChartTooltipContent = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<typeof RechartsPrimitive.Tooltip> &
+    React.ComponentProps<"div"> & {
+      hideLabel?: boolean
+      hideIndicator?: boolean
+      indicator?: "line" | "dot" | "dashed"
+      nameKey?: string
+      labelKey?: string
+    }
 >(
-***REMOVED******REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***active,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***payload,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***indicator***REMOVED***=***REMOVED***"dot",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***hideLabel***REMOVED***=***REMOVED***false,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***hideIndicator***REMOVED***=***REMOVED***false,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***label,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***labelFormatter,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***labelClassName,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***formatter,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***color,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***nameKey,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***labelKey,
-***REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***ref
-***REMOVED******REMOVED***)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***config***REMOVED***}***REMOVED***=***REMOVED***useChart()
+  (
+    {
+      active,
+      payload,
+      className,
+      indicator = "dot",
+      hideLabel = false,
+      hideIndicator = false,
+      label,
+      labelFormatter,
+      labelClassName,
+      formatter,
+      color,
+      nameKey,
+      labelKey,
+    },
+    ref
+  ) => {
+    const { config } = useChart()
 
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***tooltipLabel***REMOVED***=***REMOVED***React.useMemo(()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(hideLabel***REMOVED***||***REMOVED***!payload?.length)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
+    const tooltipLabel = React.useMemo(() => {
+      if (hideLabel || !payload?.length) {
+        return null
+      }
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***[item]***REMOVED***=***REMOVED***payload
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***key***REMOVED***=***REMOVED***`${labelKey***REMOVED***||***REMOVED***item.dataKey***REMOVED***||***REMOVED***item.name***REMOVED***||***REMOVED***"value"}`
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***itemConfig***REMOVED***=***REMOVED***getPayloadConfigFromPayload(config,***REMOVED***item,***REMOVED***key)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***value***REMOVED***=
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***!labelKey***REMOVED***&&***REMOVED***typeof***REMOVED***label***REMOVED***===***REMOVED***"string"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***config[label***REMOVED***as***REMOVED***keyof***REMOVED***typeof***REMOVED***config]?.label***REMOVED***||***REMOVED***label
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***itemConfig?.label
+      const [item] = payload
+      const key = `${labelKey || item.dataKey || item.name || "value"}`
+      const itemConfig = getPayloadConfigFromPayload(config, item, key)
+      const value =
+        !labelKey && typeof label === "string"
+          ? config[label as keyof typeof config]?.label || label
+          : itemConfig?.label
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(labelFormatter)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className={cn("font-medium",***REMOVED***labelClassName)}>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{labelFormatter(value,***REMOVED***payload)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
+      if (labelFormatter) {
+        return (
+          <div className={cn("font-medium", labelClassName)}>
+            {labelFormatter(value, payload)}
+          </div>
+        )
+      }
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(!value)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
+      if (!value) {
+        return null
+      }
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***<div***REMOVED***className={cn("font-medium",***REMOVED***labelClassName)}>{value}</div>
-***REMOVED******REMOVED******REMOVED******REMOVED***},***REMOVED***[
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***label,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***labelFormatter,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***payload,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***hideLabel,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***labelClassName,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***config,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***labelKey,
-***REMOVED******REMOVED******REMOVED******REMOVED***])
+      return <div className={cn("font-medium", labelClassName)}>{value}</div>
+    }, [
+      label,
+      labelFormatter,
+      payload,
+      hideLabel,
+      labelClassName,
+      config,
+      labelKey,
+    ])
 
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(!active***REMOVED***||***REMOVED***!payload?.length)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED***}
+    if (!active || !payload?.length) {
+      return null
+    }
 
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***nestLabel***REMOVED***=***REMOVED***payload.length***REMOVED***===***REMOVED***1***REMOVED***&&***REMOVED***indicator***REMOVED***!==***REMOVED***"dot"
+    const nestLabel = payload.length === 1 && indicator !== "dot"
 
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"grid***REMOVED***min-w-[8rem]***REMOVED***items-start***REMOVED***gap-1.5***REMOVED***rounded-lg***REMOVED***border***REMOVED***border-border/50***REMOVED***bg-background***REMOVED***px-2.5***REMOVED***py-1.5***REMOVED***text-xs***REMOVED***shadow-xl",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{!nestLabel***REMOVED***?***REMOVED***tooltipLabel***REMOVED***:***REMOVED***null}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="grid***REMOVED***gap-1.5">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{payload.map((item,***REMOVED***index)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***key***REMOVED***=***REMOVED***`${nameKey***REMOVED***||***REMOVED***item.name***REMOVED***||***REMOVED***item.dataKey***REMOVED***||***REMOVED***"value"}`
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***itemConfig***REMOVED***=***REMOVED***getPayloadConfigFromPayload(config,***REMOVED***item,***REMOVED***key)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***indicatorColor***REMOVED***=***REMOVED***color***REMOVED***||***REMOVED***item.payload.fill***REMOVED***||***REMOVED***item.color
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          "grid min-w-[8rem] items-start gap-1.5 rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl",
+          className
+        )}
+      >
+        {!nestLabel ? tooltipLabel : null}
+        <div className="grid gap-1.5">
+          {payload.map((item, index) => {
+            const key = `${nameKey || item.name || item.dataKey || "value"}`
+            const itemConfig = getPayloadConfigFromPayload(config, item, key)
+            const indicatorColor = color || item.payload.fill || item.color
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***key={item.dataKey}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"flex***REMOVED***w-full***REMOVED***flex-wrap***REMOVED***items-stretch***REMOVED***gap-2***REMOVED***[&>svg]:h-2.5***REMOVED***[&>svg]:w-2.5***REMOVED***[&>svg]:text-muted-foreground",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***indicator***REMOVED***===***REMOVED***"dot"***REMOVED***&&***REMOVED***"items-center"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{formatter***REMOVED***&&***REMOVED***item?.value***REMOVED***!==***REMOVED***undefined***REMOVED***&&***REMOVED***item.name***REMOVED***?***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***formatter(item.value,***REMOVED***item.name,***REMOVED***item,***REMOVED***index,***REMOVED***item.payload)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)***REMOVED***:***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{itemConfig?.icon***REMOVED***?***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<itemConfig.icon***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)***REMOVED***:***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***!hideIndicator***REMOVED***&&***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"shrink-0***REMOVED***rounded-[2px]***REMOVED***border-[--color-border]***REMOVED***bg-[--color-bg]",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"h-2.5***REMOVED***w-2.5":***REMOVED***indicator***REMOVED***===***REMOVED***"dot",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"w-1":***REMOVED***indicator***REMOVED***===***REMOVED***"line",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"w-0***REMOVED***border-[1.5px]***REMOVED***border-dashed***REMOVED***bg-transparent":
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***indicator***REMOVED***===***REMOVED***"dashed",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"my-0.5":***REMOVED***nestLabel***REMOVED***&&***REMOVED***indicator***REMOVED***===***REMOVED***"dashed",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***style={
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"--color-bg":***REMOVED***indicatorColor,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"--color-border":***REMOVED***indicatorColor,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***as***REMOVED***React.CSSProperties
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"flex***REMOVED***flex-1***REMOVED***justify-between***REMOVED***leading-none",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***nestLabel***REMOVED***?***REMOVED***"items-end"***REMOVED***:***REMOVED***"items-center"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="grid***REMOVED***gap-1.5">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{nestLabel***REMOVED***?***REMOVED***tooltipLabel***REMOVED***:***REMOVED***null}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<span***REMOVED***className="text-muted-foreground">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{itemConfig?.label***REMOVED***||***REMOVED***item.name}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</span>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{item.value***REMOVED***&&***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<span***REMOVED***className="font-mono***REMOVED***font-medium***REMOVED***tabular-nums***REMOVED***text-foreground">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{item.value.toLocaleString()}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</span>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***})}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED***)
-***REMOVED******REMOVED***}
+            return (
+              <div
+                key={item.dataKey}
+                className={cn(
+                  "flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5 [&>svg]:text-muted-foreground",
+                  indicator === "dot" && "items-center"
+                )}
+              >
+                {formatter && item?.value !== undefined && item.name ? (
+                  formatter(item.value, item.name, item, index, item.payload)
+                ) : (
+                  <>
+                    {itemConfig?.icon ? (
+                      <itemConfig.icon />
+                    ) : (
+                      !hideIndicator && (
+                        <div
+                          className={cn(
+                            "shrink-0 rounded-[2px] border-[--color-border] bg-[--color-bg]",
+                            {
+                              "h-2.5 w-2.5": indicator === "dot",
+                              "w-1": indicator === "line",
+                              "w-0 border-[1.5px] border-dashed bg-transparent":
+                                indicator === "dashed",
+                              "my-0.5": nestLabel && indicator === "dashed",
+                            }
+                          )}
+                          style={
+                            {
+                              "--color-bg": indicatorColor,
+                              "--color-border": indicatorColor,
+                            } as React.CSSProperties
+                          }
+                        />
+                      )
+                    )}
+                    <div
+                      className={cn(
+                        "flex flex-1 justify-between leading-none",
+                        nestLabel ? "items-end" : "items-center"
+                      )}
+                    >
+                      <div className="grid gap-1.5">
+                        {nestLabel ? tooltipLabel : null}
+                        <span className="text-muted-foreground">
+                          {itemConfig?.label || item.name}
+                        </span>
+                      </div>
+                      {item.value && (
+                        <span className="font-mono font-medium tabular-nums text-foreground">
+                          {item.value.toLocaleString()}
+                        </span>
+                      )}
+                    </div>
+                  </>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    )
+  }
 )
-ChartTooltipContent.displayName***REMOVED***=***REMOVED***"ChartTooltip"
+ChartTooltipContent.displayName = "ChartTooltip"
 
-const***REMOVED***ChartLegend***REMOVED***=***REMOVED***RechartsPrimitive.Legend
+const ChartLegend = RechartsPrimitive.Legend
 
-const***REMOVED***ChartLegendContent***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLDivElement,
-***REMOVED******REMOVED***React.ComponentProps<"div">***REMOVED***&
-***REMOVED******REMOVED******REMOVED******REMOVED***Pick<RechartsPrimitive.LegendProps,***REMOVED***"payload"***REMOVED***|***REMOVED***"verticalAlign">***REMOVED***&***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***hideIcon?:***REMOVED***boolean
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***nameKey?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED***}
+const ChartLegendContent = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<"div"> &
+    Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> & {
+      hideIcon?: boolean
+      nameKey?: string
+    }
 >(
-***REMOVED******REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***{***REMOVED***className,***REMOVED***hideIcon***REMOVED***=***REMOVED***false,***REMOVED***payload,***REMOVED***verticalAlign***REMOVED***=***REMOVED***"bottom",***REMOVED***nameKey***REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***ref
-***REMOVED******REMOVED***)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***config***REMOVED***}***REMOVED***=***REMOVED***useChart()
+  (
+    { className, hideIcon = false, payload, verticalAlign = "bottom", nameKey },
+    ref
+  ) => {
+    const { config } = useChart()
 
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(!payload?.length)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED***}
+    if (!payload?.length) {
+      return null
+    }
 
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"flex***REMOVED***items-center***REMOVED***justify-center***REMOVED***gap-4",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***verticalAlign***REMOVED***===***REMOVED***"top"***REMOVED***?***REMOVED***"pb-3"***REMOVED***:***REMOVED***"pt-3",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{payload.map((item)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***key***REMOVED***=***REMOVED***`${nameKey***REMOVED***||***REMOVED***item.dataKey***REMOVED***||***REMOVED***"value"}`
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***itemConfig***REMOVED***=***REMOVED***getPayloadConfigFromPayload(config,***REMOVED***item,***REMOVED***key)
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          "flex items-center justify-center gap-4",
+          verticalAlign === "top" ? "pb-3" : "pt-3",
+          className
+        )}
+      >
+        {payload.map((item) => {
+          const key = `${nameKey || item.dataKey || "value"}`
+          const itemConfig = getPayloadConfigFromPayload(config, item, key)
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***key={item.value}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"flex***REMOVED***items-center***REMOVED***gap-1.5***REMOVED***[&>svg]:h-3***REMOVED***[&>svg]:w-3***REMOVED***[&>svg]:text-muted-foreground"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{itemConfig?.icon***REMOVED***&&***REMOVED***!hideIcon***REMOVED***?***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<itemConfig.icon***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)***REMOVED***:***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className="h-2***REMOVED***w-2***REMOVED***shrink-0***REMOVED***rounded-[2px]"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***style={{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***backgroundColor:***REMOVED***item.color,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{itemConfig?.label}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***})}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED***)
-***REMOVED******REMOVED***}
+          return (
+            <div
+              key={item.value}
+              className={cn(
+                "flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground"
+              )}
+            >
+              {itemConfig?.icon && !hideIcon ? (
+                <itemConfig.icon />
+              ) : (
+                <div
+                  className="h-2 w-2 shrink-0 rounded-[2px]"
+                  style={{
+                    backgroundColor: item.color,
+                  }}
+                />
+              )}
+              {itemConfig?.label}
+            </div>
+          )
+        })}
+      </div>
+    )
+  }
 )
-ChartLegendContent.displayName***REMOVED***=***REMOVED***"ChartLegend"
+ChartLegendContent.displayName = "ChartLegend"
 
-//***REMOVED***Helper***REMOVED***to***REMOVED***extract***REMOVED***item***REMOVED***config***REMOVED***from***REMOVED***a***REMOVED***payload.
-function***REMOVED***getPayloadConfigFromPayload(
-***REMOVED******REMOVED***config:***REMOVED***ChartConfig,
-***REMOVED******REMOVED***payload:***REMOVED***unknown,
-***REMOVED******REMOVED***key:***REMOVED***string
-)***REMOVED***{
-***REMOVED******REMOVED***if***REMOVED***(typeof***REMOVED***payload***REMOVED***!==***REMOVED***"object"***REMOVED***||***REMOVED***payload***REMOVED***===***REMOVED***null)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***undefined
-***REMOVED******REMOVED***}
+// Helper to extract item config from a payload.
+function getPayloadConfigFromPayload(
+  config: ChartConfig,
+  payload: unknown,
+  key: string
+) {
+  if (typeof payload !== "object" || payload === null) {
+    return undefined
+  }
 
-***REMOVED******REMOVED***const***REMOVED***payloadPayload***REMOVED***=
-***REMOVED******REMOVED******REMOVED******REMOVED***"payload"***REMOVED***in***REMOVED***payload***REMOVED***&&
-***REMOVED******REMOVED******REMOVED******REMOVED***typeof***REMOVED***payload.payload***REMOVED***===***REMOVED***"object"***REMOVED***&&
-***REMOVED******REMOVED******REMOVED******REMOVED***payload.payload***REMOVED***!==***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***payload.payload
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***undefined
+  const payloadPayload =
+    "payload" in payload &&
+    typeof payload.payload === "object" &&
+    payload.payload !== null
+      ? payload.payload
+      : undefined
 
-***REMOVED******REMOVED***let***REMOVED***configLabelKey:***REMOVED***string***REMOVED***=***REMOVED***key
+  let configLabelKey: string = key
 
-***REMOVED******REMOVED***if***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***key***REMOVED***in***REMOVED***payload***REMOVED***&&
-***REMOVED******REMOVED******REMOVED******REMOVED***typeof***REMOVED***payload[key***REMOVED***as***REMOVED***keyof***REMOVED***typeof***REMOVED***payload]***REMOVED***===***REMOVED***"string"
-***REMOVED******REMOVED***)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***configLabelKey***REMOVED***=***REMOVED***payload[key***REMOVED***as***REMOVED***keyof***REMOVED***typeof***REMOVED***payload]***REMOVED***as***REMOVED***string
-***REMOVED******REMOVED***}***REMOVED***else***REMOVED***if***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***payloadPayload***REMOVED***&&
-***REMOVED******REMOVED******REMOVED******REMOVED***key***REMOVED***in***REMOVED***payloadPayload***REMOVED***&&
-***REMOVED******REMOVED******REMOVED******REMOVED***typeof***REMOVED***payloadPayload[key***REMOVED***as***REMOVED***keyof***REMOVED***typeof***REMOVED***payloadPayload]***REMOVED***===***REMOVED***"string"
-***REMOVED******REMOVED***)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***configLabelKey***REMOVED***=***REMOVED***payloadPayload[
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***key***REMOVED***as***REMOVED***keyof***REMOVED***typeof***REMOVED***payloadPayload
-***REMOVED******REMOVED******REMOVED******REMOVED***]***REMOVED***as***REMOVED***string
-***REMOVED******REMOVED***}
+  if (
+    key in payload &&
+    typeof payload[key as keyof typeof payload] === "string"
+  ) {
+    configLabelKey = payload[key as keyof typeof payload] as string
+  } else if (
+    payloadPayload &&
+    key in payloadPayload &&
+    typeof payloadPayload[key as keyof typeof payloadPayload] === "string"
+  ) {
+    configLabelKey = payloadPayload[
+      key as keyof typeof payloadPayload
+    ] as string
+  }
 
-***REMOVED******REMOVED***return***REMOVED***configLabelKey***REMOVED***in***REMOVED***config
-***REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***config[configLabelKey]
-***REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***config[key***REMOVED***as***REMOVED***keyof***REMOVED***typeof***REMOVED***config]
+  return configLabelKey in config
+    ? config[configLabelKey]
+    : config[key as keyof typeof config]
 }
 
-export***REMOVED***{
-***REMOVED******REMOVED***ChartContainer,
-***REMOVED******REMOVED***ChartTooltip,
-***REMOVED******REMOVED***ChartTooltipContent,
-***REMOVED******REMOVED***ChartLegend,
-***REMOVED******REMOVED***ChartLegendContent,
-***REMOVED******REMOVED***ChartStyle,
+export {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
+  ChartStyle,
 }

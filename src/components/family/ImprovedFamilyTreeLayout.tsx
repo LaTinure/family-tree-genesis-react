@@ -1,517 +1,517 @@
 
-import***REMOVED***React,***REMOVED***{***REMOVED***useEffect,***REMOVED***useRef,***REMOVED***useState,***REMOVED***useCallback***REMOVED***}***REMOVED***from***REMOVED***'react';
-import***REMOVED***{***REMOVED***Card,***REMOVED***CardContent,***REMOVED***CardHeader,***REMOVED***CardTitle***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/card';
-import***REMOVED***{***REMOVED***Button***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/button';
-import***REMOVED***{***REMOVED***Input***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/input';
-import***REMOVED***{***REMOVED***ZoomIn,***REMOVED***ZoomOut,***REMOVED***RotateCcw,***REMOVED***Search,***REMOVED***Crown,***REMOVED***Phone,***REMOVED***MapPin,***REMOVED***User***REMOVED***}***REMOVED***from***REMOVED***'lucide-react';
-import***REMOVED***{***REMOVED***useFamilyMembers***REMOVED***}***REMOVED***from***REMOVED***'@/hooks/useFamilyMembers';
-import***REMOVED***{***REMOVED***LoadingSpinner***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/loading-spinner';
-import***REMOVED***{***REMOVED***FamilyMember***REMOVED***}***REMOVED***from***REMOVED***'@/types/family';
-import***REMOVED***{***REMOVED***motion,***REMOVED***AnimatePresence***REMOVED***}***REMOVED***from***REMOVED***'framer-motion';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { ZoomIn, ZoomOut, RotateCcw, Search, Crown, Phone, MapPin, User } from 'lucide-react';
+import { useFamilyMembers } from '@/hooks/useFamilyMembers';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { FamilyMember } from '@/types/family';
+import { motion, AnimatePresence } from 'framer-motion';
 
-interface***REMOVED***Position***REMOVED***{
-***REMOVED******REMOVED***x:***REMOVED***number;
-***REMOVED******REMOVED***y:***REMOVED***number;
+interface Position {
+  x: number;
+  y: number;
 }
 
-interface***REMOVED***DraggableNode***REMOVED***{
-***REMOVED******REMOVED***member:***REMOVED***FamilyMember;
-***REMOVED******REMOVED***position:***REMOVED***Position;
-***REMOVED******REMOVED***isDragging:***REMOVED***boolean;
+interface DraggableNode {
+  member: FamilyMember;
+  position: Position;
+  isDragging: boolean;
 }
 
-interface***REMOVED***TreeLayoutNode***REMOVED***{
-***REMOVED******REMOVED***member:***REMOVED***FamilyMember;
-***REMOVED******REMOVED***x:***REMOVED***number;
-***REMOVED******REMOVED***y:***REMOVED***number;
-***REMOVED******REMOVED***level:***REMOVED***number;
-***REMOVED******REMOVED***children:***REMOVED***TreeLayoutNode[];
+interface TreeLayoutNode {
+  member: FamilyMember;
+  x: number;
+  y: number;
+  level: number;
+  children: TreeLayoutNode[];
 }
 
-export***REMOVED***const***REMOVED***ImprovedFamilyTreeLayout***REMOVED***=***REMOVED***()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***{***REMOVED***members,***REMOVED***isLoading***REMOVED***}***REMOVED***=***REMOVED***useFamilyMembers();
-***REMOVED******REMOVED***const***REMOVED***containerRef***REMOVED***=***REMOVED***useRef<HTMLDivElement>(null);
-***REMOVED******REMOVED***const***REMOVED***[zoom,***REMOVED***setZoom]***REMOVED***=***REMOVED***useState(1);
-***REMOVED******REMOVED***const***REMOVED***[panPosition,***REMOVED***setPanPosition]***REMOVED***=***REMOVED***useState<Position>({***REMOVED***x:***REMOVED***0,***REMOVED***y:***REMOVED***0***REMOVED***});
-***REMOVED******REMOVED***const***REMOVED***[searchTerm,***REMOVED***setSearchTerm]***REMOVED***=***REMOVED***useState('');
-***REMOVED******REMOVED***const***REMOVED***[highlightedMember,***REMOVED***setHighlightedMember]***REMOVED***=***REMOVED***useState<string***REMOVED***|***REMOVED***null>(null);
-***REMOVED******REMOVED***const***REMOVED***[selectedMember,***REMOVED***setSelectedMember]***REMOVED***=***REMOVED***useState<FamilyMember***REMOVED***|***REMOVED***null>(null);
-***REMOVED******REMOVED***const***REMOVED***[nodes,***REMOVED***setNodes]***REMOVED***=***REMOVED***useState<DraggableNode[]>([]);
-***REMOVED******REMOVED***const***REMOVED***[isPanning,***REMOVED***setIsPanning]***REMOVED***=***REMOVED***useState(false);
-***REMOVED******REMOVED***const***REMOVED***[panStart,***REMOVED***setPanStart]***REMOVED***=***REMOVED***useState<Position>({***REMOVED***x:***REMOVED***0,***REMOVED***y:***REMOVED***0***REMOVED***});
+export const ImprovedFamilyTreeLayout = () => {
+  const { members, isLoading } = useFamilyMembers();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [zoom, setZoom] = useState(1);
+  const [panPosition, setPanPosition] = useState<Position>({ x: 0, y: 0 });
+  const [searchTerm, setSearchTerm] = useState('');
+  const [highlightedMember, setHighlightedMember] = useState<string | null>(null);
+  const [selectedMember, setSelectedMember] = useState<FamilyMember | null>(null);
+  const [nodes, setNodes] = useState<DraggableNode[]>([]);
+  const [isPanning, setIsPanning] = useState(false);
+  const [panStart, setPanStart] = useState<Position>({ x: 0, y: 0 });
 
-***REMOVED******REMOVED***//***REMOVED***Construire***REMOVED***la***REMOVED***hiérarchie***REMOVED***généalogique***REMOVED***correcte
-***REMOVED******REMOVED***const***REMOVED***buildFamilyHierarchy***REMOVED***=***REMOVED***useCallback((familyMembers:***REMOVED***FamilyMember[]):***REMOVED***TreeLayoutNode[]***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(!familyMembers***REMOVED***||***REMOVED***familyMembers.length***REMOVED***===***REMOVED***0)***REMOVED***return***REMOVED***[];
+  // Construire la hiérarchie généalogique correcte
+  const buildFamilyHierarchy = useCallback((familyMembers: FamilyMember[]): TreeLayoutNode[] => {
+    if (!familyMembers || familyMembers.length === 0) return [];
 
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Identifier***REMOVED***les***REMOVED***patriarches/matriarches***REMOVED***(racines)
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***roots***REMOVED***=***REMOVED***familyMembers.filter(member***REMOVED***=>***REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***member.is_patriarch***REMOVED***||***REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***member.relationship_type***REMOVED***===***REMOVED***'patriarche'***REMOVED***||***REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***member.relationship_type***REMOVED***===***REMOVED***'matriarche'***REMOVED***||
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***(!member.father_id***REMOVED***&&***REMOVED***!member.mother_id)
-***REMOVED******REMOVED******REMOVED******REMOVED***);
+    // Identifier les patriarches/matriarches (racines)
+    const roots = familyMembers.filter(member => 
+      member.is_patriarch || 
+      member.relationship_type === 'patriarche' || 
+      member.relationship_type === 'matriarche' ||
+      (!member.father_id && !member.mother_id)
+    );
 
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Si***REMOVED***pas***REMOVED***de***REMOVED***patriarche,***REMOVED***prendre***REMOVED***les***REMOVED***plus***REMOVED***anciens
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(roots.length***REMOVED***===***REMOVED***0***REMOVED***&&***REMOVED***familyMembers.length***REMOVED***>***REMOVED***0)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***oldest***REMOVED***=***REMOVED***familyMembers
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.sort((a,***REMOVED***b)***REMOVED***=>***REMOVED***new***REMOVED***Date(a.birth_date***REMOVED***||***REMOVED***'1900-01-01').getTime()***REMOVED***-***REMOVED***new***REMOVED***Date(b.birth_date***REMOVED***||***REMOVED***'1900-01-01').getTime())
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.slice(0,***REMOVED***2);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***roots.push(...oldest);
-***REMOVED******REMOVED******REMOVED******REMOVED***}
+    // Si pas de patriarche, prendre les plus anciens
+    if (roots.length === 0 && familyMembers.length > 0) {
+      const oldest = familyMembers
+        .sort((a, b) => new Date(a.birth_date || '1900-01-01').getTime() - new Date(b.birth_date || '1900-01-01').getTime())
+        .slice(0, 2);
+      roots.push(...oldest);
+    }
 
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***buildTree***REMOVED***=***REMOVED***(parent:***REMOVED***FamilyMember,***REMOVED***level:***REMOVED***number):***REMOVED***TreeLayoutNode***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Trouver***REMOVED***les***REMOVED***enfants***REMOVED***directs
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***children***REMOVED***=***REMOVED***familyMembers.filter(member***REMOVED***=>***REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***member.father_id***REMOVED***===***REMOVED***parent.id***REMOVED***||***REMOVED***member.mother_id***REMOVED***===***REMOVED***parent.id
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***);
+    const buildTree = (parent: FamilyMember, level: number): TreeLayoutNode => {
+      // Trouver les enfants directs
+      const children = familyMembers.filter(member => 
+        member.father_id === parent.id || member.mother_id === parent.id
+      );
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***childNodes***REMOVED***=***REMOVED***children.map(child***REMOVED***=>***REMOVED***buildTree(child,***REMOVED***level***REMOVED***+***REMOVED***1));
+      const childNodes = children.map(child => buildTree(child, level + 1));
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***member:***REMOVED***parent,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***x:***REMOVED***0,***REMOVED***//***REMOVED***Position***REMOVED***calculée***REMOVED***plus***REMOVED***tard
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***y:***REMOVED***0,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***level,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***children:***REMOVED***childNodes
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***};
-***REMOVED******REMOVED******REMOVED******REMOVED***};
+      return {
+        member: parent,
+        x: 0, // Position calculée plus tard
+        y: 0,
+        level,
+        children: childNodes
+      };
+    };
 
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***roots.map(root***REMOVED***=>***REMOVED***buildTree(root,***REMOVED***0));
-***REMOVED******REMOVED***},***REMOVED***[]);
+    return roots.map(root => buildTree(root, 0));
+  }, []);
 
-***REMOVED******REMOVED***//***REMOVED***Calculer***REMOVED***les***REMOVED***positions***REMOVED***avec***REMOVED***une***REMOVED***vraie***REMOVED***logique***REMOVED***généalogique
-***REMOVED******REMOVED***const***REMOVED***calculateTreePositions***REMOVED***=***REMOVED***useCallback((treeNodes:***REMOVED***TreeLayoutNode[]):***REMOVED***DraggableNode[]***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(!treeNodes***REMOVED***||***REMOVED***treeNodes.length***REMOVED***===***REMOVED***0)***REMOVED***return***REMOVED***[];
+  // Calculer les positions avec une vraie logique généalogique
+  const calculateTreePositions = useCallback((treeNodes: TreeLayoutNode[]): DraggableNode[] => {
+    if (!treeNodes || treeNodes.length === 0) return [];
 
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***nodeWidth***REMOVED***=***REMOVED***200;
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***nodeHeight***REMOVED***=***REMOVED***160;
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***levelSpacing***REMOVED***=***REMOVED***250;
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***siblingSpacing***REMOVED***=***REMOVED***220;
-***REMOVED******REMOVED******REMOVED******REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***positionedNodes:***REMOVED***DraggableNode[]***REMOVED***=***REMOVED***[];
-***REMOVED******REMOVED******REMOVED******REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Calculer***REMOVED***la***REMOVED***largeur***REMOVED***totale***REMOVED***nécessaire***REMOVED***pour***REMOVED***chaque***REMOVED***niveau
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***calculateNodePositions***REMOVED***=***REMOVED***(nodes:***REMOVED***TreeLayoutNode[],***REMOVED***startX:***REMOVED***number,***REMOVED***startY:***REMOVED***number)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***nodes.forEach((node,***REMOVED***index)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Position***REMOVED***horizontale***REMOVED***basée***REMOVED***sur***REMOVED***l'index***REMOVED***et***REMOVED***l'espacement
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***x***REMOVED***=***REMOVED***startX***REMOVED***+***REMOVED***(index***REMOVED*******REMOVED***siblingSpacing);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***y***REMOVED***=***REMOVED***startY***REMOVED***+***REMOVED***(node.level***REMOVED*******REMOVED***levelSpacing);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Ajouter***REMOVED***le***REMOVED***noeud***REMOVED***positionné
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***positionedNodes.push({
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***member:***REMOVED***node.member,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***position:***REMOVED***{***REMOVED***x,***REMOVED***y***REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***isDragging:***REMOVED***false
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***});
+    const nodeWidth = 200;
+    const nodeHeight = 160;
+    const levelSpacing = 250;
+    const siblingSpacing = 220;
+    
+    const positionedNodes: DraggableNode[] = [];
+    
+    // Calculer la largeur totale nécessaire pour chaque niveau
+    const calculateNodePositions = (nodes: TreeLayoutNode[], startX: number, startY: number) => {
+      nodes.forEach((node, index) => {
+        // Position horizontale basée sur l'index et l'espacement
+        const x = startX + (index * siblingSpacing);
+        const y = startY + (node.level * levelSpacing);
+        
+        // Ajouter le noeud positionné
+        positionedNodes.push({
+          member: node.member,
+          position: { x, y },
+          isDragging: false
+        });
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Positionner***REMOVED***les***REMOVED***enfants
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(node.children***REMOVED***&&***REMOVED***node.children.length***REMOVED***>***REMOVED***0)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***childrenStartX***REMOVED***=***REMOVED***x***REMOVED***-***REMOVED***((node.children.length***REMOVED***-***REMOVED***1)***REMOVED*******REMOVED***siblingSpacing)***REMOVED***/***REMOVED***2;
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***calculateNodePositions(node.children,***REMOVED***childrenStartX,***REMOVED***startY);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***});
-***REMOVED******REMOVED******REMOVED******REMOVED***};
+        // Positionner les enfants
+        if (node.children && node.children.length > 0) {
+          const childrenStartX = x - ((node.children.length - 1) * siblingSpacing) / 2;
+          calculateNodePositions(node.children, childrenStartX, startY);
+        }
+      });
+    };
 
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Centrer***REMOVED***les***REMOVED***racines
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***rootStartX***REMOVED***=***REMOVED***400;
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***rootStartY***REMOVED***=***REMOVED***100;
-***REMOVED******REMOVED******REMOVED******REMOVED***calculateNodePositions(treeNodes,***REMOVED***rootStartX,***REMOVED***rootStartY);
+    // Centrer les racines
+    const rootStartX = 400;
+    const rootStartY = 100;
+    calculateNodePositions(treeNodes, rootStartX, rootStartY);
 
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***positionedNodes;
-***REMOVED******REMOVED***},***REMOVED***[]);
+    return positionedNodes;
+  }, []);
 
-***REMOVED******REMOVED***//***REMOVED***Initialiser***REMOVED***les***REMOVED***positions***REMOVED***des***REMOVED***noeuds
-***REMOVED******REMOVED***useEffect(()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(members***REMOVED***&&***REMOVED***members.length***REMOVED***>***REMOVED***0)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***try***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***hierarchy***REMOVED***=***REMOVED***buildFamilyHierarchy(members);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***positionedNodes***REMOVED***=***REMOVED***calculateTreePositions(hierarchy);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setNodes(positionedNodes);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***catch***REMOVED***(error)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***console.error('Error***REMOVED***building***REMOVED***family***REMOVED***tree:',***REMOVED***error);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setNodes([]);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED***},***REMOVED***[members,***REMOVED***buildFamilyHierarchy,***REMOVED***calculateTreePositions]);
+  // Initialiser les positions des noeuds
+  useEffect(() => {
+    if (members && members.length > 0) {
+      try {
+        const hierarchy = buildFamilyHierarchy(members);
+        const positionedNodes = calculateTreePositions(hierarchy);
+        setNodes(positionedNodes);
+      } catch (error) {
+        console.error('Error building family tree:', error);
+        setNodes([]);
+      }
+    }
+  }, [members, buildFamilyHierarchy, calculateTreePositions]);
 
-***REMOVED******REMOVED***//***REMOVED***Gestion***REMOVED***de***REMOVED***la***REMOVED***recherche
-***REMOVED******REMOVED***useEffect(()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(searchTerm.trim()***REMOVED***&&***REMOVED***members)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***foundMember***REMOVED***=***REMOVED***members.find(member***REMOVED***=>***REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***`${member.first_name}***REMOVED***${member.last_name}`.toLowerCase().includes(searchTerm.toLowerCase())
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(foundMember)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setHighlightedMember(foundMember.id);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setSelectedMember(foundMember);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Centrer***REMOVED***sur***REMOVED***le***REMOVED***membre***REMOVED***trouvé
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***foundNode***REMOVED***=***REMOVED***nodes.find(node***REMOVED***=>***REMOVED***node.member.id***REMOVED***===***REMOVED***foundMember.id);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(foundNode)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setPanPosition({
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***x:***REMOVED***-foundNode.position.x***REMOVED***+***REMOVED***400,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***y:***REMOVED***-foundNode.position.y***REMOVED***+***REMOVED***300
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***});
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***else***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setHighlightedMember(null);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***else***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setHighlightedMember(null);
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED***},***REMOVED***[searchTerm,***REMOVED***members,***REMOVED***nodes]);
+  // Gestion de la recherche
+  useEffect(() => {
+    if (searchTerm.trim() && members) {
+      const foundMember = members.find(member => 
+        `${member.first_name} ${member.last_name}`.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      if (foundMember) {
+        setHighlightedMember(foundMember.id);
+        setSelectedMember(foundMember);
+        // Centrer sur le membre trouvé
+        const foundNode = nodes.find(node => node.member.id === foundMember.id);
+        if (foundNode) {
+          setPanPosition({
+            x: -foundNode.position.x + 400,
+            y: -foundNode.position.y + 300
+          });
+        }
+      } else {
+        setHighlightedMember(null);
+      }
+    } else {
+      setHighlightedMember(null);
+    }
+  }, [searchTerm, members, nodes]);
 
-***REMOVED******REMOVED***const***REMOVED***handleZoomIn***REMOVED***=***REMOVED***()***REMOVED***=>***REMOVED***setZoom(prev***REMOVED***=>***REMOVED***Math.min(prev***REMOVED***+***REMOVED***0.1,***REMOVED***3));
-***REMOVED******REMOVED***const***REMOVED***handleZoomOut***REMOVED***=***REMOVED***()***REMOVED***=>***REMOVED***setZoom(prev***REMOVED***=>***REMOVED***Math.max(prev***REMOVED***-***REMOVED***0.1,***REMOVED***0.3));
-***REMOVED******REMOVED***const***REMOVED***handleReset***REMOVED***=***REMOVED***()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***setZoom(1);
-***REMOVED******REMOVED******REMOVED******REMOVED***setPanPosition({***REMOVED***x:***REMOVED***0,***REMOVED***y:***REMOVED***0***REMOVED***});
-***REMOVED******REMOVED******REMOVED******REMOVED***setSelectedMember(null);
-***REMOVED******REMOVED******REMOVED******REMOVED***setSearchTerm('');
-***REMOVED******REMOVED******REMOVED******REMOVED***setHighlightedMember(null);
-***REMOVED******REMOVED***};
+  const handleZoomIn = () => setZoom(prev => Math.min(prev + 0.1, 3));
+  const handleZoomOut = () => setZoom(prev => Math.max(prev - 0.1, 0.3));
+  const handleReset = () => {
+    setZoom(1);
+    setPanPosition({ x: 0, y: 0 });
+    setSelectedMember(null);
+    setSearchTerm('');
+    setHighlightedMember(null);
+  };
 
-***REMOVED******REMOVED***//***REMOVED***Gestion***REMOVED***du***REMOVED***déplacement***REMOVED***individuel***REMOVED***des***REMOVED***cartes
-***REMOVED******REMOVED***const***REMOVED***handleNodeDragStart***REMOVED***=***REMOVED***(nodeIndex:***REMOVED***number,***REMOVED***event:***REMOVED***React.MouseEvent)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***event.stopPropagation();
-***REMOVED******REMOVED******REMOVED******REMOVED***setNodes(prev***REMOVED***=>***REMOVED***prev.map((node,***REMOVED***index)***REMOVED***=>***REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***index***REMOVED***===***REMOVED***nodeIndex***REMOVED***?***REMOVED***{***REMOVED***...node,***REMOVED***isDragging:***REMOVED***true***REMOVED***}***REMOVED***:***REMOVED***node
-***REMOVED******REMOVED******REMOVED******REMOVED***));
-***REMOVED******REMOVED***};
+  // Gestion du déplacement individuel des cartes
+  const handleNodeDragStart = (nodeIndex: number, event: React.MouseEvent) => {
+    event.stopPropagation();
+    setNodes(prev => prev.map((node, index) => 
+      index === nodeIndex ? { ...node, isDragging: true } : node
+    ));
+  };
 
-***REMOVED******REMOVED***const***REMOVED***handleNodeDrag***REMOVED***=***REMOVED***(nodeIndex:***REMOVED***number,***REMOVED***deltaX:***REMOVED***number,***REMOVED***deltaY:***REMOVED***number)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***setNodes(prev***REMOVED***=>***REMOVED***prev.map((node,***REMOVED***index)***REMOVED***=>***REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***index***REMOVED***===***REMOVED***nodeIndex***REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***{***REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***...node,***REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***position:***REMOVED***{***REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***x:***REMOVED***node.position.x***REMOVED***+***REMOVED***deltaX***REMOVED***/***REMOVED***zoom,***REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***y:***REMOVED***node.position.y***REMOVED***+***REMOVED***deltaY***REMOVED***/***REMOVED***zoom***REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***node
-***REMOVED******REMOVED******REMOVED******REMOVED***));
-***REMOVED******REMOVED***};
+  const handleNodeDrag = (nodeIndex: number, deltaX: number, deltaY: number) => {
+    setNodes(prev => prev.map((node, index) => 
+      index === nodeIndex 
+        ? { 
+            ...node, 
+            position: { 
+              x: node.position.x + deltaX / zoom, 
+              y: node.position.y + deltaY / zoom 
+            }
+          }
+        : node
+    ));
+  };
 
-***REMOVED******REMOVED***const***REMOVED***handleNodeDragEnd***REMOVED***=***REMOVED***(nodeIndex:***REMOVED***number)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***setNodes(prev***REMOVED***=>***REMOVED***prev.map((node,***REMOVED***index)***REMOVED***=>***REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***index***REMOVED***===***REMOVED***nodeIndex***REMOVED***?***REMOVED***{***REMOVED***...node,***REMOVED***isDragging:***REMOVED***false***REMOVED***}***REMOVED***:***REMOVED***node
-***REMOVED******REMOVED******REMOVED******REMOVED***));
-***REMOVED******REMOVED***};
+  const handleNodeDragEnd = (nodeIndex: number) => {
+    setNodes(prev => prev.map((node, index) => 
+      index === nodeIndex ? { ...node, isDragging: false } : node
+    ));
+  };
 
-***REMOVED******REMOVED***//***REMOVED***Gestion***REMOVED***du***REMOVED***pan***REMOVED***global
-***REMOVED******REMOVED***const***REMOVED***handlePanStart***REMOVED***=***REMOVED***(event:***REMOVED***React.MouseEvent)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(event.target***REMOVED***===***REMOVED***event.currentTarget)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setIsPanning(true);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setPanStart({***REMOVED***x:***REMOVED***event.clientX***REMOVED***-***REMOVED***panPosition.x,***REMOVED***y:***REMOVED***event.clientY***REMOVED***-***REMOVED***panPosition.y***REMOVED***});
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED***};
+  // Gestion du pan global
+  const handlePanStart = (event: React.MouseEvent) => {
+    if (event.target === event.currentTarget) {
+      setIsPanning(true);
+      setPanStart({ x: event.clientX - panPosition.x, y: event.clientY - panPosition.y });
+    }
+  };
 
-***REMOVED******REMOVED***const***REMOVED***handlePanMove***REMOVED***=***REMOVED***(event:***REMOVED***React.MouseEvent)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(isPanning)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setPanPosition({
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***x:***REMOVED***event.clientX***REMOVED***-***REMOVED***panStart.x,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***y:***REMOVED***event.clientY***REMOVED***-***REMOVED***panStart.y
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***});
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED***};
+  const handlePanMove = (event: React.MouseEvent) => {
+    if (isPanning) {
+      setPanPosition({
+        x: event.clientX - panStart.x,
+        y: event.clientY - panStart.y
+      });
+    }
+  };
 
-***REMOVED******REMOVED***const***REMOVED***handlePanEnd***REMOVED***=***REMOVED***()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***setIsPanning(false);
-***REMOVED******REMOVED***};
+  const handlePanEnd = () => {
+    setIsPanning(false);
+  };
 
-***REMOVED******REMOVED***//***REMOVED***Rendu***REMOVED***des***REMOVED***connexions***REMOVED***généalogiques***REMOVED***avec***REMOVED***key***REMOVED***unique
-***REMOVED******REMOVED***const***REMOVED***renderConnections***REMOVED***=***REMOVED***()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(!nodes***REMOVED***||***REMOVED***nodes.length***REMOVED***===***REMOVED***0)***REMOVED***return***REMOVED***null;
+  // Rendu des connexions généalogiques avec key unique
+  const renderConnections = () => {
+    if (!nodes || nodes.length === 0) return null;
 
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***connections:***REMOVED***JSX.Element[]***REMOVED***=***REMOVED***[];
-***REMOVED******REMOVED******REMOVED******REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED***nodes.forEach((node,***REMOVED***index)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Connexions***REMOVED***parent-enfant
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***children***REMOVED***=***REMOVED***nodes.filter(n***REMOVED***=>***REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***n.member.father_id***REMOVED***===***REMOVED***node.member.id***REMOVED***||***REMOVED***n.member.mother_id***REMOVED***===***REMOVED***node.member.id
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***children.forEach((child,***REMOVED***childIndex)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***connectionKey***REMOVED***=***REMOVED***`connection-${node.member.id}-${child.member.id}-${index}-${childIndex}`;
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***connections.push(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<line
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***key={connectionKey}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***x1={node.position.x***REMOVED***+***REMOVED***100}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***y1={node.position.y***REMOVED***+***REMOVED***80}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***x2={child.position.x***REMOVED***+***REMOVED***100}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***y2={child.position.y}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***stroke="#25D366"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***strokeWidth="2"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className="opacity-60"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***strokeDasharray="5,5"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***});
-***REMOVED******REMOVED******REMOVED******REMOVED***});
+    const connections: JSX.Element[] = [];
+    
+    nodes.forEach((node, index) => {
+      // Connexions parent-enfant
+      const children = nodes.filter(n => 
+        n.member.father_id === node.member.id || n.member.mother_id === node.member.id
+      );
+      
+      children.forEach((child, childIndex) => {
+        const connectionKey = `connection-${node.member.id}-${child.member.id}-${index}-${childIndex}`;
+        connections.push(
+          <line
+            key={connectionKey}
+            x1={node.position.x + 100}
+            y1={node.position.y + 80}
+            x2={child.position.x + 100}
+            y2={child.position.y}
+            stroke="#25D366"
+            strokeWidth="2"
+            className="opacity-60"
+            strokeDasharray="5,5"
+          />
+        );
+      });
+    });
 
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***connections;
-***REMOVED******REMOVED***};
+    return connections;
+  };
 
-***REMOVED******REMOVED***if***REMOVED***(isLoading)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="h-96***REMOVED***flex***REMOVED***items-center***REMOVED***justify-center">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<LoadingSpinner***REMOVED***size="lg"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED***);
-***REMOVED******REMOVED***}
+  if (isLoading) {
+    return (
+      <div className="h-96 flex items-center justify-center">
+        <LoadingSpinner size="lg" />
+      </div>
+    );
+  }
 
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="h-full">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{/****REMOVED***Contrôles***REMOVED****/}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="flex***REMOVED***items-center***REMOVED***justify-between***REMOVED***mb-4***REMOVED***gap-4">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="flex***REMOVED***items-center***REMOVED***gap-2">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Button***REMOVED***variant="outline"***REMOVED***size="sm"***REMOVED***onClick={handleZoomOut}>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<ZoomOut***REMOVED***className="w-4***REMOVED***h-4"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Button>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Button***REMOVED***variant="outline"***REMOVED***size="sm"***REMOVED***onClick={handleZoomIn}>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<ZoomIn***REMOVED***className="w-4***REMOVED***h-4"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Button>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Button***REMOVED***variant="outline"***REMOVED***size="sm"***REMOVED***onClick={handleReset}>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<RotateCcw***REMOVED***className="w-4***REMOVED***h-4"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Button>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<span***REMOVED***className="text-sm***REMOVED***text-gray-600">Zoom:***REMOVED***{Math.round(zoom***REMOVED*******REMOVED***100)}%</span>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="relative***REMOVED***flex-1***REMOVED***max-w-md">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Search***REMOVED***className="absolute***REMOVED***left-3***REMOVED***top-1/2***REMOVED***transform***REMOVED***-translate-y-1/2***REMOVED***text-gray-400***REMOVED***w-4***REMOVED***h-4"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Input
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***type="text"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***placeholder="Rechercher***REMOVED***un***REMOVED***membre..."
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***value={searchTerm}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onChange={(e)***REMOVED***=>***REMOVED***setSearchTerm(e.target.value)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className="pl-10"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
+  return (
+    <div className="h-full">
+      {/* Contrôles */}
+      <div className="flex items-center justify-between mb-4 gap-4">
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={handleZoomOut}>
+            <ZoomOut className="w-4 h-4" />
+          </Button>
+          <Button variant="outline" size="sm" onClick={handleZoomIn}>
+            <ZoomIn className="w-4 h-4" />
+          </Button>
+          <Button variant="outline" size="sm" onClick={handleReset}>
+            <RotateCcw className="w-4 h-4" />
+          </Button>
+          <span className="text-sm text-gray-600">Zoom: {Math.round(zoom * 100)}%</span>
+        </div>
+        
+        <div className="relative flex-1 max-w-md">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <Input
+            type="text"
+            placeholder="Rechercher un membre..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+      </div>
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{/****REMOVED***Conteneur***REMOVED***de***REMOVED***l'arbre***REMOVED****/}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={containerRef}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className="relative***REMOVED***w-full***REMOVED***h-[700px]***REMOVED***overflow-hidden***REMOVED***bg-gradient-to-br***REMOVED***from-green-50***REMOVED***to-emerald-50***REMOVED***rounded-lg***REMOVED***border***REMOVED***cursor-move"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onMouseDown={handlePanStart}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onMouseMove={handlePanMove}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onMouseUp={handlePanEnd}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onMouseLeave={handlePanEnd}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className="relative***REMOVED***w-full***REMOVED***h-full"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***style={{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***transform:***REMOVED***`scale(${zoom})***REMOVED***translate(${panPosition.x}px,***REMOVED***${panPosition.y}px)`,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***transformOrigin:***REMOVED***'0***REMOVED***0'
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{/****REMOVED***SVG***REMOVED***pour***REMOVED***les***REMOVED***connexions***REMOVED****/}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<svg
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className="absolute***REMOVED***inset-0***REMOVED***w-full***REMOVED***h-full***REMOVED***pointer-events-none"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***style={{***REMOVED***minWidth:***REMOVED***'2000px',***REMOVED***minHeight:***REMOVED***'2000px'***REMOVED***}}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<AnimatePresence>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{renderConnections()}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</AnimatePresence>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</svg>
+      {/* Conteneur de l'arbre */}
+      <div 
+        ref={containerRef}
+        className="relative w-full h-[700px] overflow-hidden bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg border cursor-move"
+        onMouseDown={handlePanStart}
+        onMouseMove={handlePanMove}
+        onMouseUp={handlePanEnd}
+        onMouseLeave={handlePanEnd}
+      >
+        <div
+          className="relative w-full h-full"
+          style={{
+            transform: `scale(${zoom}) translate(${panPosition.x}px, ${panPosition.y}px)`,
+            transformOrigin: '0 0'
+          }}
+        >
+          {/* SVG pour les connexions */}
+          <svg
+            className="absolute inset-0 w-full h-full pointer-events-none"
+            style={{ minWidth: '2000px', minHeight: '2000px' }}
+          >
+            <AnimatePresence>
+              {renderConnections()}
+            </AnimatePresence>
+          </svg>
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{/****REMOVED***Rendu***REMOVED***des***REMOVED***cartes***REMOVED***membres***REMOVED****/}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<AnimatePresence>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{nodes.map((node,***REMOVED***index)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<DraggableMemberCard
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***key={`member-${node.member.id}-${index}`}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***node={node}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***index={index}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***isHighlighted={highlightedMember***REMOVED***===***REMOVED***node.member.id}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onSelect={setSelectedMember}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onDragStart={(e)***REMOVED***=>***REMOVED***handleNodeDragStart(index,***REMOVED***e)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onDrag={(deltaX,***REMOVED***deltaY)***REMOVED***=>***REMOVED***handleNodeDrag(index,***REMOVED***deltaX,***REMOVED***deltaY)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onDragEnd={()***REMOVED***=>***REMOVED***handleNodeDragEnd(index)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***))}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</AnimatePresence>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
+          {/* Rendu des cartes membres */}
+          <AnimatePresence>
+            {nodes.map((node, index) => (
+              <DraggableMemberCard
+                key={`member-${node.member.id}-${index}`}
+                node={node}
+                index={index}
+                isHighlighted={highlightedMember === node.member.id}
+                onSelect={setSelectedMember}
+                onDragStart={(e) => handleNodeDragStart(index, e)}
+                onDrag={(deltaX, deltaY) => handleNodeDrag(index, deltaX, deltaY)}
+                onDragEnd={() => handleNodeDragEnd(index)}
+              />
+            ))}
+          </AnimatePresence>
+        </div>
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{/****REMOVED***Membre***REMOVED***sélectionné***REMOVED****/}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<AnimatePresence>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{selectedMember***REMOVED***&&***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<motion.div
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***key={`selected-${selectedMember.id}`}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***initial={{***REMOVED***opacity:***REMOVED***0,***REMOVED***x:***REMOVED***20***REMOVED***}}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***animate={{***REMOVED***opacity:***REMOVED***1,***REMOVED***x:***REMOVED***0***REMOVED***}}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***exit={{***REMOVED***opacity:***REMOVED***0,***REMOVED***x:***REMOVED***20***REMOVED***}}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className="absolute***REMOVED***top-4***REMOVED***right-4***REMOVED***bg-white***REMOVED***p-4***REMOVED***rounded-lg***REMOVED***shadow-lg***REMOVED***border***REMOVED***max-w-xs"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="flex***REMOVED***items-center***REMOVED***gap-3***REMOVED***mb-3">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="w-12***REMOVED***h-12***REMOVED***rounded-full***REMOVED***bg-gradient-to-br***REMOVED***from-green-100***REMOVED***to-green-200***REMOVED***flex***REMOVED***items-center***REMOVED***justify-center">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{selectedMember.photo_url***REMOVED***?***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<img
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***src={selectedMember.photo_url}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***alt="Avatar"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className="w-full***REMOVED***h-full***REMOVED***rounded-full***REMOVED***object-cover"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)***REMOVED***:***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<User***REMOVED***className="w-6***REMOVED***h-6***REMOVED***text-green-600"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<h3***REMOVED***className="font-semibold***REMOVED***text-green-700***REMOVED***flex***REMOVED***items-center">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{selectedMember.first_name}***REMOVED***{selectedMember.last_name}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{selectedMember.is_patriarch***REMOVED***&&***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Crown***REMOVED***className="w-4***REMOVED***h-4***REMOVED***ml-1***REMOVED***text-yellow-500"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</h3>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<p***REMOVED***className="text-sm***REMOVED***text-green-600">{selectedMember.relationship_type}</p>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="space-y-2***REMOVED***text-sm">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{selectedMember.phone***REMOVED***&&***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<p***REMOVED***className="flex***REMOVED***items-center***REMOVED***gap-2***REMOVED***text-gray-600">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Phone***REMOVED***className="w-3***REMOVED***h-3"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{selectedMember.phone}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</p>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{selectedMember.current_location***REMOVED***&&***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<p***REMOVED***className="flex***REMOVED***items-center***REMOVED***gap-2***REMOVED***text-gray-600">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<MapPin***REMOVED***className="w-3***REMOVED***h-3"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{selectedMember.current_location}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</p>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Button
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***variant="outline"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***size="sm"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className="mt-3***REMOVED***w-full"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onClick={()***REMOVED***=>***REMOVED***setSelectedMember(null)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Fermer
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Button>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</motion.div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</AnimatePresence>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED***);
+        {/* Membre sélectionné */}
+        <AnimatePresence>
+          {selectedMember && (
+            <motion.div
+              key={`selected-${selectedMember.id}`}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              className="absolute top-4 right-4 bg-white p-4 rounded-lg shadow-lg border max-w-xs"
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center">
+                  {selectedMember.photo_url ? (
+                    <img
+                      src={selectedMember.photo_url}
+                      alt="Avatar"
+                      className="w-full h-full rounded-full object-cover"
+                    />
+                  ) : (
+                    <User className="w-6 h-6 text-green-600" />
+                  )}
+                </div>
+                <div>
+                  <h3 className="font-semibold text-green-700 flex items-center">
+                    {selectedMember.first_name} {selectedMember.last_name}
+                    {selectedMember.is_patriarch && (
+                      <Crown className="w-4 h-4 ml-1 text-yellow-500" />
+                    )}
+                  </h3>
+                  <p className="text-sm text-green-600">{selectedMember.relationship_type}</p>
+                </div>
+              </div>
+              
+              <div className="space-y-2 text-sm">
+                {selectedMember.phone && (
+                  <p className="flex items-center gap-2 text-gray-600">
+                    <Phone className="w-3 h-3" />
+                    {selectedMember.phone}
+                  </p>
+                )}
+                {selectedMember.current_location && (
+                  <p className="flex items-center gap-2 text-gray-600">
+                    <MapPin className="w-3 h-3" />
+                    {selectedMember.current_location}
+                  </p>
+                )}
+              </div>
+              
+              <Button
+                variant="outline"
+                size="sm"
+                className="mt-3 w-full"
+                onClick={() => setSelectedMember(null)}
+              >
+                Fermer
+              </Button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
 };
 
-//***REMOVED***Composant***REMOVED***pour***REMOVED***les***REMOVED***cartes***REMOVED***draggables
-interface***REMOVED***DraggableMemberCardProps***REMOVED***{
-***REMOVED******REMOVED***node:***REMOVED***DraggableNode;
-***REMOVED******REMOVED***index:***REMOVED***number;
-***REMOVED******REMOVED***isHighlighted:***REMOVED***boolean;
-***REMOVED******REMOVED***onSelect:***REMOVED***(member:***REMOVED***FamilyMember)***REMOVED***=>***REMOVED***void;
-***REMOVED******REMOVED***onDragStart:***REMOVED***(event:***REMOVED***React.MouseEvent)***REMOVED***=>***REMOVED***void;
-***REMOVED******REMOVED***onDrag:***REMOVED***(deltaX:***REMOVED***number,***REMOVED***deltaY:***REMOVED***number)***REMOVED***=>***REMOVED***void;
-***REMOVED******REMOVED***onDragEnd:***REMOVED***()***REMOVED***=>***REMOVED***void;
+// Composant pour les cartes draggables
+interface DraggableMemberCardProps {
+  node: DraggableNode;
+  index: number;
+  isHighlighted: boolean;
+  onSelect: (member: FamilyMember) => void;
+  onDragStart: (event: React.MouseEvent) => void;
+  onDrag: (deltaX: number, deltaY: number) => void;
+  onDragEnd: () => void;
 }
 
-const***REMOVED***DraggableMemberCard:***REMOVED***React.FC<DraggableMemberCardProps>***REMOVED***=***REMOVED***({
-***REMOVED******REMOVED***node,
-***REMOVED******REMOVED***index,
-***REMOVED******REMOVED***isHighlighted,
-***REMOVED******REMOVED***onSelect,
-***REMOVED******REMOVED***onDragStart,
-***REMOVED******REMOVED***onDrag,
-***REMOVED******REMOVED***onDragEnd
-})***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***[dragStartPos,***REMOVED***setDragStartPos]***REMOVED***=***REMOVED***useState<Position>({***REMOVED***x:***REMOVED***0,***REMOVED***y:***REMOVED***0***REMOVED***});
+const DraggableMemberCard: React.FC<DraggableMemberCardProps> = ({
+  node,
+  index,
+  isHighlighted,
+  onSelect,
+  onDragStart,
+  onDrag,
+  onDragEnd
+}) => {
+  const [dragStartPos, setDragStartPos] = useState<Position>({ x: 0, y: 0 });
 
-***REMOVED******REMOVED***const***REMOVED***handleMouseDown***REMOVED***=***REMOVED***(event:***REMOVED***React.MouseEvent)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***event.stopPropagation();
-***REMOVED******REMOVED******REMOVED******REMOVED***setDragStartPos({***REMOVED***x:***REMOVED***event.clientX,***REMOVED***y:***REMOVED***event.clientY***REMOVED***});
-***REMOVED******REMOVED******REMOVED******REMOVED***onDragStart(event);
+  const handleMouseDown = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setDragStartPos({ x: event.clientX, y: event.clientY });
+    onDragStart(event);
 
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***handleMouseMove***REMOVED***=***REMOVED***(e:***REMOVED***MouseEvent)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***deltaX***REMOVED***=***REMOVED***e.clientX***REMOVED***-***REMOVED***dragStartPos.x;
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***deltaY***REMOVED***=***REMOVED***e.clientY***REMOVED***-***REMOVED***dragStartPos.y;
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onDrag(deltaX,***REMOVED***deltaY);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setDragStartPos({***REMOVED***x:***REMOVED***e.clientX,***REMOVED***y:***REMOVED***e.clientY***REMOVED***});
-***REMOVED******REMOVED******REMOVED******REMOVED***};
+    const handleMouseMove = (e: MouseEvent) => {
+      const deltaX = e.clientX - dragStartPos.x;
+      const deltaY = e.clientY - dragStartPos.y;
+      onDrag(deltaX, deltaY);
+      setDragStartPos({ x: e.clientX, y: e.clientY });
+    };
 
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***handleMouseUp***REMOVED***=***REMOVED***()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onDragEnd();
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***document.removeEventListener('mousemove',***REMOVED***handleMouseMove);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***document.removeEventListener('mouseup',***REMOVED***handleMouseUp);
-***REMOVED******REMOVED******REMOVED******REMOVED***};
+    const handleMouseUp = () => {
+      onDragEnd();
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
 
-***REMOVED******REMOVED******REMOVED******REMOVED***document.addEventListener('mousemove',***REMOVED***handleMouseMove);
-***REMOVED******REMOVED******REMOVED******REMOVED***document.addEventListener('mouseup',***REMOVED***handleMouseUp);
-***REMOVED******REMOVED***};
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
 
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<motion.div
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***key={`card-${node.member.id}-${index}`}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={`absolute***REMOVED***cursor-move***REMOVED***${node.isDragging***REMOVED***?***REMOVED***'z-50'***REMOVED***:***REMOVED***'z-10'}`}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***style={{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***left:***REMOVED***node.position.x,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***top:***REMOVED***node.position.y,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***width:***REMOVED***'200px',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***height:***REMOVED***'140px'
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***whileHover={{***REMOVED***scale:***REMOVED***1.02***REMOVED***}}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onMouseDown={handleMouseDown}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***initial={{***REMOVED***opacity:***REMOVED***0,***REMOVED***scale:***REMOVED***0.8***REMOVED***}}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***animate={{***REMOVED***opacity:***REMOVED***1,***REMOVED***scale:***REMOVED***1***REMOVED***}}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***exit={{***REMOVED***opacity:***REMOVED***0,***REMOVED***scale:***REMOVED***0.8***REMOVED***}}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***transition={{***REMOVED***duration:***REMOVED***0.2***REMOVED***}}
-***REMOVED******REMOVED******REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Card***REMOVED***className={`h-full***REMOVED***w-full***REMOVED***shadow-lg***REMOVED***${
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***isHighlighted***REMOVED***?***REMOVED***'ring-4***REMOVED***ring-red-400***REMOVED***bg-red-50'***REMOVED***:***REMOVED***'bg-white'
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***${node.member.is_patriarch***REMOVED***?***REMOVED***'ring-2***REMOVED***ring-yellow-400'***REMOVED***:***REMOVED***''}`}>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<CardContent***REMOVED***className="p-4***REMOVED***h-full***REMOVED***flex***REMOVED***flex-col">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="flex***REMOVED***items-center***REMOVED***gap-3***REMOVED***mb-2">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="w-10***REMOVED***h-10***REMOVED***rounded-full***REMOVED***bg-gradient-to-br***REMOVED***from-green-100***REMOVED***to-green-200***REMOVED***flex***REMOVED***items-center***REMOVED***justify-center***REMOVED***flex-shrink-0">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{node.member.photo_url***REMOVED***?***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<img
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***src={node.member.photo_url}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***alt="Avatar"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className="w-full***REMOVED***h-full***REMOVED***rounded-full***REMOVED***object-cover"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)***REMOVED***:***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<User***REMOVED***className="w-5***REMOVED***h-5***REMOVED***text-green-600"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="flex-1***REMOVED***min-w-0">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<h3***REMOVED***className="font-semibold***REMOVED***text-sm***REMOVED***text-green-700***REMOVED***flex***REMOVED***items-center***REMOVED***truncate">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{node.member.first_name}***REMOVED***{node.member.last_name}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{node.member.is_patriarch***REMOVED***&&***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Crown***REMOVED***className="w-3***REMOVED***h-3***REMOVED***ml-1***REMOVED***text-yellow-500***REMOVED***flex-shrink-0"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</h3>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<p***REMOVED***className="text-xs***REMOVED***text-green-600***REMOVED***truncate">{node.member.relationship_type}</p>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="flex-1***REMOVED***space-y-1***REMOVED***text-xs***REMOVED***text-gray-600">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{node.member.phone***REMOVED***&&***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<p***REMOVED***className="flex***REMOVED***items-center***REMOVED***gap-1***REMOVED***truncate">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Phone***REMOVED***className="w-3***REMOVED***h-3***REMOVED***flex-shrink-0"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<span***REMOVED***className="truncate">{node.member.phone}</span>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</p>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{node.member.current_location***REMOVED***&&***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<p***REMOVED***className="flex***REMOVED***items-center***REMOVED***gap-1***REMOVED***truncate">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<MapPin***REMOVED***className="w-3***REMOVED***h-3***REMOVED***flex-shrink-0"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<span***REMOVED***className="truncate">{node.member.current_location}</span>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</p>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Button***REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***variant="outline"***REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***size="sm"***REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className="mt-2***REMOVED***h-6***REMOVED***text-xs"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onClick={(e)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***e.stopPropagation();
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onSelect(node.member);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Détails
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Button>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</CardContent>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Card>
-***REMOVED******REMOVED******REMOVED******REMOVED***</motion.div>
-***REMOVED******REMOVED***);
+  return (
+    <motion.div
+      key={`card-${node.member.id}-${index}`}
+      className={`absolute cursor-move ${node.isDragging ? 'z-50' : 'z-10'}`}
+      style={{
+        left: node.position.x,
+        top: node.position.y,
+        width: '200px',
+        height: '140px'
+      }}
+      whileHover={{ scale: 1.02 }}
+      onMouseDown={handleMouseDown}
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.8 }}
+      transition={{ duration: 0.2 }}
+    >
+      <Card className={`h-full w-full shadow-lg ${
+        isHighlighted ? 'ring-4 ring-red-400 bg-red-50' : 'bg-white'
+      } ${node.member.is_patriarch ? 'ring-2 ring-yellow-400' : ''}`}>
+        <CardContent className="p-4 h-full flex flex-col">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center flex-shrink-0">
+              {node.member.photo_url ? (
+                <img
+                  src={node.member.photo_url}
+                  alt="Avatar"
+                  className="w-full h-full rounded-full object-cover"
+                />
+              ) : (
+                <User className="w-5 h-5 text-green-600" />
+              )}
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="font-semibold text-sm text-green-700 flex items-center truncate">
+                {node.member.first_name} {node.member.last_name}
+                {node.member.is_patriarch && (
+                  <Crown className="w-3 h-3 ml-1 text-yellow-500 flex-shrink-0" />
+                )}
+              </h3>
+              <p className="text-xs text-green-600 truncate">{node.member.relationship_type}</p>
+            </div>
+          </div>
+          
+          <div className="flex-1 space-y-1 text-xs text-gray-600">
+            {node.member.phone && (
+              <p className="flex items-center gap-1 truncate">
+                <Phone className="w-3 h-3 flex-shrink-0" />
+                <span className="truncate">{node.member.phone}</span>
+              </p>
+            )}
+            {node.member.current_location && (
+              <p className="flex items-center gap-1 truncate">
+                <MapPin className="w-3 h-3 flex-shrink-0" />
+                <span className="truncate">{node.member.current_location}</span>
+              </p>
+            )}
+          </div>
+          
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="mt-2 h-6 text-xs"
+            onClick={(e) => {
+              e.stopPropagation();
+              onSelect(node.member);
+            }}
+          >
+            Détails
+          </Button>
+        </CardContent>
+      </Card>
+    </motion.div>
+  );
 };

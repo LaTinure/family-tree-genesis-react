@@ -1,48 +1,48 @@
-import***REMOVED*******REMOVED***as***REMOVED***React***REMOVED***from***REMOVED***"react"
-import***REMOVED*******REMOVED***as***REMOVED***AvatarPrimitive***REMOVED***from***REMOVED***"@radix-ui/react-avatar"
+import * as React from "react"
+import * as AvatarPrimitive from "@radix-ui/react-avatar"
 
-import***REMOVED***{***REMOVED***cn***REMOVED***}***REMOVED***from***REMOVED***"@/lib/utils"
+import { cn } from "@/lib/utils"
 
-const***REMOVED***Avatar***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***AvatarPrimitive.Root>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***AvatarPrimitive.Root>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<AvatarPrimitive.Root
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"relative***REMOVED***flex***REMOVED***h-10***REMOVED***w-10***REMOVED***shrink-0***REMOVED***overflow-hidden***REMOVED***rounded-full",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const Avatar = React.forwardRef<
+  React.ElementRef<typeof AvatarPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root>
+>(({ className, ...props }, ref) => (
+  <AvatarPrimitive.Root
+    ref={ref}
+    className={cn(
+      "relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full",
+      className
+    )}
+    {...props}
+  />
 ))
-Avatar.displayName***REMOVED***=***REMOVED***AvatarPrimitive.Root.displayName
+Avatar.displayName = AvatarPrimitive.Root.displayName
 
-const***REMOVED***AvatarImage***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***AvatarPrimitive.Image>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***AvatarPrimitive.Image>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<AvatarPrimitive.Image
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn("aspect-square***REMOVED***h-full***REMOVED***w-full",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const AvatarImage = React.forwardRef<
+  React.ElementRef<typeof AvatarPrimitive.Image>,
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Image>
+>(({ className, ...props }, ref) => (
+  <AvatarPrimitive.Image
+    ref={ref}
+    className={cn("aspect-square h-full w-full", className)}
+    {...props}
+  />
 ))
-AvatarImage.displayName***REMOVED***=***REMOVED***AvatarPrimitive.Image.displayName
+AvatarImage.displayName = AvatarPrimitive.Image.displayName
 
-const***REMOVED***AvatarFallback***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***AvatarPrimitive.Fallback>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***AvatarPrimitive.Fallback>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<AvatarPrimitive.Fallback
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"flex***REMOVED***h-full***REMOVED***w-full***REMOVED***items-center***REMOVED***justify-center***REMOVED***rounded-full***REMOVED***bg-muted",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const AvatarFallback = React.forwardRef<
+  React.ElementRef<typeof AvatarPrimitive.Fallback>,
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback>
+>(({ className, ...props }, ref) => (
+  <AvatarPrimitive.Fallback
+    ref={ref}
+    className={cn(
+      "flex h-full w-full items-center justify-center rounded-full bg-muted",
+      className
+    )}
+    {...props}
+  />
 ))
-AvatarFallback.displayName***REMOVED***=***REMOVED***AvatarPrimitive.Fallback.displayName
+AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName
 
-export***REMOVED***{***REMOVED***Avatar,***REMOVED***AvatarImage,***REMOVED***AvatarFallback***REMOVED***}
+export { Avatar, AvatarImage, AvatarFallback }

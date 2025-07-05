@@ -1,107 +1,107 @@
-import***REMOVED***React,***REMOVED***{***REMOVED***useEffect,***REMOVED***useState***REMOVED***}***REMOVED***from***REMOVED***'react';
-import***REMOVED***{***REMOVED***useNavigate,***REMOVED***useSearchParams***REMOVED***}***REMOVED***from***REMOVED***'react-router-dom';
-import***REMOVED***{***REMOVED***useQuery***REMOVED***}***REMOVED***from***REMOVED***'@tanstack/react-query';
-import***REMOVED***{***REMOVED***Card,***REMOVED***CardContent,***REMOVED***CardDescription,***REMOVED***CardHeader,***REMOVED***CardTitle***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/card';
-import***REMOVED***{***REMOVED***Button***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/button';
-import***REMOVED***{***REMOVED***Badge***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/badge';
-import***REMOVED***{***REMOVED***ROUTES***REMOVED***}***REMOVED***from***REMOVED***'@/lib/constants/routes';
-import***REMOVED***{***REMOVED***supabase***REMOVED***}***REMOVED***from***REMOVED***'@/integrations/supabase/client';
-import***REMOVED***{***REMOVED***useToast***REMOVED***}***REMOVED***from***REMOVED***'@/hooks/use-toast';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { ROUTES } from '@/lib/constants/routes';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
-const***REMOVED***DynastyInviteHandler***REMOVED***=***REMOVED***()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***navigate***REMOVED***=***REMOVED***useNavigate();
-***REMOVED******REMOVED***const***REMOVED***[searchParams]***REMOVED***=***REMOVED***useSearchParams();
-***REMOVED******REMOVED***const***REMOVED***{***REMOVED***toast***REMOVED***}***REMOVED***=***REMOVED***useToast();
-***REMOVED******REMOVED***const***REMOVED***[inviteToken,***REMOVED***setInviteToken]***REMOVED***=***REMOVED***useState<string***REMOVED***|***REMOVED***null>(null);
+const DynastyInviteHandler = () => {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const { toast } = useToast();
+  const [inviteToken, setInviteToken] = useState<string | null>(null);
 
-***REMOVED******REMOVED***useEffect(()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***token***REMOVED***=***REMOVED***searchParams.get('invite');
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(token)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setInviteToken(token);
-***REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***else***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***navigate(ROUTES.HOME);
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED***},***REMOVED***[searchParams,***REMOVED***navigate]);
+  useEffect(() => {
+    const token = searchParams.get('invite');
+    if (token) {
+      setInviteToken(token);
+    } else {
+      navigate(ROUTES.HOME);
+    }
+  }, [searchParams, navigate]);
 
-***REMOVED******REMOVED***const***REMOVED***{***REMOVED***data:***REMOVED***inviteData,***REMOVED***isLoading,***REMOVED***error***REMOVED***}***REMOVED***=***REMOVED***useQuery({
-***REMOVED******REMOVED******REMOVED******REMOVED***queryKey:***REMOVED***['invite',***REMOVED***inviteToken],
-***REMOVED******REMOVED******REMOVED******REMOVED***queryFn:***REMOVED***async***REMOVED***()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(!inviteToken)***REMOVED***throw***REMOVED***new***REMOVED***Error('Token***REMOVED***manquant');
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***data,***REMOVED***error***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.from('invites')
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.select('*')
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.eq('token',***REMOVED***inviteToken)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.single();
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(error)***REMOVED***throw***REMOVED***error;
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***data;
-***REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***enabled:***REMOVED***!!inviteToken,
-***REMOVED******REMOVED******REMOVED******REMOVED***retry:***REMOVED***false
-***REMOVED******REMOVED***});
+  const { data: inviteData, isLoading, error } = useQuery({
+    queryKey: ['invite', inviteToken],
+    queryFn: async () => {
+      if (!inviteToken) throw new Error('Token manquant');
+      const { data, error } = await supabase
+        .from('invites')
+        .select('*')
+        .eq('token', inviteToken)
+        .single();
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!inviteToken,
+    retry: false
+  });
 
-***REMOVED******REMOVED***const***REMOVED***handleAcceptInvite***REMOVED***=***REMOVED***()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(!inviteData)***REMOVED***return;
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***authUrl***REMOVED***=***REMOVED***`${ROUTES.AUTH.FAMILY}?invite=${inviteToken}&dynasty_id=${inviteData.dynasty_id}&role=${inviteData.user_role}`;
-***REMOVED******REMOVED******REMOVED******REMOVED***navigate(authUrl);
-***REMOVED******REMOVED***};
+  const handleAcceptInvite = () => {
+    if (!inviteData) return;
+    const authUrl = `${ROUTES.AUTH.FAMILY}?invite=${inviteToken}&dynasty_id=${inviteData.dynasty_id}&role=${inviteData.user_role}`;
+    navigate(authUrl);
+  };
 
-***REMOVED******REMOVED***if***REMOVED***(isLoading)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="min-h-screen***REMOVED***bg-gradient-to-br***REMOVED***from-blue-50***REMOVED***via-white***REMOVED***to-green-50***REMOVED***flex***REMOVED***items-center***REMOVED***justify-center">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Card***REMOVED***className="w-full***REMOVED***max-w-md">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<CardContent***REMOVED***className="p-8***REMOVED***text-center">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="animate-spin***REMOVED***rounded-full***REMOVED***h-12***REMOVED***w-12***REMOVED***border-b-2***REMOVED***border-whatsapp-600***REMOVED***mx-auto***REMOVED***mb-4"></div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<p***REMOVED***className="text-gray-600">Vérification***REMOVED***de***REMOVED***l'invitation...</p>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</CardContent>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Card>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED***);
-***REMOVED******REMOVED***}
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 flex items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardContent className="p-8 text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-whatsapp-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Vérification de l'invitation...</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
-***REMOVED******REMOVED***if***REMOVED***(error***REMOVED***||***REMOVED***!inviteData)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="min-h-screen***REMOVED***bg-gradient-to-br***REMOVED***from-blue-50***REMOVED***via-white***REMOVED***to-green-50***REMOVED***flex***REMOVED***items-center***REMOVED***justify-center">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Card***REMOVED***className="w-full***REMOVED***max-w-md">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<CardHeader***REMOVED***className="text-center">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<CardTitle***REMOVED***className="text-xl***REMOVED***text-red-600">Invitation***REMOVED***Invalide</CardTitle>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<CardDescription>Cette***REMOVED***invitation***REMOVED***n'est***REMOVED***plus***REMOVED***valide***REMOVED***ou***REMOVED***a***REMOVED***expiré.</CardDescription>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</CardHeader>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<CardContent***REMOVED***className="text-center">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Button***REMOVED***onClick={()***REMOVED***=>***REMOVED***navigate(ROUTES.HOME)}***REMOVED***className="w-full">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Retour***REMOVED***à***REMOVED***la***REMOVED***sélection
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Button>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</CardContent>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Card>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED***);
-***REMOVED******REMOVED***}
+  if (error || !inviteData) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 flex items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <CardTitle className="text-xl text-red-600">Invitation Invalide</CardTitle>
+            <CardDescription>Cette invitation n'est plus valide ou a expiré.</CardDescription>
+          </CardHeader>
+          <CardContent className="text-center">
+            <Button onClick={() => navigate(ROUTES.HOME)} className="w-full">
+              Retour à la sélection
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="min-h-screen***REMOVED***bg-gradient-to-br***REMOVED***from-blue-50***REMOVED***via-white***REMOVED***to-green-50***REMOVED***flex***REMOVED***items-center***REMOVED***justify-center">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Card***REMOVED***className="w-full***REMOVED***max-w-md***REMOVED***border-whatsapp-200">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<CardHeader***REMOVED***className="text-center">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Badge***REMOVED***className="mb-2***REMOVED***bg-whatsapp-100***REMOVED***text-whatsapp-800">Invitation***REMOVED***Valide</Badge>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<CardTitle***REMOVED***className="text-2xl">Invitation***REMOVED***à***REMOVED***Rejoindre</CardTitle>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<CardDescription>Vous***REMOVED***avez***REMOVED***été***REMOVED***invité***REMOVED***à***REMOVED***rejoindre***REMOVED***une***REMOVED***dynastie***REMOVED***familiale</CardDescription>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</CardHeader>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<CardContent***REMOVED***className="space-y-6">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="bg-gradient-to-r***REMOVED***from-whatsapp-50***REMOVED***to-green-50***REMOVED***p-4***REMOVED***rounded-lg">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<h4***REMOVED***className="font-semibold***REMOVED***text-gray-900***REMOVED***mb-2">Dynastie</h4>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<p***REMOVED***className="text-sm***REMOVED***text-gray-700">Rôle***REMOVED***:***REMOVED***{inviteData.user_role}</p>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 flex items-center justify-center">
+      <Card className="w-full max-w-md border-whatsapp-200">
+        <CardHeader className="text-center">
+          <Badge className="mb-2 bg-whatsapp-100 text-whatsapp-800">Invitation Valide</Badge>
+          <CardTitle className="text-2xl">Invitation à Rejoindre</CardTitle>
+          <CardDescription>Vous avez été invité à rejoindre une dynastie familiale</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="bg-gradient-to-r from-whatsapp-50 to-green-50 p-4 rounded-lg">
+            <h4 className="font-semibold text-gray-900 mb-2">Dynastie</h4>
+            <p className="text-sm text-gray-700">Rôle : {inviteData.user_role}</p>
+          </div>
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="space-y-3">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Button***REMOVED***onClick={handleAcceptInvite}***REMOVED***className="w-full***REMOVED***bg-whatsapp-600***REMOVED***hover:bg-whatsapp-700">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Accepter***REMOVED***l'Invitation
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Button>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Button***REMOVED***onClick={()***REMOVED***=>***REMOVED***navigate(ROUTES.HOME)}***REMOVED***variant="outline"***REMOVED***className="w-full">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Décliner
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Button>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</CardContent>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Card>
-***REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED***);
+          <div className="space-y-3">
+            <Button onClick={handleAcceptInvite} className="w-full bg-whatsapp-600 hover:bg-whatsapp-700">
+              Accepter l'Invitation
+            </Button>
+            <Button onClick={() => navigate(ROUTES.HOME)} variant="outline" className="w-full">
+              Décliner
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
 };
 
-export***REMOVED***default***REMOVED***DynastyInviteHandler;
+export default DynastyInviteHandler;

@@ -1,68 +1,68 @@
-#***REMOVED***🚀***REMOVED***Résolution***REMOVED***Rapide***REMOVED***-***REMOVED***Affichage***REMOVED***des***REMOVED***Membres
+# 🚀 Résolution Rapide - Affichage des Membres
 
-##***REMOVED***Problème
-Les***REMOVED***membres***REMOVED***ne***REMOVED***s'affichent***REMOVED***pas***REMOVED***dans***REMOVED***l'arbre***REMOVED***familial***REMOVED***du***REMOVED***dashboard.
+## Problème
+Les membres ne s'affichent pas dans l'arbre familial du dashboard.
 
-##***REMOVED***Solution***REMOVED***en***REMOVED***3***REMOVED***étapes
+## Solution en 3 étapes
 
-###***REMOVED***1.***REMOVED***Exécuter***REMOVED***le***REMOVED***script***REMOVED***SQL***REMOVED***dans***REMOVED***Supabase
-1.***REMOVED***Aller***REMOVED***dans***REMOVED***votre***REMOVED***projet***REMOVED***Supabase
-2.***REMOVED***Ouvrir***REMOVED***l'éditeur***REMOVED***SQL
-3.***REMOVED***Copier***REMOVED***et***REMOVED***coller***REMOVED***le***REMOVED***contenu***REMOVED***du***REMOVED***fichier***REMOVED***`fix-permissions.sql`
-4.***REMOVED***Exécuter***REMOVED***le***REMOVED***script
+### 1. Exécuter le script SQL dans Supabase
+1. Aller dans votre projet Supabase
+2. Ouvrir l'éditeur SQL
+3. Copier et coller le contenu du fichier `fix-permissions.sql`
+4. Exécuter le script
 
-###***REMOVED***2.***REMOVED***Vérifier***REMOVED***les***REMOVED***logs***REMOVED***dans***REMOVED***le***REMOVED***navigateur
-1.***REMOVED***Ouvrir***REMOVED***la***REMOVED***console***REMOVED***du***REMOVED***navigateur***REMOVED***(F12)
-2.***REMOVED***Aller***REMOVED***sur***REMOVED***le***REMOVED***dashboard
-3.***REMOVED***Chercher***REMOVED***les***REMOVED***logs***REMOVED***avec***REMOVED***ces***REMOVED***emojis***REMOVED***:
-***REMOVED******REMOVED******REMOVED***-***REMOVED***🔍***REMOVED***`[fetchMembers]***REMOVED***Début***REMOVED***de***REMOVED***la***REMOVED***récupération***REMOVED***des***REMOVED***membres`
-***REMOVED******REMOVED******REMOVED***-***REMOVED***📊***REMOVED***`[fetchMembers]***REMOVED***Réponse***REMOVED***Supabase:`
-***REMOVED******REMOVED******REMOVED***-***REMOVED***✅***REMOVED***`[fetchMembers]***REMOVED***Profils***REMOVED***trouvés:`
-***REMOVED******REMOVED******REMOVED***-***REMOVED***🌳***REMOVED***`[FamilyTree]***REMOVED***État***REMOVED***actuel:`
+### 2. Vérifier les logs dans le navigateur
+1. Ouvrir la console du navigateur (F12)
+2. Aller sur le dashboard
+3. Chercher les logs avec ces emojis :
+   - 🔍 `[fetchMembers] Début de la récupération des membres`
+   - 📊 `[fetchMembers] Réponse Supabase:`
+   - ✅ `[fetchMembers] Profils trouvés:`
+   - 🌳 `[FamilyTree] État actuel:`
 
-###***REMOVED***3.***REMOVED***Vérifier***REMOVED***le***REMOVED***panel***REMOVED***de***REMOVED***debug
-Dans***REMOVED***le***REMOVED***dashboard,***REMOVED***regarder***REMOVED***le***REMOVED***panel***REMOVED***orange***REMOVED***"Debug***REMOVED***-***REMOVED***Membres"***REMOVED***dans***REMOVED***la***REMOVED***sidebar***REMOVED***pour***REMOVED***voir***REMOVED***:
--***REMOVED***Nombre***REMOVED***de***REMOVED***membres***REMOVED***chargés
--***REMOVED***État***REMOVED***de***REMOVED***chargement
--***REMOVED***Détails***REMOVED***des***REMOVED***membres***REMOVED***trouvés
+### 3. Vérifier le panel de debug
+Dans le dashboard, regarder le panel orange "Debug - Membres" dans la sidebar pour voir :
+- Nombre de membres chargés
+- État de chargement
+- Détails des membres trouvés
 
-##***REMOVED***Si***REMOVED***le***REMOVED***problème***REMOVED***persiste
+## Si le problème persiste
 
-###***REMOVED***Vérifier***REMOVED***l'authentification
+### Vérifier l'authentification
 ```javascript
-//***REMOVED***Dans***REMOVED***la***REMOVED***console***REMOVED***du***REMOVED***navigateur
-const***REMOVED***{***REMOVED***data:***REMOVED***{***REMOVED***user***REMOVED***}***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase.auth.getUser();
-console.log('Utilisateur:',***REMOVED***user);
+// Dans la console du navigateur
+const { data: { user } } = await supabase.auth.getUser();
+console.log('Utilisateur:', user);
 ```
 
-###***REMOVED***Vérifier***REMOVED***les***REMOVED***données
+### Vérifier les données
 ```sql
---***REMOVED***Dans***REMOVED***l'éditeur***REMOVED***SQL***REMOVED***de***REMOVED***Supabase
-SELECT***REMOVED***COUNT(*)***REMOVED***FROM***REMOVED***profiles;
-SELECT***REMOVED*******REMOVED***FROM***REMOVED***profiles***REMOVED***LIMIT***REMOVED***5;
+-- Dans l'éditeur SQL de Supabase
+SELECT COUNT(*) FROM profiles;
+SELECT * FROM profiles LIMIT 5;
 ```
 
-###***REMOVED***Vérifier***REMOVED***les***REMOVED***variables***REMOVED***d'environnement
-S'assurer***REMOVED***que***REMOVED***dans***REMOVED***`.env.local`***REMOVED***:
+### Vérifier les variables d'environnement
+S'assurer que dans `.env.local` :
 ```
 VITE_SUPABASE_URL=https://votre-projet.supabase.co
 VITE_SUPABASE_ANON_KEY=votre-clé-anon
 ```
 
-##***REMOVED***Logs***REMOVED***attendus
+## Logs attendus
 
-Si***REMOVED***tout***REMOVED***fonctionne,***REMOVED***vous***REMOVED***devriez***REMOVED***voir***REMOVED***:
+Si tout fonctionne, vous devriez voir :
 ```
-🔍***REMOVED***[fetchMembers]***REMOVED***Début***REMOVED***de***REMOVED***la***REMOVED***récupération***REMOVED***des***REMOVED***membres
-📊***REMOVED***[fetchMembers]***REMOVED***Réponse***REMOVED***Supabase:***REMOVED***{***REMOVED***profiles:***REMOVED***[...],***REMOVED***fetchError:***REMOVED***null***REMOVED***}
-✅***REMOVED***[fetchMembers]***REMOVED***Profils***REMOVED***trouvés:***REMOVED***3
-👥***REMOVED***[fetchMembers]***REMOVED***Membres***REMOVED***transformés:***REMOVED***[...]
-🌳***REMOVED***[FamilyTree]***REMOVED***État***REMOVED***actuel:***REMOVED***{***REMOVED***members:***REMOVED***3,***REMOVED***isLoading:***REMOVED***false,***REMOVED***treeData:***REMOVED***{...}***REMOVED***}
+🔍 [fetchMembers] Début de la récupération des membres
+📊 [fetchMembers] Réponse Supabase: { profiles: [...], fetchError: null }
+✅ [fetchMembers] Profils trouvés: 3
+👥 [fetchMembers] Membres transformés: [...]
+🌳 [FamilyTree] État actuel: { members: 3, isLoading: false, treeData: {...} }
 ```
 
-##***REMOVED***Contact
-Si***REMOVED***le***REMOVED***problème***REMOVED***persiste***REMOVED***après***REMOVED***ces***REMOVED***étapes,***REMOVED***vérifiez***REMOVED***:
-1.***REMOVED***La***REMOVED***configuration***REMOVED***Supabase
-2.***REMOVED***Les***REMOVED***permissions***REMOVED***RLS
-3.***REMOVED***L'authentification***REMOVED***utilisateur
-4.***REMOVED***Les***REMOVED***données***REMOVED***dans***REMOVED***la***REMOVED***table***REMOVED***`profiles`
+## Contact
+Si le problème persiste après ces étapes, vérifiez :
+1. La configuration Supabase
+2. Les permissions RLS
+3. L'authentification utilisateur
+4. Les données dans la table `profiles`

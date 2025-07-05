@@ -1,124 +1,124 @@
 
-import***REMOVED***React***REMOVED***from***REMOVED***'react';
-import***REMOVED***{***REMOVED***useNavigate,***REMOVED***useLocation***REMOVED***}***REMOVED***from***REMOVED***'react-router-dom';
-import***REMOVED***{***REMOVED***Button***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/button';
-import***REMOVED***{***REMOVED***useAuth***REMOVED***}***REMOVED***from***REMOVED***'@/hooks/useAuth';
-import***REMOVED***{***REMOVED***ROUTES***REMOVED***}***REMOVED***from***REMOVED***'@/lib/constants/routes';
-import***REMOVED***{
-***REMOVED******REMOVED***Home,
-***REMOVED******REMOVED***TreePine,
-***REMOVED******REMOVED***Users,
-***REMOVED******REMOVED***UserPlus,
-***REMOVED******REMOVED***HelpCircle,
-***REMOVED******REMOVED***Info,
-***REMOVED******REMOVED***LogIn,
-***REMOVED******REMOVED***UserCheck,
-***REMOVED******REMOVED***Play
-}***REMOVED***from***REMOVED***'lucide-react';
+import React from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/hooks/useAuth';
+import { ROUTES } from '@/lib/constants/routes';
+import {
+  Home,
+  TreePine,
+  Users,
+  UserPlus,
+  HelpCircle,
+  Info,
+  LogIn,
+  UserCheck,
+  Play
+} from 'lucide-react';
 
-interface***REMOVED***NavItem***REMOVED***{
-***REMOVED******REMOVED***path:***REMOVED***string;
-***REMOVED******REMOVED***label:***REMOVED***string;
-***REMOVED******REMOVED***icon:***REMOVED***React.ReactNode;
-***REMOVED******REMOVED***requiresAuth?:***REMOVED***boolean;
-***REMOVED******REMOVED***publicOnly?:***REMOVED***boolean;
+interface NavItem {
+  path: string;
+  label: string;
+  icon: React.ReactNode;
+  requiresAuth?: boolean;
+  publicOnly?: boolean;
 }
 
-export***REMOVED***const***REMOVED***MobileNavigation:***REMOVED***React.FC***REMOVED***=***REMOVED***()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***navigate***REMOVED***=***REMOVED***useNavigate();
-***REMOVED******REMOVED***const***REMOVED***location***REMOVED***=***REMOVED***useLocation();
-***REMOVED******REMOVED***const***REMOVED***{***REMOVED***user***REMOVED***}***REMOVED***=***REMOVED***useAuth();
+export const MobileNavigation: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { user } = useAuth();
 
-***REMOVED******REMOVED***const***REMOVED***navItems:***REMOVED***NavItem[]***REMOVED***=***REMOVED***[
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Public***REMOVED***items***REMOVED***(always***REMOVED***visible)
-***REMOVED******REMOVED******REMOVED******REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***path:***REMOVED***ROUTES.HELP,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***label:***REMOVED***'Aide',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***icon:***REMOVED***<HelpCircle***REMOVED***className="w-4***REMOVED***h-4"***REMOVED***/>,
-***REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***path:***REMOVED***ROUTES.ABOUT,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***label:***REMOVED***'À***REMOVED***propos',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***icon:***REMOVED***<Info***REMOVED***className="w-4***REMOVED***h-4"***REMOVED***/>,
-***REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Auth***REMOVED***items***REMOVED***(only***REMOVED***when***REMOVED***not***REMOVED***authenticated)
-***REMOVED******REMOVED******REMOVED******REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***path:***REMOVED***ROUTES.AUTH.FAMILY,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***label:***REMOVED***'Se***REMOVED***connecter',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***icon:***REMOVED***<LogIn***REMOVED***className="w-4***REMOVED***h-4"***REMOVED***/>,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***publicOnly:***REMOVED***true,
-***REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***path:***REMOVED***ROUTES.AUTH.FAMILY,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***label:***REMOVED***'Rejoindre',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***icon:***REMOVED***<UserCheck***REMOVED***className="w-4***REMOVED***h-4"***REMOVED***/>,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***publicOnly:***REMOVED***true,
-***REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Authenticated***REMOVED***items
-***REMOVED******REMOVED******REMOVED******REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***path:***REMOVED***ROUTES.DASHBOARD.ROOT,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***label:***REMOVED***'Dashboard',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***icon:***REMOVED***<Home***REMOVED***className="w-4***REMOVED***h-4"***REMOVED***/>,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***requiresAuth:***REMOVED***true,
-***REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***path:***REMOVED***ROUTES.DASHBOARD.TREE,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***label:***REMOVED***'Arbre',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***icon:***REMOVED***<TreePine***REMOVED***className="w-4***REMOVED***h-4"***REMOVED***/>,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***requiresAuth:***REMOVED***true,
-***REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***path:***REMOVED***ROUTES.DASHBOARD.MEMBERS,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***label:***REMOVED***'Membres',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***icon:***REMOVED***<Users***REMOVED***className="w-4***REMOVED***h-4"***REMOVED***/>,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***requiresAuth:***REMOVED***true,
-***REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***path:***REMOVED***ROUTES.DASHBOARD.MEDIA,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***label:***REMOVED***'Média',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***icon:***REMOVED***<Play***REMOVED***className="w-4***REMOVED***h-4"***REMOVED***/>,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***requiresAuth:***REMOVED***true,
-***REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***path:***REMOVED***ROUTES.DASHBOARD.INVITE,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***label:***REMOVED***'Inviter',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***icon:***REMOVED***<UserPlus***REMOVED***className="w-4***REMOVED***h-4"***REMOVED***/>,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***requiresAuth:***REMOVED***true,
-***REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED***];
+  const navItems: NavItem[] = [
+    // Public items (always visible)
+    {
+      path: ROUTES.HELP,
+      label: 'Aide',
+      icon: <HelpCircle className="w-4 h-4" />,
+    },
+    {
+      path: ROUTES.ABOUT,
+      label: 'À propos',
+      icon: <Info className="w-4 h-4" />,
+    },
+    // Auth items (only when not authenticated)
+    {
+      path: ROUTES.AUTH.FAMILY,
+      label: 'Se connecter',
+      icon: <LogIn className="w-4 h-4" />,
+      publicOnly: true,
+    },
+    {
+      path: ROUTES.AUTH.FAMILY,
+      label: 'Rejoindre',
+      icon: <UserCheck className="w-4 h-4" />,
+      publicOnly: true,
+    },
+    // Authenticated items
+    {
+      path: ROUTES.DASHBOARD.ROOT,
+      label: 'Dashboard',
+      icon: <Home className="w-4 h-4" />,
+      requiresAuth: true,
+    },
+    {
+      path: ROUTES.DASHBOARD.TREE,
+      label: 'Arbre',
+      icon: <TreePine className="w-4 h-4" />,
+      requiresAuth: true,
+    },
+    {
+      path: ROUTES.DASHBOARD.MEMBERS,
+      label: 'Membres',
+      icon: <Users className="w-4 h-4" />,
+      requiresAuth: true,
+    },
+    {
+      path: ROUTES.DASHBOARD.MEDIA,
+      label: 'Média',
+      icon: <Play className="w-4 h-4" />,
+      requiresAuth: true,
+    },
+    {
+      path: ROUTES.DASHBOARD.INVITE,
+      label: 'Inviter',
+      icon: <UserPlus className="w-4 h-4" />,
+      requiresAuth: true,
+    },
+  ];
 
-***REMOVED******REMOVED***const***REMOVED***isActiveRoute***REMOVED***=***REMOVED***(path:***REMOVED***string)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***location.pathname***REMOVED***===***REMOVED***path;
-***REMOVED******REMOVED***};
+  const isActiveRoute = (path: string) => {
+    return location.pathname === path;
+  };
 
-***REMOVED******REMOVED***const***REMOVED***canShowItem***REMOVED***=***REMOVED***(item:***REMOVED***NavItem)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(item.requiresAuth***REMOVED***&&***REMOVED***!user)***REMOVED***return***REMOVED***false;
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(item.publicOnly***REMOVED***&&***REMOVED***user)***REMOVED***return***REMOVED***false;
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***true;
-***REMOVED******REMOVED***};
+  const canShowItem = (item: NavItem) => {
+    if (item.requiresAuth && !user) return false;
+    if (item.publicOnly && user) return false;
+    return true;
+  };
 
-***REMOVED******REMOVED***const***REMOVED***filteredNavItems***REMOVED***=***REMOVED***navItems.filter(canShowItem);
+  const filteredNavItems = navItems.filter(canShowItem);
 
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="md:hidden***REMOVED***fixed***REMOVED***bottom-0***REMOVED***left-0***REMOVED***right-0***REMOVED***bg-white***REMOVED***border-t***REMOVED***border-gray-200***REMOVED***px-4***REMOVED***py-2***REMOVED***z-50">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="flex***REMOVED***justify-around***REMOVED***items-center***REMOVED***space-x-1">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{filteredNavItems.slice(0,***REMOVED***5).map((item)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Button
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***key={item.path}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***variant={isActiveRoute(item.path)***REMOVED***?***REMOVED***"default"***REMOVED***:***REMOVED***"ghost"}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***size="sm"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onClick={()***REMOVED***=>***REMOVED***navigate(item.path)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={`flex***REMOVED***flex-col***REMOVED***items-center***REMOVED***space-y-1***REMOVED***px-2***REMOVED***py-1***REMOVED***h-auto***REMOVED***min-w-0***REMOVED***${
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***isActiveRoute(item.path)***REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***'bg-whatsapp-600***REMOVED***text-white'***REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***'text-gray-600***REMOVED***hover:text-whatsapp-600'
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}`}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{item.icon}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<span***REMOVED***className="text-xs***REMOVED***leading-none">{item.label}</span>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Button>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***))}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED***);
+  return (
+    <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 z-50">
+      <div className="flex justify-around items-center space-x-1">
+        {filteredNavItems.slice(0, 5).map((item) => (
+          <Button
+            key={item.path}
+            variant={isActiveRoute(item.path) ? "default" : "ghost"}
+            size="sm"
+            onClick={() => navigate(item.path)}
+            className={`flex flex-col items-center space-y-1 px-2 py-1 h-auto min-w-0 ${
+              isActiveRoute(item.path) 
+                ? 'bg-whatsapp-600 text-white' 
+                : 'text-gray-600 hover:text-whatsapp-600'
+            }`}
+          >
+            {item.icon}
+            <span className="text-xs leading-none">{item.label}</span>
+          </Button>
+        ))}
+      </div>
+    </div>
+  );
 };

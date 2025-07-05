@@ -1,169 +1,169 @@
 
-import***REMOVED***{***REMOVED***useState,***REMOVED***useEffect,***REMOVED***useRef***REMOVED***}***REMOVED***from***REMOVED***'react';
-import***REMOVED***{***REMOVED***Search,***REMOVED***X***REMOVED***}***REMOVED***from***REMOVED***'lucide-react';
-import***REMOVED***{***REMOVED***Input***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/input';
-import***REMOVED***{***REMOVED***Card***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/card';
-import***REMOVED***{***REMOVED***Avatar,***REMOVED***AvatarFallback,***REMOVED***AvatarImage***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/avatar';
-import***REMOVED***{***REMOVED***useQuery***REMOVED***}***REMOVED***from***REMOVED***'@tanstack/react-query';
-import***REMOVED***{***REMOVED***supabase***REMOVED***}***REMOVED***from***REMOVED***'@/integrations/supabase/client';
-import***REMOVED***{***REMOVED***ProfileData***REMOVED***}***REMOVED***from***REMOVED***'@/types/profile';
+import { useState, useEffect, useRef } from 'react';
+import { Search, X } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Card } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { ProfileData } from '@/types/profile';
 
-interface***REMOVED***SearchProps***REMOVED***{
-***REMOVED******REMOVED***onSelect:***REMOVED***(member:***REMOVED***ProfileData)***REMOVED***=>***REMOVED***void;
-***REMOVED******REMOVED***placeholder?:***REMOVED***string;
-***REMOVED******REMOVED***className?:***REMOVED***string;
+interface SearchProps {
+  onSelect: (member: ProfileData) => void;
+  placeholder?: string;
+  className?: string;
 }
 
-export***REMOVED***const***REMOVED***SearchWithAutocomplete***REMOVED***=***REMOVED***({***REMOVED***onSelect,***REMOVED***placeholder***REMOVED***=***REMOVED***"Rechercher***REMOVED***un***REMOVED***membre...",***REMOVED***className***REMOVED***}:***REMOVED***SearchProps)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***[query,***REMOVED***setQuery]***REMOVED***=***REMOVED***useState('');
-***REMOVED******REMOVED***const***REMOVED***[isOpen,***REMOVED***setIsOpen]***REMOVED***=***REMOVED***useState(false);
-***REMOVED******REMOVED***const***REMOVED***[showNoResults,***REMOVED***setShowNoResults]***REMOVED***=***REMOVED***useState(false);
-***REMOVED******REMOVED***const***REMOVED***searchRef***REMOVED***=***REMOVED***useRef<HTMLDivElement>(null);
+export const SearchWithAutocomplete = ({ onSelect, placeholder = "Rechercher un membre...", className }: SearchProps) => {
+  const [query, setQuery] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+  const [showNoResults, setShowNoResults] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
 
-***REMOVED******REMOVED***//***REMOVED***Recherche***REMOVED***avec***REMOVED***debouncing
-***REMOVED******REMOVED***const***REMOVED***{***REMOVED***data:***REMOVED***results***REMOVED***=***REMOVED***[],***REMOVED***isLoading***REMOVED***}***REMOVED***=***REMOVED***useQuery({
-***REMOVED******REMOVED******REMOVED******REMOVED***queryKey:***REMOVED***['search-members',***REMOVED***query],
-***REMOVED******REMOVED******REMOVED******REMOVED***queryFn:***REMOVED***async***REMOVED***()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(query.length***REMOVED***===***REMOVED***0)***REMOVED***return***REMOVED***[];
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***data,***REMOVED***error***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.from('profiles')
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.select('*')
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.or(`first_name.ilike.%${query}%,last_name.ilike.%${query}%,email.ilike.%${query}%,profession.ilike.%${query}%,current_location.ilike.%${query}%`)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.limit(10);
+  // Recherche avec debouncing
+  const { data: results = [], isLoading } = useQuery({
+    queryKey: ['search-members', query],
+    queryFn: async () => {
+      if (query.length === 0) return [];
+      
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .or(`first_name.ilike.%${query}%,last_name.ilike.%${query}%,email.ilike.%${query}%,profession.ilike.%${query}%,current_location.ilike.%${query}%`)
+        .limit(10);
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(error)***REMOVED***throw***REMOVED***error;
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***data***REMOVED***as***REMOVED***ProfileData[];
-***REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***enabled:***REMOVED***query.length***REMOVED***>***REMOVED***0,
-***REMOVED******REMOVED***});
+      if (error) throw error;
+      return data as ProfileData[];
+    },
+    enabled: query.length > 0,
+  });
 
-***REMOVED******REMOVED***//***REMOVED***Gestion***REMOVED***clic***REMOVED***extérieur
-***REMOVED******REMOVED***useEffect(()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***handleClickOutside***REMOVED***=***REMOVED***(event:***REMOVED***MouseEvent)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(searchRef.current***REMOVED***&&***REMOVED***!searchRef.current.contains(event.target***REMOVED***as***REMOVED***Node))***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setIsOpen(false);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***};
+  // Gestion clic extérieur
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
 
-***REMOVED******REMOVED******REMOVED******REMOVED***document.addEventListener('mousedown',***REMOVED***handleClickOutside);
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***()***REMOVED***=>***REMOVED***document.removeEventListener('mousedown',***REMOVED***handleClickOutside);
-***REMOVED******REMOVED***},***REMOVED***[]);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
-***REMOVED******REMOVED***//***REMOVED***Gestion***REMOVED***message***REMOVED***"Aucun***REMOVED***résultat"
-***REMOVED******REMOVED***useEffect(()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(query.length***REMOVED***>***REMOVED***0***REMOVED***&&***REMOVED***results.length***REMOVED***===***REMOVED***0***REMOVED***&&***REMOVED***!isLoading)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setShowNoResults(true);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***timer***REMOVED***=***REMOVED***setTimeout(()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setShowNoResults(false);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setQuery('');
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setIsOpen(false);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},***REMOVED***2000);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***()***REMOVED***=>***REMOVED***clearTimeout(timer);
-***REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***else***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setShowNoResults(false);
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED***},***REMOVED***[results,***REMOVED***query,***REMOVED***isLoading]);
+  // Gestion message "Aucun résultat"
+  useEffect(() => {
+    if (query.length > 0 && results.length === 0 && !isLoading) {
+      setShowNoResults(true);
+      const timer = setTimeout(() => {
+        setShowNoResults(false);
+        setQuery('');
+        setIsOpen(false);
+      }, 2000);
+      return () => clearTimeout(timer);
+    } else {
+      setShowNoResults(false);
+    }
+  }, [results, query, isLoading]);
 
-***REMOVED******REMOVED***const***REMOVED***handleInputChange***REMOVED***=***REMOVED***(value:***REMOVED***string)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***setQuery(value);
-***REMOVED******REMOVED******REMOVED******REMOVED***setIsOpen(value.length***REMOVED***>***REMOVED***0);
-***REMOVED******REMOVED***};
+  const handleInputChange = (value: string) => {
+    setQuery(value);
+    setIsOpen(value.length > 0);
+  };
 
-***REMOVED******REMOVED***const***REMOVED***handleSelect***REMOVED***=***REMOVED***(member:***REMOVED***ProfileData)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***onSelect(member);
-***REMOVED******REMOVED******REMOVED******REMOVED***setQuery('');
-***REMOVED******REMOVED******REMOVED******REMOVED***setIsOpen(false);
-***REMOVED******REMOVED***};
+  const handleSelect = (member: ProfileData) => {
+    onSelect(member);
+    setQuery('');
+    setIsOpen(false);
+  };
 
-***REMOVED******REMOVED***const***REMOVED***highlightMatch***REMOVED***=***REMOVED***(text:***REMOVED***string,***REMOVED***query:***REMOVED***string)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(!query)***REMOVED***return***REMOVED***text;
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***regex***REMOVED***=***REMOVED***new***REMOVED***RegExp(`(${query})`,***REMOVED***'gi');
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***text.replace(regex,***REMOVED***'<mark***REMOVED***class="bg-whatsapp-200***REMOVED***text-whatsapp-800***REMOVED***px-1***REMOVED***rounded">$1</mark>');
-***REMOVED******REMOVED***};
+  const highlightMatch = (text: string, query: string) => {
+    if (!query) return text;
+    const regex = new RegExp(`(${query})`, 'gi');
+    return text.replace(regex, '<mark class="bg-whatsapp-200 text-whatsapp-800 px-1 rounded">$1</mark>');
+  };
 
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***ref={searchRef}***REMOVED***className={`relative***REMOVED***w-full***REMOVED***max-w-md***REMOVED***${className}`}>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="relative">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Search***REMOVED***className="absolute***REMOVED***left-3***REMOVED***top-1/2***REMOVED***transform***REMOVED***-translate-y-1/2***REMOVED***text-gray-400***REMOVED***w-4***REMOVED***h-4"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Input
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***value={query}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onChange={(e)***REMOVED***=>***REMOVED***handleInputChange(e.target.value)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***placeholder={placeholder}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className="pl-10***REMOVED***pr-10"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{query***REMOVED***&&***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<button
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onClick={()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setQuery('');
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setIsOpen(false);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className="absolute***REMOVED***right-3***REMOVED***top-1/2***REMOVED***transform***REMOVED***-translate-y-1/2***REMOVED***text-gray-400***REMOVED***hover:text-gray-600"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<X***REMOVED***className="w-4***REMOVED***h-4"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</button>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
+  return (
+    <div ref={searchRef} className={`relative w-full max-w-md ${className}`}>
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+        <Input
+          value={query}
+          onChange={(e) => handleInputChange(e.target.value)}
+          placeholder={placeholder}
+          className="pl-10 pr-10"
+        />
+        {query && (
+          <button
+            onClick={() => {
+              setQuery('');
+              setIsOpen(false);
+            }}
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        )}
+      </div>
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{isOpen***REMOVED***&&***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Card***REMOVED***className="absolute***REMOVED***top-full***REMOVED***left-0***REMOVED***right-0***REMOVED***mt-1***REMOVED***z-50***REMOVED***max-h-96***REMOVED***overflow-y-auto***REMOVED***shadow-lg">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{isLoading***REMOVED***&&***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="p-4***REMOVED***text-center***REMOVED***text-gray-500">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Recherche***REMOVED***en***REMOVED***cours...
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
+      {isOpen && (
+        <Card className="absolute top-full left-0 right-0 mt-1 z-50 max-h-96 overflow-y-auto shadow-lg">
+          {isLoading && (
+            <div className="p-4 text-center text-gray-500">
+              Recherche en cours...
+            </div>
+          )}
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{showNoResults***REMOVED***&&***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="p-4***REMOVED***text-center***REMOVED***text-red-500">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Aucun***REMOVED***résultat***REMOVED***trouvé
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
+          {showNoResults && (
+            <div className="p-4 text-center text-red-500">
+              Aucun résultat trouvé
+            </div>
+          )}
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{!isLoading***REMOVED***&&***REMOVED***results.length***REMOVED***>***REMOVED***0***REMOVED***&&***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="py-2">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{results.map((member)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***key={member.id}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onClick={()***REMOVED***=>***REMOVED***handleSelect(member)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className="flex***REMOVED***items-center***REMOVED***p-3***REMOVED***hover:bg-gray-50***REMOVED***cursor-pointer***REMOVED***border-b***REMOVED***last:border-b-0"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Avatar***REMOVED***className="w-10***REMOVED***h-10***REMOVED***mr-3">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<AvatarImage***REMOVED***src={member.avatar_url***REMOVED***||***REMOVED***''}***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<AvatarFallback>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{member.first_name?.[0]}{member.last_name?.[0]}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</AvatarFallback>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Avatar>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="flex-1***REMOVED***min-w-0">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="font-medium***REMOVED***text-gray-900">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<span***REMOVED***dangerouslySetInnerHTML={{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***__html:***REMOVED***highlightMatch(`${member.first_name}***REMOVED***${member.last_name}`,***REMOVED***query)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}}***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="text-sm***REMOVED***text-gray-500***REMOVED***truncate">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{member.profession***REMOVED***&&***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<span***REMOVED***dangerouslySetInnerHTML={{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***__html:***REMOVED***highlightMatch(member.profession,***REMOVED***query)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}}***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{member.profession***REMOVED***&&***REMOVED***member.current_location***REMOVED***&&***REMOVED***'***REMOVED***•***REMOVED***'}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{member.current_location***REMOVED***&&***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<span***REMOVED***dangerouslySetInnerHTML={{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***__html:***REMOVED***highlightMatch(member.current_location,***REMOVED***query)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}}***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{member.is_patriarch***REMOVED***&&***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="text-xs***REMOVED***bg-whatsapp-100***REMOVED***text-whatsapp-700***REMOVED***px-2***REMOVED***py-1***REMOVED***rounded-full">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Patriarche
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***))}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Card>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED***);
+          {!isLoading && results.length > 0 && (
+            <div className="py-2">
+              {results.map((member) => (
+                <div
+                  key={member.id}
+                  onClick={() => handleSelect(member)}
+                  className="flex items-center p-3 hover:bg-gray-50 cursor-pointer border-b last:border-b-0"
+                >
+                  <Avatar className="w-10 h-10 mr-3">
+                    <AvatarImage src={member.avatar_url || ''} />
+                    <AvatarFallback>
+                      {member.first_name?.[0]}{member.last_name?.[0]}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-medium text-gray-900">
+                      <span dangerouslySetInnerHTML={{
+                        __html: highlightMatch(`${member.first_name} ${member.last_name}`, query)
+                      }} />
+                    </div>
+                    <div className="text-sm text-gray-500 truncate">
+                      {member.profession && (
+                        <span dangerouslySetInnerHTML={{
+                          __html: highlightMatch(member.profession, query)
+                        }} />
+                      )}
+                      {member.profession && member.current_location && ' • '}
+                      {member.current_location && (
+                        <span dangerouslySetInnerHTML={{
+                          __html: highlightMatch(member.current_location, query)
+                        }} />
+                      )}
+                    </div>
+                  </div>
+                  {member.is_patriarch && (
+                    <div className="text-xs bg-whatsapp-100 text-whatsapp-700 px-2 py-1 rounded-full">
+                      Patriarche
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </Card>
+      )}
+    </div>
+  );
 };

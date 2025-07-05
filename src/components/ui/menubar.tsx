@@ -1,234 +1,234 @@
-import***REMOVED*******REMOVED***as***REMOVED***React***REMOVED***from***REMOVED***"react"
-import***REMOVED*******REMOVED***as***REMOVED***MenubarPrimitive***REMOVED***from***REMOVED***"@radix-ui/react-menubar"
-import***REMOVED***{***REMOVED***Check,***REMOVED***ChevronRight,***REMOVED***Circle***REMOVED***}***REMOVED***from***REMOVED***"lucide-react"
+import * as React from "react"
+import * as MenubarPrimitive from "@radix-ui/react-menubar"
+import { Check, ChevronRight, Circle } from "lucide-react"
 
-import***REMOVED***{***REMOVED***cn***REMOVED***}***REMOVED***from***REMOVED***"@/lib/utils"
+import { cn } from "@/lib/utils"
 
-const***REMOVED***MenubarMenu***REMOVED***=***REMOVED***MenubarPrimitive.Menu
+const MenubarMenu = MenubarPrimitive.Menu
 
-const***REMOVED***MenubarGroup***REMOVED***=***REMOVED***MenubarPrimitive.Group
+const MenubarGroup = MenubarPrimitive.Group
 
-const***REMOVED***MenubarPortal***REMOVED***=***REMOVED***MenubarPrimitive.Portal
+const MenubarPortal = MenubarPrimitive.Portal
 
-const***REMOVED***MenubarSub***REMOVED***=***REMOVED***MenubarPrimitive.Sub
+const MenubarSub = MenubarPrimitive.Sub
 
-const***REMOVED***MenubarRadioGroup***REMOVED***=***REMOVED***MenubarPrimitive.RadioGroup
+const MenubarRadioGroup = MenubarPrimitive.RadioGroup
 
-const***REMOVED***Menubar***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***MenubarPrimitive.Root>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***MenubarPrimitive.Root>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<MenubarPrimitive.Root
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"flex***REMOVED***h-10***REMOVED***items-center***REMOVED***space-x-1***REMOVED***rounded-md***REMOVED***border***REMOVED***bg-background***REMOVED***p-1",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const Menubar = React.forwardRef<
+  React.ElementRef<typeof MenubarPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.Root>
+>(({ className, ...props }, ref) => (
+  <MenubarPrimitive.Root
+    ref={ref}
+    className={cn(
+      "flex h-10 items-center space-x-1 rounded-md border bg-background p-1",
+      className
+    )}
+    {...props}
+  />
 ))
-Menubar.displayName***REMOVED***=***REMOVED***MenubarPrimitive.Root.displayName
+Menubar.displayName = MenubarPrimitive.Root.displayName
 
-const***REMOVED***MenubarTrigger***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***MenubarPrimitive.Trigger>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***MenubarPrimitive.Trigger>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<MenubarPrimitive.Trigger
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"flex***REMOVED***cursor-default***REMOVED***select-none***REMOVED***items-center***REMOVED***rounded-sm***REMOVED***px-3***REMOVED***py-1.5***REMOVED***text-sm***REMOVED***font-medium***REMOVED***outline-none***REMOVED***focus:bg-accent***REMOVED***focus:text-accent-foreground***REMOVED***data-[state=open]:bg-accent***REMOVED***data-[state=open]:text-accent-foreground",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const MenubarTrigger = React.forwardRef<
+  React.ElementRef<typeof MenubarPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.Trigger>
+>(({ className, ...props }, ref) => (
+  <MenubarPrimitive.Trigger
+    ref={ref}
+    className={cn(
+      "flex cursor-default select-none items-center rounded-sm px-3 py-1.5 text-sm font-medium outline-none focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground",
+      className
+    )}
+    {...props}
+  />
 ))
-MenubarTrigger.displayName***REMOVED***=***REMOVED***MenubarPrimitive.Trigger.displayName
+MenubarTrigger.displayName = MenubarPrimitive.Trigger.displayName
 
-const***REMOVED***MenubarSubTrigger***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***MenubarPrimitive.SubTrigger>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***MenubarPrimitive.SubTrigger>***REMOVED***&***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***inset?:***REMOVED***boolean
-***REMOVED******REMOVED***}
->(({***REMOVED***className,***REMOVED***inset,***REMOVED***children,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<MenubarPrimitive.SubTrigger
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"flex***REMOVED***cursor-default***REMOVED***select-none***REMOVED***items-center***REMOVED***rounded-sm***REMOVED***px-2***REMOVED***py-1.5***REMOVED***text-sm***REMOVED***outline-none***REMOVED***focus:bg-accent***REMOVED***focus:text-accent-foreground***REMOVED***data-[state=open]:bg-accent***REMOVED***data-[state=open]:text-accent-foreground",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***inset***REMOVED***&&***REMOVED***"pl-8",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED***{children}
-***REMOVED******REMOVED******REMOVED******REMOVED***<ChevronRight***REMOVED***className="ml-auto***REMOVED***h-4***REMOVED***w-4"***REMOVED***/>
-***REMOVED******REMOVED***</MenubarPrimitive.SubTrigger>
+const MenubarSubTrigger = React.forwardRef<
+  React.ElementRef<typeof MenubarPrimitive.SubTrigger>,
+  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.SubTrigger> & {
+    inset?: boolean
+  }
+>(({ className, inset, children, ...props }, ref) => (
+  <MenubarPrimitive.SubTrigger
+    ref={ref}
+    className={cn(
+      "flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground",
+      inset && "pl-8",
+      className
+    )}
+    {...props}
+  >
+    {children}
+    <ChevronRight className="ml-auto h-4 w-4" />
+  </MenubarPrimitive.SubTrigger>
 ))
-MenubarSubTrigger.displayName***REMOVED***=***REMOVED***MenubarPrimitive.SubTrigger.displayName
+MenubarSubTrigger.displayName = MenubarPrimitive.SubTrigger.displayName
 
-const***REMOVED***MenubarSubContent***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***MenubarPrimitive.SubContent>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***MenubarPrimitive.SubContent>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<MenubarPrimitive.SubContent
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"z-50***REMOVED***min-w-[8rem]***REMOVED***overflow-hidden***REMOVED***rounded-md***REMOVED***border***REMOVED***bg-popover***REMOVED***p-1***REMOVED***text-popover-foreground***REMOVED***data-[state=open]:animate-in***REMOVED***data-[state=closed]:animate-out***REMOVED***data-[state=closed]:fade-out-0***REMOVED***data-[state=open]:fade-in-0***REMOVED***data-[state=closed]:zoom-out-95***REMOVED***data-[state=open]:zoom-in-95***REMOVED***data-[side=bottom]:slide-in-from-top-2***REMOVED***data-[side=left]:slide-in-from-right-2***REMOVED***data-[side=right]:slide-in-from-left-2***REMOVED***data-[side=top]:slide-in-from-bottom-2",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const MenubarSubContent = React.forwardRef<
+  React.ElementRef<typeof MenubarPrimitive.SubContent>,
+  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.SubContent>
+>(({ className, ...props }, ref) => (
+  <MenubarPrimitive.SubContent
+    ref={ref}
+    className={cn(
+      "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+      className
+    )}
+    {...props}
+  />
 ))
-MenubarSubContent.displayName***REMOVED***=***REMOVED***MenubarPrimitive.SubContent.displayName
+MenubarSubContent.displayName = MenubarPrimitive.SubContent.displayName
 
-const***REMOVED***MenubarContent***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***MenubarPrimitive.Content>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***MenubarPrimitive.Content>
+const MenubarContent = React.forwardRef<
+  React.ElementRef<typeof MenubarPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.Content>
 >(
-***REMOVED******REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***{***REMOVED***className,***REMOVED***align***REMOVED***=***REMOVED***"start",***REMOVED***alignOffset***REMOVED***=***REMOVED***-4,***REMOVED***sideOffset***REMOVED***=***REMOVED***8,***REMOVED***...props***REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***ref
-***REMOVED******REMOVED***)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<MenubarPrimitive.Portal>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<MenubarPrimitive.Content
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***align={align}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***alignOffset={alignOffset}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***sideOffset={sideOffset}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"z-50***REMOVED***min-w-[12rem]***REMOVED***overflow-hidden***REMOVED***rounded-md***REMOVED***border***REMOVED***bg-popover***REMOVED***p-1***REMOVED***text-popover-foreground***REMOVED***shadow-md***REMOVED***data-[state=open]:animate-in***REMOVED***data-[state=closed]:fade-out-0***REMOVED***data-[state=open]:fade-in-0***REMOVED***data-[state=closed]:zoom-out-95***REMOVED***data-[state=open]:zoom-in-95***REMOVED***data-[side=bottom]:slide-in-from-top-2***REMOVED***data-[side=left]:slide-in-from-right-2***REMOVED***data-[side=right]:slide-in-from-left-2***REMOVED***data-[side=top]:slide-in-from-bottom-2",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED***</MenubarPrimitive.Portal>
-***REMOVED******REMOVED***)
+  (
+    { className, align = "start", alignOffset = -4, sideOffset = 8, ...props },
+    ref
+  ) => (
+    <MenubarPrimitive.Portal>
+      <MenubarPrimitive.Content
+        ref={ref}
+        align={align}
+        alignOffset={alignOffset}
+        sideOffset={sideOffset}
+        className={cn(
+          "z-50 min-w-[12rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+          className
+        )}
+        {...props}
+      />
+    </MenubarPrimitive.Portal>
+  )
 )
-MenubarContent.displayName***REMOVED***=***REMOVED***MenubarPrimitive.Content.displayName
+MenubarContent.displayName = MenubarPrimitive.Content.displayName
 
-const***REMOVED***MenubarItem***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***MenubarPrimitive.Item>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***MenubarPrimitive.Item>***REMOVED***&***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***inset?:***REMOVED***boolean
-***REMOVED******REMOVED***}
->(({***REMOVED***className,***REMOVED***inset,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<MenubarPrimitive.Item
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"relative***REMOVED***flex***REMOVED***cursor-default***REMOVED***select-none***REMOVED***items-center***REMOVED***rounded-sm***REMOVED***px-2***REMOVED***py-1.5***REMOVED***text-sm***REMOVED***outline-none***REMOVED***focus:bg-accent***REMOVED***focus:text-accent-foreground***REMOVED***data-[disabled]:pointer-events-none***REMOVED***data-[disabled]:opacity-50",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***inset***REMOVED***&&***REMOVED***"pl-8",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const MenubarItem = React.forwardRef<
+  React.ElementRef<typeof MenubarPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.Item> & {
+    inset?: boolean
+  }
+>(({ className, inset, ...props }, ref) => (
+  <MenubarPrimitive.Item
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      inset && "pl-8",
+      className
+    )}
+    {...props}
+  />
 ))
-MenubarItem.displayName***REMOVED***=***REMOVED***MenubarPrimitive.Item.displayName
+MenubarItem.displayName = MenubarPrimitive.Item.displayName
 
-const***REMOVED***MenubarCheckboxItem***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***MenubarPrimitive.CheckboxItem>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***MenubarPrimitive.CheckboxItem>
->(({***REMOVED***className,***REMOVED***children,***REMOVED***checked,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<MenubarPrimitive.CheckboxItem
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"relative***REMOVED***flex***REMOVED***cursor-default***REMOVED***select-none***REMOVED***items-center***REMOVED***rounded-sm***REMOVED***py-1.5***REMOVED***pl-8***REMOVED***pr-2***REMOVED***text-sm***REMOVED***outline-none***REMOVED***focus:bg-accent***REMOVED***focus:text-accent-foreground***REMOVED***data-[disabled]:pointer-events-none***REMOVED***data-[disabled]:opacity-50",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***checked={checked}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED***<span***REMOVED***className="absolute***REMOVED***left-2***REMOVED***flex***REMOVED***h-3.5***REMOVED***w-3.5***REMOVED***items-center***REMOVED***justify-center">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<MenubarPrimitive.ItemIndicator>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Check***REMOVED***className="h-4***REMOVED***w-4"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</MenubarPrimitive.ItemIndicator>
-***REMOVED******REMOVED******REMOVED******REMOVED***</span>
-***REMOVED******REMOVED******REMOVED******REMOVED***{children}
-***REMOVED******REMOVED***</MenubarPrimitive.CheckboxItem>
+const MenubarCheckboxItem = React.forwardRef<
+  React.ElementRef<typeof MenubarPrimitive.CheckboxItem>,
+  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.CheckboxItem>
+>(({ className, children, checked, ...props }, ref) => (
+  <MenubarPrimitive.CheckboxItem
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      className
+    )}
+    checked={checked}
+    {...props}
+  >
+    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+      <MenubarPrimitive.ItemIndicator>
+        <Check className="h-4 w-4" />
+      </MenubarPrimitive.ItemIndicator>
+    </span>
+    {children}
+  </MenubarPrimitive.CheckboxItem>
 ))
-MenubarCheckboxItem.displayName***REMOVED***=***REMOVED***MenubarPrimitive.CheckboxItem.displayName
+MenubarCheckboxItem.displayName = MenubarPrimitive.CheckboxItem.displayName
 
-const***REMOVED***MenubarRadioItem***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***MenubarPrimitive.RadioItem>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***MenubarPrimitive.RadioItem>
->(({***REMOVED***className,***REMOVED***children,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<MenubarPrimitive.RadioItem
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"relative***REMOVED***flex***REMOVED***cursor-default***REMOVED***select-none***REMOVED***items-center***REMOVED***rounded-sm***REMOVED***py-1.5***REMOVED***pl-8***REMOVED***pr-2***REMOVED***text-sm***REMOVED***outline-none***REMOVED***focus:bg-accent***REMOVED***focus:text-accent-foreground***REMOVED***data-[disabled]:pointer-events-none***REMOVED***data-[disabled]:opacity-50",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED***<span***REMOVED***className="absolute***REMOVED***left-2***REMOVED***flex***REMOVED***h-3.5***REMOVED***w-3.5***REMOVED***items-center***REMOVED***justify-center">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<MenubarPrimitive.ItemIndicator>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Circle***REMOVED***className="h-2***REMOVED***w-2***REMOVED***fill-current"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</MenubarPrimitive.ItemIndicator>
-***REMOVED******REMOVED******REMOVED******REMOVED***</span>
-***REMOVED******REMOVED******REMOVED******REMOVED***{children}
-***REMOVED******REMOVED***</MenubarPrimitive.RadioItem>
+const MenubarRadioItem = React.forwardRef<
+  React.ElementRef<typeof MenubarPrimitive.RadioItem>,
+  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.RadioItem>
+>(({ className, children, ...props }, ref) => (
+  <MenubarPrimitive.RadioItem
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      className
+    )}
+    {...props}
+  >
+    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+      <MenubarPrimitive.ItemIndicator>
+        <Circle className="h-2 w-2 fill-current" />
+      </MenubarPrimitive.ItemIndicator>
+    </span>
+    {children}
+  </MenubarPrimitive.RadioItem>
 ))
-MenubarRadioItem.displayName***REMOVED***=***REMOVED***MenubarPrimitive.RadioItem.displayName
+MenubarRadioItem.displayName = MenubarPrimitive.RadioItem.displayName
 
-const***REMOVED***MenubarLabel***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***MenubarPrimitive.Label>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***MenubarPrimitive.Label>***REMOVED***&***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***inset?:***REMOVED***boolean
-***REMOVED******REMOVED***}
->(({***REMOVED***className,***REMOVED***inset,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<MenubarPrimitive.Label
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"px-2***REMOVED***py-1.5***REMOVED***text-sm***REMOVED***font-semibold",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***inset***REMOVED***&&***REMOVED***"pl-8",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const MenubarLabel = React.forwardRef<
+  React.ElementRef<typeof MenubarPrimitive.Label>,
+  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.Label> & {
+    inset?: boolean
+  }
+>(({ className, inset, ...props }, ref) => (
+  <MenubarPrimitive.Label
+    ref={ref}
+    className={cn(
+      "px-2 py-1.5 text-sm font-semibold",
+      inset && "pl-8",
+      className
+    )}
+    {...props}
+  />
 ))
-MenubarLabel.displayName***REMOVED***=***REMOVED***MenubarPrimitive.Label.displayName
+MenubarLabel.displayName = MenubarPrimitive.Label.displayName
 
-const***REMOVED***MenubarSeparator***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***MenubarPrimitive.Separator>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***MenubarPrimitive.Separator>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<MenubarPrimitive.Separator
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn("-mx-1***REMOVED***my-1***REMOVED***h-px***REMOVED***bg-muted",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const MenubarSeparator = React.forwardRef<
+  React.ElementRef<typeof MenubarPrimitive.Separator>,
+  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.Separator>
+>(({ className, ...props }, ref) => (
+  <MenubarPrimitive.Separator
+    ref={ref}
+    className={cn("-mx-1 my-1 h-px bg-muted", className)}
+    {...props}
+  />
 ))
-MenubarSeparator.displayName***REMOVED***=***REMOVED***MenubarPrimitive.Separator.displayName
+MenubarSeparator.displayName = MenubarPrimitive.Separator.displayName
 
-const***REMOVED***MenubarShortcut***REMOVED***=***REMOVED***({
-***REMOVED******REMOVED***className,
-***REMOVED******REMOVED***...props
-}:***REMOVED***React.HTMLAttributes<HTMLSpanElement>)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<span
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"ml-auto***REMOVED***text-xs***REMOVED***tracking-widest***REMOVED***text-muted-foreground",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED***)
+const MenubarShortcut = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLSpanElement>) => {
+  return (
+    <span
+      className={cn(
+        "ml-auto text-xs tracking-widest text-muted-foreground",
+        className
+      )}
+      {...props}
+    />
+  )
 }
-MenubarShortcut.displayname***REMOVED***=***REMOVED***"MenubarShortcut"
+MenubarShortcut.displayname = "MenubarShortcut"
 
-export***REMOVED***{
-***REMOVED******REMOVED***Menubar,
-***REMOVED******REMOVED***MenubarMenu,
-***REMOVED******REMOVED***MenubarTrigger,
-***REMOVED******REMOVED***MenubarContent,
-***REMOVED******REMOVED***MenubarItem,
-***REMOVED******REMOVED***MenubarSeparator,
-***REMOVED******REMOVED***MenubarLabel,
-***REMOVED******REMOVED***MenubarCheckboxItem,
-***REMOVED******REMOVED***MenubarRadioGroup,
-***REMOVED******REMOVED***MenubarRadioItem,
-***REMOVED******REMOVED***MenubarPortal,
-***REMOVED******REMOVED***MenubarSubContent,
-***REMOVED******REMOVED***MenubarSubTrigger,
-***REMOVED******REMOVED***MenubarGroup,
-***REMOVED******REMOVED***MenubarSub,
-***REMOVED******REMOVED***MenubarShortcut,
+export {
+  Menubar,
+  MenubarMenu,
+  MenubarTrigger,
+  MenubarContent,
+  MenubarItem,
+  MenubarSeparator,
+  MenubarLabel,
+  MenubarCheckboxItem,
+  MenubarRadioGroup,
+  MenubarRadioItem,
+  MenubarPortal,
+  MenubarSubContent,
+  MenubarSubTrigger,
+  MenubarGroup,
+  MenubarSub,
+  MenubarShortcut,
 }

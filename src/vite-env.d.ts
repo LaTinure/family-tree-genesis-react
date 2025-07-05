@@ -1,1 +1,1 @@
-///***REMOVED***<reference***REMOVED***types="vite/client"***REMOVED***/>
+/// <reference types="vite/client" />

@@ -1,22 +1,22 @@
-import***REMOVED*******REMOVED***as***REMOVED***React***REMOVED***from***REMOVED***"react"
+import * as React from "react"
 
-import***REMOVED***{***REMOVED***cn***REMOVED***}***REMOVED***from***REMOVED***"@/lib/utils"
+import { cn } from "@/lib/utils"
 
-const***REMOVED***Input***REMOVED***=***REMOVED***React.forwardRef<HTMLInputElement,***REMOVED***React.ComponentProps<"input">>(
-***REMOVED******REMOVED***({***REMOVED***className,***REMOVED***type,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<input
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***type={type}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"flex***REMOVED***h-10***REMOVED***w-full***REMOVED***rounded-md***REMOVED***border***REMOVED***border-input***REMOVED***bg-background***REMOVED***px-3***REMOVED***py-2***REMOVED***text-base***REMOVED***ring-offset-background***REMOVED***file:border-0***REMOVED***file:bg-transparent***REMOVED***file:text-sm***REMOVED***file:font-medium***REMOVED***file:text-foreground***REMOVED***placeholder:text-muted-foreground***REMOVED***focus-visible:outline-none***REMOVED***focus-visible:ring-2***REMOVED***focus-visible:ring-ring***REMOVED***focus-visible:ring-offset-2***REMOVED***disabled:cursor-not-allowed***REMOVED***disabled:opacity-50***REMOVED***md:text-sm",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED***)
-***REMOVED******REMOVED***}
+const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
+  ({ className, type, ...props }, ref) => {
+    return (
+      <input
+        type={type}
+        className={cn(
+          "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+          className
+        )}
+        ref={ref}
+        {...props}
+      />
+    )
+  }
 )
-Input.displayName***REMOVED***=***REMOVED***"Input"
+Input.displayName = "Input"
 
-export***REMOVED***{***REMOVED***Input***REMOVED***}
+export { Input }

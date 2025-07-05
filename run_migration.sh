@@ -1,24 +1,24 @@
 #!/bin/bash
 
-#***REMOVED***Script***REMOVED***pour***REMOVED***exécuter***REMOVED***la***REMOVED***migration***REMOVED***Supabase
-echo***REMOVED***"🚀***REMOVED***Exécution***REMOVED***de***REMOVED***la***REMOVED***migration***REMOVED***pour***REMOVED***ajouter***REMOVED***le***REMOVED***champ***REMOVED***role..."
+# Script pour exécuter la migration Supabase
+echo "🚀 Exécution de la migration pour ajouter le champ role..."
 
-#***REMOVED***Vérifier***REMOVED***si***REMOVED***supabase***REMOVED***CLI***REMOVED***est***REMOVED***installé
-if***REMOVED***!***REMOVED***command***REMOVED***-v***REMOVED***supabase***REMOVED***&>***REMOVED***/dev/null;***REMOVED***then
-***REMOVED******REMOVED******REMOVED******REMOVED***echo***REMOVED***"❌***REMOVED***Supabase***REMOVED***CLI***REMOVED***n'est***REMOVED***pas***REMOVED***installé.***REMOVED***Veuillez***REMOVED***l'installer***REMOVED***d'abord."
-***REMOVED******REMOVED******REMOVED******REMOVED***echo***REMOVED***"📦***REMOVED***Installation:***REMOVED***npm***REMOVED***install***REMOVED***-g***REMOVED***supabase"
-***REMOVED******REMOVED******REMOVED******REMOVED***exit***REMOVED***1
+# Vérifier si supabase CLI est installé
+if ! command -v supabase &> /dev/null; then
+    echo "❌ Supabase CLI n'est pas installé. Veuillez l'installer d'abord."
+    echo "📦 Installation: npm install -g supabase"
+    exit 1
 fi
 
-#***REMOVED***Exécuter***REMOVED***la***REMOVED***migration
-echo***REMOVED***"📝***REMOVED***Application***REMOVED***de***REMOVED***la***REMOVED***migration..."
-supabase***REMOVED***db***REMOVED***push
+# Exécuter la migration
+echo "📝 Application de la migration..."
+supabase db push
 
-if***REMOVED***[***REMOVED***$?***REMOVED***-eq***REMOVED***0***REMOVED***];***REMOVED***then
-***REMOVED******REMOVED******REMOVED******REMOVED***echo***REMOVED***"✅***REMOVED***Migration***REMOVED***appliquée***REMOVED***avec***REMOVED***succès***REMOVED***!"
-***REMOVED******REMOVED******REMOVED******REMOVED***echo***REMOVED***"🎉***REMOVED***Le***REMOVED***champ***REMOVED***'role'***REMOVED***a***REMOVED***été***REMOVED***ajouté***REMOVED***à***REMOVED***la***REMOVED***table***REMOVED***'profiles'"
-***REMOVED******REMOVED******REMOVED******REMOVED***echo***REMOVED***"📊***REMOVED***Les***REMOVED***rôles***REMOVED***disponibles:***REMOVED***'Simple***REMOVED***Membre'***REMOVED***ou***REMOVED***'Patriarche'"
+if [ $? -eq 0 ]; then
+    echo "✅ Migration appliquée avec succès !"
+    echo "🎉 Le champ 'role' a été ajouté à la table 'profiles'"
+    echo "📊 Les rôles disponibles: 'Simple Membre' ou 'Patriarche'"
 else
-***REMOVED******REMOVED******REMOVED******REMOVED***echo***REMOVED***"❌***REMOVED***Erreur***REMOVED***lors***REMOVED***de***REMOVED***l'application***REMOVED***de***REMOVED***la***REMOVED***migration"
-***REMOVED******REMOVED******REMOVED******REMOVED***exit***REMOVED***1
+    echo "❌ Erreur lors de l'application de la migration"
+    exit 1
 fi

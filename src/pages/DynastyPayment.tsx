@@ -1,155 +1,221 @@
 
-import***REMOVED***{***REMOVED***useEffect,***REMOVED***useState***REMOVED***}***REMOVED***from***REMOVED***'react';
-import***REMOVED***{***REMOVED***useNavigate,***REMOVED***useLocation***REMOVED***}***REMOVED***from***REMOVED***'react-router-dom';
-import***REMOVED***{***REMOVED***loadStripe***REMOVED***}***REMOVED***from***REMOVED***'@stripe/stripe-js';
-import***REMOVED***{***REMOVED***Button***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/button';
-import***REMOVED***{***REMOVED***Card,***REMOVED***CardContent,***REMOVED***CardDescription,***REMOVED***CardHeader,***REMOVED***CardTitle***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/card';
-import***REMOVED***{***REMOVED***Badge***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/badge';
-import***REMOVED***{***REMOVED***CheckCircle,***REMOVED***CreditCard,***REMOVED***Shield,***REMOVED***Zap***REMOVED***}***REMOVED***from***REMOVED***'lucide-react';
-import***REMOVED***{***REMOVED***motion***REMOVED***}***REMOVED***from***REMOVED***'framer-motion';
-import***REMOVED***{***REMOVED***useToast***REMOVED***}***REMOVED***from***REMOVED***'@/hooks/use-toast';
-import***REMOVED***{***REMOVED***createClient***REMOVED***}***REMOVED***from***REMOVED***'@supabase/supabase-js';
-import***REMOVED***CancelPaymentDialog***REMOVED***from***REMOVED***'@/components/CancelPaymentDialog';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { CreditCard, Gift, Loader2, CheckCircle, AlertTriangle } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
-const***REMOVED***supabase***REMOVED***=***REMOVED***createClient(
-***REMOVED******REMOVED***import.meta.env.VITE_SUPABASE_URL!,
-***REMOVED******REMOVED***import.meta.env.VITE_SUPABASE_ANON_KEY!
-);
+const DynastyPayment = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [promoCode, setPromoCode] = useState('');
+  const [isValidatingPromo, setIsValidatingPromo] = useState(false);
+  const [isPaymentLoading, setIsPaymentLoading] = useState(false);
 
-const***REMOVED***stripePromise***REMOVED***=***REMOVED***loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY!);
+  const validatePromoCode = async () => {
+    if (!promoCode.trim()) {
+      toast({
+        title: 'Code promo manquant',
+        description: 'Veuillez entrer un code promo valide.',
+        variant: 'destructive',
+      });
+      return;
+    }
 
-export***REMOVED***default***REMOVED***function***REMOVED***DynastyPayment()***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***{***REMOVED***toast***REMOVED***}***REMOVED***=***REMOVED***useToast();
-***REMOVED******REMOVED***const***REMOVED***[isLoading,***REMOVED***setIsLoading]***REMOVED***=***REMOVED***useState(false);
-***REMOVED******REMOVED***const***REMOVED***[showCancelDialog,***REMOVED***setShowCancelDialog]***REMOVED***=***REMOVED***useState(false);
-***REMOVED******REMOVED***const***REMOVED***navigate***REMOVED***=***REMOVED***useNavigate();
-***REMOVED******REMOVED***const***REMOVED***location***REMOVED***=***REMOVED***useLocation();
+    setIsValidatingPromo(true);
+    try {
+      const { data, error } = await supabase
+        .from('dynasty_creation_tokens')
+        .select('*')
+        .eq('code_promo', promoCode.trim())
+        .eq('is_used', false)
+        .gt('expires_at', new Date().toISOString())
+        .single();
 
-***REMOVED******REMOVED***//***REMOVED***Vérifier***REMOVED***la***REMOVED***session***REMOVED***utilisateur
-***REMOVED******REMOVED***useEffect(()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***supabase.auth.getSession().then(({***REMOVED***data:***REMOVED***{***REMOVED***session***REMOVED***}***REMOVED***})***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(!session)***REMOVED***navigate('/register-before-payment');
-***REMOVED******REMOVED******REMOVED******REMOVED***});
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Afficher***REMOVED***le***REMOVED***dialogue***REMOVED***d'annulation***REMOVED***si***REMOVED***?cancel=1
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(new***REMOVED***URLSearchParams(location.search).get('cancel')***REMOVED***===***REMOVED***'1')***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setShowCancelDialog(true);
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED***},***REMOVED***[navigate,***REMOVED***location.search]);
+      if (error || !data) {
+        toast({
+          title: 'Code promo invalide',
+          description: 'Ce code promo n\'existe pas, a expiré ou a déjà été utilisé.',
+          variant: 'destructive',
+        });
+        return;
+      }
 
-***REMOVED******REMOVED***//***REMOVED***Suppression***REMOVED***du***REMOVED***compte***REMOVED***via***REMOVED***Edge***REMOVED***Function***REMOVED***sécurisée
-***REMOVED******REMOVED***const***REMOVED***handleDeleteAccount***REMOVED***=***REMOVED***async***REMOVED***()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***try***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***session***REMOVED***=***REMOVED***(await***REMOVED***supabase.auth.getSession()).data.session;
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***jwt***REMOVED***=***REMOVED***session?.access_token***REMOVED***||***REMOVED***localStorage.getItem('jwt');
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***res***REMOVED***=***REMOVED***await***REMOVED***fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/delete-user`,***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***method:***REMOVED***'POST',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***headers:***REMOVED***{***REMOVED***'Authorization':***REMOVED***`Bearer***REMOVED***${jwt}`***REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***});
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(res.ok)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***toast({***REMOVED***title:***REMOVED***'Compte***REMOVED***supprimé',***REMOVED***description:***REMOVED***'Votre***REMOVED***compte***REMOVED***a***REMOVED***bien***REMOVED***été***REMOVED***supprimé.'***REMOVED***});
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***supabase.auth.signOut();
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***localStorage.removeItem('jwt');
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***localStorage.removeItem('user_id');
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***navigate('/register-before-payment');
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***else***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***toast({***REMOVED***title:***REMOVED***'Erreur',***REMOVED***description:***REMOVED***'Impossible***REMOVED***de***REMOVED***supprimer***REMOVED***le***REMOVED***compte',***REMOVED***variant:***REMOVED***'destructive'***REMOVED***});
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***catch***REMOVED***(e)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***toast({***REMOVED***title:***REMOVED***'Erreur',***REMOVED***description:***REMOVED***'Erreur***REMOVED***lors***REMOVED***de***REMOVED***la***REMOVED***suppression',***REMOVED***variant:***REMOVED***'destructive'***REMOVED***});
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED***};
+      toast({
+        title: 'Code promo valide !',
+        description: 'Redirection vers la création de votre dynastie...',
+      });
 
-***REMOVED******REMOVED***const***REMOVED***handleCheckout***REMOVED***=***REMOVED***async***REMOVED***()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***setIsLoading(true);
-***REMOVED******REMOVED******REMOVED******REMOVED***try***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***session***REMOVED***=***REMOVED***(await***REMOVED***supabase.auth.getSession()).data.session;
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***jwt***REMOVED***=***REMOVED***session?.access_token***REMOVED***||***REMOVED***localStorage.getItem('jwt');
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***user_id***REMOVED***=***REMOVED***session?.user?.id***REMOVED***||***REMOVED***localStorage.getItem('user_id');
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***stripe***REMOVED***=***REMOVED***await***REMOVED***stripePromise;
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***response***REMOVED***=***REMOVED***await***REMOVED***fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-checkout-session`,***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***method:***REMOVED***'POST',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***headers:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***'Content-Type':***REMOVED***'application/json',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***'Authorization':***REMOVED***`Bearer***REMOVED***${jwt}`,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***body:***REMOVED***JSON.stringify({
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***successUrl:***REMOVED***`${window.location.origin}/dynasty/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***cancelUrl:***REMOVED***`${window.location.origin}/dynasty/payment?cancel=1`,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***customAmount:***REMOVED***1000,***REMOVED***//***REMOVED***10€***REMOVED***en***REMOVED***centimes
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_id,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}),
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***});
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(!response.ok)***REMOVED***throw***REMOVED***new***REMOVED***Error('Erreur***REMOVED***lors***REMOVED***de***REMOVED***la***REMOVED***création***REMOVED***de***REMOVED***la***REMOVED***session');
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***sessionId***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***response.json();
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(stripe)***REMOVED***await***REMOVED***stripe.redirectToCheckout({***REMOVED***sessionId***REMOVED***});
-***REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***catch***REMOVED***(error)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***console.error('Erreur***REMOVED***lors***REMOVED***du***REMOVED***paiement:',***REMOVED***error);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***toast({***REMOVED***title:***REMOVED***'Erreur***REMOVED***de***REMOVED***paiement',***REMOVED***description:***REMOVED***'Une***REMOVED***erreur***REMOVED***est***REMOVED***survenue***REMOVED***lors***REMOVED***du***REMOVED***traitement***REMOVED***du***REMOVED***paiement.',***REMOVED***variant:***REMOVED***'destructive'***REMOVED***});
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setIsLoading(false);
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED***};
+      setTimeout(() => {
+        navigate(`/dynasty/create?create_token=${data.token}`);
+      }, 1500);
 
-***REMOVED******REMOVED***const***REMOVED***features***REMOVED***=***REMOVED***[
-***REMOVED******REMOVED******REMOVED******REMOVED***{***REMOVED***icon:***REMOVED***<Zap***REMOVED***className="h-5***REMOVED***w-5"***REMOVED***/>,***REMOVED***title:***REMOVED***"Création***REMOVED***instantanée",***REMOVED***description:***REMOVED***"Votre***REMOVED***dynastie***REMOVED***sera***REMOVED***créée***REMOVED***immédiatement***REMOVED***après***REMOVED***le***REMOVED***paiement"***REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***{***REMOVED***icon:***REMOVED***<Shield***REMOVED***className="h-5***REMOVED***w-5"***REMOVED***/>,***REMOVED***title:***REMOVED***"Paiement***REMOVED***sécurisé",***REMOVED***description:***REMOVED***"Protection***REMOVED***SSL***REMOVED***et***REMOVED***conformité***REMOVED***PCI***REMOVED***DSS"***REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***{***REMOVED***icon:***REMOVED***<CheckCircle***REMOVED***className="h-5***REMOVED***w-5"***REMOVED***/>,***REMOVED***title:***REMOVED***"Garantie***REMOVED***satisfait",***REMOVED***description:***REMOVED***"Remboursement***REMOVED***sous***REMOVED***30***REMOVED***jours***REMOVED***si***REMOVED***insatisfait"***REMOVED***}
-***REMOVED******REMOVED***];
+    } catch (error) {
+      console.error('Erreur validation code promo:', error);
+      toast({
+        title: 'Erreur',
+        description: 'Une erreur est survenue lors de la vérification du code promo.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsValidatingPromo(false);
+    }
+  };
 
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="min-h-screen***REMOVED***bg-gradient-to-br***REMOVED***from-blue-50***REMOVED***via-white***REMOVED***to-purple-50***REMOVED***flex***REMOVED***items-center***REMOVED***justify-center***REMOVED***p-4">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<motion.div***REMOVED***initial={{***REMOVED***opacity:***REMOVED***0,***REMOVED***y:***REMOVED***20***REMOVED***}}***REMOVED***animate={{***REMOVED***opacity:***REMOVED***1,***REMOVED***y:***REMOVED***0***REMOVED***}}***REMOVED***transition={{***REMOVED***duration:***REMOVED***0.6***REMOVED***}}***REMOVED***className="w-full***REMOVED***max-w-md">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Card***REMOVED***className="shadow-xl***REMOVED***border-0***REMOVED***bg-white/80***REMOVED***backdrop-blur-sm">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<CardHeader***REMOVED***className="text-center***REMOVED***pb-6">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<motion.div***REMOVED***initial={{***REMOVED***scale:***REMOVED***0***REMOVED***}}***REMOVED***animate={{***REMOVED***scale:***REMOVED***1***REMOVED***}}***REMOVED***transition={{***REMOVED***delay:***REMOVED***0.2,***REMOVED***type:***REMOVED***"spring",***REMOVED***stiffness:***REMOVED***200***REMOVED***}}***REMOVED***className="mx-auto***REMOVED***mb-4***REMOVED***w-16***REMOVED***h-16***REMOVED***bg-gradient-to-r***REMOVED***from-blue-500***REMOVED***to-purple-600***REMOVED***rounded-full***REMOVED***flex***REMOVED***items-center***REMOVED***justify-center">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<CreditCard***REMOVED***className="h-8***REMOVED***w-8***REMOVED***text-white"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</motion.div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<CardTitle***REMOVED***className="text-2xl***REMOVED***font-bold***REMOVED***bg-gradient-to-r***REMOVED***from-blue-600***REMOVED***to-purple-600***REMOVED***bg-clip-text***REMOVED***text-transparent">Créer***REMOVED***votre***REMOVED***Dynastie</CardTitle>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<CardDescription***REMOVED***className="text-gray-600***REMOVED***mt-2">Accédez***REMOVED***à***REMOVED***toutes***REMOVED***les***REMOVED***fonctionnalités***REMOVED***premium***REMOVED***pour***REMOVED***votre***REMOVED***arbre***REMOVED***généalogique</CardDescription>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</CardHeader>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<CardContent***REMOVED***className="space-y-6">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<motion.div***REMOVED***initial={{***REMOVED***opacity:***REMOVED***0,***REMOVED***x:***REMOVED***-20***REMOVED***}}***REMOVED***animate={{***REMOVED***opacity:***REMOVED***1,***REMOVED***x:***REMOVED***0***REMOVED***}}***REMOVED***transition={{***REMOVED***delay:***REMOVED***0.3***REMOVED***}}***REMOVED***className="text-center">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="flex***REMOVED***items-center***REMOVED***justify-center***REMOVED***gap-2***REMOVED***mb-2">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<span***REMOVED***className="text-3xl***REMOVED***font-bold***REMOVED***text-gray-900">10€</span>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Badge***REMOVED***variant="secondary"***REMOVED***className="bg-green-100***REMOVED***text-green-800">Prix***REMOVED***unique</Badge>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<p***REMOVED***className="text-sm***REMOVED***text-gray-500">Paiement***REMOVED***unique,***REMOVED***accès***REMOVED***permanent</p>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</motion.div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<motion.div***REMOVED***initial={{***REMOVED***opacity:***REMOVED***0,***REMOVED***y:***REMOVED***20***REMOVED***}}***REMOVED***animate={{***REMOVED***opacity:***REMOVED***1,***REMOVED***y:***REMOVED***0***REMOVED***}}***REMOVED***transition={{***REMOVED***delay:***REMOVED***0.4***REMOVED***}}***REMOVED***className="space-y-3">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{features.map((feature,***REMOVED***index)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<motion.div***REMOVED***key={feature.title}***REMOVED***initial={{***REMOVED***opacity:***REMOVED***0,***REMOVED***x:***REMOVED***-20***REMOVED***}}***REMOVED***animate={{***REMOVED***opacity:***REMOVED***1,***REMOVED***x:***REMOVED***0***REMOVED***}}***REMOVED***transition={{***REMOVED***delay:***REMOVED***0.5***REMOVED***+***REMOVED***index***REMOVED*******REMOVED***0.1***REMOVED***}}***REMOVED***className="flex***REMOVED***items-start***REMOVED***gap-3***REMOVED***p-3***REMOVED***rounded-lg***REMOVED***bg-gray-50/50">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="text-blue-600***REMOVED***mt-0.5">{feature.icon}</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<h4***REMOVED***className="font-medium***REMOVED***text-gray-900">{feature.title}</h4>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<p***REMOVED***className="text-sm***REMOVED***text-gray-600">{feature.description}</p>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</motion.div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***))}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</motion.div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<motion.div***REMOVED***initial={{***REMOVED***opacity:***REMOVED***0,***REMOVED***y:***REMOVED***20***REMOVED***}}***REMOVED***animate={{***REMOVED***opacity:***REMOVED***1,***REMOVED***y:***REMOVED***0***REMOVED***}}***REMOVED***transition={{***REMOVED***delay:***REMOVED***0.7***REMOVED***}}>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Button***REMOVED***onClick={handleCheckout}***REMOVED***disabled={isLoading}***REMOVED***className="w-full***REMOVED***bg-gradient-to-r***REMOVED***from-blue-600***REMOVED***to-purple-600***REMOVED***hover:from-blue-700***REMOVED***hover:to-purple-700***REMOVED***text-white***REMOVED***font-semibold***REMOVED***py-3***REMOVED***text-lg***REMOVED***shadow-lg***REMOVED***hover:shadow-xl***REMOVED***transition-all***REMOVED***duration-300***REMOVED***transform***REMOVED***hover:scale-105">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{isLoading***REMOVED***?***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="flex***REMOVED***items-center***REMOVED***gap-2">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="w-5***REMOVED***h-5***REMOVED***border-2***REMOVED***border-white***REMOVED***border-t-transparent***REMOVED***rounded-full***REMOVED***animate-spin"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Traitement...
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)***REMOVED***:***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="flex***REMOVED***items-center***REMOVED***gap-2">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<CreditCard***REMOVED***className="h-5***REMOVED***w-5"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Payer***REMOVED***10€***REMOVED***-***REMOVED***Créer***REMOVED***ma***REMOVED***Dynastie
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Button>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</motion.div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<motion.div***REMOVED***initial={{***REMOVED***opacity:***REMOVED***0***REMOVED***}}***REMOVED***animate={{***REMOVED***opacity:***REMOVED***1***REMOVED***}}***REMOVED***transition={{***REMOVED***delay:***REMOVED***0.8***REMOVED***}}***REMOVED***className="text-center">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<p***REMOVED***className="text-xs***REMOVED***text-gray-500***REMOVED***flex***REMOVED***items-center***REMOVED***justify-center***REMOVED***gap-1">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Shield***REMOVED***className="h-3***REMOVED***w-3"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Paiement***REMOVED***sécurisé***REMOVED***par***REMOVED***Stripe
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</p>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</motion.div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</CardContent>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Card>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</motion.div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<CancelPaymentDialog***REMOVED***open={showCancelDialog}***REMOVED***onClose={()***REMOVED***=>***REMOVED***setShowCancelDialog(false)}***REMOVED***onDeleteAccount={handleDeleteAccount}***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED***);
-}
+  const handleStripePayment = async () => {
+    setIsPaymentLoading(true);
+    try {
+      // Simuler le paiement Stripe (à implémenter selon vos besoins)
+      // Pour l'instant, on génère un token directement
+      const token = crypto.randomUUID();
+      
+      const { error } = await supabase
+        .from('dynasty_creation_tokens')
+        .insert({
+          token,
+          stripe_session_id: 'session_' + token,
+          is_used: false,
+          expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24h
+        });
+
+      if (error) {
+        throw error;
+      }
+
+      toast({
+        title: 'Paiement réussi !',
+        description: 'Redirection vers la création de votre dynastie...',
+      });
+
+      setTimeout(() => {
+        navigate(`/dynasty/create?create_token=${token}`);
+      }, 1500);
+
+    } catch (error) {
+      console.error('Erreur paiement:', error);
+      toast({
+        title: 'Erreur de paiement',
+        description: 'Une erreur est survenue lors du traitement du paiement.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsPaymentLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-whatsapp-50 via-green-50 to-emerald-50 flex items-center justify-center px-4 py-8">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-whatsapp-700 mb-2">Créer une Dynastie</h1>
+          <p className="text-gray-600">
+            Choisissez votre méthode pour débuter votre arbre généalogique familial
+          </p>
+        </div>
+
+        <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
+          <CardHeader className="text-center">
+            <CardTitle className="text-xl text-gray-900">Options de création</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Option Paiement Stripe */}
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <CreditCard className="w-5 h-5 text-whatsapp-600" />
+                <h3 className="font-semibold text-gray-900">Paiement sécurisé</h3>
+              </div>
+              <p className="text-sm text-gray-600">
+                Créez votre dynastie pour 29.99€ et bénéficiez de toutes les fonctionnalités premium.
+              </p>
+              <Button
+                onClick={handleStripePayment}
+                disabled={isPaymentLoading}
+                className="w-full bg-gradient-to-r from-whatsapp-500 to-whatsapp-600 hover:from-whatsapp-600 hover:to-whatsapp-700"
+              >
+                {isPaymentLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Traitement...
+                  </>
+                ) : (
+                  'Payer et Créer ma Dynastie'
+                )}
+              </Button>
+            </div>
+
+            <Separator />
+
+            {/* Option Code Promo */}
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <Gift className="w-5 h-5 text-green-600" />
+                <h3 className="font-semibold text-gray-900">Code promo</h3>
+              </div>
+              <p className="text-sm text-gray-600">
+                Vous avez un code promo ? Entrez-le ci-dessous pour créer votre dynastie gratuitement.
+              </p>
+              <div className="space-y-3">
+                <div>
+                  <Label htmlFor="promo-code">Code promo</Label>
+                  <Input
+                    id="promo-code"
+                    type="text"
+                    value={promoCode}
+                    onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                    placeholder="Entrez votre code promo"
+                    className="font-mono"
+                    disabled={isValidatingPromo}
+                  />
+                </div>
+                <Button
+                  onClick={validatePromoCode}
+                  disabled={!promoCode.trim() || isValidatingPromo}
+                  variant="outline"
+                  className="w-full border-green-500 text-green-600 hover:bg-green-50"
+                >
+                  {isValidatingPromo ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Vérification...
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle className="w-4 h-4 mr-2" />
+                      Valider le code promo
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+
+            <Alert className="border-blue-200 bg-blue-50">
+              <AlertTriangle className="h-4 w-4" />
+              <AlertDescription className="text-blue-800 text-sm">
+                Une fois votre paiement effectué ou votre code promo validé, vous pourrez créer votre dynastie 
+                et devenir automatiquement le premier administrateur.
+              </AlertDescription>
+            </Alert>
+          </CardContent>
+        </Card>
+
+        <div className="text-center mt-6">
+          <Button
+            variant="ghost"
+            onClick={() => navigate('/dynasty')}
+            className="text-whatsapp-600 hover:text-whatsapp-700"
+          >
+            ← Retour à l'accueil
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default DynastyPayment;

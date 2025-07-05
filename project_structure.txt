@@ -1,158 +1,158 @@
-Structure***REMOVED***du***REMOVED***projet***REMOVED***(exclusions***REMOVED***:***REMOVED***node_modules,***REMOVED***dist,***REMOVED***public,***REMOVED***nhost,***REMOVED***.vscode,***REMOVED***.nuxt,***REMOVED***.output,***REMOVED***.git,***REMOVED***.bolt,***REMOVED***.next)
+Structure du projet (exclusions : node_modules, dist, public, nhost, .vscode, .nuxt, .output, .git, .bolt, .next)
 ========================================
 
-📄***REMOVED***.gitignore
-📄***REMOVED***bun.lockb
-📄***REMOVED***components.json
-📁***REMOVED***docs
-***REMOVED******REMOVED***📄***REMOVED***corrections.md
-***REMOVED******REMOVED***📄***REMOVED***delete.md
-***REMOVED******REMOVED***📄***REMOVED***prompt.md
-📄***REMOVED***eslint.config.js
-📄***REMOVED***git-helper.sh
-📄***REMOVED***index.html
-📄***REMOVED***inscription_test.md
-📄***REMOVED***liste.mjs
-📄***REMOVED***package-lock.json
-📄***REMOVED***package.json
-📄***REMOVED***postcss.config.js
-📄***REMOVED***project_structure.txt
-📄***REMOVED***README.md
-📁***REMOVED***src
-***REMOVED******REMOVED***📄***REMOVED***App.css
-***REMOVED******REMOVED***📄***REMOVED***App.tsx
-***REMOVED******REMOVED***📁***REMOVED***components
-***REMOVED******REMOVED******REMOVED******REMOVED***📁***REMOVED***admin
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***EditUserDialog.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***UserManagementTable.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED***📁***REMOVED***family
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***ComboboxMembre.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***FamilyRegisterForm.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED***📁***REMOVED***layout
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***Footer.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***Header.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***Layout.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***ProtectedRoute.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED***📁***REMOVED***profile
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***ProfileForm.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***ProfileInfo.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***ProfilePhoto.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED***📁***REMOVED***shared
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***AppLoader.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***Avatar.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***FamilyCard.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***FormHeader.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***SearchWithAutocomplete.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***UserAvatar.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED***📁***REMOVED***ui
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***accordion.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***alert-dialog.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***alert.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***aspect-ratio.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***avatar.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***badge.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***breadcrumb.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***button.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***calendar.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***card.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***carousel.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***chart.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***checkbox.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***collapsible.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***command.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***context-menu.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***dialog.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***drawer.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***dropdown-menu.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***form.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***hover-card.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***input-otp.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***input.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***label.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***menubar.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***navigation-menu.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***pagination.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***popover.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***progress.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***radio-group.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***resizable.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***scroll-area.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***select.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***separator.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***sheet.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***sidebar.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***skeleton.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***slider.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***sonner.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***switch.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***table.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***tabs.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***textarea.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***toast.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***toaster.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***toggle-group.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***toggle.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***tooltip.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***use-toast.ts
-***REMOVED******REMOVED***📁***REMOVED***hooks
-***REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***use-mobile.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***use-toast.ts
-***REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***useAuth.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***useFamilyMembers.ts
-***REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***useFamilyTree.ts
-***REMOVED******REMOVED***📄***REMOVED***index.css
-***REMOVED******REMOVED***📁***REMOVED***integrations
-***REMOVED******REMOVED******REMOVED******REMOVED***📁***REMOVED***supabase
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***client.ts
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***types.ts
-***REMOVED******REMOVED***📁***REMOVED***lib
-***REMOVED******REMOVED******REMOVED******REMOVED***📁***REMOVED***constants
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***relationshipTypeOptions.ts
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***routes.ts
-***REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***utils.ts
-***REMOVED******REMOVED******REMOVED******REMOVED***📁***REMOVED***validations
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***family-registration.ts
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***passwordValidation.ts
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***relationshipSchema.ts
-***REMOVED******REMOVED***📄***REMOVED***main.tsx
-***REMOVED******REMOVED***📁***REMOVED***pages
-***REMOVED******REMOVED******REMOVED******REMOVED***📁***REMOVED***auth
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***AuthFamily.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***AuthPage.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***FamilyRegisterForm.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***Login.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***Register.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED***📁***REMOVED***dashboard
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***Admin.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***Chat.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***ContactAdmin.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***Events.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***FamilyTree.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***Invite.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***Members.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***Messages.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***Notifications.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***Profile.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***Report.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***Dashboard.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***Index.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***NotFound.tsx
-***REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***Profile.tsx
-***REMOVED******REMOVED***📁***REMOVED***services
-***REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***api.ts
-***REMOVED******REMOVED***📁***REMOVED***styles
-***REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***globals.css
-***REMOVED******REMOVED***📁***REMOVED***types
-***REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***family.ts
-***REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***profile.ts
-***REMOVED******REMOVED***📄***REMOVED***vite-env.d.ts
-📁***REMOVED***supabase
-***REMOVED******REMOVED***📄***REMOVED***config.toml
-***REMOVED******REMOVED***📁***REMOVED***functions
-***REMOVED******REMOVED******REMOVED******REMOVED***📁***REMOVED***delete-all-data
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***📄***REMOVED***index.ts
-📄***REMOVED***tailwind.config.ts
-📄***REMOVED***tsconfig.app.json
-📄***REMOVED***tsconfig.json
-📄***REMOVED***tsconfig.node.json
-📄***REMOVED***vite.config.ts
+📄 .gitignore
+📄 bun.lockb
+📄 components.json
+📁 docs
+  📄 corrections.md
+  📄 delete.md
+  📄 prompt.md
+📄 eslint.config.js
+📄 git-helper.sh
+📄 index.html
+📄 inscription_test.md
+📄 liste.mjs
+📄 package-lock.json
+📄 package.json
+📄 postcss.config.js
+📄 project_structure.txt
+📄 README.md
+📁 src
+  📄 App.css
+  📄 App.tsx
+  📁 components
+    📁 admin
+      📄 EditUserDialog.tsx
+      📄 UserManagementTable.tsx
+    📁 family
+      📄 ComboboxMembre.tsx
+      📄 FamilyRegisterForm.tsx
+    📁 layout
+      📄 Footer.tsx
+      📄 Header.tsx
+      📄 Layout.tsx
+      📄 ProtectedRoute.tsx
+    📁 profile
+      📄 ProfileForm.tsx
+      📄 ProfileInfo.tsx
+      📄 ProfilePhoto.tsx
+    📁 shared
+      📄 AppLoader.tsx
+      📄 Avatar.tsx
+      📄 FamilyCard.tsx
+      📄 FormHeader.tsx
+      📄 SearchWithAutocomplete.tsx
+      📄 UserAvatar.tsx
+    📁 ui
+      📄 accordion.tsx
+      📄 alert-dialog.tsx
+      📄 alert.tsx
+      📄 aspect-ratio.tsx
+      📄 avatar.tsx
+      📄 badge.tsx
+      📄 breadcrumb.tsx
+      📄 button.tsx
+      📄 calendar.tsx
+      📄 card.tsx
+      📄 carousel.tsx
+      📄 chart.tsx
+      📄 checkbox.tsx
+      📄 collapsible.tsx
+      📄 command.tsx
+      📄 context-menu.tsx
+      📄 dialog.tsx
+      📄 drawer.tsx
+      📄 dropdown-menu.tsx
+      📄 form.tsx
+      📄 hover-card.tsx
+      📄 input-otp.tsx
+      📄 input.tsx
+      📄 label.tsx
+      📄 menubar.tsx
+      📄 navigation-menu.tsx
+      📄 pagination.tsx
+      📄 popover.tsx
+      📄 progress.tsx
+      📄 radio-group.tsx
+      📄 resizable.tsx
+      📄 scroll-area.tsx
+      📄 select.tsx
+      📄 separator.tsx
+      📄 sheet.tsx
+      📄 sidebar.tsx
+      📄 skeleton.tsx
+      📄 slider.tsx
+      📄 sonner.tsx
+      📄 switch.tsx
+      📄 table.tsx
+      📄 tabs.tsx
+      📄 textarea.tsx
+      📄 toast.tsx
+      📄 toaster.tsx
+      📄 toggle-group.tsx
+      📄 toggle.tsx
+      📄 tooltip.tsx
+      📄 use-toast.ts
+  📁 hooks
+    📄 use-mobile.tsx
+    📄 use-toast.ts
+    📄 useAuth.tsx
+    📄 useFamilyMembers.ts
+    📄 useFamilyTree.ts
+  📄 index.css
+  📁 integrations
+    📁 supabase
+      📄 client.ts
+      📄 types.ts
+  📁 lib
+    📁 constants
+      📄 relationshipTypeOptions.ts
+      📄 routes.ts
+    📄 utils.ts
+    📁 validations
+      📄 family-registration.ts
+      📄 passwordValidation.ts
+      📄 relationshipSchema.ts
+  📄 main.tsx
+  📁 pages
+    📁 auth
+      📄 AuthFamily.tsx
+      📄 AuthPage.tsx
+      📄 FamilyRegisterForm.tsx
+      📄 Login.tsx
+      📄 Register.tsx
+    📁 dashboard
+      📄 Admin.tsx
+      📄 Chat.tsx
+      📄 ContactAdmin.tsx
+      📄 Events.tsx
+      📄 FamilyTree.tsx
+      📄 Invite.tsx
+      📄 Members.tsx
+      📄 Messages.tsx
+      📄 Notifications.tsx
+      📄 Profile.tsx
+      📄 Report.tsx
+    📄 Dashboard.tsx
+    📄 Index.tsx
+    📄 NotFound.tsx
+    📄 Profile.tsx
+  📁 services
+    📄 api.ts
+  📁 styles
+    📄 globals.css
+  📁 types
+    📄 family.ts
+    📄 profile.ts
+  📄 vite-env.d.ts
+📁 supabase
+  📄 config.toml
+  📁 functions
+    📁 delete-all-data
+      📄 index.ts
+📄 tailwind.config.ts
+📄 tsconfig.app.json
+📄 tsconfig.json
+📄 tsconfig.node.json
+📄 vite.config.ts

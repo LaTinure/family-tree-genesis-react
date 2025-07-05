@@ -1,143 +1,142 @@
 
-//src\hooks\useAuth.tsx
-import***REMOVED***{***REMOVED***createContext,***REMOVED***useContext,***REMOVED***useEffect,***REMOVED***useState,***REMOVED***ReactNode***REMOVED***}***REMOVED***from***REMOVED***'react';
-import***REMOVED***{***REMOVED***User,***REMOVED***Session***REMOVED***}***REMOVED***from***REMOVED***'@supabase/supabase-js';
-import***REMOVED***{***REMOVED***supabase***REMOVED***}***REMOVED***from***REMOVED***'@/lib/supabaseClient';
-import***REMOVED***{***REMOVED***FamilyMember***REMOVED***}***REMOVED***from***REMOVED***'@/types/family';
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { User, Session } from '@supabase/supabase-js';
+import { supabase } from '@/integrations/supabase/client';
+import { FamilyMember } from '@/types/family';
 
-interface***REMOVED***AuthContextType***REMOVED***{
-***REMOVED******REMOVED***user:***REMOVED***User***REMOVED***|***REMOVED***null;
-***REMOVED******REMOVED***session:***REMOVED***Session***REMOVED***|***REMOVED***null;
-***REMOVED******REMOVED***profile:***REMOVED***FamilyMember***REMOVED***|***REMOVED***null;
-***REMOVED******REMOVED***loading:***REMOVED***boolean;
-***REMOVED******REMOVED***signIn:***REMOVED***(email:***REMOVED***string,***REMOVED***password:***REMOVED***string)***REMOVED***=>***REMOVED***Promise<void>;
-***REMOVED******REMOVED***signOut:***REMOVED***()***REMOVED***=>***REMOVED***Promise<void>;
+interface AuthContextType {
+  user: User | null;
+  session: Session | null;
+  profile: FamilyMember | null;
+  loading: boolean;
+  signIn: (email: string, password: string) => Promise<void>;
+  signOut: () => Promise<void>;
 }
 
-const***REMOVED***AuthContext***REMOVED***=***REMOVED***createContext<AuthContextType***REMOVED***|***REMOVED***undefined>(undefined);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export***REMOVED***const***REMOVED***useAuth***REMOVED***=***REMOVED***()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***context***REMOVED***=***REMOVED***useContext(AuthContext);
-***REMOVED******REMOVED***if***REMOVED***(!context)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***throw***REMOVED***new***REMOVED***Error('useAuth***REMOVED***must***REMOVED***be***REMOVED***used***REMOVED***within***REMOVED***an***REMOVED***AuthProvider');
-***REMOVED******REMOVED***}
-***REMOVED******REMOVED***return***REMOVED***context;
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
 };
 
-interface***REMOVED***AuthProviderProps***REMOVED***{
-***REMOVED******REMOVED***children:***REMOVED***ReactNode;
+interface AuthProviderProps {
+  children: ReactNode;
 }
 
-export***REMOVED***const***REMOVED***AuthProvider***REMOVED***=***REMOVED***({***REMOVED***children***REMOVED***}:***REMOVED***AuthProviderProps)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***[user,***REMOVED***setUser]***REMOVED***=***REMOVED***useState<User***REMOVED***|***REMOVED***null>(null);
-***REMOVED******REMOVED***const***REMOVED***[session,***REMOVED***setSession]***REMOVED***=***REMOVED***useState<Session***REMOVED***|***REMOVED***null>(null);
-***REMOVED******REMOVED***const***REMOVED***[profile,***REMOVED***setProfile]***REMOVED***=***REMOVED***useState<FamilyMember***REMOVED***|***REMOVED***null>(null);
-***REMOVED******REMOVED***const***REMOVED***[loading,***REMOVED***setLoading]***REMOVED***=***REMOVED***useState(true);
+export const AuthProvider = ({ children }: AuthProviderProps) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
+  const [profile, setProfile] = useState<FamilyMember | null>(null);
+  const [loading, setLoading] = useState(true);
 
-***REMOVED******REMOVED***useEffect(()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Get***REMOVED***initial***REMOVED***session
-***REMOVED******REMOVED******REMOVED******REMOVED***supabase.auth.getSession().then(({***REMOVED***data:***REMOVED***{***REMOVED***session***REMOVED***}***REMOVED***})***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setSession(session);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setUser(session?.user***REMOVED***??***REMOVED***null);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(session?.user)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***fetchProfile(session.user.id);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***else***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setLoading(false);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***});
+  useEffect(() => {
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        fetchProfile(session.user.id);
+      } else {
+        setLoading(false);
+      }
+    });
 
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Listen***REMOVED***for***REMOVED***auth***REMOVED***changes
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data:***REMOVED***{***REMOVED***subscription***REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***=***REMOVED***supabase.auth.onAuthStateChange(async***REMOVED***(event,***REMOVED***session)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setSession(session);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setUser(session?.user***REMOVED***??***REMOVED***null);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(session?.user)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***fetchProfile(session.user.id);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***else***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setProfile(null);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setLoading(false);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***});
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        fetchProfile(session.user.id);
+      } else {
+        setProfile(null);
+        setLoading(false);
+      }
+    });
 
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***()***REMOVED***=>***REMOVED***subscription.unsubscribe();
-***REMOVED******REMOVED***},***REMOVED***[]);
+    return () => subscription.unsubscribe();
+  }, []);
 
-***REMOVED******REMOVED***const***REMOVED***fetchProfile***REMOVED***=***REMOVED***async***REMOVED***(userId:***REMOVED***string)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***try***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***data,***REMOVED***error***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.from('profiles')
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.select('*')
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.eq('user_id',***REMOVED***userId)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.maybeSingle();
+  const fetchProfile = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('user_id', userId)
+        .maybeSingle();
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(error)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***console.error('Error***REMOVED***fetching***REMOVED***profile:',***REMOVED***error);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***else***REMOVED***if***REMOVED***(data)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setProfile({
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***data.id,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_id:***REMOVED***data.user_id,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***first_name:***REMOVED***data.first_name***REMOVED***||***REMOVED***'',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***last_name:***REMOVED***data.last_name***REMOVED***||***REMOVED***'',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***email:***REMOVED***data.email***REMOVED***||***REMOVED***'',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***civilite:***REMOVED***(data.civilite***REMOVED***as***REMOVED***'M.'***REMOVED***|***REMOVED***'Mme')***REMOVED***||***REMOVED***'M.',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***phone:***REMOVED***data.phone,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***profession:***REMOVED***data.profession,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***current_location:***REMOVED***data.current_location,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***birth_place:***REMOVED***data.birth_place,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***birth_date:***REMOVED***data.birth_date,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***avatar_url:***REMOVED***data.avatar_url,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***photo_url:***REMOVED***data.photo_url,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***relationship_type:***REMOVED***(data.relationship_type***REMOVED***as***REMOVED***any)***REMOVED***||***REMOVED***'patriarche',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***father_id:***REMOVED***data.father_id,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***mother_id:***REMOVED***data.mother_id,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***father_name:***REMOVED***data.father_name,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***mother_name:***REMOVED***data.mother_name,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***spouse_name:***REMOVED***'',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_admin:***REMOVED***data.is_admin***REMOVED***||***REMOVED***false,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_patriarch:***REMOVED***data.is_patriarch***REMOVED***||***REMOVED***false,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_parent:***REMOVED***data.is_parent***REMOVED***||***REMOVED***false,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***situation:***REMOVED***data.situation,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_role:***REMOVED***(data.user_role***REMOVED***as***REMOVED***any)***REMOVED***||***REMOVED***'Membre',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at:***REMOVED***data.created_at,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***updated_at:***REMOVED***data.updated_at,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***});
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***catch***REMOVED***(error)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***console.error('Error***REMOVED***fetching***REMOVED***profile:',***REMOVED***error);
-***REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***finally***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setLoading(false);
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED***};
+      if (error) {
+        console.error('Error fetching profile:', error);
+      } else if (data) {
+        setProfile({
+          id: data.id,
+          user_id: data.user_id,
+          first_name: data.first_name || '',
+          last_name: data.last_name || '',
+          email: data.email || '',
+          civilite: (data.civilite as 'M.' | 'Mme') || 'M.',
+          phone: data.phone,
+          profession: data.profession,
+          current_location: data.current_location,
+          birth_place: data.birth_place,
+          birth_date: data.birth_date,
+          avatar_url: data.avatar_url,
+          photo_url: data.photo_url,
+          relationship_type: (data.relationship_type as any) || 'patriarche',
+          father_id: data.father_id,
+          mother_id: data.mother_id,
+          father_name: data.father_name,
+          mother_name: data.mother_name,
+          spouse_name: '',
+          is_admin: data.is_admin || false,
+          is_patriarch: data.is_patriarch || false,
+          is_parent: data.is_parent || false,
+          situation: data.situation,
+          user_role: (data.user_role as any) || 'Membre',
+          created_at: data.created_at,
+          updated_at: data.updated_at,
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-***REMOVED******REMOVED***const***REMOVED***signIn***REMOVED***=***REMOVED***async***REMOVED***(email:***REMOVED***string,***REMOVED***password:***REMOVED***string)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***error***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase.auth.signInWithPassword({
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***email,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***password,
-***REMOVED******REMOVED******REMOVED******REMOVED***});
+  const signIn = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(error)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***throw***REMOVED***error;
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED***};
+    if (error) {
+      throw error;
+    }
+  };
 
-***REMOVED******REMOVED***const***REMOVED***signOut***REMOVED***=***REMOVED***async***REMOVED***()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***await***REMOVED***supabase.auth.signOut();
-***REMOVED******REMOVED******REMOVED******REMOVED***setProfile(null);
-***REMOVED******REMOVED***};
+  const signOut = async () => {
+    await supabase.auth.signOut();
+    setProfile(null);
+  };
 
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<AuthContext.Provider
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***value={{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***session,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***profile,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***loading,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***signIn,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***signOut,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}}
-***REMOVED******REMOVED******REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{children}
-***REMOVED******REMOVED******REMOVED******REMOVED***</AuthContext.Provider>
-***REMOVED******REMOVED***);
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        session,
+        profile,
+        loading,
+        signIn,
+        signOut,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };

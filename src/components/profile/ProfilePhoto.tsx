@@ -1,176 +1,176 @@
 
-import***REMOVED***{***REMOVED***useState***REMOVED***}***REMOVED***from***REMOVED***'react';
-import***REMOVED***{***REMOVED***Camera,***REMOVED***Loader2***REMOVED***}***REMOVED***from***REMOVED***'lucide-react';
-import***REMOVED***{***REMOVED***Avatar,***REMOVED***AvatarFallback,***REMOVED***AvatarImage***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/avatar';
-import***REMOVED***{***REMOVED***Button***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/button';
-import***REMOVED***{***REMOVED***Dialog,***REMOVED***DialogContent,***REMOVED***DialogHeader,***REMOVED***DialogTitle***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/dialog';
-import***REMOVED***{***REMOVED***useToast***REMOVED***}***REMOVED***from***REMOVED***'@/hooks/use-toast';
-import***REMOVED***{***REMOVED***supabase***REMOVED***}***REMOVED***from***REMOVED***'@/integrations/supabase/client';
+import { useState } from 'react';
+import { Camera, Loader2 } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
-interface***REMOVED***ProfilePhotoProps***REMOVED***{
-***REMOVED******REMOVED***user:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***first_name?:***REMOVED***string;
-***REMOVED******REMOVED******REMOVED******REMOVED***last_name?:***REMOVED***string;
-***REMOVED******REMOVED******REMOVED******REMOVED***avatar_url?:***REMOVED***string;
-***REMOVED******REMOVED***};
-***REMOVED******REMOVED***isEditing:***REMOVED***boolean;
-***REMOVED******REMOVED***onPhotoUpdate:***REMOVED***(url:***REMOVED***string)***REMOVED***=>***REMOVED***void;
-***REMOVED******REMOVED***size?:***REMOVED***'sm'***REMOVED***|***REMOVED***'md'***REMOVED***|***REMOVED***'lg'***REMOVED***|***REMOVED***'xl';
+interface ProfilePhotoProps {
+  user: {
+    first_name?: string;
+    last_name?: string;
+    avatar_url?: string;
+  };
+  isEditing: boolean;
+  onPhotoUpdate: (url: string) => void;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
 }
 
-export***REMOVED***const***REMOVED***ProfilePhoto***REMOVED***=***REMOVED***({***REMOVED***user,***REMOVED***isEditing,***REMOVED***onPhotoUpdate,***REMOVED***size***REMOVED***=***REMOVED***'xl'***REMOVED***}:***REMOVED***ProfilePhotoProps)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***[uploading,***REMOVED***setUploading]***REMOVED***=***REMOVED***useState(false);
-***REMOVED******REMOVED***const***REMOVED***[showPreview,***REMOVED***setShowPreview]***REMOVED***=***REMOVED***useState(false);
-***REMOVED******REMOVED***const***REMOVED***[previewUrl,***REMOVED***setPreviewUrl]***REMOVED***=***REMOVED***useState('');
-***REMOVED******REMOVED***const***REMOVED***{***REMOVED***toast***REMOVED***}***REMOVED***=***REMOVED***useToast();
+export const ProfilePhoto = ({ user, isEditing, onPhotoUpdate, size = 'xl' }: ProfilePhotoProps) => {
+  const [uploading, setUploading] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState('');
+  const { toast } = useToast();
 
-***REMOVED******REMOVED***const***REMOVED***sizeClasses***REMOVED***=***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***sm:***REMOVED***'w-16***REMOVED***h-16',
-***REMOVED******REMOVED******REMOVED******REMOVED***md:***REMOVED***'w-24***REMOVED***h-24',
-***REMOVED******REMOVED******REMOVED******REMOVED***lg:***REMOVED***'w-32***REMOVED***h-32',
-***REMOVED******REMOVED******REMOVED******REMOVED***xl:***REMOVED***'w-40***REMOVED***h-40'
-***REMOVED******REMOVED***};
+  const sizeClasses = {
+    sm: 'w-16 h-16',
+    md: 'w-24 h-24',
+    lg: 'w-32 h-32',
+    xl: 'w-40 h-40'
+  };
 
-***REMOVED******REMOVED***const***REMOVED***handleFileUpload***REMOVED***=***REMOVED***async***REMOVED***(e:***REMOVED***React.ChangeEvent<HTMLInputElement>)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***file***REMOVED***=***REMOVED***e.target.files?.[0];
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(!file)***REMOVED***return;
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Validation***REMOVED***du***REMOVED***fichier
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(!file.type.startsWith('image/'))***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***toast({
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***title:***REMOVED***'Erreur',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***description:***REMOVED***'Veuillez***REMOVED***sélectionner***REMOVED***une***REMOVED***image***REMOVED***valide',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***variant:***REMOVED***'destructive',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***});
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return;
-***REMOVED******REMOVED******REMOVED******REMOVED***}
+    // Validation du fichier
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: 'Erreur',
+        description: 'Veuillez sélectionner une image valide',
+        variant: 'destructive',
+      });
+      return;
+    }
 
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(file.size***REMOVED***>***REMOVED***5***REMOVED*******REMOVED***1024***REMOVED*******REMOVED***1024)***REMOVED***{***REMOVED***//***REMOVED***5MB
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***toast({
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***title:***REMOVED***'Erreur',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***description:***REMOVED***'L\'image***REMOVED***ne***REMOVED***doit***REMOVED***pas***REMOVED***dépasser***REMOVED***5MB',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***variant:***REMOVED***'destructive',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***});
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return;
-***REMOVED******REMOVED******REMOVED******REMOVED***}
+    if (file.size > 5 * 1024 * 1024) { // 5MB
+      toast({
+        title: 'Erreur',
+        description: 'L\'image ne doit pas dépasser 5MB',
+        variant: 'destructive',
+      });
+      return;
+    }
 
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Prévisualisation
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***reader***REMOVED***=***REMOVED***new***REMOVED***FileReader();
-***REMOVED******REMOVED******REMOVED******REMOVED***reader.onload***REMOVED***=***REMOVED***(event)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***result***REMOVED***=***REMOVED***event.target?.result***REMOVED***as***REMOVED***string;
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setPreviewUrl(result);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setShowPreview(true);
-***REMOVED******REMOVED******REMOVED******REMOVED***};
-***REMOVED******REMOVED******REMOVED******REMOVED***reader.readAsDataURL(file);
-***REMOVED******REMOVED***};
+    // Prévisualisation
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const result = event.target?.result as string;
+      setPreviewUrl(result);
+      setShowPreview(true);
+    };
+    reader.readAsDataURL(file);
+  };
 
-***REMOVED******REMOVED***const***REMOVED***confirmUpload***REMOVED***=***REMOVED***async***REMOVED***()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(!previewUrl)***REMOVED***return;
+  const confirmUpload = async () => {
+    if (!previewUrl) return;
 
-***REMOVED******REMOVED******REMOVED******REMOVED***try***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setUploading(true);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Convertir***REMOVED***le***REMOVED***data***REMOVED***URL***REMOVED***en***REMOVED***blob
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***response***REMOVED***=***REMOVED***await***REMOVED***fetch(previewUrl);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***blob***REMOVED***=***REMOVED***await***REMOVED***response.blob();
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Créer***REMOVED***un***REMOVED***nom***REMOVED***de***REMOVED***fichier***REMOVED***unique
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***fileExt***REMOVED***=***REMOVED***blob.type.split('/')[1];
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***fileName***REMOVED***=***REMOVED***`${Date.now()}.${fileExt}`;
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***filePath***REMOVED***=***REMOVED***`${(await***REMOVED***supabase.auth.getUser()).data.user?.id}/${fileName}`;
+    try {
+      setUploading(true);
+      
+      // Convertir le data URL en blob
+      const response = await fetch(previewUrl);
+      const blob = await response.blob();
+      
+      // Créer un nom de fichier unique
+      const fileExt = blob.type.split('/')[1];
+      const fileName = `${Date.now()}.${fileExt}`;
+      const filePath = `${(await supabase.auth.getUser()).data.user?.id}/${fileName}`;
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Upload***REMOVED***vers***REMOVED***Supabase***REMOVED***Storage
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***error:***REMOVED***uploadError***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase.storage
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.from('avatars')
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.upload(filePath,***REMOVED***blob);
+      // Upload vers Supabase Storage
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, blob);
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(uploadError)***REMOVED***throw***REMOVED***uploadError;
+      if (uploadError) throw uploadError;
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Obtenir***REMOVED***l'URL***REMOVED***publique
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***data***REMOVED***}***REMOVED***=***REMOVED***supabase.storage
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.from('avatars')
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.getPublicUrl(filePath);
+      // Obtenir l'URL publique
+      const { data } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(filePath);
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onPhotoUpdate(data.publicUrl);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setShowPreview(false);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setPreviewUrl('');
+      onPhotoUpdate(data.publicUrl);
+      setShowPreview(false);
+      setPreviewUrl('');
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***toast({
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***title:***REMOVED***'Succès',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***description:***REMOVED***'Photo***REMOVED***de***REMOVED***profil***REMOVED***mise***REMOVED***à***REMOVED***jour***REMOVED***avec***REMOVED***succès',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***});
-***REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***catch***REMOVED***(error)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***console.error('Erreur***REMOVED***upload:',***REMOVED***error);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***toast({
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***title:***REMOVED***'Erreur',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***description:***REMOVED***'Erreur***REMOVED***lors***REMOVED***du***REMOVED***téléchargement***REMOVED***de***REMOVED***la***REMOVED***photo',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***variant:***REMOVED***'destructive',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***});
-***REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***finally***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setUploading(false);
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED***};
+      toast({
+        title: 'Succès',
+        description: 'Photo de profil mise à jour avec succès',
+      });
+    } catch (error) {
+      console.error('Erreur upload:', error);
+      toast({
+        title: 'Erreur',
+        description: 'Erreur lors du téléchargement de la photo',
+        variant: 'destructive',
+      });
+    } finally {
+      setUploading(false);
+    }
+  };
 
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="relative">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Avatar***REMOVED***className={sizeClasses[size]}>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<AvatarImage***REMOVED***src={user.avatar_url***REMOVED***||***REMOVED***''}***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<AvatarFallback***REMOVED***className="text-2xl***REMOVED***font-bold">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{user.first_name?.[0]}{user.last_name?.[0]}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</AvatarFallback>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Avatar>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{isEditing***REMOVED***&&***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<label***REMOVED***className="absolute***REMOVED***bottom-0***REMOVED***right-0***REMOVED***w-10***REMOVED***h-10***REMOVED***bg-whatsapp-600***REMOVED***rounded-full***REMOVED***flex***REMOVED***items-center***REMOVED***justify-center***REMOVED***cursor-pointer***REMOVED***hover:bg-whatsapp-700***REMOVED***transition-colors***REMOVED***shadow-lg">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Camera***REMOVED***className="w-5***REMOVED***h-5***REMOVED***text-white"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<input
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***type="file"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***accept="image/*"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onChange={handleFileUpload}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className="hidden"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***disabled={uploading}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</label>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
+  return (
+    <>
+      <div className="relative">
+        <Avatar className={sizeClasses[size]}>
+          <AvatarImage src={user.avatar_url || ''} />
+          <AvatarFallback className="text-2xl font-bold">
+            {user.first_name?.[0]}{user.last_name?.[0]}
+          </AvatarFallback>
+        </Avatar>
+        
+        {isEditing && (
+          <label className="absolute bottom-0 right-0 w-10 h-10 bg-whatsapp-600 rounded-full flex items-center justify-center cursor-pointer hover:bg-whatsapp-700 transition-colors shadow-lg">
+            <Camera className="w-5 h-5 text-white" />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileUpload}
+              className="hidden"
+              disabled={uploading}
+            />
+          </label>
+        )}
+      </div>
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Dialog***REMOVED***open={showPreview}***REMOVED***onOpenChange={setShowPreview}>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<DialogContent>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<DialogHeader>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<DialogTitle>Confirmer***REMOVED***la***REMOVED***photo***REMOVED***de***REMOVED***profil</DialogTitle>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</DialogHeader>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="space-y-4">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="flex***REMOVED***justify-center">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Avatar***REMOVED***className="w-32***REMOVED***h-32">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<AvatarImage***REMOVED***src={previewUrl}***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<AvatarFallback>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{user.first_name?.[0]}{user.last_name?.[0]}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</AvatarFallback>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Avatar>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="flex***REMOVED***justify-end***REMOVED***space-x-2">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Button***REMOVED***variant="outline"***REMOVED***onClick={()***REMOVED***=>***REMOVED***setShowPreview(false)}>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Annuler
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Button>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Button***REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onClick={confirmUpload}***REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***disabled={uploading}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className="bg-whatsapp-600***REMOVED***hover:bg-whatsapp-700"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{uploading***REMOVED***?***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Loader2***REMOVED***className="w-4***REMOVED***h-4***REMOVED***mr-2***REMOVED***animate-spin"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Upload...
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)***REMOVED***:***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***'Confirmer'
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Button>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</DialogContent>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Dialog>
-***REMOVED******REMOVED******REMOVED******REMOVED***</>
-***REMOVED******REMOVED***);
+      <Dialog open={showPreview} onOpenChange={setShowPreview}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirmer la photo de profil</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="flex justify-center">
+              <Avatar className="w-32 h-32">
+                <AvatarImage src={previewUrl} />
+                <AvatarFallback>
+                  {user.first_name?.[0]}{user.last_name?.[0]}
+                </AvatarFallback>
+              </Avatar>
+            </div>
+            <div className="flex justify-end space-x-2">
+              <Button variant="outline" onClick={() => setShowPreview(false)}>
+                Annuler
+              </Button>
+              <Button 
+                onClick={confirmUpload} 
+                disabled={uploading}
+                className="bg-whatsapp-600 hover:bg-whatsapp-700"
+              >
+                {uploading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Upload...
+                  </>
+                ) : (
+                  'Confirmer'
+                )}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
 };

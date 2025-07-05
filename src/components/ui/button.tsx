@@ -1,56 +1,56 @@
-import***REMOVED*******REMOVED***as***REMOVED***React***REMOVED***from***REMOVED***"react"
-import***REMOVED***{***REMOVED***Slot***REMOVED***}***REMOVED***from***REMOVED***"@radix-ui/react-slot"
-import***REMOVED***{***REMOVED***cva,***REMOVED***type***REMOVED***VariantProps***REMOVED***}***REMOVED***from***REMOVED***"class-variance-authority"
+import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
+import { cva, type VariantProps } from "class-variance-authority"
 
-import***REMOVED***{***REMOVED***cn***REMOVED***}***REMOVED***from***REMOVED***"@/lib/utils"
+import { cn } from "@/lib/utils"
 
-const***REMOVED***buttonVariants***REMOVED***=***REMOVED***cva(
-***REMOVED******REMOVED***"inline-flex***REMOVED***items-center***REMOVED***justify-center***REMOVED***gap-2***REMOVED***whitespace-nowrap***REMOVED***rounded-md***REMOVED***text-sm***REMOVED***font-medium***REMOVED***ring-offset-background***REMOVED***transition-colors***REMOVED***focus-visible:outline-none***REMOVED***focus-visible:ring-2***REMOVED***focus-visible:ring-ring***REMOVED***focus-visible:ring-offset-2***REMOVED***disabled:pointer-events-none***REMOVED***disabled:opacity-50***REMOVED***[&_svg]:pointer-events-none***REMOVED***[&_svg]:size-4***REMOVED***[&_svg]:shrink-0",
-***REMOVED******REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***variants:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***variant:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***default:***REMOVED***"bg-primary***REMOVED***text-primary-foreground***REMOVED***hover:bg-primary/90",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***destructive:
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"bg-destructive***REMOVED***text-destructive-foreground***REMOVED***hover:bg-destructive/90",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***outline:
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"border***REMOVED***border-input***REMOVED***bg-background***REMOVED***hover:bg-accent***REMOVED***hover:text-accent-foreground",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***secondary:
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"bg-secondary***REMOVED***text-secondary-foreground***REMOVED***hover:bg-secondary/80",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ghost:***REMOVED***"hover:bg-accent***REMOVED***hover:text-accent-foreground",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***link:***REMOVED***"text-primary***REMOVED***underline-offset-4***REMOVED***hover:underline",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***size:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***default:***REMOVED***"h-10***REMOVED***px-4***REMOVED***py-2",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***sm:***REMOVED***"h-9***REMOVED***rounded-md***REMOVED***px-3",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***lg:***REMOVED***"h-11***REMOVED***rounded-md***REMOVED***px-8",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***icon:***REMOVED***"h-10***REMOVED***w-10",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***defaultVariants:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***variant:***REMOVED***"default",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***size:***REMOVED***"default",
-***REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED***}
+const buttonVariants = cva(
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        destructive:
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        outline:
+          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+        secondary:
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
+      },
+      size: {
+        default: "h-10 px-4 py-2",
+        sm: "h-9 rounded-md px-3",
+        lg: "h-11 rounded-md px-8",
+        icon: "h-10 w-10",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
 )
 
-export***REMOVED***interface***REMOVED***ButtonProps
-***REMOVED******REMOVED***extends***REMOVED***React.ButtonHTMLAttributes<HTMLButtonElement>,
-***REMOVED******REMOVED******REMOVED******REMOVED***VariantProps<typeof***REMOVED***buttonVariants>***REMOVED***{
-***REMOVED******REMOVED***asChild?:***REMOVED***boolean
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean
 }
 
-const***REMOVED***Button***REMOVED***=***REMOVED***React.forwardRef<HTMLButtonElement,***REMOVED***ButtonProps>(
-***REMOVED******REMOVED***({***REMOVED***className,***REMOVED***variant,***REMOVED***size,***REMOVED***asChild***REMOVED***=***REMOVED***false,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***Comp***REMOVED***=***REMOVED***asChild***REMOVED***?***REMOVED***Slot***REMOVED***:***REMOVED***"button"
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Comp
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(buttonVariants({***REMOVED***variant,***REMOVED***size,***REMOVED***className***REMOVED***}))}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED***)
-***REMOVED******REMOVED***}
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button"
+    return (
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        {...props}
+      />
+    )
+  }
 )
-Button.displayName***REMOVED***=***REMOVED***"Button"
+Button.displayName = "Button"
 
-export***REMOVED***{***REMOVED***Button,***REMOVED***buttonVariants***REMOVED***}
+export { Button, buttonVariants }

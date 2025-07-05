@@ -1,59 +1,59 @@
-import***REMOVED*******REMOVED***as***REMOVED***React***REMOVED***from***REMOVED***"react"
-import***REMOVED*******REMOVED***as***REMOVED***ToggleGroupPrimitive***REMOVED***from***REMOVED***"@radix-ui/react-toggle-group"
-import***REMOVED***{***REMOVED***type***REMOVED***VariantProps***REMOVED***}***REMOVED***from***REMOVED***"class-variance-authority"
+import * as React from "react"
+import * as ToggleGroupPrimitive from "@radix-ui/react-toggle-group"
+import { type VariantProps } from "class-variance-authority"
 
-import***REMOVED***{***REMOVED***cn***REMOVED***}***REMOVED***from***REMOVED***"@/lib/utils"
-import***REMOVED***{***REMOVED***toggleVariants***REMOVED***}***REMOVED***from***REMOVED***"@/components/ui/toggle"
+import { cn } from "@/lib/utils"
+import { toggleVariants } from "@/components/ui/toggle"
 
-const***REMOVED***ToggleGroupContext***REMOVED***=***REMOVED***React.createContext<
-***REMOVED******REMOVED***VariantProps<typeof***REMOVED***toggleVariants>
+const ToggleGroupContext = React.createContext<
+  VariantProps<typeof toggleVariants>
 >({
-***REMOVED******REMOVED***size:***REMOVED***"default",
-***REMOVED******REMOVED***variant:***REMOVED***"default",
+  size: "default",
+  variant: "default",
 })
 
-const***REMOVED***ToggleGroup***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***ToggleGroupPrimitive.Root>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***ToggleGroupPrimitive.Root>***REMOVED***&
-***REMOVED******REMOVED******REMOVED******REMOVED***VariantProps<typeof***REMOVED***toggleVariants>
->(({***REMOVED***className,***REMOVED***variant,***REMOVED***size,***REMOVED***children,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<ToggleGroupPrimitive.Root
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn("flex***REMOVED***items-center***REMOVED***justify-center***REMOVED***gap-1",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED***<ToggleGroupContext.Provider***REMOVED***value={{***REMOVED***variant,***REMOVED***size***REMOVED***}}>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{children}
-***REMOVED******REMOVED******REMOVED******REMOVED***</ToggleGroupContext.Provider>
-***REMOVED******REMOVED***</ToggleGroupPrimitive.Root>
+const ToggleGroup = React.forwardRef<
+  React.ElementRef<typeof ToggleGroupPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Root> &
+    VariantProps<typeof toggleVariants>
+>(({ className, variant, size, children, ...props }, ref) => (
+  <ToggleGroupPrimitive.Root
+    ref={ref}
+    className={cn("flex items-center justify-center gap-1", className)}
+    {...props}
+  >
+    <ToggleGroupContext.Provider value={{ variant, size }}>
+      {children}
+    </ToggleGroupContext.Provider>
+  </ToggleGroupPrimitive.Root>
 ))
 
-ToggleGroup.displayName***REMOVED***=***REMOVED***ToggleGroupPrimitive.Root.displayName
+ToggleGroup.displayName = ToggleGroupPrimitive.Root.displayName
 
-const***REMOVED***ToggleGroupItem***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***ToggleGroupPrimitive.Item>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***ToggleGroupPrimitive.Item>***REMOVED***&
-***REMOVED******REMOVED******REMOVED******REMOVED***VariantProps<typeof***REMOVED***toggleVariants>
->(({***REMOVED***className,***REMOVED***children,***REMOVED***variant,***REMOVED***size,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***context***REMOVED***=***REMOVED***React.useContext(ToggleGroupContext)
+const ToggleGroupItem = React.forwardRef<
+  React.ElementRef<typeof ToggleGroupPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Item> &
+    VariantProps<typeof toggleVariants>
+>(({ className, children, variant, size, ...props }, ref) => {
+  const context = React.useContext(ToggleGroupContext)
 
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<ToggleGroupPrimitive.Item
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***toggleVariants({
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***variant:***REMOVED***context.variant***REMOVED***||***REMOVED***variant,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***size:***REMOVED***context.size***REMOVED***||***REMOVED***size,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}),
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{children}
-***REMOVED******REMOVED******REMOVED******REMOVED***</ToggleGroupPrimitive.Item>
-***REMOVED******REMOVED***)
+  return (
+    <ToggleGroupPrimitive.Item
+      ref={ref}
+      className={cn(
+        toggleVariants({
+          variant: context.variant || variant,
+          size: context.size || size,
+        }),
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </ToggleGroupPrimitive.Item>
+  )
 })
 
-ToggleGroupItem.displayName***REMOVED***=***REMOVED***ToggleGroupPrimitive.Item.displayName
+ToggleGroupItem.displayName = ToggleGroupPrimitive.Item.displayName
 
-export***REMOVED***{***REMOVED***ToggleGroup,***REMOVED***ToggleGroupItem***REMOVED***}
+export { ToggleGroup, ToggleGroupItem }

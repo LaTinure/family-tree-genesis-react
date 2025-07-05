@@ -1,42 +1,42 @@
-import***REMOVED*******REMOVED***as***REMOVED***React***REMOVED***from***REMOVED***"react"
-import***REMOVED*******REMOVED***as***REMOVED***RadioGroupPrimitive***REMOVED***from***REMOVED***"@radix-ui/react-radio-group"
-import***REMOVED***{***REMOVED***Circle***REMOVED***}***REMOVED***from***REMOVED***"lucide-react"
+import * as React from "react"
+import * as RadioGroupPrimitive from "@radix-ui/react-radio-group"
+import { Circle } from "lucide-react"
 
-import***REMOVED***{***REMOVED***cn***REMOVED***}***REMOVED***from***REMOVED***"@/lib/utils"
+import { cn } from "@/lib/utils"
 
-const***REMOVED***RadioGroup***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***RadioGroupPrimitive.Root>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***RadioGroupPrimitive.Root>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<RadioGroupPrimitive.Root
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn("grid***REMOVED***gap-2",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED***)
+const RadioGroup = React.forwardRef<
+  React.ElementRef<typeof RadioGroupPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root>
+>(({ className, ...props }, ref) => {
+  return (
+    <RadioGroupPrimitive.Root
+      className={cn("grid gap-2", className)}
+      {...props}
+      ref={ref}
+    />
+  )
 })
-RadioGroup.displayName***REMOVED***=***REMOVED***RadioGroupPrimitive.Root.displayName
+RadioGroup.displayName = RadioGroupPrimitive.Root.displayName
 
-const***REMOVED***RadioGroupItem***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***RadioGroupPrimitive.Item>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***RadioGroupPrimitive.Item>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<RadioGroupPrimitive.Item
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"aspect-square***REMOVED***h-4***REMOVED***w-4***REMOVED***rounded-full***REMOVED***border***REMOVED***border-primary***REMOVED***text-primary***REMOVED***ring-offset-background***REMOVED***focus:outline-none***REMOVED***focus-visible:ring-2***REMOVED***focus-visible:ring-ring***REMOVED***focus-visible:ring-offset-2***REMOVED***disabled:cursor-not-allowed***REMOVED***disabled:opacity-50",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<RadioGroupPrimitive.Indicator***REMOVED***className="flex***REMOVED***items-center***REMOVED***justify-center">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Circle***REMOVED***className="h-2.5***REMOVED***w-2.5***REMOVED***fill-current***REMOVED***text-current"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</RadioGroupPrimitive.Indicator>
-***REMOVED******REMOVED******REMOVED******REMOVED***</RadioGroupPrimitive.Item>
-***REMOVED******REMOVED***)
+const RadioGroupItem = React.forwardRef<
+  React.ElementRef<typeof RadioGroupPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item>
+>(({ className, ...props }, ref) => {
+  return (
+    <RadioGroupPrimitive.Item
+      ref={ref}
+      className={cn(
+        "aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        className
+      )}
+      {...props}
+    >
+      <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
+        <Circle className="h-2.5 w-2.5 fill-current text-current" />
+      </RadioGroupPrimitive.Indicator>
+    </RadioGroupPrimitive.Item>
+  )
 })
-RadioGroupItem.displayName***REMOVED***=***REMOVED***RadioGroupPrimitive.Item.displayName
+RadioGroupItem.displayName = RadioGroupPrimitive.Item.displayName
 
-export***REMOVED***{***REMOVED***RadioGroup,***REMOVED***RadioGroupItem***REMOVED***}
+export { RadioGroup, RadioGroupItem }

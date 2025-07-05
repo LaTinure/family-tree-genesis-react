@@ -1,64 +1,64 @@
-const***REMOVED***fs***REMOVED***=***REMOVED***require('fs');
-const***REMOVED***path***REMOVED***=***REMOVED***require('path');
+const fs = require('fs');
+const path = require('path');
 
-//***REMOVED***Fonction***REMOVED***pour***REMOVED***corriger***REMOVED***les***REMOVED***erreurs***REMOVED***dans***REMOVED***les***REMOVED***fichiers
-function***REMOVED***fixFileErrors(filePath)***REMOVED***{
-***REMOVED******REMOVED***try***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***let***REMOVED***content***REMOVED***=***REMOVED***fs.readFileSync(filePath,***REMOVED***'utf8');
-***REMOVED******REMOVED******REMOVED******REMOVED***let***REMOVED***modified***REMOVED***=***REMOVED***false;
+// Fonction pour corriger les erreurs dans les fichiers
+function fixFileErrors(filePath) {
+  try {
+    let content = fs.readFileSync(filePath, 'utf8');
+    let modified = false;
 
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Correction***REMOVED***1:***REMOVED***Supprimer***REMOVED***les***REMOVED***logs***REMOVED***problématiques
-***REMOVED******REMOVED******REMOVED******REMOVED***content***REMOVED***=***REMOVED***content.replace(/console\.log\('🎭***REMOVED***\[.*?\]***REMOVED***Rôle.*?\);?\n?/g,***REMOVED***'');
-***REMOVED******REMOVED******REMOVED******REMOVED***content***REMOVED***=***REMOVED***content.replace(/console\.log\('🎭***REMOVED***\[.*?\]***REMOVED***Type.*?\);?\n?/g,***REMOVED***'');
-***REMOVED******REMOVED******REMOVED******REMOVED***content***REMOVED***=***REMOVED***content.replace(/console\.log\('🎭***REMOVED***\[.*?\]***REMOVED***Longueur.*?\);?\n?/g,***REMOVED***'');
-***REMOVED******REMOVED******REMOVED******REMOVED***content***REMOVED***=***REMOVED***content.replace(/console\.log\('🎭***REMOVED***\[.*?\]***REMOVED***Code***REMOVED***ASCII.*?\);?\n?/g,***REMOVED***'');
+    // Correction 1: Supprimer les logs problématiques
+    content = content.replace(/console\.log\('🎭 \[.*?\] Rôle.*?\);?\n?/g, '');
+    content = content.replace(/console\.log\('🎭 \[.*?\] Type.*?\);?\n?/g, '');
+    content = content.replace(/console\.log\('🎭 \[.*?\] Longueur.*?\);?\n?/g, '');
+    content = content.replace(/console\.log\('🎭 \[.*?\] Code ASCII.*?\);?\n?/g, '');
 
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Correction***REMOVED***2:***REMOVED***Corriger***REMOVED***les***REMOVED***variables***REMOVED***profileData
-***REMOVED******REMOVED******REMOVED******REMOVED***content***REMOVED***=***REMOVED***content.replace(/profileData\./g,***REMOVED***'profileDataToInsert.');
+    // Correction 2: Corriger les variables profileData
+    content = content.replace(/profileData\./g, 'profileDataToInsert.');
 
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Correction***REMOVED***3:***REMOVED***Supprimer***REMOVED***les***REMOVED***boutons***REMOVED***de***REMOVED***routes***REMOVED***inexistantes
-***REMOVED******REMOVED******REMOVED******REMOVED***content***REMOVED***=***REMOVED***content.replace(/<motion\.button[^>]*onClick=\{\(\)***REMOVED***=>***REMOVED***\{[^}]*navigate\('\/dashboard\/profile'\)[^}]*\}[^>]*>[\s\S]*?<\/motion\.button>/g,***REMOVED***'');
-***REMOVED******REMOVED******REMOVED******REMOVED***content***REMOVED***=***REMOVED***content.replace(/<motion\.button[^>]*onClick=\{\(\)***REMOVED***=>***REMOVED***\{[^}]*navigate\('\/dashboard\/notifications'\)[^}]*\}[^>]*>[\s\S]*?<\/motion\.button>/g,***REMOVED***'');
-***REMOVED******REMOVED******REMOVED******REMOVED***content***REMOVED***=***REMOVED***content.replace(/<motion\.button[^>]*onClick=\{\(\)***REMOVED***=>***REMOVED***\{[^}]*navigate\('\/dashboard\/settings'\)[^}]*\}[^>]*>[\s\S]*?<\/motion\.button>/g,***REMOVED***'');
+    // Correction 3: Supprimer les boutons de routes inexistantes
+    content = content.replace(/<motion\.button[^>]*onClick=\{\(\) => \{[^}]*navigate\('\/dashboard\/profile'\)[^}]*\}[^>]*>[\s\S]*?<\/motion\.button>/g, '');
+    content = content.replace(/<motion\.button[^>]*onClick=\{\(\) => \{[^}]*navigate\('\/dashboard\/notifications'\)[^}]*\}[^>]*>[\s\S]*?<\/motion\.button>/g, '');
+    content = content.replace(/<motion\.button[^>]*onClick=\{\(\) => \{[^}]*navigate\('\/dashboard\/settings'\)[^}]*\}[^>]*>[\s\S]*?<\/motion\.button>/g, '');
 
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Correction***REMOVED***4:***REMOVED***Supprimer***REMOVED***les***REMOVED***imports***REMOVED***inutilisés
-***REMOVED******REMOVED******REMOVED******REMOVED***content***REMOVED***=***REMOVED***content.replace(/import.*?Search.*?from.*?lucide-react.*?\n/g,***REMOVED***'');
+    // Correction 4: Supprimer les imports inutilisés
+    content = content.replace(/import.*?Search.*?from.*?lucide-react.*?\n/g, '');
 
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(content***REMOVED***!==***REMOVED***fs.readFileSync(filePath,***REMOVED***'utf8'))***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***fs.writeFileSync(filePath,***REMOVED***content,***REMOVED***'utf8');
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***console.log(`✅***REMOVED***Corrigé:***REMOVED***${filePath}`);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***modified***REMOVED***=***REMOVED***true;
-***REMOVED******REMOVED******REMOVED******REMOVED***}
+    if (content !== fs.readFileSync(filePath, 'utf8')) {
+      fs.writeFileSync(filePath, content, 'utf8');
+      console.log(`✅ Corrigé: ${filePath}`);
+      modified = true;
+    }
 
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***modified;
-***REMOVED******REMOVED***}***REMOVED***catch***REMOVED***(error)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***console.error(`❌***REMOVED***Erreur***REMOVED***lors***REMOVED***de***REMOVED***la***REMOVED***correction***REMOVED***de***REMOVED***${filePath}:`,***REMOVED***error.message);
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***false;
-***REMOVED******REMOVED***}
+    return modified;
+  } catch (error) {
+    console.error(`❌ Erreur lors de la correction de ${filePath}:`, error.message);
+    return false;
+  }
 }
 
-//***REMOVED***Liste***REMOVED***des***REMOVED***fichiers***REMOVED***à***REMOVED***corriger
-const***REMOVED***filesToFix***REMOVED***=***REMOVED***[
-***REMOVED******REMOVED***'src/components/family/FamilyRegisterForm.tsx',
-***REMOVED******REMOVED***'src/components/layout/Header.tsx',
-***REMOVED******REMOVED***'src/hooks/useAuth.tsx'
+// Liste des fichiers à corriger
+const filesToFix = [
+  'src/components/family/FamilyRegisterForm.tsx',
+  'src/components/layout/Header.tsx',
+  'src/hooks/useAuth.tsx'
 ];
 
-console.log('🔧***REMOVED***Début***REMOVED***de***REMOVED***la***REMOVED***correction***REMOVED***automatique***REMOVED***des***REMOVED***erreurs...\n');
+console.log('🔧 Début de la correction automatique des erreurs...\n');
 
-let***REMOVED***fixedCount***REMOVED***=***REMOVED***0;
-filesToFix.forEach(file***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***if***REMOVED***(fs.existsSync(file))***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(fixFileErrors(file))***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***fixedCount++;
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED***}***REMOVED***else***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***console.log(`⚠️***REMOVED***Fichier***REMOVED***non***REMOVED***trouvé:***REMOVED***${file}`);
-***REMOVED******REMOVED***}
+let fixedCount = 0;
+filesToFix.forEach(file => {
+  if (fs.existsSync(file)) {
+    if (fixFileErrors(file)) {
+      fixedCount++;
+    }
+  } else {
+    console.log(`⚠️ Fichier non trouvé: ${file}`);
+  }
 });
 
-console.log(`\n🎉***REMOVED***Correction***REMOVED***terminée!***REMOVED***${fixedCount}***REMOVED***fichiers***REMOVED***corrigés.`);
-console.log('\n📝***REMOVED***Prochaines***REMOVED***étapes:');
-console.log('1.***REMOVED***Exécutez***REMOVED***le***REMOVED***script***REMOVED***SQL***REMOVED***dans***REMOVED***Supabase***REMOVED***pour***REMOVED***corriger***REMOVED***la***REMOVED***contrainte***REMOVED***de***REMOVED***rôle');
-console.log('2.***REMOVED***Testez***REMOVED***l\'inscription***REMOVED***avec***REMOVED***le***REMOVED***rôle***REMOVED***"Membre"');
-console.log('3.***REMOVED***Vérifiez***REMOVED***que***REMOVED***l\'application***REMOVED***fonctionne***REMOVED***correctement');
+console.log(`\n🎉 Correction terminée! ${fixedCount} fichiers corrigés.`);
+console.log('\n📝 Prochaines étapes:');
+console.log('1. Exécutez le script SQL dans Supabase pour corriger la contrainte de rôle');
+console.log('2. Testez l\'inscription avec le rôle "Membre"');
+console.log('3. Vérifiez que l\'application fonctionne correctement');

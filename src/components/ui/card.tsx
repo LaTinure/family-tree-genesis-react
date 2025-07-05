@@ -1,79 +1,79 @@
-import***REMOVED*******REMOVED***as***REMOVED***React***REMOVED***from***REMOVED***"react"
+import * as React from "react"
 
-import***REMOVED***{***REMOVED***cn***REMOVED***}***REMOVED***from***REMOVED***"@/lib/utils"
+import { cn } from "@/lib/utils"
 
-const***REMOVED***Card***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLDivElement,
-***REMOVED******REMOVED***React.HTMLAttributes<HTMLDivElement>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"rounded-lg***REMOVED***border***REMOVED***bg-card***REMOVED***text-card-foreground***REMOVED***shadow-sm",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const Card = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn(
+      "rounded-lg border bg-card text-card-foreground shadow-sm",
+      className
+    )}
+    {...props}
+  />
 ))
-Card.displayName***REMOVED***=***REMOVED***"Card"
+Card.displayName = "Card"
 
-const***REMOVED***CardHeader***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLDivElement,
-***REMOVED******REMOVED***React.HTMLAttributes<HTMLDivElement>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn("flex***REMOVED***flex-col***REMOVED***space-y-1.5***REMOVED***p-6",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const CardHeader = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn("flex flex-col space-y-1.5 p-6", className)}
+    {...props}
+  />
 ))
-CardHeader.displayName***REMOVED***=***REMOVED***"CardHeader"
+CardHeader.displayName = "CardHeader"
 
-const***REMOVED***CardTitle***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLParagraphElement,
-***REMOVED******REMOVED***React.HTMLAttributes<HTMLHeadingElement>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<h3
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"text-2xl***REMOVED***font-semibold***REMOVED***leading-none***REMOVED***tracking-tight",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const CardTitle = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLHeadingElement>
+>(({ className, ...props }, ref) => (
+  <h3
+    ref={ref}
+    className={cn(
+      "text-2xl font-semibold leading-none tracking-tight",
+      className
+    )}
+    {...props}
+  />
 ))
-CardTitle.displayName***REMOVED***=***REMOVED***"CardTitle"
+CardTitle.displayName = "CardTitle"
 
-const***REMOVED***CardDescription***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLParagraphElement,
-***REMOVED******REMOVED***React.HTMLAttributes<HTMLParagraphElement>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<p
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn("text-sm***REMOVED***text-muted-foreground",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const CardDescription = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLParagraphElement>
+>(({ className, ...props }, ref) => (
+  <p
+    ref={ref}
+    className={cn("text-sm text-muted-foreground", className)}
+    {...props}
+  />
 ))
-CardDescription.displayName***REMOVED***=***REMOVED***"CardDescription"
+CardDescription.displayName = "CardDescription"
 
-const***REMOVED***CardContent***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLDivElement,
-***REMOVED******REMOVED***React.HTMLAttributes<HTMLDivElement>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<div***REMOVED***ref={ref}***REMOVED***className={cn("p-6***REMOVED***pt-0",***REMOVED***className)}***REMOVED***{...props}***REMOVED***/>
+const CardContent = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />
 ))
-CardContent.displayName***REMOVED***=***REMOVED***"CardContent"
+CardContent.displayName = "CardContent"
 
-const***REMOVED***CardFooter***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLDivElement,
-***REMOVED******REMOVED***React.HTMLAttributes<HTMLDivElement>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn("flex***REMOVED***items-center***REMOVED***p-6***REMOVED***pt-0",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const CardFooter = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn("flex items-center p-6 pt-0", className)}
+    {...props}
+  />
 ))
-CardFooter.displayName***REMOVED***=***REMOVED***"CardFooter"
+CardFooter.displayName = "CardFooter"
 
-export***REMOVED***{***REMOVED***Card,***REMOVED***CardHeader,***REMOVED***CardFooter,***REMOVED***CardTitle,***REMOVED***CardDescription,***REMOVED***CardContent***REMOVED***}
+export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }

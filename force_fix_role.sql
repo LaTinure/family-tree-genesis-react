@@ -1,69 +1,69 @@
---***REMOVED***Script***REMOVED***de***REMOVED***correction***REMOVED***forcée***REMOVED***pour***REMOVED***le***REMOVED***problème***REMOVED***de***REMOVED***rôle
---***REMOVED***À***REMOVED***exécuter***REMOVED***dans***REMOVED***l'éditeur***REMOVED***SQL***REMOVED***de***REMOVED***Supabase
+-- Script de correction forcée pour le problème de rôle
+-- À exécuter dans l'éditeur SQL de Supabase
 
---***REMOVED***1.***REMOVED***Supprimer***REMOVED***TOUTES***REMOVED***les***REMOVED***contraintes***REMOVED***liées***REMOVED***au***REMOVED***rôle
-DO***REMOVED***$$
+-- 1. Supprimer TOUTES les contraintes liées au rôle
+DO $$
 BEGIN
-***REMOVED******REMOVED******REMOVED******REMOVED***--***REMOVED***Supprimer***REMOVED***toutes***REMOVED***les***REMOVED***contraintes***REMOVED***check***REMOVED***qui***REMOVED***contiennent***REMOVED***'role'
-***REMOVED******REMOVED******REMOVED******REMOVED***FOR***REMOVED***r***REMOVED***IN***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***SELECT***REMOVED***constraint_name
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***FROM***REMOVED***information_schema.check_constraints
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***WHERE***REMOVED***check_clause***REMOVED***LIKE***REMOVED***'%role%'
-***REMOVED******REMOVED******REMOVED******REMOVED***)***REMOVED***LOOP
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***EXECUTE***REMOVED***'ALTER***REMOVED***TABLE***REMOVED***profiles***REMOVED***DROP***REMOVED***CONSTRAINT***REMOVED***IF***REMOVED***EXISTS***REMOVED***'***REMOVED***||***REMOVED***r.constraint_name;
-***REMOVED******REMOVED******REMOVED******REMOVED***END***REMOVED***LOOP;
+    -- Supprimer toutes les contraintes check qui contiennent 'role'
+    FOR r IN (
+        SELECT constraint_name
+        FROM information_schema.check_constraints
+        WHERE check_clause LIKE '%role%'
+    ) LOOP
+        EXECUTE 'ALTER TABLE profiles DROP CONSTRAINT IF EXISTS ' || r.constraint_name;
+    END LOOP;
 
-***REMOVED******REMOVED******REMOVED******REMOVED***--***REMOVED***Supprimer***REMOVED***aussi***REMOVED***les***REMOVED***contraintes***REMOVED***de***REMOVED***table
-***REMOVED******REMOVED******REMOVED******REMOVED***FOR***REMOVED***r***REMOVED***IN***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***SELECT***REMOVED***constraint_name
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***FROM***REMOVED***information_schema.table_constraints
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***WHERE***REMOVED***table_name***REMOVED***=***REMOVED***'profiles'***REMOVED***AND***REMOVED***constraint_name***REMOVED***LIKE***REMOVED***'%role%'
-***REMOVED******REMOVED******REMOVED******REMOVED***)***REMOVED***LOOP
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***EXECUTE***REMOVED***'ALTER***REMOVED***TABLE***REMOVED***profiles***REMOVED***DROP***REMOVED***CONSTRAINT***REMOVED***IF***REMOVED***EXISTS***REMOVED***'***REMOVED***||***REMOVED***r.constraint_name;
-***REMOVED******REMOVED******REMOVED******REMOVED***END***REMOVED***LOOP;
-END***REMOVED***$$;
+    -- Supprimer aussi les contraintes de table
+    FOR r IN (
+        SELECT constraint_name
+        FROM information_schema.table_constraints
+        WHERE table_name = 'profiles' AND constraint_name LIKE '%role%'
+    ) LOOP
+        EXECUTE 'ALTER TABLE profiles DROP CONSTRAINT IF EXISTS ' || r.constraint_name;
+    END LOOP;
+END $$;
 
---***REMOVED***2.***REMOVED***Nettoyer***REMOVED***complètement***REMOVED***les***REMOVED***données
-UPDATE***REMOVED***profiles
-SET***REMOVED***role***REMOVED***=***REMOVED***'Membre'
-WHERE***REMOVED***role***REMOVED***IS***REMOVED***NULL***REMOVED***OR***REMOVED***role***REMOVED***=***REMOVED***''***REMOVED***OR***REMOVED***role***REMOVED***NOT***REMOVED***IN***REMOVED***('Membre',***REMOVED***'Administrateur');
+-- 2. Nettoyer complètement les données
+UPDATE profiles
+SET role = 'Membre'
+WHERE role IS NULL OR role = '' OR role NOT IN ('Membre', 'Administrateur');
 
---***REMOVED***3.***REMOVED***S'assurer***REMOVED***que***REMOVED***la***REMOVED***colonne***REMOVED***a***REMOVED***la***REMOVED***bonne***REMOVED***valeur***REMOVED***par***REMOVED***défaut
-ALTER***REMOVED***TABLE***REMOVED***profiles***REMOVED***ALTER***REMOVED***COLUMN***REMOVED***role***REMOVED***SET***REMOVED***DEFAULT***REMOVED***'Membre';
+-- 3. S'assurer que la colonne a la bonne valeur par défaut
+ALTER TABLE profiles ALTER COLUMN role SET DEFAULT 'Membre';
 
---***REMOVED***4.***REMOVED***Recréer***REMOVED***la***REMOVED***contrainte***REMOVED***avec***REMOVED***des***REMOVED***valeurs***REMOVED***exactes
-ALTER***REMOVED***TABLE***REMOVED***profiles
-ADD***REMOVED***CONSTRAINT***REMOVED***profiles_role_check
-CHECK***REMOVED***(role***REMOVED***=***REMOVED***'Membre'***REMOVED***OR***REMOVED***role***REMOVED***=***REMOVED***'Administrateur');
+-- 4. Recréer la contrainte avec des valeurs exactes
+ALTER TABLE profiles
+ADD CONSTRAINT profiles_role_check
+CHECK (role = 'Membre' OR role = 'Administrateur');
 
---***REMOVED***5.***REMOVED***Vérifier***REMOVED***que***REMOVED***la***REMOVED***contrainte***REMOVED***fonctionne
-SELECT***REMOVED***'===***REMOVED***VÉRIFICATION***REMOVED***==='***REMOVED***as***REMOVED***section;
+-- 5. Vérifier que la contrainte fonctionne
+SELECT '=== VÉRIFICATION ===' as section;
 
---***REMOVED***Test***REMOVED***avec***REMOVED***'Membre'
+-- Test avec 'Membre'
 BEGIN;
-***REMOVED******REMOVED******REMOVED******REMOVED***INSERT***REMOVED***INTO***REMOVED***profiles***REMOVED***(id,***REMOVED***user_id,***REMOVED***email,***REMOVED***first_name,***REMOVED***last_name,***REMOVED***role)
-***REMOVED******REMOVED******REMOVED******REMOVED***VALUES***REMOVED***('test-membre-2',***REMOVED***'test-membre-2',***REMOVED***'test2@membre.com',***REMOVED***'Test',***REMOVED***'Membre',***REMOVED***'Membre');
-***REMOVED******REMOVED******REMOVED******REMOVED***SELECT***REMOVED***'✅***REMOVED***Membre:***REMOVED***SUCCESS'***REMOVED***as***REMOVED***result;
+    INSERT INTO profiles (id, user_id, email, first_name, last_name, role)
+    VALUES ('test-membre-2', 'test-membre-2', 'test2@membre.com', 'Test', 'Membre', 'Membre');
+    SELECT '✅ Membre: SUCCESS' as result;
 ROLLBACK;
 
---***REMOVED***Test***REMOVED***avec***REMOVED***'Administrateur'
+-- Test avec 'Administrateur'
 BEGIN;
-***REMOVED******REMOVED******REMOVED******REMOVED***INSERT***REMOVED***INTO***REMOVED***profiles***REMOVED***(id,***REMOVED***user_id,***REMOVED***email,***REMOVED***first_name,***REMOVED***last_name,***REMOVED***role)
-***REMOVED******REMOVED******REMOVED******REMOVED***VALUES***REMOVED***('test-admin-2',***REMOVED***'test-admin-2',***REMOVED***'test2@admin.com',***REMOVED***'Test',***REMOVED***'Admin',***REMOVED***'Administrateur');
-***REMOVED******REMOVED******REMOVED******REMOVED***SELECT***REMOVED***'✅***REMOVED***Administrateur:***REMOVED***SUCCESS'***REMOVED***as***REMOVED***result;
+    INSERT INTO profiles (id, user_id, email, first_name, last_name, role)
+    VALUES ('test-admin-2', 'test-admin-2', 'test2@admin.com', 'Test', 'Admin', 'Administrateur');
+    SELECT '✅ Administrateur: SUCCESS' as result;
 ROLLBACK;
 
---***REMOVED***6.***REMOVED***Afficher***REMOVED***la***REMOVED***contrainte***REMOVED***finale
-SELECT***REMOVED***'===***REMOVED***CONTRAINTE***REMOVED***FINALE***REMOVED***==='***REMOVED***as***REMOVED***section;
-SELECT***REMOVED***constraint_name,***REMOVED***check_clause
-FROM***REMOVED***information_schema.check_constraints
-WHERE***REMOVED***constraint_name***REMOVED***=***REMOVED***'profiles_role_check';
+-- 6. Afficher la contrainte finale
+SELECT '=== CONTRAINTE FINALE ===' as section;
+SELECT constraint_name, check_clause
+FROM information_schema.check_constraints
+WHERE constraint_name = 'profiles_role_check';
 
---***REMOVED***7.***REMOVED***Afficher***REMOVED***les***REMOVED***valeurs***REMOVED***dans***REMOVED***la***REMOVED***table
-SELECT***REMOVED***'===***REMOVED***VALEURS***REMOVED***FINALES***REMOVED***==='***REMOVED***as***REMOVED***section;
-SELECT***REMOVED***DISTINCT***REMOVED***role,***REMOVED***COUNT(*)***REMOVED***as***REMOVED***count
-FROM***REMOVED***profiles
-GROUP***REMOVED***BY***REMOVED***role
-ORDER***REMOVED***BY***REMOVED***role;
+-- 7. Afficher les valeurs dans la table
+SELECT '=== VALEURS FINALES ===' as section;
+SELECT DISTINCT role, COUNT(*) as count
+FROM profiles
+GROUP BY role
+ORDER BY role;
 
-SELECT***REMOVED***'🎉***REMOVED***Correction***REMOVED***terminée***REMOVED***avec***REMOVED***succès!'***REMOVED***as***REMOVED***status;
+SELECT '🎉 Correction terminée avec succès!' as status;

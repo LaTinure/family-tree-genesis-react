@@ -1,29 +1,29 @@
-import***REMOVED*******REMOVED***as***REMOVED***React***REMOVED***from***REMOVED***"react"
-import***REMOVED*******REMOVED***as***REMOVED***SeparatorPrimitive***REMOVED***from***REMOVED***"@radix-ui/react-separator"
+import * as React from "react"
+import * as SeparatorPrimitive from "@radix-ui/react-separator"
 
-import***REMOVED***{***REMOVED***cn***REMOVED***}***REMOVED***from***REMOVED***"@/lib/utils"
+import { cn } from "@/lib/utils"
 
-const***REMOVED***Separator***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***SeparatorPrimitive.Root>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***SeparatorPrimitive.Root>
+const Separator = React.forwardRef<
+  React.ElementRef<typeof SeparatorPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof SeparatorPrimitive.Root>
 >(
-***REMOVED******REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***{***REMOVED***className,***REMOVED***orientation***REMOVED***=***REMOVED***"horizontal",***REMOVED***decorative***REMOVED***=***REMOVED***true,***REMOVED***...props***REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***ref
-***REMOVED******REMOVED***)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<SeparatorPrimitive.Root
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***decorative={decorative}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***orientation={orientation}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"shrink-0***REMOVED***bg-border",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***orientation***REMOVED***===***REMOVED***"horizontal"***REMOVED***?***REMOVED***"h-[1px]***REMOVED***w-full"***REMOVED***:***REMOVED***"h-full***REMOVED***w-[1px]",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED***)
+  (
+    { className, orientation = "horizontal", decorative = true, ...props },
+    ref
+  ) => (
+    <SeparatorPrimitive.Root
+      ref={ref}
+      decorative={decorative}
+      orientation={orientation}
+      className={cn(
+        "shrink-0 bg-border",
+        orientation === "horizontal" ? "h-[1px] w-full" : "h-full w-[1px]",
+        className
+      )}
+      {...props}
+    />
+  )
 )
-Separator.displayName***REMOVED***=***REMOVED***SeparatorPrimitive.Root.displayName
+Separator.displayName = SeparatorPrimitive.Root.displayName
 
-export***REMOVED***{***REMOVED***Separator***REMOVED***}
+export { Separator }

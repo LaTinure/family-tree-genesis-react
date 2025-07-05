@@ -1,26 +1,26 @@
-import***REMOVED*******REMOVED***as***REMOVED***React***REMOVED***from***REMOVED***"react"
-import***REMOVED*******REMOVED***as***REMOVED***ProgressPrimitive***REMOVED***from***REMOVED***"@radix-ui/react-progress"
+import * as React from "react"
+import * as ProgressPrimitive from "@radix-ui/react-progress"
 
-import***REMOVED***{***REMOVED***cn***REMOVED***}***REMOVED***from***REMOVED***"@/lib/utils"
+import { cn } from "@/lib/utils"
 
-const***REMOVED***Progress***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***ProgressPrimitive.Root>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***ProgressPrimitive.Root>
->(({***REMOVED***className,***REMOVED***value,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<ProgressPrimitive.Root
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"relative***REMOVED***h-4***REMOVED***w-full***REMOVED***overflow-hidden***REMOVED***rounded-full***REMOVED***bg-secondary",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED***<ProgressPrimitive.Indicator
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className="h-full***REMOVED***w-full***REMOVED***flex-1***REMOVED***bg-primary***REMOVED***transition-all"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***style={{***REMOVED***transform:***REMOVED***`translateX(-${100***REMOVED***-***REMOVED***(value***REMOVED***||***REMOVED***0)}%)`***REMOVED***}}
-***REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED***</ProgressPrimitive.Root>
+const Progress = React.forwardRef<
+  React.ElementRef<typeof ProgressPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>
+>(({ className, value, ...props }, ref) => (
+  <ProgressPrimitive.Root
+    ref={ref}
+    className={cn(
+      "relative h-4 w-full overflow-hidden rounded-full bg-secondary",
+      className
+    )}
+    {...props}
+  >
+    <ProgressPrimitive.Indicator
+      className="h-full w-full flex-1 bg-primary transition-all"
+      style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
+    />
+  </ProgressPrimitive.Root>
 ))
-Progress.displayName***REMOVED***=***REMOVED***ProgressPrimitive.Root.displayName
+Progress.displayName = ProgressPrimitive.Root.displayName
 
-export***REMOVED***{***REMOVED***Progress***REMOVED***}
+export { Progress }

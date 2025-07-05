@@ -1,41 +1,41 @@
---***REMOVED***Migration***REMOVED***pour***REMOVED***ajouter***REMOVED***la***REMOVED***colonne***REMOVED***dynasty_id***REMOVED***à***REMOVED***la***REMOVED***table***REMOVED***profiles
---***REMOVED***Date:***REMOVED***2024-01-XX
+-- Migration pour ajouter la colonne dynasty_id à la table profiles
+-- Date: 2024-01-XX
 
---***REMOVED***Vérifier***REMOVED***si***REMOVED***la***REMOVED***colonne***REMOVED***dynasty_id***REMOVED***existe***REMOVED***déjà
-DO***REMOVED***$$
+-- Vérifier si la colonne dynasty_id existe déjà
+DO $$
 BEGIN
-***REMOVED******REMOVED******REMOVED******REMOVED***--***REMOVED***Si***REMOVED***la***REMOVED***colonne***REMOVED***n'existe***REMOVED***pas,***REMOVED***la***REMOVED***créer
-***REMOVED******REMOVED******REMOVED******REMOVED***IF***REMOVED***NOT***REMOVED***EXISTS***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***SELECT***REMOVED***1***REMOVED***FROM***REMOVED***information_schema.columns
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***WHERE***REMOVED***table_name***REMOVED***=***REMOVED***'profiles'***REMOVED***AND***REMOVED***column_name***REMOVED***=***REMOVED***'dynasty_id'
-***REMOVED******REMOVED******REMOVED******REMOVED***)***REMOVED***THEN
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ALTER***REMOVED***TABLE***REMOVED***profiles***REMOVED***ADD***REMOVED***COLUMN***REMOVED***dynasty_id***REMOVED***UUID;
-***REMOVED******REMOVED******REMOVED******REMOVED***END***REMOVED***IF;
-END***REMOVED***$$;
+    -- Si la colonne n'existe pas, la créer
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name = 'profiles' AND column_name = 'dynasty_id'
+    ) THEN
+        ALTER TABLE profiles ADD COLUMN dynasty_id UUID;
+    END IF;
+END $$;
 
---***REMOVED***Créer***REMOVED***un***REMOVED***index***REMOVED***sur***REMOVED***la***REMOVED***colonne***REMOVED***dynasty_id***REMOVED***pour***REMOVED***améliorer***REMOVED***les***REMOVED***performances
-CREATE***REMOVED***INDEX***REMOVED***IF***REMOVED***NOT***REMOVED***EXISTS***REMOVED***idx_profiles_dynasty_id***REMOVED***ON***REMOVED***profiles(dynasty_id);
+-- Créer un index sur la colonne dynasty_id pour améliorer les performances
+CREATE INDEX IF NOT EXISTS idx_profiles_dynasty_id ON profiles(dynasty_id);
 
---***REMOVED***Ajouter***REMOVED***une***REMOVED***contrainte***REMOVED***de***REMOVED***clé***REMOVED***étrangère***REMOVED***vers***REMOVED***la***REMOVED***table***REMOVED***dynasties***REMOVED***(si***REMOVED***elle***REMOVED***existe)
-DO***REMOVED***$$
+-- Ajouter une contrainte de clé étrangère vers la table dynasties (si elle existe)
+DO $$
 BEGIN
-***REMOVED******REMOVED******REMOVED******REMOVED***--***REMOVED***Vérifier***REMOVED***si***REMOVED***la***REMOVED***table***REMOVED***dynasties***REMOVED***existe
-***REMOVED******REMOVED******REMOVED******REMOVED***IF***REMOVED***EXISTS***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***SELECT***REMOVED***1***REMOVED***FROM***REMOVED***information_schema.tables
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***WHERE***REMOVED***table_name***REMOVED***=***REMOVED***'dynasties'
-***REMOVED******REMOVED******REMOVED******REMOVED***)***REMOVED***THEN
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***--***REMOVED***Ajouter***REMOVED***la***REMOVED***contrainte***REMOVED***de***REMOVED***clé***REMOVED***étrangère***REMOVED***si***REMOVED***elle***REMOVED***n'existe***REMOVED***pas***REMOVED***déjà
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***IF***REMOVED***NOT***REMOVED***EXISTS***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***SELECT***REMOVED***1***REMOVED***FROM***REMOVED***information_schema.table_constraints
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***WHERE***REMOVED***constraint_name***REMOVED***=***REMOVED***'profiles_dynasty_id_fkey'
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)***REMOVED***THEN
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ALTER***REMOVED***TABLE***REMOVED***profiles
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ADD***REMOVED***CONSTRAINT***REMOVED***profiles_dynasty_id_fkey
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***FOREIGN***REMOVED***KEY***REMOVED***(dynasty_id)***REMOVED***REFERENCES***REMOVED***dynasties(id)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ON***REMOVED***DELETE***REMOVED***SET***REMOVED***NULL;
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***END***REMOVED***IF;
-***REMOVED******REMOVED******REMOVED******REMOVED***END***REMOVED***IF;
-END***REMOVED***$$;
+    -- Vérifier si la table dynasties existe
+    IF EXISTS (
+        SELECT 1 FROM information_schema.tables
+        WHERE table_name = 'dynasties'
+    ) THEN
+        -- Ajouter la contrainte de clé étrangère si elle n'existe pas déjà
+        IF NOT EXISTS (
+            SELECT 1 FROM information_schema.table_constraints
+            WHERE constraint_name = 'profiles_dynasty_id_fkey'
+        ) THEN
+            ALTER TABLE profiles
+            ADD CONSTRAINT profiles_dynasty_id_fkey
+            FOREIGN KEY (dynasty_id) REFERENCES dynasties(id)
+            ON DELETE SET NULL;
+        END IF;
+    END IF;
+END $$;
 
---***REMOVED***Ajouter***REMOVED***un***REMOVED***commentaire***REMOVED***sur***REMOVED***la***REMOVED***colonne
-COMMENT***REMOVED***ON***REMOVED***COLUMN***REMOVED***profiles.dynasty_id***REMOVED***IS***REMOVED***'ID***REMOVED***de***REMOVED***la***REMOVED***dynastie***REMOVED***à***REMOVED***laquelle***REMOVED***appartient***REMOVED***ce***REMOVED***profil';
+-- Ajouter un commentaire sur la colonne
+COMMENT ON COLUMN profiles.dynasty_id IS 'ID de la dynastie à laquelle appartient ce profil';

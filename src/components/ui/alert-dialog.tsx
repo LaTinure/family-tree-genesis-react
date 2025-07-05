@@ -1,139 +1,139 @@
-import***REMOVED*******REMOVED***as***REMOVED***React***REMOVED***from***REMOVED***"react"
-import***REMOVED*******REMOVED***as***REMOVED***AlertDialogPrimitive***REMOVED***from***REMOVED***"@radix-ui/react-alert-dialog"
+import * as React from "react"
+import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog"
 
-import***REMOVED***{***REMOVED***cn***REMOVED***}***REMOVED***from***REMOVED***"@/lib/utils"
-import***REMOVED***{***REMOVED***buttonVariants***REMOVED***}***REMOVED***from***REMOVED***"@/components/ui/button"
+import { cn } from "@/lib/utils"
+import { buttonVariants } from "@/components/ui/button"
 
-const***REMOVED***AlertDialog***REMOVED***=***REMOVED***AlertDialogPrimitive.Root
+const AlertDialog = AlertDialogPrimitive.Root
 
-const***REMOVED***AlertDialogTrigger***REMOVED***=***REMOVED***AlertDialogPrimitive.Trigger
+const AlertDialogTrigger = AlertDialogPrimitive.Trigger
 
-const***REMOVED***AlertDialogPortal***REMOVED***=***REMOVED***AlertDialogPrimitive.Portal
+const AlertDialogPortal = AlertDialogPrimitive.Portal
 
-const***REMOVED***AlertDialogOverlay***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***AlertDialogPrimitive.Overlay>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***AlertDialogPrimitive.Overlay>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<AlertDialogPrimitive.Overlay
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"fixed***REMOVED***inset-0***REMOVED***z-50***REMOVED***bg-black/80***REMOVED******REMOVED***data-[state=open]:animate-in***REMOVED***data-[state=closed]:animate-out***REMOVED***data-[state=closed]:fade-out-0***REMOVED***data-[state=open]:fade-in-0",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED***/>
+const AlertDialogOverlay = React.forwardRef<
+  React.ElementRef<typeof AlertDialogPrimitive.Overlay>,
+  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Overlay>
+>(({ className, ...props }, ref) => (
+  <AlertDialogPrimitive.Overlay
+    className={cn(
+      "fixed inset-0 z-50 bg-black/80  data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      className
+    )}
+    {...props}
+    ref={ref}
+  />
 ))
-AlertDialogOverlay.displayName***REMOVED***=***REMOVED***AlertDialogPrimitive.Overlay.displayName
+AlertDialogOverlay.displayName = AlertDialogPrimitive.Overlay.displayName
 
-const***REMOVED***AlertDialogContent***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***AlertDialogPrimitive.Content>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***AlertDialogPrimitive.Content>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<AlertDialogPortal>
-***REMOVED******REMOVED******REMOVED******REMOVED***<AlertDialogOverlay***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED***<AlertDialogPrimitive.Content
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"fixed***REMOVED***left-[50%]***REMOVED***top-[50%]***REMOVED***z-50***REMOVED***grid***REMOVED***w-full***REMOVED***max-w-lg***REMOVED***translate-x-[-50%]***REMOVED***translate-y-[-50%]***REMOVED***gap-4***REMOVED***border***REMOVED***bg-background***REMOVED***p-6***REMOVED***shadow-lg***REMOVED***duration-200***REMOVED***data-[state=open]:animate-in***REMOVED***data-[state=closed]:animate-out***REMOVED***data-[state=closed]:fade-out-0***REMOVED***data-[state=open]:fade-in-0***REMOVED***data-[state=closed]:zoom-out-95***REMOVED***data-[state=open]:zoom-in-95***REMOVED***data-[state=closed]:slide-out-to-left-1/2***REMOVED***data-[state=closed]:slide-out-to-top-[48%]***REMOVED***data-[state=open]:slide-in-from-left-1/2***REMOVED***data-[state=open]:slide-in-from-top-[48%]***REMOVED***sm:rounded-lg",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED***</AlertDialogPortal>
+const AlertDialogContent = React.forwardRef<
+  React.ElementRef<typeof AlertDialogPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Content>
+>(({ className, ...props }, ref) => (
+  <AlertDialogPortal>
+    <AlertDialogOverlay />
+    <AlertDialogPrimitive.Content
+      ref={ref}
+      className={cn(
+        "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
+        className
+      )}
+      {...props}
+    />
+  </AlertDialogPortal>
 ))
-AlertDialogContent.displayName***REMOVED***=***REMOVED***AlertDialogPrimitive.Content.displayName
+AlertDialogContent.displayName = AlertDialogPrimitive.Content.displayName
 
-const***REMOVED***AlertDialogHeader***REMOVED***=***REMOVED***({
-***REMOVED******REMOVED***className,
-***REMOVED******REMOVED***...props
-}:***REMOVED***React.HTMLAttributes<HTMLDivElement>)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"flex***REMOVED***flex-col***REMOVED***space-y-2***REMOVED***text-center***REMOVED***sm:text-left",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const AlertDialogHeader = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={cn(
+      "flex flex-col space-y-2 text-center sm:text-left",
+      className
+    )}
+    {...props}
+  />
 )
-AlertDialogHeader.displayName***REMOVED***=***REMOVED***"AlertDialogHeader"
+AlertDialogHeader.displayName = "AlertDialogHeader"
 
-const***REMOVED***AlertDialogFooter***REMOVED***=***REMOVED***({
-***REMOVED******REMOVED***className,
-***REMOVED******REMOVED***...props
-}:***REMOVED***React.HTMLAttributes<HTMLDivElement>)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"flex***REMOVED***flex-col-reverse***REMOVED***sm:flex-row***REMOVED***sm:justify-end***REMOVED***sm:space-x-2",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const AlertDialogFooter = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={cn(
+      "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
+      className
+    )}
+    {...props}
+  />
 )
-AlertDialogFooter.displayName***REMOVED***=***REMOVED***"AlertDialogFooter"
+AlertDialogFooter.displayName = "AlertDialogFooter"
 
-const***REMOVED***AlertDialogTitle***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***AlertDialogPrimitive.Title>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***AlertDialogPrimitive.Title>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<AlertDialogPrimitive.Title
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn("text-lg***REMOVED***font-semibold",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const AlertDialogTitle = React.forwardRef<
+  React.ElementRef<typeof AlertDialogPrimitive.Title>,
+  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Title>
+>(({ className, ...props }, ref) => (
+  <AlertDialogPrimitive.Title
+    ref={ref}
+    className={cn("text-lg font-semibold", className)}
+    {...props}
+  />
 ))
-AlertDialogTitle.displayName***REMOVED***=***REMOVED***AlertDialogPrimitive.Title.displayName
+AlertDialogTitle.displayName = AlertDialogPrimitive.Title.displayName
 
-const***REMOVED***AlertDialogDescription***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***AlertDialogPrimitive.Description>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***AlertDialogPrimitive.Description>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<AlertDialogPrimitive.Description
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn("text-sm***REMOVED***text-muted-foreground",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const AlertDialogDescription = React.forwardRef<
+  React.ElementRef<typeof AlertDialogPrimitive.Description>,
+  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Description>
+>(({ className, ...props }, ref) => (
+  <AlertDialogPrimitive.Description
+    ref={ref}
+    className={cn("text-sm text-muted-foreground", className)}
+    {...props}
+  />
 ))
-AlertDialogDescription.displayName***REMOVED***=
-***REMOVED******REMOVED***AlertDialogPrimitive.Description.displayName
+AlertDialogDescription.displayName =
+  AlertDialogPrimitive.Description.displayName
 
-const***REMOVED***AlertDialogAction***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***AlertDialogPrimitive.Action>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***AlertDialogPrimitive.Action>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<AlertDialogPrimitive.Action
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(buttonVariants(),***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const AlertDialogAction = React.forwardRef<
+  React.ElementRef<typeof AlertDialogPrimitive.Action>,
+  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Action>
+>(({ className, ...props }, ref) => (
+  <AlertDialogPrimitive.Action
+    ref={ref}
+    className={cn(buttonVariants(), className)}
+    {...props}
+  />
 ))
-AlertDialogAction.displayName***REMOVED***=***REMOVED***AlertDialogPrimitive.Action.displayName
+AlertDialogAction.displayName = AlertDialogPrimitive.Action.displayName
 
-const***REMOVED***AlertDialogCancel***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***AlertDialogPrimitive.Cancel>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***AlertDialogPrimitive.Cancel>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<AlertDialogPrimitive.Cancel
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***buttonVariants({***REMOVED***variant:***REMOVED***"outline"***REMOVED***}),
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"mt-2***REMOVED***sm:mt-0",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const AlertDialogCancel = React.forwardRef<
+  React.ElementRef<typeof AlertDialogPrimitive.Cancel>,
+  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Cancel>
+>(({ className, ...props }, ref) => (
+  <AlertDialogPrimitive.Cancel
+    ref={ref}
+    className={cn(
+      buttonVariants({ variant: "outline" }),
+      "mt-2 sm:mt-0",
+      className
+    )}
+    {...props}
+  />
 ))
-AlertDialogCancel.displayName***REMOVED***=***REMOVED***AlertDialogPrimitive.Cancel.displayName
+AlertDialogCancel.displayName = AlertDialogPrimitive.Cancel.displayName
 
-export***REMOVED***{
-***REMOVED******REMOVED***AlertDialog,
-***REMOVED******REMOVED***AlertDialogPortal,
-***REMOVED******REMOVED***AlertDialogOverlay,
-***REMOVED******REMOVED***AlertDialogTrigger,
-***REMOVED******REMOVED***AlertDialogContent,
-***REMOVED******REMOVED***AlertDialogHeader,
-***REMOVED******REMOVED***AlertDialogFooter,
-***REMOVED******REMOVED***AlertDialogTitle,
-***REMOVED******REMOVED***AlertDialogDescription,
-***REMOVED******REMOVED***AlertDialogAction,
-***REMOVED******REMOVED***AlertDialogCancel,
+export {
+  AlertDialog,
+  AlertDialogPortal,
+  AlertDialogOverlay,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogAction,
+  AlertDialogCancel,
 }

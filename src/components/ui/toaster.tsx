@@ -1,33 +1,33 @@
-import***REMOVED***{***REMOVED***useToast***REMOVED***}***REMOVED***from***REMOVED***"@/hooks/use-toast"
-import***REMOVED***{
-***REMOVED******REMOVED***Toast,
-***REMOVED******REMOVED***ToastClose,
-***REMOVED******REMOVED***ToastDescription,
-***REMOVED******REMOVED***ToastProvider,
-***REMOVED******REMOVED***ToastTitle,
-***REMOVED******REMOVED***ToastViewport,
-}***REMOVED***from***REMOVED***"@/components/ui/toast"
+import { useToast } from "@/hooks/use-toast"
+import {
+  Toast,
+  ToastClose,
+  ToastDescription,
+  ToastProvider,
+  ToastTitle,
+  ToastViewport,
+} from "@/components/ui/toast"
 
-export***REMOVED***function***REMOVED***Toaster()***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***{***REMOVED***toasts***REMOVED***}***REMOVED***=***REMOVED***useToast()
+export function Toaster() {
+  const { toasts } = useToast()
 
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<ToastProvider>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{toasts.map(function***REMOVED***({***REMOVED***id,***REMOVED***title,***REMOVED***description,***REMOVED***action,***REMOVED***...props***REMOVED***})***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Toast***REMOVED***key={id}***REMOVED***{...props}>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="grid***REMOVED***gap-1">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{title***REMOVED***&&***REMOVED***<ToastTitle>{title}</ToastTitle>}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{description***REMOVED***&&***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<ToastDescription>{description}</ToastDescription>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{action}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<ToastClose***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Toast>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***})}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<ToastViewport***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED***</ToastProvider>
-***REMOVED******REMOVED***)
+  return (
+    <ToastProvider>
+      {toasts.map(function ({ id, title, description, action, ...props }) {
+        return (
+          <Toast key={id} {...props}>
+            <div className="grid gap-1">
+              {title && <ToastTitle>{title}</ToastTitle>}
+              {description && (
+                <ToastDescription>{description}</ToastDescription>
+              )}
+            </div>
+            {action}
+            <ToastClose />
+          </Toast>
+        )
+      })}
+      <ToastViewport />
+    </ToastProvider>
+  )
 }

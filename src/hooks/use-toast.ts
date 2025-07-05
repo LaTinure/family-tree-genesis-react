@@ -1,191 +1,191 @@
-import***REMOVED*******REMOVED***as***REMOVED***React***REMOVED***from***REMOVED***"react"
+import * as React from "react"
 
-import***REMOVED***type***REMOVED***{
-***REMOVED******REMOVED***ToastActionElement,
-***REMOVED******REMOVED***ToastProps,
-}***REMOVED***from***REMOVED***"@/components/ui/toast"
+import type {
+  ToastActionElement,
+  ToastProps,
+} from "@/components/ui/toast"
 
-const***REMOVED***TOAST_LIMIT***REMOVED***=***REMOVED***1
-const***REMOVED***TOAST_REMOVE_DELAY***REMOVED***=***REMOVED***1000000
+const TOAST_LIMIT = 1
+const TOAST_REMOVE_DELAY = 1000000
 
-type***REMOVED***ToasterToast***REMOVED***=***REMOVED***ToastProps***REMOVED***&***REMOVED***{
-***REMOVED******REMOVED***id:***REMOVED***string
-***REMOVED******REMOVED***title?:***REMOVED***React.ReactNode
-***REMOVED******REMOVED***description?:***REMOVED***React.ReactNode
-***REMOVED******REMOVED***action?:***REMOVED***ToastActionElement
+type ToasterToast = ToastProps & {
+  id: string
+  title?: React.ReactNode
+  description?: React.ReactNode
+  action?: ToastActionElement
 }
 
-const***REMOVED***actionTypes***REMOVED***=***REMOVED***{
-***REMOVED******REMOVED***ADD_TOAST:***REMOVED***"ADD_TOAST",
-***REMOVED******REMOVED***UPDATE_TOAST:***REMOVED***"UPDATE_TOAST",
-***REMOVED******REMOVED***DISMISS_TOAST:***REMOVED***"DISMISS_TOAST",
-***REMOVED******REMOVED***REMOVE_TOAST:***REMOVED***"REMOVE_TOAST",
-}***REMOVED***as***REMOVED***const
+const actionTypes = {
+  ADD_TOAST: "ADD_TOAST",
+  UPDATE_TOAST: "UPDATE_TOAST",
+  DISMISS_TOAST: "DISMISS_TOAST",
+  REMOVE_TOAST: "REMOVE_TOAST",
+} as const
 
-let***REMOVED***count***REMOVED***=***REMOVED***0
+let count = 0
 
-function***REMOVED***genId()***REMOVED***{
-***REMOVED******REMOVED***count***REMOVED***=***REMOVED***(count***REMOVED***+***REMOVED***1)***REMOVED***%***REMOVED***Number.MAX_SAFE_INTEGER
-***REMOVED******REMOVED***return***REMOVED***count.toString()
+function genId() {
+  count = (count + 1) % Number.MAX_SAFE_INTEGER
+  return count.toString()
 }
 
-type***REMOVED***ActionType***REMOVED***=***REMOVED***typeof***REMOVED***actionTypes
+type ActionType = typeof actionTypes
 
-type***REMOVED***Action***REMOVED***=
-***REMOVED******REMOVED***|***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***type:***REMOVED***ActionType["ADD_TOAST"]
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***toast:***REMOVED***ToasterToast
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED***|***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***type:***REMOVED***ActionType["UPDATE_TOAST"]
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***toast:***REMOVED***Partial<ToasterToast>
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED***|***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***type:***REMOVED***ActionType["DISMISS_TOAST"]
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***toastId?:***REMOVED***ToasterToast["id"]
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED***|***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***type:***REMOVED***ActionType["REMOVE_TOAST"]
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***toastId?:***REMOVED***ToasterToast["id"]
-***REMOVED******REMOVED******REMOVED******REMOVED***}
+type Action =
+  | {
+      type: ActionType["ADD_TOAST"]
+      toast: ToasterToast
+    }
+  | {
+      type: ActionType["UPDATE_TOAST"]
+      toast: Partial<ToasterToast>
+    }
+  | {
+      type: ActionType["DISMISS_TOAST"]
+      toastId?: ToasterToast["id"]
+    }
+  | {
+      type: ActionType["REMOVE_TOAST"]
+      toastId?: ToasterToast["id"]
+    }
 
-interface***REMOVED***State***REMOVED***{
-***REMOVED******REMOVED***toasts:***REMOVED***ToasterToast[]
+interface State {
+  toasts: ToasterToast[]
 }
 
-const***REMOVED***toastTimeouts***REMOVED***=***REMOVED***new***REMOVED***Map<string,***REMOVED***ReturnType<typeof***REMOVED***setTimeout>>()
+const toastTimeouts = new Map<string, ReturnType<typeof setTimeout>>()
 
-const***REMOVED***addToRemoveQueue***REMOVED***=***REMOVED***(toastId:***REMOVED***string)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***if***REMOVED***(toastTimeouts.has(toastId))***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***return
-***REMOVED******REMOVED***}
+const addToRemoveQueue = (toastId: string) => {
+  if (toastTimeouts.has(toastId)) {
+    return
+  }
 
-***REMOVED******REMOVED***const***REMOVED***timeout***REMOVED***=***REMOVED***setTimeout(()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***toastTimeouts.delete(toastId)
-***REMOVED******REMOVED******REMOVED******REMOVED***dispatch({
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***type:***REMOVED***"REMOVE_TOAST",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***toastId:***REMOVED***toastId,
-***REMOVED******REMOVED******REMOVED******REMOVED***})
-***REMOVED******REMOVED***},***REMOVED***TOAST_REMOVE_DELAY)
+  const timeout = setTimeout(() => {
+    toastTimeouts.delete(toastId)
+    dispatch({
+      type: "REMOVE_TOAST",
+      toastId: toastId,
+    })
+  }, TOAST_REMOVE_DELAY)
 
-***REMOVED******REMOVED***toastTimeouts.set(toastId,***REMOVED***timeout)
+  toastTimeouts.set(toastId, timeout)
 }
 
-export***REMOVED***const***REMOVED***reducer***REMOVED***=***REMOVED***(state:***REMOVED***State,***REMOVED***action:***REMOVED***Action):***REMOVED***State***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***switch***REMOVED***(action.type)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***case***REMOVED***"ADD_TOAST":
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***...state,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***toasts:***REMOVED***[action.toast,***REMOVED***...state.toasts].slice(0,***REMOVED***TOAST_LIMIT),
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
+export const reducer = (state: State, action: Action): State => {
+  switch (action.type) {
+    case "ADD_TOAST":
+      return {
+        ...state,
+        toasts: [action.toast, ...state.toasts].slice(0, TOAST_LIMIT),
+      }
 
-***REMOVED******REMOVED******REMOVED******REMOVED***case***REMOVED***"UPDATE_TOAST":
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***...state,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***toasts:***REMOVED***state.toasts.map((t)***REMOVED***=>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***t.id***REMOVED***===***REMOVED***action.toast.id***REMOVED***?***REMOVED***{***REMOVED***...t,***REMOVED***...action.toast***REMOVED***}***REMOVED***:***REMOVED***t
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***),
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
+    case "UPDATE_TOAST":
+      return {
+        ...state,
+        toasts: state.toasts.map((t) =>
+          t.id === action.toast.id ? { ...t, ...action.toast } : t
+        ),
+      }
 
-***REMOVED******REMOVED******REMOVED******REMOVED***case***REMOVED***"DISMISS_TOAST":***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***toastId***REMOVED***}***REMOVED***=***REMOVED***action
+    case "DISMISS_TOAST": {
+      const { toastId } = action
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***!***REMOVED***Side***REMOVED***effects***REMOVED***!***REMOVED***-***REMOVED***This***REMOVED***could***REMOVED***be***REMOVED***extracted***REMOVED***into***REMOVED***a***REMOVED***dismissToast()***REMOVED***action,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***but***REMOVED***I'll***REMOVED***keep***REMOVED***it***REMOVED***here***REMOVED***for***REMOVED***simplicity
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(toastId)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***addToRemoveQueue(toastId)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***else***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***state.toasts.forEach((toast)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***addToRemoveQueue(toast.id)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***})
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
+      // ! Side effects ! - This could be extracted into a dismissToast() action,
+      // but I'll keep it here for simplicity
+      if (toastId) {
+        addToRemoveQueue(toastId)
+      } else {
+        state.toasts.forEach((toast) => {
+          addToRemoveQueue(toast.id)
+        })
+      }
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***...state,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***toasts:***REMOVED***state.toasts.map((t)***REMOVED***=>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***t.id***REMOVED***===***REMOVED***toastId***REMOVED***||***REMOVED***toastId***REMOVED***===***REMOVED***undefined
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***...t,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***open:***REMOVED***false,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***t
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***),
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***case***REMOVED***"REMOVE_TOAST":
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(action.toastId***REMOVED***===***REMOVED***undefined)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***...state,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***toasts:***REMOVED***[],
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***...state,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***toasts:***REMOVED***state.toasts.filter((t)***REMOVED***=>***REMOVED***t.id***REMOVED***!==***REMOVED***action.toastId),
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED***}
+      return {
+        ...state,
+        toasts: state.toasts.map((t) =>
+          t.id === toastId || toastId === undefined
+            ? {
+                ...t,
+                open: false,
+              }
+            : t
+        ),
+      }
+    }
+    case "REMOVE_TOAST":
+      if (action.toastId === undefined) {
+        return {
+          ...state,
+          toasts: [],
+        }
+      }
+      return {
+        ...state,
+        toasts: state.toasts.filter((t) => t.id !== action.toastId),
+      }
+  }
 }
 
-const***REMOVED***listeners:***REMOVED***Array<(state:***REMOVED***State)***REMOVED***=>***REMOVED***void>***REMOVED***=***REMOVED***[]
+const listeners: Array<(state: State) => void> = []
 
-let***REMOVED***memoryState:***REMOVED***State***REMOVED***=***REMOVED***{***REMOVED***toasts:***REMOVED***[]***REMOVED***}
+let memoryState: State = { toasts: [] }
 
-function***REMOVED***dispatch(action:***REMOVED***Action)***REMOVED***{
-***REMOVED******REMOVED***memoryState***REMOVED***=***REMOVED***reducer(memoryState,***REMOVED***action)
-***REMOVED******REMOVED***listeners.forEach((listener)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***listener(memoryState)
-***REMOVED******REMOVED***})
+function dispatch(action: Action) {
+  memoryState = reducer(memoryState, action)
+  listeners.forEach((listener) => {
+    listener(memoryState)
+  })
 }
 
-type***REMOVED***Toast***REMOVED***=***REMOVED***Omit<ToasterToast,***REMOVED***"id">
+type Toast = Omit<ToasterToast, "id">
 
-function***REMOVED***toast({***REMOVED***...props***REMOVED***}:***REMOVED***Toast)***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***id***REMOVED***=***REMOVED***genId()
+function toast({ ...props }: Toast) {
+  const id = genId()
 
-***REMOVED******REMOVED***const***REMOVED***update***REMOVED***=***REMOVED***(props:***REMOVED***ToasterToast)***REMOVED***=>
-***REMOVED******REMOVED******REMOVED******REMOVED***dispatch({
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***type:***REMOVED***"UPDATE_TOAST",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***toast:***REMOVED***{***REMOVED***...props,***REMOVED***id***REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***})
-***REMOVED******REMOVED***const***REMOVED***dismiss***REMOVED***=***REMOVED***()***REMOVED***=>***REMOVED***dispatch({***REMOVED***type:***REMOVED***"DISMISS_TOAST",***REMOVED***toastId:***REMOVED***id***REMOVED***})
+  const update = (props: ToasterToast) =>
+    dispatch({
+      type: "UPDATE_TOAST",
+      toast: { ...props, id },
+    })
+  const dismiss = () => dispatch({ type: "DISMISS_TOAST", toastId: id })
 
-***REMOVED******REMOVED***dispatch({
-***REMOVED******REMOVED******REMOVED******REMOVED***type:***REMOVED***"ADD_TOAST",
-***REMOVED******REMOVED******REMOVED******REMOVED***toast:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***...props,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***open:***REMOVED***true,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onOpenChange:***REMOVED***(open)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(!open)***REMOVED***dismiss()
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED***})
+  dispatch({
+    type: "ADD_TOAST",
+    toast: {
+      ...props,
+      id,
+      open: true,
+      onOpenChange: (open) => {
+        if (!open) dismiss()
+      },
+    },
+  })
 
-***REMOVED******REMOVED***return***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***id,
-***REMOVED******REMOVED******REMOVED******REMOVED***dismiss,
-***REMOVED******REMOVED******REMOVED******REMOVED***update,
-***REMOVED******REMOVED***}
+  return {
+    id: id,
+    dismiss,
+    update,
+  }
 }
 
-function***REMOVED***useToast()***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***[state,***REMOVED***setState]***REMOVED***=***REMOVED***React.useState<State>(memoryState)
+function useToast() {
+  const [state, setState] = React.useState<State>(memoryState)
 
-***REMOVED******REMOVED***React.useEffect(()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***listeners.push(setState)
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***index***REMOVED***=***REMOVED***listeners.indexOf(setState)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(index***REMOVED***>***REMOVED***-1)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***listeners.splice(index,***REMOVED***1)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED***},***REMOVED***[state])
+  React.useEffect(() => {
+    listeners.push(setState)
+    return () => {
+      const index = listeners.indexOf(setState)
+      if (index > -1) {
+        listeners.splice(index, 1)
+      }
+    }
+  }, [state])
 
-***REMOVED******REMOVED***return***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***...state,
-***REMOVED******REMOVED******REMOVED******REMOVED***toast,
-***REMOVED******REMOVED******REMOVED******REMOVED***dismiss:***REMOVED***(toastId?:***REMOVED***string)***REMOVED***=>***REMOVED***dispatch({***REMOVED***type:***REMOVED***"DISMISS_TOAST",***REMOVED***toastId***REMOVED***}),
-***REMOVED******REMOVED***}
+  return {
+    ...state,
+    toast,
+    dismiss: (toastId?: string) => dispatch({ type: "DISMISS_TOAST", toastId }),
+  }
 }
 
-export***REMOVED***{***REMOVED***useToast,***REMOVED***toast***REMOVED***}
+export { useToast, toast }

@@ -1,37 +1,37 @@
---***REMOVED***Migration***REMOVED***pour***REMOVED***mettre***REMOVED***à***REMOVED***jour***REMOVED***le***REMOVED***champ***REMOVED***role***REMOVED***dans***REMOVED***la***REMOVED***table***REMOVED***profiles
---***REMOVED***Date:***REMOVED***2024-01-XX
+-- Migration pour mettre à jour le champ role dans la table profiles
+-- Date: 2024-01-XX
 
---***REMOVED***Vérifier***REMOVED***si***REMOVED***la***REMOVED***colonne***REMOVED***role***REMOVED***existe***REMOVED***déjà
-DO***REMOVED***$$
+-- Vérifier si la colonne role existe déjà
+DO $$
 BEGIN
-***REMOVED******REMOVED******REMOVED******REMOVED***--***REMOVED***Si***REMOVED***la***REMOVED***colonne***REMOVED***n'existe***REMOVED***pas,***REMOVED***la***REMOVED***créer
-***REMOVED******REMOVED******REMOVED******REMOVED***IF***REMOVED***NOT***REMOVED***EXISTS***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***SELECT***REMOVED***1***REMOVED***FROM***REMOVED***information_schema.columns
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***WHERE***REMOVED***table_name***REMOVED***=***REMOVED***'profiles'***REMOVED***AND***REMOVED***column_name***REMOVED***=***REMOVED***'role'
-***REMOVED******REMOVED******REMOVED******REMOVED***)***REMOVED***THEN
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ALTER***REMOVED***TABLE***REMOVED***profiles***REMOVED***ADD***REMOVED***COLUMN***REMOVED***role***REMOVED***VARCHAR(50)***REMOVED***DEFAULT***REMOVED***'Membre';
-***REMOVED******REMOVED******REMOVED******REMOVED***END***REMOVED***IF;
-END***REMOVED***$$;
+    -- Si la colonne n'existe pas, la créer
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name = 'profiles' AND column_name = 'role'
+    ) THEN
+        ALTER TABLE profiles ADD COLUMN role VARCHAR(50) DEFAULT 'Membre';
+    END IF;
+END $$;
 
---***REMOVED***Supprimer***REMOVED***les***REMOVED***contraintes***REMOVED***existantes***REMOVED***si***REMOVED***elles***REMOVED***existent
-ALTER***REMOVED***TABLE***REMOVED***profiles***REMOVED***DROP***REMOVED***CONSTRAINT***REMOVED***IF***REMOVED***EXISTS***REMOVED***profiles_role_check;
+-- Supprimer les contraintes existantes si elles existent
+ALTER TABLE profiles DROP CONSTRAINT IF EXISTS profiles_role_check;
 
---***REMOVED***Ajouter***REMOVED***la***REMOVED***nouvelle***REMOVED***contrainte***REMOVED***avec***REMOVED***les***REMOVED***valeurs***REMOVED***Membre***REMOVED***et***REMOVED***Administrateur
-ALTER***REMOVED***TABLE***REMOVED***profiles
-ADD***REMOVED***CONSTRAINT***REMOVED***profiles_role_check***REMOVED***CHECK***REMOVED***(role***REMOVED***IN***REMOVED***('Membre',***REMOVED***'Administrateur'));
+-- Ajouter la nouvelle contrainte avec les valeurs Membre et Administrateur
+ALTER TABLE profiles
+ADD CONSTRAINT profiles_role_check CHECK (role IN ('Membre', 'Administrateur'));
 
---***REMOVED***Mettre***REMOVED***à***REMOVED***jour***REMOVED***les***REMOVED***enregistrements***REMOVED***existants
---***REMOVED***Si***REMOVED***is_patriarch***REMOVED***est***REMOVED***true,***REMOVED***alors***REMOVED***role***REMOVED***=***REMOVED***'Patriarche',***REMOVED***sinon***REMOVED***'Membre'
-UPDATE***REMOVED***profiles
-SET***REMOVED***role***REMOVED***=***REMOVED***CASE
-***REMOVED******REMOVED******REMOVED******REMOVED***WHEN***REMOVED***is_patriarch***REMOVED***=***REMOVED***true***REMOVED***THEN***REMOVED***'Patriarche'
-***REMOVED******REMOVED******REMOVED******REMOVED***WHEN***REMOVED***role***REMOVED***IS***REMOVED***NULL***REMOVED***OR***REMOVED***role***REMOVED***=***REMOVED***''***REMOVED***THEN***REMOVED***'Membre'
-***REMOVED******REMOVED******REMOVED******REMOVED***ELSE***REMOVED***role
+-- Mettre à jour les enregistrements existants
+-- Si is_patriarch est true, alors role = 'Patriarche', sinon 'Membre'
+UPDATE profiles
+SET role = CASE
+    WHEN is_patriarch = true THEN 'Patriarche'
+    WHEN role IS NULL OR role = '' THEN 'Membre'
+    ELSE role
 END
-WHERE***REMOVED***role***REMOVED***IS***REMOVED***NULL***REMOVED***OR***REMOVED***role***REMOVED***=***REMOVED***'';
+WHERE role IS NULL OR role = '';
 
---***REMOVED***Créer***REMOVED***un***REMOVED***index***REMOVED***sur***REMOVED***la***REMOVED***colonne***REMOVED***role***REMOVED***pour***REMOVED***améliorer***REMOVED***les***REMOVED***performances***REMOVED***(s'il***REMOVED***n'existe***REMOVED***pas***REMOVED***déjà)
-CREATE***REMOVED***INDEX***REMOVED***IF***REMOVED***NOT***REMOVED***EXISTS***REMOVED***idx_profiles_role***REMOVED***ON***REMOVED***profiles(role);
+-- Créer un index sur la colonne role pour améliorer les performances (s'il n'existe pas déjà)
+CREATE INDEX IF NOT EXISTS idx_profiles_role ON profiles(role);
 
---***REMOVED***Ajouter***REMOVED***un***REMOVED***commentaire***REMOVED***sur***REMOVED***la***REMOVED***colonne
-COMMENT***REMOVED***ON***REMOVED***COLUMN***REMOVED***profiles.role***REMOVED***IS***REMOVED***'Rôle***REMOVED***du***REMOVED***membre***REMOVED***dans***REMOVED***la***REMOVED***famille:***REMOVED***Membre***REMOVED***ou***REMOVED***Administrateur';
+-- Ajouter un commentaire sur la colonne
+COMMENT ON COLUMN profiles.role IS 'Rôle du membre dans la famille: Membre ou Administrateur';

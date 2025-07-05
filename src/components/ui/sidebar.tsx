@@ -1,761 +1,761 @@
-import***REMOVED*******REMOVED***as***REMOVED***React***REMOVED***from***REMOVED***"react"
-import***REMOVED***{***REMOVED***Slot***REMOVED***}***REMOVED***from***REMOVED***"@radix-ui/react-slot"
-import***REMOVED***{***REMOVED***VariantProps,***REMOVED***cva***REMOVED***}***REMOVED***from***REMOVED***"class-variance-authority"
-import***REMOVED***{***REMOVED***PanelLeft***REMOVED***}***REMOVED***from***REMOVED***"lucide-react"
+import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
+import { VariantProps, cva } from "class-variance-authority"
+import { PanelLeft } from "lucide-react"
 
-import***REMOVED***{***REMOVED***useIsMobile***REMOVED***}***REMOVED***from***REMOVED***"@/hooks/use-mobile"
-import***REMOVED***{***REMOVED***cn***REMOVED***}***REMOVED***from***REMOVED***"@/lib/utils"
-import***REMOVED***{***REMOVED***Button***REMOVED***}***REMOVED***from***REMOVED***"@/components/ui/button"
-import***REMOVED***{***REMOVED***Input***REMOVED***}***REMOVED***from***REMOVED***"@/components/ui/input"
-import***REMOVED***{***REMOVED***Separator***REMOVED***}***REMOVED***from***REMOVED***"@/components/ui/separator"
-import***REMOVED***{***REMOVED***Sheet,***REMOVED***SheetContent***REMOVED***}***REMOVED***from***REMOVED***"@/components/ui/sheet"
-import***REMOVED***{***REMOVED***Skeleton***REMOVED***}***REMOVED***from***REMOVED***"@/components/ui/skeleton"
-import***REMOVED***{
-***REMOVED******REMOVED***Tooltip,
-***REMOVED******REMOVED***TooltipContent,
-***REMOVED******REMOVED***TooltipProvider,
-***REMOVED******REMOVED***TooltipTrigger,
-}***REMOVED***from***REMOVED***"@/components/ui/tooltip"
+import { useIsMobile } from "@/hooks/use-mobile"
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Separator } from "@/components/ui/separator"
+import { Sheet, SheetContent } from "@/components/ui/sheet"
+import { Skeleton } from "@/components/ui/skeleton"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
-const***REMOVED***SIDEBAR_COOKIE_NAME***REMOVED***=***REMOVED***"sidebar:state"
-const***REMOVED***SIDEBAR_COOKIE_MAX_AGE***REMOVED***=***REMOVED***60***REMOVED*******REMOVED***60***REMOVED*******REMOVED***24***REMOVED*******REMOVED***7
-const***REMOVED***SIDEBAR_WIDTH***REMOVED***=***REMOVED***"16rem"
-const***REMOVED***SIDEBAR_WIDTH_MOBILE***REMOVED***=***REMOVED***"18rem"
-const***REMOVED***SIDEBAR_WIDTH_ICON***REMOVED***=***REMOVED***"3rem"
-const***REMOVED***SIDEBAR_KEYBOARD_SHORTCUT***REMOVED***=***REMOVED***"b"
+const SIDEBAR_COOKIE_NAME = "sidebar:state"
+const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
+const SIDEBAR_WIDTH = "16rem"
+const SIDEBAR_WIDTH_MOBILE = "18rem"
+const SIDEBAR_WIDTH_ICON = "3rem"
+const SIDEBAR_KEYBOARD_SHORTCUT = "b"
 
-type***REMOVED***SidebarContext***REMOVED***=***REMOVED***{
-***REMOVED******REMOVED***state:***REMOVED***"expanded"***REMOVED***|***REMOVED***"collapsed"
-***REMOVED******REMOVED***open:***REMOVED***boolean
-***REMOVED******REMOVED***setOpen:***REMOVED***(open:***REMOVED***boolean)***REMOVED***=>***REMOVED***void
-***REMOVED******REMOVED***openMobile:***REMOVED***boolean
-***REMOVED******REMOVED***setOpenMobile:***REMOVED***(open:***REMOVED***boolean)***REMOVED***=>***REMOVED***void
-***REMOVED******REMOVED***isMobile:***REMOVED***boolean
-***REMOVED******REMOVED***toggleSidebar:***REMOVED***()***REMOVED***=>***REMOVED***void
+type SidebarContext = {
+  state: "expanded" | "collapsed"
+  open: boolean
+  setOpen: (open: boolean) => void
+  openMobile: boolean
+  setOpenMobile: (open: boolean) => void
+  isMobile: boolean
+  toggleSidebar: () => void
 }
 
-const***REMOVED***SidebarContext***REMOVED***=***REMOVED***React.createContext<SidebarContext***REMOVED***|***REMOVED***null>(null)
+const SidebarContext = React.createContext<SidebarContext | null>(null)
 
-function***REMOVED***useSidebar()***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***context***REMOVED***=***REMOVED***React.useContext(SidebarContext)
-***REMOVED******REMOVED***if***REMOVED***(!context)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***throw***REMOVED***new***REMOVED***Error("useSidebar***REMOVED***must***REMOVED***be***REMOVED***used***REMOVED***within***REMOVED***a***REMOVED***SidebarProvider.")
-***REMOVED******REMOVED***}
+function useSidebar() {
+  const context = React.useContext(SidebarContext)
+  if (!context) {
+    throw new Error("useSidebar must be used within a SidebarProvider.")
+  }
 
-***REMOVED******REMOVED***return***REMOVED***context
+  return context
 }
 
-const***REMOVED***SidebarProvider***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLDivElement,
-***REMOVED******REMOVED***React.ComponentProps<"div">***REMOVED***&***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***defaultOpen?:***REMOVED***boolean
-***REMOVED******REMOVED******REMOVED******REMOVED***open?:***REMOVED***boolean
-***REMOVED******REMOVED******REMOVED******REMOVED***onOpenChange?:***REMOVED***(open:***REMOVED***boolean)***REMOVED***=>***REMOVED***void
-***REMOVED******REMOVED***}
+const SidebarProvider = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<"div"> & {
+    defaultOpen?: boolean
+    open?: boolean
+    onOpenChange?: (open: boolean) => void
+  }
 >(
-***REMOVED******REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***defaultOpen***REMOVED***=***REMOVED***true,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***open:***REMOVED***openProp,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onOpenChange:***REMOVED***setOpenProp,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***style,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***children,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***...props
-***REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***ref
-***REMOVED******REMOVED***)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***isMobile***REMOVED***=***REMOVED***useIsMobile()
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***[openMobile,***REMOVED***setOpenMobile]***REMOVED***=***REMOVED***React.useState(false)
+  (
+    {
+      defaultOpen = true,
+      open: openProp,
+      onOpenChange: setOpenProp,
+      className,
+      style,
+      children,
+      ...props
+    },
+    ref
+  ) => {
+    const isMobile = useIsMobile()
+    const [openMobile, setOpenMobile] = React.useState(false)
 
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***This***REMOVED***is***REMOVED***the***REMOVED***internal***REMOVED***state***REMOVED***of***REMOVED***the***REMOVED***sidebar.
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***We***REMOVED***use***REMOVED***openProp***REMOVED***and***REMOVED***setOpenProp***REMOVED***for***REMOVED***control***REMOVED***from***REMOVED***outside***REMOVED***the***REMOVED***component.
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***[_open,***REMOVED***_setOpen]***REMOVED***=***REMOVED***React.useState(defaultOpen)
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***open***REMOVED***=***REMOVED***openProp***REMOVED***??***REMOVED***_open
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***setOpen***REMOVED***=***REMOVED***React.useCallback(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***(value:***REMOVED***boolean***REMOVED***|***REMOVED***((value:***REMOVED***boolean)***REMOVED***=>***REMOVED***boolean))***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***openState***REMOVED***=***REMOVED***typeof***REMOVED***value***REMOVED***===***REMOVED***"function"***REMOVED***?***REMOVED***value(open)***REMOVED***:***REMOVED***value
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(setOpenProp)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setOpenProp(openState)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***else***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***_setOpen(openState)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
+    // This is the internal state of the sidebar.
+    // We use openProp and setOpenProp for control from outside the component.
+    const [_open, _setOpen] = React.useState(defaultOpen)
+    const open = openProp ?? _open
+    const setOpen = React.useCallback(
+      (value: boolean | ((value: boolean) => boolean)) => {
+        const openState = typeof value === "function" ? value(open) : value
+        if (setOpenProp) {
+          setOpenProp(openState)
+        } else {
+          _setOpen(openState)
+        }
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***This***REMOVED***sets***REMOVED***the***REMOVED***cookie***REMOVED***to***REMOVED***keep***REMOVED***the***REMOVED***sidebar***REMOVED***state.
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***document.cookie***REMOVED***=***REMOVED***`${SIDEBAR_COOKIE_NAME}=${openState};***REMOVED***path=/;***REMOVED***max-age=${SIDEBAR_COOKIE_MAX_AGE}`
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***[setOpenProp,***REMOVED***open]
-***REMOVED******REMOVED******REMOVED******REMOVED***)
+        // This sets the cookie to keep the sidebar state.
+        document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`
+      },
+      [setOpenProp, open]
+    )
 
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Helper***REMOVED***to***REMOVED***toggle***REMOVED***the***REMOVED***sidebar.
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***toggleSidebar***REMOVED***=***REMOVED***React.useCallback(()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***isMobile
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***setOpenMobile((open)***REMOVED***=>***REMOVED***!open)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***setOpen((open)***REMOVED***=>***REMOVED***!open)
-***REMOVED******REMOVED******REMOVED******REMOVED***},***REMOVED***[isMobile,***REMOVED***setOpen,***REMOVED***setOpenMobile])
+    // Helper to toggle the sidebar.
+    const toggleSidebar = React.useCallback(() => {
+      return isMobile
+        ? setOpenMobile((open) => !open)
+        : setOpen((open) => !open)
+    }, [isMobile, setOpen, setOpenMobile])
 
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Adds***REMOVED***a***REMOVED***keyboard***REMOVED***shortcut***REMOVED***to***REMOVED***toggle***REMOVED***the***REMOVED***sidebar.
-***REMOVED******REMOVED******REMOVED******REMOVED***React.useEffect(()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***handleKeyDown***REMOVED***=***REMOVED***(event:***REMOVED***KeyboardEvent)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***event.key***REMOVED***===***REMOVED***SIDEBAR_KEYBOARD_SHORTCUT***REMOVED***&&
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***(event.metaKey***REMOVED***||***REMOVED***event.ctrlKey)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***event.preventDefault()
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***toggleSidebar()
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
+    // Adds a keyboard shortcut to toggle the sidebar.
+    React.useEffect(() => {
+      const handleKeyDown = (event: KeyboardEvent) => {
+        if (
+          event.key === SIDEBAR_KEYBOARD_SHORTCUT &&
+          (event.metaKey || event.ctrlKey)
+        ) {
+          event.preventDefault()
+          toggleSidebar()
+        }
+      }
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***window.addEventListener("keydown",***REMOVED***handleKeyDown)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***()***REMOVED***=>***REMOVED***window.removeEventListener("keydown",***REMOVED***handleKeyDown)
-***REMOVED******REMOVED******REMOVED******REMOVED***},***REMOVED***[toggleSidebar])
+      window.addEventListener("keydown", handleKeyDown)
+      return () => window.removeEventListener("keydown", handleKeyDown)
+    }, [toggleSidebar])
 
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***We***REMOVED***add***REMOVED***a***REMOVED***state***REMOVED***so***REMOVED***that***REMOVED***we***REMOVED***can***REMOVED***do***REMOVED***data-state="expanded"***REMOVED***or***REMOVED***"collapsed".
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***This***REMOVED***makes***REMOVED***it***REMOVED***easier***REMOVED***to***REMOVED***style***REMOVED***the***REMOVED***sidebar***REMOVED***with***REMOVED***Tailwind***REMOVED***classes.
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***state***REMOVED***=***REMOVED***open***REMOVED***?***REMOVED***"expanded"***REMOVED***:***REMOVED***"collapsed"
+    // We add a state so that we can do data-state="expanded" or "collapsed".
+    // This makes it easier to style the sidebar with Tailwind classes.
+    const state = open ? "expanded" : "collapsed"
 
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***contextValue***REMOVED***=***REMOVED***React.useMemo<SidebarContext>(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***()***REMOVED***=>***REMOVED***({
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***state,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***open,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setOpen,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***isMobile,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***openMobile,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setOpenMobile,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***toggleSidebar,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}),
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***[state,***REMOVED***open,***REMOVED***setOpen,***REMOVED***isMobile,***REMOVED***openMobile,***REMOVED***setOpenMobile,***REMOVED***toggleSidebar]
-***REMOVED******REMOVED******REMOVED******REMOVED***)
+    const contextValue = React.useMemo<SidebarContext>(
+      () => ({
+        state,
+        open,
+        setOpen,
+        isMobile,
+        openMobile,
+        setOpenMobile,
+        toggleSidebar,
+      }),
+      [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar]
+    )
 
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<SidebarContext.Provider***REMOVED***value={contextValue}>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<TooltipProvider***REMOVED***delayDuration={0}>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***style={
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"--sidebar-width":***REMOVED***SIDEBAR_WIDTH,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"--sidebar-width-icon":***REMOVED***SIDEBAR_WIDTH_ICON,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***...style,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***as***REMOVED***React.CSSProperties
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"group/sidebar-wrapper***REMOVED***flex***REMOVED***min-h-svh***REMOVED***w-full***REMOVED***has-[[data-variant=inset]]:bg-sidebar",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{children}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</TooltipProvider>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</SidebarContext.Provider>
-***REMOVED******REMOVED******REMOVED******REMOVED***)
-***REMOVED******REMOVED***}
+    return (
+      <SidebarContext.Provider value={contextValue}>
+        <TooltipProvider delayDuration={0}>
+          <div
+            style={
+              {
+                "--sidebar-width": SIDEBAR_WIDTH,
+                "--sidebar-width-icon": SIDEBAR_WIDTH_ICON,
+                ...style,
+              } as React.CSSProperties
+            }
+            className={cn(
+              "group/sidebar-wrapper flex min-h-svh w-full has-[[data-variant=inset]]:bg-sidebar",
+              className
+            )}
+            ref={ref}
+            {...props}
+          >
+            {children}
+          </div>
+        </TooltipProvider>
+      </SidebarContext.Provider>
+    )
+  }
 )
-SidebarProvider.displayName***REMOVED***=***REMOVED***"SidebarProvider"
+SidebarProvider.displayName = "SidebarProvider"
 
-const***REMOVED***Sidebar***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLDivElement,
-***REMOVED******REMOVED***React.ComponentProps<"div">***REMOVED***&***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***side?:***REMOVED***"left"***REMOVED***|***REMOVED***"right"
-***REMOVED******REMOVED******REMOVED******REMOVED***variant?:***REMOVED***"sidebar"***REMOVED***|***REMOVED***"floating"***REMOVED***|***REMOVED***"inset"
-***REMOVED******REMOVED******REMOVED******REMOVED***collapsible?:***REMOVED***"offcanvas"***REMOVED***|***REMOVED***"icon"***REMOVED***|***REMOVED***"none"
-***REMOVED******REMOVED***}
+const Sidebar = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<"div"> & {
+    side?: "left" | "right"
+    variant?: "sidebar" | "floating" | "inset"
+    collapsible?: "offcanvas" | "icon" | "none"
+  }
 >(
-***REMOVED******REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***side***REMOVED***=***REMOVED***"left",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***variant***REMOVED***=***REMOVED***"sidebar",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***collapsible***REMOVED***=***REMOVED***"offcanvas",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***children,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***...props
-***REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***ref
-***REMOVED******REMOVED***)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***isMobile,***REMOVED***state,***REMOVED***openMobile,***REMOVED***setOpenMobile***REMOVED***}***REMOVED***=***REMOVED***useSidebar()
+  (
+    {
+      side = "left",
+      variant = "sidebar",
+      collapsible = "offcanvas",
+      className,
+      children,
+      ...props
+    },
+    ref
+  ) => {
+    const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
 
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(collapsible***REMOVED***===***REMOVED***"none")***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"flex***REMOVED***h-full***REMOVED***w-[--sidebar-width]***REMOVED***flex-col***REMOVED***bg-sidebar***REMOVED***text-sidebar-foreground",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{children}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)
-***REMOVED******REMOVED******REMOVED******REMOVED***}
+    if (collapsible === "none") {
+      return (
+        <div
+          className={cn(
+            "flex h-full w-[--sidebar-width] flex-col bg-sidebar text-sidebar-foreground",
+            className
+          )}
+          ref={ref}
+          {...props}
+        >
+          {children}
+        </div>
+      )
+    }
 
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(isMobile)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Sheet***REMOVED***open={openMobile}***REMOVED***onOpenChange={setOpenMobile}***REMOVED***{...props}>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<SheetContent
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data-sidebar="sidebar"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data-mobile="true"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className="w-[--sidebar-width]***REMOVED***bg-sidebar***REMOVED***p-0***REMOVED***text-sidebar-foreground***REMOVED***[&>button]:hidden"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***style={
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"--sidebar-width":***REMOVED***SIDEBAR_WIDTH_MOBILE,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***as***REMOVED***React.CSSProperties
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***side={side}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="flex***REMOVED***h-full***REMOVED***w-full***REMOVED***flex-col">{children}</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</SheetContent>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Sheet>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)
-***REMOVED******REMOVED******REMOVED******REMOVED***}
+    if (isMobile) {
+      return (
+        <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
+          <SheetContent
+            data-sidebar="sidebar"
+            data-mobile="true"
+            className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
+            style={
+              {
+                "--sidebar-width": SIDEBAR_WIDTH_MOBILE,
+              } as React.CSSProperties
+            }
+            side={side}
+          >
+            <div className="flex h-full w-full flex-col">{children}</div>
+          </SheetContent>
+        </Sheet>
+      )
+    }
 
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className="group***REMOVED***peer***REMOVED***hidden***REMOVED***md:block***REMOVED***text-sidebar-foreground"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data-state={state}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data-collapsible={state***REMOVED***===***REMOVED***"collapsed"***REMOVED***?***REMOVED***collapsible***REMOVED***:***REMOVED***""}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data-variant={variant}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data-side={side}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{/****REMOVED***This***REMOVED***is***REMOVED***what***REMOVED***handles***REMOVED***the***REMOVED***sidebar***REMOVED***gap***REMOVED***on***REMOVED***desktop***REMOVED****/}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"duration-200***REMOVED***relative***REMOVED***h-svh***REMOVED***w-[--sidebar-width]***REMOVED***bg-transparent***REMOVED***transition-[width]***REMOVED***ease-linear",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"group-data-[collapsible=offcanvas]:w-0",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"group-data-[side=right]:rotate-180",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***variant***REMOVED***===***REMOVED***"floating"***REMOVED***||***REMOVED***variant***REMOVED***===***REMOVED***"inset"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***"group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4))]"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***"group-data-[collapsible=icon]:w-[--sidebar-width-icon]"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"duration-200***REMOVED***fixed***REMOVED***inset-y-0***REMOVED***z-10***REMOVED***hidden***REMOVED***h-svh***REMOVED***w-[--sidebar-width]***REMOVED***transition-[left,right,width]***REMOVED***ease-linear***REMOVED***md:flex",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***side***REMOVED***===***REMOVED***"left"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***"left-0***REMOVED***group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***"right-0***REMOVED***group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Adjust***REMOVED***the***REMOVED***padding***REMOVED***for***REMOVED***floating***REMOVED***and***REMOVED***inset***REMOVED***variants.
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***variant***REMOVED***===***REMOVED***"floating"***REMOVED***||***REMOVED***variant***REMOVED***===***REMOVED***"inset"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***"p-2***REMOVED***group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4)_+2px)]"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***"group-data-[collapsible=icon]:w-[--sidebar-width-icon]***REMOVED***group-data-[side=left]:border-r***REMOVED***group-data-[side=right]:border-l",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data-sidebar="sidebar"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className="flex***REMOVED***h-full***REMOVED***w-full***REMOVED***flex-col***REMOVED***bg-sidebar***REMOVED***group-data-[variant=floating]:rounded-lg***REMOVED***group-data-[variant=floating]:border***REMOVED***group-data-[variant=floating]:border-sidebar-border***REMOVED***group-data-[variant=floating]:shadow"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{children}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED***)
-***REMOVED******REMOVED***}
+    return (
+      <div
+        ref={ref}
+        className="group peer hidden md:block text-sidebar-foreground"
+        data-state={state}
+        data-collapsible={state === "collapsed" ? collapsible : ""}
+        data-variant={variant}
+        data-side={side}
+      >
+        {/* This is what handles the sidebar gap on desktop */}
+        <div
+          className={cn(
+            "duration-200 relative h-svh w-[--sidebar-width] bg-transparent transition-[width] ease-linear",
+            "group-data-[collapsible=offcanvas]:w-0",
+            "group-data-[side=right]:rotate-180",
+            variant === "floating" || variant === "inset"
+              ? "group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4))]"
+              : "group-data-[collapsible=icon]:w-[--sidebar-width-icon]"
+          )}
+        />
+        <div
+          className={cn(
+            "duration-200 fixed inset-y-0 z-10 hidden h-svh w-[--sidebar-width] transition-[left,right,width] ease-linear md:flex",
+            side === "left"
+              ? "left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]"
+              : "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]",
+            // Adjust the padding for floating and inset variants.
+            variant === "floating" || variant === "inset"
+              ? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4)_+2px)]"
+              : "group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l",
+            className
+          )}
+          {...props}
+        >
+          <div
+            data-sidebar="sidebar"
+            className="flex h-full w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow"
+          >
+            {children}
+          </div>
+        </div>
+      </div>
+    )
+  }
 )
-Sidebar.displayName***REMOVED***=***REMOVED***"Sidebar"
+Sidebar.displayName = "Sidebar"
 
-const***REMOVED***SidebarTrigger***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***Button>,
-***REMOVED******REMOVED***React.ComponentProps<typeof***REMOVED***Button>
->(({***REMOVED***className,***REMOVED***onClick,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***{***REMOVED***toggleSidebar***REMOVED***}***REMOVED***=***REMOVED***useSidebar()
+const SidebarTrigger = React.forwardRef<
+  React.ElementRef<typeof Button>,
+  React.ComponentProps<typeof Button>
+>(({ className, onClick, ...props }, ref) => {
+  const { toggleSidebar } = useSidebar()
 
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<Button
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data-sidebar="trigger"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***variant="ghost"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***size="icon"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn("h-7***REMOVED***w-7",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onClick={(event)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onClick?.(event)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***toggleSidebar()
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<PanelLeft***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<span***REMOVED***className="sr-only">Toggle***REMOVED***Sidebar</span>
-***REMOVED******REMOVED******REMOVED******REMOVED***</Button>
-***REMOVED******REMOVED***)
+  return (
+    <Button
+      ref={ref}
+      data-sidebar="trigger"
+      variant="ghost"
+      size="icon"
+      className={cn("h-7 w-7", className)}
+      onClick={(event) => {
+        onClick?.(event)
+        toggleSidebar()
+      }}
+      {...props}
+    >
+      <PanelLeft />
+      <span className="sr-only">Toggle Sidebar</span>
+    </Button>
+  )
 })
-SidebarTrigger.displayName***REMOVED***=***REMOVED***"SidebarTrigger"
+SidebarTrigger.displayName = "SidebarTrigger"
 
-const***REMOVED***SidebarRail***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLButtonElement,
-***REMOVED******REMOVED***React.ComponentProps<"button">
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***{***REMOVED***toggleSidebar***REMOVED***}***REMOVED***=***REMOVED***useSidebar()
+const SidebarRail = React.forwardRef<
+  HTMLButtonElement,
+  React.ComponentProps<"button">
+>(({ className, ...props }, ref) => {
+  const { toggleSidebar } = useSidebar()
 
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<button
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data-sidebar="rail"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***aria-label="Toggle***REMOVED***Sidebar"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***tabIndex={-1}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onClick={toggleSidebar}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***title="Toggle***REMOVED***Sidebar"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"absolute***REMOVED***inset-y-0***REMOVED***z-20***REMOVED***hidden***REMOVED***w-4***REMOVED***-translate-x-1/2***REMOVED***transition-all***REMOVED***ease-linear***REMOVED***after:absolute***REMOVED***after:inset-y-0***REMOVED***after:left-1/2***REMOVED***after:w-[2px]***REMOVED***hover:after:bg-sidebar-border***REMOVED***group-data-[side=left]:-right-4***REMOVED***group-data-[side=right]:left-0***REMOVED***sm:flex",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"[[data-side=left]_&]:cursor-w-resize***REMOVED***[[data-side=right]_&]:cursor-e-resize",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"[[data-side=left][data-state=collapsed]_&]:cursor-e-resize***REMOVED***[[data-side=right][data-state=collapsed]_&]:cursor-w-resize",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"group-data-[collapsible=offcanvas]:translate-x-0***REMOVED***group-data-[collapsible=offcanvas]:after:left-full***REMOVED***group-data-[collapsible=offcanvas]:hover:bg-sidebar",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"[[data-side=left][data-collapsible=offcanvas]_&]:-right-2",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"[[data-side=right][data-collapsible=offcanvas]_&]:-left-2",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED***)
+  return (
+    <button
+      ref={ref}
+      data-sidebar="rail"
+      aria-label="Toggle Sidebar"
+      tabIndex={-1}
+      onClick={toggleSidebar}
+      title="Toggle Sidebar"
+      className={cn(
+        "absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-linear after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] hover:after:bg-sidebar-border group-data-[side=left]:-right-4 group-data-[side=right]:left-0 sm:flex",
+        "[[data-side=left]_&]:cursor-w-resize [[data-side=right]_&]:cursor-e-resize",
+        "[[data-side=left][data-state=collapsed]_&]:cursor-e-resize [[data-side=right][data-state=collapsed]_&]:cursor-w-resize",
+        "group-data-[collapsible=offcanvas]:translate-x-0 group-data-[collapsible=offcanvas]:after:left-full group-data-[collapsible=offcanvas]:hover:bg-sidebar",
+        "[[data-side=left][data-collapsible=offcanvas]_&]:-right-2",
+        "[[data-side=right][data-collapsible=offcanvas]_&]:-left-2",
+        className
+      )}
+      {...props}
+    />
+  )
 })
-SidebarRail.displayName***REMOVED***=***REMOVED***"SidebarRail"
+SidebarRail.displayName = "SidebarRail"
 
-const***REMOVED***SidebarInset***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLDivElement,
-***REMOVED******REMOVED***React.ComponentProps<"main">
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<main
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"relative***REMOVED***flex***REMOVED***min-h-svh***REMOVED***flex-1***REMOVED***flex-col***REMOVED***bg-background",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"peer-data-[variant=inset]:min-h-[calc(100svh-theme(spacing.4))]***REMOVED***md:peer-data-[variant=inset]:m-2***REMOVED***md:peer-data-[state=collapsed]:peer-data-[variant=inset]:ml-2***REMOVED***md:peer-data-[variant=inset]:ml-0***REMOVED***md:peer-data-[variant=inset]:rounded-xl***REMOVED***md:peer-data-[variant=inset]:shadow",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED***)
+const SidebarInset = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<"main">
+>(({ className, ...props }, ref) => {
+  return (
+    <main
+      ref={ref}
+      className={cn(
+        "relative flex min-h-svh flex-1 flex-col bg-background",
+        "peer-data-[variant=inset]:min-h-[calc(100svh-theme(spacing.4))] md:peer-data-[variant=inset]:m-2 md:peer-data-[state=collapsed]:peer-data-[variant=inset]:ml-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow",
+        className
+      )}
+      {...props}
+    />
+  )
 })
-SidebarInset.displayName***REMOVED***=***REMOVED***"SidebarInset"
+SidebarInset.displayName = "SidebarInset"
 
-const***REMOVED***SidebarInput***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***Input>,
-***REMOVED******REMOVED***React.ComponentProps<typeof***REMOVED***Input>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<Input
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data-sidebar="input"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"h-8***REMOVED***w-full***REMOVED***bg-background***REMOVED***shadow-none***REMOVED***focus-visible:ring-2***REMOVED***focus-visible:ring-sidebar-ring",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED***)
+const SidebarInput = React.forwardRef<
+  React.ElementRef<typeof Input>,
+  React.ComponentProps<typeof Input>
+>(({ className, ...props }, ref) => {
+  return (
+    <Input
+      ref={ref}
+      data-sidebar="input"
+      className={cn(
+        "h-8 w-full bg-background shadow-none focus-visible:ring-2 focus-visible:ring-sidebar-ring",
+        className
+      )}
+      {...props}
+    />
+  )
 })
-SidebarInput.displayName***REMOVED***=***REMOVED***"SidebarInput"
+SidebarInput.displayName = "SidebarInput"
 
-const***REMOVED***SidebarHeader***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLDivElement,
-***REMOVED******REMOVED***React.ComponentProps<"div">
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data-sidebar="header"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn("flex***REMOVED***flex-col***REMOVED***gap-2***REMOVED***p-2",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED***)
+const SidebarHeader = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<"div">
+>(({ className, ...props }, ref) => {
+  return (
+    <div
+      ref={ref}
+      data-sidebar="header"
+      className={cn("flex flex-col gap-2 p-2", className)}
+      {...props}
+    />
+  )
 })
-SidebarHeader.displayName***REMOVED***=***REMOVED***"SidebarHeader"
+SidebarHeader.displayName = "SidebarHeader"
 
-const***REMOVED***SidebarFooter***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLDivElement,
-***REMOVED******REMOVED***React.ComponentProps<"div">
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data-sidebar="footer"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn("flex***REMOVED***flex-col***REMOVED***gap-2***REMOVED***p-2",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED***)
+const SidebarFooter = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<"div">
+>(({ className, ...props }, ref) => {
+  return (
+    <div
+      ref={ref}
+      data-sidebar="footer"
+      className={cn("flex flex-col gap-2 p-2", className)}
+      {...props}
+    />
+  )
 })
-SidebarFooter.displayName***REMOVED***=***REMOVED***"SidebarFooter"
+SidebarFooter.displayName = "SidebarFooter"
 
-const***REMOVED***SidebarSeparator***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***Separator>,
-***REMOVED******REMOVED***React.ComponentProps<typeof***REMOVED***Separator>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<Separator
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data-sidebar="separator"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn("mx-2***REMOVED***w-auto***REMOVED***bg-sidebar-border",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED***)
+const SidebarSeparator = React.forwardRef<
+  React.ElementRef<typeof Separator>,
+  React.ComponentProps<typeof Separator>
+>(({ className, ...props }, ref) => {
+  return (
+    <Separator
+      ref={ref}
+      data-sidebar="separator"
+      className={cn("mx-2 w-auto bg-sidebar-border", className)}
+      {...props}
+    />
+  )
 })
-SidebarSeparator.displayName***REMOVED***=***REMOVED***"SidebarSeparator"
+SidebarSeparator.displayName = "SidebarSeparator"
 
-const***REMOVED***SidebarContent***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLDivElement,
-***REMOVED******REMOVED***React.ComponentProps<"div">
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data-sidebar="content"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"flex***REMOVED***min-h-0***REMOVED***flex-1***REMOVED***flex-col***REMOVED***gap-2***REMOVED***overflow-auto***REMOVED***group-data-[collapsible=icon]:overflow-hidden",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED***)
+const SidebarContent = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<"div">
+>(({ className, ...props }, ref) => {
+  return (
+    <div
+      ref={ref}
+      data-sidebar="content"
+      className={cn(
+        "flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden",
+        className
+      )}
+      {...props}
+    />
+  )
 })
-SidebarContent.displayName***REMOVED***=***REMOVED***"SidebarContent"
+SidebarContent.displayName = "SidebarContent"
 
-const***REMOVED***SidebarGroup***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLDivElement,
-***REMOVED******REMOVED***React.ComponentProps<"div">
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data-sidebar="group"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn("relative***REMOVED***flex***REMOVED***w-full***REMOVED***min-w-0***REMOVED***flex-col***REMOVED***p-2",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED***)
+const SidebarGroup = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<"div">
+>(({ className, ...props }, ref) => {
+  return (
+    <div
+      ref={ref}
+      data-sidebar="group"
+      className={cn("relative flex w-full min-w-0 flex-col p-2", className)}
+      {...props}
+    />
+  )
 })
-SidebarGroup.displayName***REMOVED***=***REMOVED***"SidebarGroup"
+SidebarGroup.displayName = "SidebarGroup"
 
-const***REMOVED***SidebarGroupLabel***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLDivElement,
-***REMOVED******REMOVED***React.ComponentProps<"div">***REMOVED***&***REMOVED***{***REMOVED***asChild?:***REMOVED***boolean***REMOVED***}
->(({***REMOVED***className,***REMOVED***asChild***REMOVED***=***REMOVED***false,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***Comp***REMOVED***=***REMOVED***asChild***REMOVED***?***REMOVED***Slot***REMOVED***:***REMOVED***"div"
+const SidebarGroupLabel = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<"div"> & { asChild?: boolean }
+>(({ className, asChild = false, ...props }, ref) => {
+  const Comp = asChild ? Slot : "div"
 
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<Comp
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data-sidebar="group-label"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"duration-200***REMOVED***flex***REMOVED***h-8***REMOVED***shrink-0***REMOVED***items-center***REMOVED***rounded-md***REMOVED***px-2***REMOVED***text-xs***REMOVED***font-medium***REMOVED***text-sidebar-foreground/70***REMOVED***outline-none***REMOVED***ring-sidebar-ring***REMOVED***transition-[margin,opa]***REMOVED***ease-linear***REMOVED***focus-visible:ring-2***REMOVED***[&>svg]:size-4***REMOVED***[&>svg]:shrink-0",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"group-data-[collapsible=icon]:-mt-8***REMOVED***group-data-[collapsible=icon]:opacity-0",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED***)
+  return (
+    <Comp
+      ref={ref}
+      data-sidebar="group-label"
+      className={cn(
+        "duration-200 flex h-8 shrink-0 items-center rounded-md px-2 text-xs font-medium text-sidebar-foreground/70 outline-none ring-sidebar-ring transition-[margin,opa] ease-linear focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
+        "group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0",
+        className
+      )}
+      {...props}
+    />
+  )
 })
-SidebarGroupLabel.displayName***REMOVED***=***REMOVED***"SidebarGroupLabel"
+SidebarGroupLabel.displayName = "SidebarGroupLabel"
 
-const***REMOVED***SidebarGroupAction***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLButtonElement,
-***REMOVED******REMOVED***React.ComponentProps<"button">***REMOVED***&***REMOVED***{***REMOVED***asChild?:***REMOVED***boolean***REMOVED***}
->(({***REMOVED***className,***REMOVED***asChild***REMOVED***=***REMOVED***false,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***Comp***REMOVED***=***REMOVED***asChild***REMOVED***?***REMOVED***Slot***REMOVED***:***REMOVED***"button"
+const SidebarGroupAction = React.forwardRef<
+  HTMLButtonElement,
+  React.ComponentProps<"button"> & { asChild?: boolean }
+>(({ className, asChild = false, ...props }, ref) => {
+  const Comp = asChild ? Slot : "button"
 
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<Comp
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data-sidebar="group-action"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"absolute***REMOVED***right-3***REMOVED***top-3.5***REMOVED***flex***REMOVED***aspect-square***REMOVED***w-5***REMOVED***items-center***REMOVED***justify-center***REMOVED***rounded-md***REMOVED***p-0***REMOVED***text-sidebar-foreground***REMOVED***outline-none***REMOVED***ring-sidebar-ring***REMOVED***transition-transform***REMOVED***hover:bg-sidebar-accent***REMOVED***hover:text-sidebar-accent-foreground***REMOVED***focus-visible:ring-2***REMOVED***[&>svg]:size-4***REMOVED***[&>svg]:shrink-0",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Increases***REMOVED***the***REMOVED***hit***REMOVED***area***REMOVED***of***REMOVED***the***REMOVED***button***REMOVED***on***REMOVED***mobile.
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"after:absolute***REMOVED***after:-inset-2***REMOVED***after:md:hidden",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"group-data-[collapsible=icon]:hidden",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED***)
+  return (
+    <Comp
+      ref={ref}
+      data-sidebar="group-action"
+      className={cn(
+        "absolute right-3 top-3.5 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground outline-none ring-sidebar-ring transition-transform hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
+        // Increases the hit area of the button on mobile.
+        "after:absolute after:-inset-2 after:md:hidden",
+        "group-data-[collapsible=icon]:hidden",
+        className
+      )}
+      {...props}
+    />
+  )
 })
-SidebarGroupAction.displayName***REMOVED***=***REMOVED***"SidebarGroupAction"
+SidebarGroupAction.displayName = "SidebarGroupAction"
 
-const***REMOVED***SidebarGroupContent***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLDivElement,
-***REMOVED******REMOVED***React.ComponentProps<"div">
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***data-sidebar="group-content"
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn("w-full***REMOVED***text-sm",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const SidebarGroupContent = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<"div">
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    data-sidebar="group-content"
+    className={cn("w-full text-sm", className)}
+    {...props}
+  />
 ))
-SidebarGroupContent.displayName***REMOVED***=***REMOVED***"SidebarGroupContent"
+SidebarGroupContent.displayName = "SidebarGroupContent"
 
-const***REMOVED***SidebarMenu***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLUListElement,
-***REMOVED******REMOVED***React.ComponentProps<"ul">
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<ul
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***data-sidebar="menu"
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn("flex***REMOVED***w-full***REMOVED***min-w-0***REMOVED***flex-col***REMOVED***gap-1",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const SidebarMenu = React.forwardRef<
+  HTMLUListElement,
+  React.ComponentProps<"ul">
+>(({ className, ...props }, ref) => (
+  <ul
+    ref={ref}
+    data-sidebar="menu"
+    className={cn("flex w-full min-w-0 flex-col gap-1", className)}
+    {...props}
+  />
 ))
-SidebarMenu.displayName***REMOVED***=***REMOVED***"SidebarMenu"
+SidebarMenu.displayName = "SidebarMenu"
 
-const***REMOVED***SidebarMenuItem***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLLIElement,
-***REMOVED******REMOVED***React.ComponentProps<"li">
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<li
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***data-sidebar="menu-item"
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn("group/menu-item***REMOVED***relative",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const SidebarMenuItem = React.forwardRef<
+  HTMLLIElement,
+  React.ComponentProps<"li">
+>(({ className, ...props }, ref) => (
+  <li
+    ref={ref}
+    data-sidebar="menu-item"
+    className={cn("group/menu-item relative", className)}
+    {...props}
+  />
 ))
-SidebarMenuItem.displayName***REMOVED***=***REMOVED***"SidebarMenuItem"
+SidebarMenuItem.displayName = "SidebarMenuItem"
 
-const***REMOVED***sidebarMenuButtonVariants***REMOVED***=***REMOVED***cva(
-***REMOVED******REMOVED***"peer/menu-button***REMOVED***flex***REMOVED***w-full***REMOVED***items-center***REMOVED***gap-2***REMOVED***overflow-hidden***REMOVED***rounded-md***REMOVED***p-2***REMOVED***text-left***REMOVED***text-sm***REMOVED***outline-none***REMOVED***ring-sidebar-ring***REMOVED***transition-[width,height,padding]***REMOVED***hover:bg-sidebar-accent***REMOVED***hover:text-sidebar-accent-foreground***REMOVED***focus-visible:ring-2***REMOVED***active:bg-sidebar-accent***REMOVED***active:text-sidebar-accent-foreground***REMOVED***disabled:pointer-events-none***REMOVED***disabled:opacity-50***REMOVED***group-has-[[data-sidebar=menu-action]]/menu-item:pr-8***REMOVED***aria-disabled:pointer-events-none***REMOVED***aria-disabled:opacity-50***REMOVED***data-[active=true]:bg-sidebar-accent***REMOVED***data-[active=true]:font-medium***REMOVED***data-[active=true]:text-sidebar-accent-foreground***REMOVED***data-[state=open]:hover:bg-sidebar-accent***REMOVED***data-[state=open]:hover:text-sidebar-accent-foreground***REMOVED***group-data-[collapsible=icon]:!size-8***REMOVED***group-data-[collapsible=icon]:!p-2***REMOVED***[&>span:last-child]:truncate***REMOVED***[&>svg]:size-4***REMOVED***[&>svg]:shrink-0",
-***REMOVED******REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***variants:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***variant:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***default:***REMOVED***"hover:bg-sidebar-accent***REMOVED***hover:text-sidebar-accent-foreground",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***outline:
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"bg-background***REMOVED***shadow-[0_0_0_1px_hsl(var(--sidebar-border))]***REMOVED***hover:bg-sidebar-accent***REMOVED***hover:text-sidebar-accent-foreground***REMOVED***hover:shadow-[0_0_0_1px_hsl(var(--sidebar-accent))]",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***size:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***default:***REMOVED***"h-8***REMOVED***text-sm",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***sm:***REMOVED***"h-7***REMOVED***text-xs",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***lg:***REMOVED***"h-12***REMOVED***text-sm***REMOVED***group-data-[collapsible=icon]:!p-0",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***defaultVariants:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***variant:***REMOVED***"default",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***size:***REMOVED***"default",
-***REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED***}
+const sidebarMenuButtonVariants = cva(
+  "peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm outline-none ring-sidebar-ring transition-[width,height,padding] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:!p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0",
+  {
+    variants: {
+      variant: {
+        default: "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+        outline:
+          "bg-background shadow-[0_0_0_1px_hsl(var(--sidebar-border))] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:shadow-[0_0_0_1px_hsl(var(--sidebar-accent))]",
+      },
+      size: {
+        default: "h-8 text-sm",
+        sm: "h-7 text-xs",
+        lg: "h-12 text-sm group-data-[collapsible=icon]:!p-0",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
 )
 
-const***REMOVED***SidebarMenuButton***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLButtonElement,
-***REMOVED******REMOVED***React.ComponentProps<"button">***REMOVED***&***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***asChild?:***REMOVED***boolean
-***REMOVED******REMOVED******REMOVED******REMOVED***isActive?:***REMOVED***boolean
-***REMOVED******REMOVED******REMOVED******REMOVED***tooltip?:***REMOVED***string***REMOVED***|***REMOVED***React.ComponentProps<typeof***REMOVED***TooltipContent>
-***REMOVED******REMOVED***}***REMOVED***&***REMOVED***VariantProps<typeof***REMOVED***sidebarMenuButtonVariants>
+const SidebarMenuButton = React.forwardRef<
+  HTMLButtonElement,
+  React.ComponentProps<"button"> & {
+    asChild?: boolean
+    isActive?: boolean
+    tooltip?: string | React.ComponentProps<typeof TooltipContent>
+  } & VariantProps<typeof sidebarMenuButtonVariants>
 >(
-***REMOVED******REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***asChild***REMOVED***=***REMOVED***false,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***isActive***REMOVED***=***REMOVED***false,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***variant***REMOVED***=***REMOVED***"default",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***size***REMOVED***=***REMOVED***"default",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***tooltip,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***...props
-***REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***ref
-***REMOVED******REMOVED***)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***Comp***REMOVED***=***REMOVED***asChild***REMOVED***?***REMOVED***Slot***REMOVED***:***REMOVED***"button"
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***isMobile,***REMOVED***state***REMOVED***}***REMOVED***=***REMOVED***useSidebar()
+  (
+    {
+      asChild = false,
+      isActive = false,
+      variant = "default",
+      size = "default",
+      tooltip,
+      className,
+      ...props
+    },
+    ref
+  ) => {
+    const Comp = asChild ? Slot : "button"
+    const { isMobile, state } = useSidebar()
 
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***button***REMOVED***=***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Comp
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data-sidebar="menu-button"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data-size={size}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data-active={isActive}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(sidebarMenuButtonVariants({***REMOVED***variant,***REMOVED***size***REMOVED***}),***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED***)
+    const button = (
+      <Comp
+        ref={ref}
+        data-sidebar="menu-button"
+        data-size={size}
+        data-active={isActive}
+        className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
+        {...props}
+      />
+    )
 
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(!tooltip)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***button
-***REMOVED******REMOVED******REMOVED******REMOVED***}
+    if (!tooltip) {
+      return button
+    }
 
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(typeof***REMOVED***tooltip***REMOVED***===***REMOVED***"string")***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***tooltip***REMOVED***=***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***children:***REMOVED***tooltip,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***}
+    if (typeof tooltip === "string") {
+      tooltip = {
+        children: tooltip,
+      }
+    }
 
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Tooltip>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<TooltipTrigger***REMOVED***asChild>{button}</TooltipTrigger>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<TooltipContent
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***side="right"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***align="center"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***hidden={state***REMOVED***!==***REMOVED***"collapsed"***REMOVED***||***REMOVED***isMobile}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...tooltip}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Tooltip>
-***REMOVED******REMOVED******REMOVED******REMOVED***)
-***REMOVED******REMOVED***}
+    return (
+      <Tooltip>
+        <TooltipTrigger asChild>{button}</TooltipTrigger>
+        <TooltipContent
+          side="right"
+          align="center"
+          hidden={state !== "collapsed" || isMobile}
+          {...tooltip}
+        />
+      </Tooltip>
+    )
+  }
 )
-SidebarMenuButton.displayName***REMOVED***=***REMOVED***"SidebarMenuButton"
+SidebarMenuButton.displayName = "SidebarMenuButton"
 
-const***REMOVED***SidebarMenuAction***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLButtonElement,
-***REMOVED******REMOVED***React.ComponentProps<"button">***REMOVED***&***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***asChild?:***REMOVED***boolean
-***REMOVED******REMOVED******REMOVED******REMOVED***showOnHover?:***REMOVED***boolean
-***REMOVED******REMOVED***}
->(({***REMOVED***className,***REMOVED***asChild***REMOVED***=***REMOVED***false,***REMOVED***showOnHover***REMOVED***=***REMOVED***false,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***Comp***REMOVED***=***REMOVED***asChild***REMOVED***?***REMOVED***Slot***REMOVED***:***REMOVED***"button"
+const SidebarMenuAction = React.forwardRef<
+  HTMLButtonElement,
+  React.ComponentProps<"button"> & {
+    asChild?: boolean
+    showOnHover?: boolean
+  }
+>(({ className, asChild = false, showOnHover = false, ...props }, ref) => {
+  const Comp = asChild ? Slot : "button"
 
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<Comp
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data-sidebar="menu-action"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"absolute***REMOVED***right-1***REMOVED***top-1.5***REMOVED***flex***REMOVED***aspect-square***REMOVED***w-5***REMOVED***items-center***REMOVED***justify-center***REMOVED***rounded-md***REMOVED***p-0***REMOVED***text-sidebar-foreground***REMOVED***outline-none***REMOVED***ring-sidebar-ring***REMOVED***transition-transform***REMOVED***hover:bg-sidebar-accent***REMOVED***hover:text-sidebar-accent-foreground***REMOVED***focus-visible:ring-2***REMOVED***peer-hover/menu-button:text-sidebar-accent-foreground***REMOVED***[&>svg]:size-4***REMOVED***[&>svg]:shrink-0",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Increases***REMOVED***the***REMOVED***hit***REMOVED***area***REMOVED***of***REMOVED***the***REMOVED***button***REMOVED***on***REMOVED***mobile.
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"after:absolute***REMOVED***after:-inset-2***REMOVED***after:md:hidden",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"peer-data-[size=sm]/menu-button:top-1",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"peer-data-[size=default]/menu-button:top-1.5",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"peer-data-[size=lg]/menu-button:top-2.5",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"group-data-[collapsible=icon]:hidden",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***showOnHover***REMOVED***&&
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"group-focus-within/menu-item:opacity-100***REMOVED***group-hover/menu-item:opacity-100***REMOVED***data-[state=open]:opacity-100***REMOVED***peer-data-[active=true]/menu-button:text-sidebar-accent-foreground***REMOVED***md:opacity-0",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED***)
+  return (
+    <Comp
+      ref={ref}
+      data-sidebar="menu-action"
+      className={cn(
+        "absolute right-1 top-1.5 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground outline-none ring-sidebar-ring transition-transform hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 peer-hover/menu-button:text-sidebar-accent-foreground [&>svg]:size-4 [&>svg]:shrink-0",
+        // Increases the hit area of the button on mobile.
+        "after:absolute after:-inset-2 after:md:hidden",
+        "peer-data-[size=sm]/menu-button:top-1",
+        "peer-data-[size=default]/menu-button:top-1.5",
+        "peer-data-[size=lg]/menu-button:top-2.5",
+        "group-data-[collapsible=icon]:hidden",
+        showOnHover &&
+          "group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100 peer-data-[active=true]/menu-button:text-sidebar-accent-foreground md:opacity-0",
+        className
+      )}
+      {...props}
+    />
+  )
 })
-SidebarMenuAction.displayName***REMOVED***=***REMOVED***"SidebarMenuAction"
+SidebarMenuAction.displayName = "SidebarMenuAction"
 
-const***REMOVED***SidebarMenuBadge***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLDivElement,
-***REMOVED******REMOVED***React.ComponentProps<"div">
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***data-sidebar="menu-badge"
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"absolute***REMOVED***right-1***REMOVED***flex***REMOVED***h-5***REMOVED***min-w-5***REMOVED***items-center***REMOVED***justify-center***REMOVED***rounded-md***REMOVED***px-1***REMOVED***text-xs***REMOVED***font-medium***REMOVED***tabular-nums***REMOVED***text-sidebar-foreground***REMOVED***select-none***REMOVED***pointer-events-none",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"peer-hover/menu-button:text-sidebar-accent-foreground***REMOVED***peer-data-[active=true]/menu-button:text-sidebar-accent-foreground",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"peer-data-[size=sm]/menu-button:top-1",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"peer-data-[size=default]/menu-button:top-1.5",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"peer-data-[size=lg]/menu-button:top-2.5",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"group-data-[collapsible=icon]:hidden",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const SidebarMenuBadge = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<"div">
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    data-sidebar="menu-badge"
+    className={cn(
+      "absolute right-1 flex h-5 min-w-5 items-center justify-center rounded-md px-1 text-xs font-medium tabular-nums text-sidebar-foreground select-none pointer-events-none",
+      "peer-hover/menu-button:text-sidebar-accent-foreground peer-data-[active=true]/menu-button:text-sidebar-accent-foreground",
+      "peer-data-[size=sm]/menu-button:top-1",
+      "peer-data-[size=default]/menu-button:top-1.5",
+      "peer-data-[size=lg]/menu-button:top-2.5",
+      "group-data-[collapsible=icon]:hidden",
+      className
+    )}
+    {...props}
+  />
 ))
-SidebarMenuBadge.displayName***REMOVED***=***REMOVED***"SidebarMenuBadge"
+SidebarMenuBadge.displayName = "SidebarMenuBadge"
 
-const***REMOVED***SidebarMenuSkeleton***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLDivElement,
-***REMOVED******REMOVED***React.ComponentProps<"div">***REMOVED***&***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***showIcon?:***REMOVED***boolean
-***REMOVED******REMOVED***}
->(({***REMOVED***className,***REMOVED***showIcon***REMOVED***=***REMOVED***false,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***//***REMOVED***Random***REMOVED***width***REMOVED***between***REMOVED***50***REMOVED***to***REMOVED***90%.
-***REMOVED******REMOVED***const***REMOVED***width***REMOVED***=***REMOVED***React.useMemo(()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***`${Math.floor(Math.random()***REMOVED*******REMOVED***40)***REMOVED***+***REMOVED***50}%`
-***REMOVED******REMOVED***},***REMOVED***[])
+const SidebarMenuSkeleton = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<"div"> & {
+    showIcon?: boolean
+  }
+>(({ className, showIcon = false, ...props }, ref) => {
+  // Random width between 50 to 90%.
+  const width = React.useMemo(() => {
+    return `${Math.floor(Math.random() * 40) + 50}%`
+  }, [])
 
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data-sidebar="menu-skeleton"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn("rounded-md***REMOVED***h-8***REMOVED***flex***REMOVED***gap-2***REMOVED***px-2***REMOVED***items-center",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{showIcon***REMOVED***&&***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Skeleton
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className="size-4***REMOVED***rounded-md"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data-sidebar="menu-skeleton-icon"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Skeleton
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className="h-4***REMOVED***flex-1***REMOVED***max-w-[--skeleton-width]"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data-sidebar="menu-skeleton-text"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***style={
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"--skeleton-width":***REMOVED***width,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***as***REMOVED***React.CSSProperties
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED***)
+  return (
+    <div
+      ref={ref}
+      data-sidebar="menu-skeleton"
+      className={cn("rounded-md h-8 flex gap-2 px-2 items-center", className)}
+      {...props}
+    >
+      {showIcon && (
+        <Skeleton
+          className="size-4 rounded-md"
+          data-sidebar="menu-skeleton-icon"
+        />
+      )}
+      <Skeleton
+        className="h-4 flex-1 max-w-[--skeleton-width]"
+        data-sidebar="menu-skeleton-text"
+        style={
+          {
+            "--skeleton-width": width,
+          } as React.CSSProperties
+        }
+      />
+    </div>
+  )
 })
-SidebarMenuSkeleton.displayName***REMOVED***=***REMOVED***"SidebarMenuSkeleton"
+SidebarMenuSkeleton.displayName = "SidebarMenuSkeleton"
 
-const***REMOVED***SidebarMenuSub***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLUListElement,
-***REMOVED******REMOVED***React.ComponentProps<"ul">
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<ul
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***data-sidebar="menu-sub"
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"mx-3.5***REMOVED***flex***REMOVED***min-w-0***REMOVED***translate-x-px***REMOVED***flex-col***REMOVED***gap-1***REMOVED***border-l***REMOVED***border-sidebar-border***REMOVED***px-2.5***REMOVED***py-0.5",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"group-data-[collapsible=icon]:hidden",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const SidebarMenuSub = React.forwardRef<
+  HTMLUListElement,
+  React.ComponentProps<"ul">
+>(({ className, ...props }, ref) => (
+  <ul
+    ref={ref}
+    data-sidebar="menu-sub"
+    className={cn(
+      "mx-3.5 flex min-w-0 translate-x-px flex-col gap-1 border-l border-sidebar-border px-2.5 py-0.5",
+      "group-data-[collapsible=icon]:hidden",
+      className
+    )}
+    {...props}
+  />
 ))
-SidebarMenuSub.displayName***REMOVED***=***REMOVED***"SidebarMenuSub"
+SidebarMenuSub.displayName = "SidebarMenuSub"
 
-const***REMOVED***SidebarMenuSubItem***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLLIElement,
-***REMOVED******REMOVED***React.ComponentProps<"li">
->(({***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***<li***REMOVED***ref={ref}***REMOVED***{...props}***REMOVED***/>)
-SidebarMenuSubItem.displayName***REMOVED***=***REMOVED***"SidebarMenuSubItem"
+const SidebarMenuSubItem = React.forwardRef<
+  HTMLLIElement,
+  React.ComponentProps<"li">
+>(({ ...props }, ref) => <li ref={ref} {...props} />)
+SidebarMenuSubItem.displayName = "SidebarMenuSubItem"
 
-const***REMOVED***SidebarMenuSubButton***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLAnchorElement,
-***REMOVED******REMOVED***React.ComponentProps<"a">***REMOVED***&***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***asChild?:***REMOVED***boolean
-***REMOVED******REMOVED******REMOVED******REMOVED***size?:***REMOVED***"sm"***REMOVED***|***REMOVED***"md"
-***REMOVED******REMOVED******REMOVED******REMOVED***isActive?:***REMOVED***boolean
-***REMOVED******REMOVED***}
->(({***REMOVED***asChild***REMOVED***=***REMOVED***false,***REMOVED***size***REMOVED***=***REMOVED***"md",***REMOVED***isActive,***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***Comp***REMOVED***=***REMOVED***asChild***REMOVED***?***REMOVED***Slot***REMOVED***:***REMOVED***"a"
+const SidebarMenuSubButton = React.forwardRef<
+  HTMLAnchorElement,
+  React.ComponentProps<"a"> & {
+    asChild?: boolean
+    size?: "sm" | "md"
+    isActive?: boolean
+  }
+>(({ asChild = false, size = "md", isActive, className, ...props }, ref) => {
+  const Comp = asChild ? Slot : "a"
 
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<Comp
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data-sidebar="menu-sub-button"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data-size={size}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data-active={isActive}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"flex***REMOVED***h-7***REMOVED***min-w-0***REMOVED***-translate-x-px***REMOVED***items-center***REMOVED***gap-2***REMOVED***overflow-hidden***REMOVED***rounded-md***REMOVED***px-2***REMOVED***text-sidebar-foreground***REMOVED***outline-none***REMOVED***ring-sidebar-ring***REMOVED***hover:bg-sidebar-accent***REMOVED***hover:text-sidebar-accent-foreground***REMOVED***focus-visible:ring-2***REMOVED***active:bg-sidebar-accent***REMOVED***active:text-sidebar-accent-foreground***REMOVED***disabled:pointer-events-none***REMOVED***disabled:opacity-50***REMOVED***aria-disabled:pointer-events-none***REMOVED***aria-disabled:opacity-50***REMOVED***[&>span:last-child]:truncate***REMOVED***[&>svg]:size-4***REMOVED***[&>svg]:shrink-0***REMOVED***[&>svg]:text-sidebar-accent-foreground",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"data-[active=true]:bg-sidebar-accent***REMOVED***data-[active=true]:text-sidebar-accent-foreground",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***size***REMOVED***===***REMOVED***"sm"***REMOVED***&&***REMOVED***"text-xs",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***size***REMOVED***===***REMOVED***"md"***REMOVED***&&***REMOVED***"text-sm",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"group-data-[collapsible=icon]:hidden",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED***)
+  return (
+    <Comp
+      ref={ref}
+      data-sidebar="menu-sub-button"
+      data-size={size}
+      data-active={isActive}
+      className={cn(
+        "flex h-7 min-w-0 -translate-x-px items-center gap-2 overflow-hidden rounded-md px-2 text-sidebar-foreground outline-none ring-sidebar-ring hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 [&>svg]:text-sidebar-accent-foreground",
+        "data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground",
+        size === "sm" && "text-xs",
+        size === "md" && "text-sm",
+        "group-data-[collapsible=icon]:hidden",
+        className
+      )}
+      {...props}
+    />
+  )
 })
-SidebarMenuSubButton.displayName***REMOVED***=***REMOVED***"SidebarMenuSubButton"
+SidebarMenuSubButton.displayName = "SidebarMenuSubButton"
 
-export***REMOVED***{
-***REMOVED******REMOVED***Sidebar,
-***REMOVED******REMOVED***SidebarContent,
-***REMOVED******REMOVED***SidebarFooter,
-***REMOVED******REMOVED***SidebarGroup,
-***REMOVED******REMOVED***SidebarGroupAction,
-***REMOVED******REMOVED***SidebarGroupContent,
-***REMOVED******REMOVED***SidebarGroupLabel,
-***REMOVED******REMOVED***SidebarHeader,
-***REMOVED******REMOVED***SidebarInput,
-***REMOVED******REMOVED***SidebarInset,
-***REMOVED******REMOVED***SidebarMenu,
-***REMOVED******REMOVED***SidebarMenuAction,
-***REMOVED******REMOVED***SidebarMenuBadge,
-***REMOVED******REMOVED***SidebarMenuButton,
-***REMOVED******REMOVED***SidebarMenuItem,
-***REMOVED******REMOVED***SidebarMenuSkeleton,
-***REMOVED******REMOVED***SidebarMenuSub,
-***REMOVED******REMOVED***SidebarMenuSubButton,
-***REMOVED******REMOVED***SidebarMenuSubItem,
-***REMOVED******REMOVED***SidebarProvider,
-***REMOVED******REMOVED***SidebarRail,
-***REMOVED******REMOVED***SidebarSeparator,
-***REMOVED******REMOVED***SidebarTrigger,
-***REMOVED******REMOVED***useSidebar,
+export {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupAction,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInput,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuAction,
+  SidebarMenuBadge,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSkeleton,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+  SidebarProvider,
+  SidebarRail,
+  SidebarSeparator,
+  SidebarTrigger,
+  useSidebar,
 }

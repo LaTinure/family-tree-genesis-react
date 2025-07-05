@@ -1,22 +1,22 @@
---***REMOVED***Script***REMOVED***SQL***REMOVED***pour***REMOVED***corriger***REMOVED***immédiatement***REMOVED***la***REMOVED***contrainte***REMOVED***de***REMOVED***rôle
---***REMOVED***À***REMOVED***exécuter***REMOVED***dans***REMOVED***l'éditeur***REMOVED***SQL***REMOVED***de***REMOVED***Supabase
+-- Script SQL pour corriger immédiatement la contrainte de rôle
+-- À exécuter dans l'éditeur SQL de Supabase
 
---***REMOVED***1.***REMOVED***Supprimer***REMOVED***la***REMOVED***contrainte***REMOVED***existante
-ALTER***REMOVED***TABLE***REMOVED***profiles***REMOVED***DROP***REMOVED***CONSTRAINT***REMOVED***IF***REMOVED***EXISTS***REMOVED***profiles_role_check;
+-- 1. Supprimer la contrainte existante
+ALTER TABLE profiles DROP CONSTRAINT IF EXISTS profiles_role_check;
 
---***REMOVED***2.***REMOVED***Ajouter***REMOVED***la***REMOVED***nouvelle***REMOVED***contrainte***REMOVED***avec***REMOVED***les***REMOVED***bonnes***REMOVED***valeurs
-ALTER***REMOVED***TABLE***REMOVED***profiles
-ADD***REMOVED***CONSTRAINT***REMOVED***profiles_role_check***REMOVED***CHECK***REMOVED***(role***REMOVED***IN***REMOVED***('Membre',***REMOVED***'Administrateur'));
+-- 2. Ajouter la nouvelle contrainte avec les bonnes valeurs
+ALTER TABLE profiles
+ADD CONSTRAINT profiles_role_check CHECK (role IN ('Membre', 'Administrateur'));
 
---***REMOVED***3.***REMOVED***Mettre***REMOVED***à***REMOVED***jour***REMOVED***les***REMOVED***valeurs***REMOVED***existantes***REMOVED***pour***REMOVED***correspondre***REMOVED***aux***REMOVED***nouvelles***REMOVED***contraintes
-UPDATE***REMOVED***profiles
-SET***REMOVED***role***REMOVED***=***REMOVED***'Membre'
-WHERE***REMOVED***role***REMOVED***IS***REMOVED***NULL***REMOVED***OR***REMOVED***role***REMOVED***=***REMOVED***''***REMOVED***OR***REMOVED***role***REMOVED***NOT***REMOVED***IN***REMOVED***('Membre',***REMOVED***'Administrateur');
+-- 3. Mettre à jour les valeurs existantes pour correspondre aux nouvelles contraintes
+UPDATE profiles
+SET role = 'Membre'
+WHERE role IS NULL OR role = '' OR role NOT IN ('Membre', 'Administrateur');
 
---***REMOVED***4.***REMOVED***Vérifier***REMOVED***le***REMOVED***résultat
-SELECT***REMOVED***DISTINCT***REMOVED***role***REMOVED***FROM***REMOVED***profiles***REMOVED***ORDER***REMOVED***BY***REMOVED***role;
+-- 4. Vérifier le résultat
+SELECT DISTINCT role FROM profiles ORDER BY role;
 
---***REMOVED***5.***REMOVED***Vérifier***REMOVED***que***REMOVED***la***REMOVED***contrainte***REMOVED***fonctionne
-SELECT***REMOVED***constraint_name,***REMOVED***check_clause
-FROM***REMOVED***information_schema.check_constraints
-WHERE***REMOVED***constraint_name***REMOVED***=***REMOVED***'profiles_role_check';
+-- 5. Vérifier que la contrainte fonctionne
+SELECT constraint_name, check_clause
+FROM information_schema.check_constraints
+WHERE constraint_name = 'profiles_role_check';

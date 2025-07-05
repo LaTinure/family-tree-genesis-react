@@ -1,210 +1,210 @@
 
-import***REMOVED***React,***REMOVED***{***REMOVED***useState,***REMOVED***useEffect***REMOVED***}***REMOVED***from***REMOVED***'react';
-import***REMOVED***{***REMOVED***Card***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/card';
-import***REMOVED***{***REMOVED***useAuth***REMOVED***}***REMOVED***from***REMOVED***'@/hooks/useAuth';
-import***REMOVED***{***REMOVED***useFamilyMembers***REMOVED***}***REMOVED***from***REMOVED***'@/hooks/useFamilyMembers';
-import***REMOVED***{***REMOVED***ChatInterface***REMOVED***}***REMOVED***from***REMOVED***'@/components/chat/ChatInterface';
-import***REMOVED***{***REMOVED***ContactList***REMOVED***}***REMOVED***from***REMOVED***'@/components/chat/ContactList';
-import***REMOVED***{***REMOVED***Message,***REMOVED***ChatContact,***REMOVED***TypingIndicator***REMOVED***}***REMOVED***from***REMOVED***'@/types/chat';
-import***REMOVED***DashboardLayout***REMOVED***from***REMOVED***'@/components/layout/DashboardLayout';
-import***REMOVED***{***REMOVED***supabase***REMOVED***}***REMOVED***from***REMOVED***'@/integrations/supabase/client';
-import***REMOVED***{***REMOVED***useToast***REMOVED***}***REMOVED***from***REMOVED***'@/hooks/use-toast';
+import React, { useState, useEffect } from 'react';
+import { Card } from '@/components/ui/card';
+import { useAuth } from '@/hooks/useAuth';
+import { useFamilyMembers } from '@/hooks/useFamilyMembers';
+import { ChatInterface } from '@/components/chat/ChatInterface';
+import { ContactList } from '@/components/chat/ContactList';
+import { Message, ChatContact, TypingIndicator } from '@/types/chat';
+import DashboardLayout from '@/components/layout/DashboardLayout';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
-const***REMOVED***Chat***REMOVED***=***REMOVED***()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***{***REMOVED***user***REMOVED***}***REMOVED***=***REMOVED***useAuth();
-***REMOVED******REMOVED***const***REMOVED***{***REMOVED***members,***REMOVED***isLoading:***REMOVED***membersLoading***REMOVED***}***REMOVED***=***REMOVED***useFamilyMembers();
-***REMOVED******REMOVED***const***REMOVED***{***REMOVED***toast***REMOVED***}***REMOVED***=***REMOVED***useToast();
-***REMOVED******REMOVED***
-***REMOVED******REMOVED***const***REMOVED***[contacts,***REMOVED***setContacts]***REMOVED***=***REMOVED***useState<ChatContact[]>([]);
-***REMOVED******REMOVED***const***REMOVED***[selectedContact,***REMOVED***setSelectedContact]***REMOVED***=***REMOVED***useState<ChatContact***REMOVED***|***REMOVED***null>(null);
-***REMOVED******REMOVED***const***REMOVED***[messages,***REMOVED***setMessages]***REMOVED***=***REMOVED***useState<Message[]>([]);
-***REMOVED******REMOVED***const***REMOVED***[typingUsers,***REMOVED***setTypingUsers]***REMOVED***=***REMOVED***useState<TypingIndicator[]>([]);
-***REMOVED******REMOVED***const***REMOVED***[isLoading,***REMOVED***setIsLoading]***REMOVED***=***REMOVED***useState(true);
+const Chat = () => {
+  const { user } = useAuth();
+  const { members, isLoading: membersLoading } = useFamilyMembers();
+  const { toast } = useToast();
+  
+  const [contacts, setContacts] = useState<ChatContact[]>([]);
+  const [selectedContact, setSelectedContact] = useState<ChatContact | null>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [typingUsers, setTypingUsers] = useState<TypingIndicator[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-***REMOVED******REMOVED***//***REMOVED***Initialiser***REMOVED***les***REMOVED***contacts***REMOVED***depuis***REMOVED***les***REMOVED***membres***REMOVED***de***REMOVED***la***REMOVED***famille
-***REMOVED******REMOVED***useEffect(()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(members.length***REMOVED***>***REMOVED***0***REMOVED***&&***REMOVED***user)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***chatContacts:***REMOVED***ChatContact[]***REMOVED***=***REMOVED***members
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.filter(member***REMOVED***=>***REMOVED***member.user_id***REMOVED***!==***REMOVED***user.id)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.map(member***REMOVED***=>***REMOVED***({
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***member.id,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***profile:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***member.id,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_id:***REMOVED***member.user_id,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***first_name:***REMOVED***member.first_name,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***last_name:***REMOVED***member.last_name,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***avatar_url:***REMOVED***member.avatar_url,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***photo_url:***REMOVED***member.photo_url,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***phone:***REMOVED***member.phone,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_online:***REMOVED***Math.random()***REMOVED***>***REMOVED***0.3,***REMOVED***//***REMOVED***Simulation***REMOVED***statut***REMOVED***en***REMOVED***ligne
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***last_seen:***REMOVED***new***REMOVED***Date(Date.now()***REMOVED***-***REMOVED***Math.random()***REMOVED*******REMOVED***3600000)***REMOVED***//***REMOVED***Dernière***REMOVED***connexion***REMOVED***aléatoire
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***conversation_id:***REMOVED***`conv_${user.id}_${member.user_id}`,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***last_message:***REMOVED***generateMockMessage(member.user_id,***REMOVED***user.id),
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***unread_count:***REMOVED***Math.floor(Math.random()***REMOVED*******REMOVED***5)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}));
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setContacts(chatContacts);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setIsLoading(false);
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED***},***REMOVED***[members,***REMOVED***user]);
+  // Initialiser les contacts depuis les membres de la famille
+  useEffect(() => {
+    if (members.length > 0 && user) {
+      const chatContacts: ChatContact[] = members
+        .filter(member => member.user_id !== user.id)
+        .map(member => ({
+          id: member.id,
+          profile: {
+            id: member.id,
+            user_id: member.user_id,
+            first_name: member.first_name,
+            last_name: member.last_name,
+            avatar_url: member.avatar_url,
+            photo_url: member.photo_url,
+            phone: member.phone,
+            is_online: Math.random() > 0.3, // Simulation statut en ligne
+            last_seen: new Date(Date.now() - Math.random() * 3600000) // Dernière connexion aléatoire
+          },
+          conversation_id: `conv_${user.id}_${member.user_id}`,
+          last_message: generateMockMessage(member.user_id, user.id),
+          unread_count: Math.floor(Math.random() * 5)
+        }));
+      
+      setContacts(chatContacts);
+      setIsLoading(false);
+    }
+  }, [members, user]);
 
-***REMOVED******REMOVED***//***REMOVED***Générer***REMOVED***un***REMOVED***message***REMOVED***factice***REMOVED***pour***REMOVED***la***REMOVED***démo
-***REMOVED******REMOVED***const***REMOVED***generateMockMessage***REMOVED***=***REMOVED***(senderId:***REMOVED***string,***REMOVED***receiverId:***REMOVED***string):***REMOVED***Message***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***mockMessages***REMOVED***=***REMOVED***[
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Salut***REMOVED***!***REMOVED***Comment***REMOVED***ça***REMOVED***va***REMOVED***?",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"On***REMOVED***se***REMOVED***voit***REMOVED***bientôt***REMOVED***?",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Merci***REMOVED***pour***REMOVED***l'invitation***REMOVED***!",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"À***REMOVED***bientôt***REMOVED***!",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Super,***REMOVED***merci***REMOVED***!",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Parfait***REMOVED***👍",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"D'accord,***REMOVED***on***REMOVED***fait***REMOVED***ça",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Bisous***REMOVED***😘"
-***REMOVED******REMOVED******REMOVED******REMOVED***];
-***REMOVED******REMOVED******REMOVED******REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***`mock_${Date.now()}_${Math.random()}`,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***sender_id:***REMOVED***senderId,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***receiver_id:***REMOVED***receiverId,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***content:***REMOVED***mockMessages[Math.floor(Math.random()***REMOVED*******REMOVED***mockMessages.length)],
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***message_type:***REMOVED***'text',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***timestamp:***REMOVED***new***REMOVED***Date(Date.now()***REMOVED***-***REMOVED***Math.random()***REMOVED*******REMOVED***86400000),***REMOVED***//***REMOVED***Message***REMOVED***aléatoire***REMOVED***des***REMOVED***dernières***REMOVED***24h
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_read:***REMOVED***Math.random()***REMOVED***>***REMOVED***0.3,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_delivered:***REMOVED***true
-***REMOVED******REMOVED******REMOVED******REMOVED***};
-***REMOVED******REMOVED***};
+  // Générer un message factice pour la démo
+  const generateMockMessage = (senderId: string, receiverId: string): Message => {
+    const mockMessages = [
+      "Salut ! Comment ça va ?",
+      "On se voit bientôt ?",
+      "Merci pour l'invitation !",
+      "À bientôt !",
+      "Super, merci !",
+      "Parfait 👍",
+      "D'accord, on fait ça",
+      "Bisous 😘"
+    ];
+    
+    return {
+      id: `mock_${Date.now()}_${Math.random()}`,
+      sender_id: senderId,
+      receiver_id: receiverId,
+      content: mockMessages[Math.floor(Math.random() * mockMessages.length)],
+      message_type: 'text',
+      timestamp: new Date(Date.now() - Math.random() * 86400000), // Message aléatoire des dernières 24h
+      is_read: Math.random() > 0.3,
+      is_delivered: true
+    };
+  };
 
-***REMOVED******REMOVED***//***REMOVED***Charger***REMOVED***les***REMOVED***messages***REMOVED***pour***REMOVED***un***REMOVED***contact***REMOVED***sélectionné
-***REMOVED******REMOVED***const***REMOVED***loadMessagesForContact***REMOVED***=***REMOVED***(contact:***REMOVED***ChatContact)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Simulation***REMOVED***de***REMOVED***messages***REMOVED***pour***REMOVED***la***REMOVED***démo
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***mockMessages:***REMOVED***Message[]***REMOVED***=***REMOVED***[];
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***messageCount***REMOVED***=***REMOVED***Math.floor(Math.random()***REMOVED*******REMOVED***10)***REMOVED***+***REMOVED***5;
-***REMOVED******REMOVED******REMOVED******REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED***for***REMOVED***(let***REMOVED***i***REMOVED***=***REMOVED***0;***REMOVED***i***REMOVED***<***REMOVED***messageCount;***REMOVED***i++)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***isFromUser***REMOVED***=***REMOVED***Math.random()***REMOVED***>***REMOVED***0.5;
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***timestamp***REMOVED***=***REMOVED***new***REMOVED***Date(Date.now()***REMOVED***-***REMOVED***(messageCount***REMOVED***-***REMOVED***i)***REMOVED*******REMOVED***300000);***REMOVED***//***REMOVED***Messages***REMOVED***espacés***REMOVED***de***REMOVED***5***REMOVED***min
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***mockMessages.push({
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***`msg_${i}_${Date.now()}`,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***sender_id:***REMOVED***isFromUser***REMOVED***?***REMOVED***user!.id***REMOVED***:***REMOVED***contact.profile.user_id,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***receiver_id:***REMOVED***isFromUser***REMOVED***?***REMOVED***contact.profile.user_id***REMOVED***:***REMOVED***user!.id,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***content:***REMOVED***isFromUser***REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***[`Salut***REMOVED***${contact.profile.first_name}***REMOVED***!`,***REMOVED***"Comment***REMOVED***ça***REMOVED***va***REMOVED***?",***REMOVED***"Tu***REMOVED***es***REMOVED***libre***REMOVED***ce***REMOVED***weekend***REMOVED***?",***REMOVED***"Super***REMOVED***!"][Math.floor(Math.random()***REMOVED*******REMOVED***4)]
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***["Salut***REMOVED***!",***REMOVED***"Ça***REMOVED***va***REMOVED***bien***REMOVED***et***REMOVED***toi***REMOVED***?",***REMOVED***"Oui,***REMOVED***pourquoi***REMOVED***?",***REMOVED***"Génial***REMOVED***!***REMOVED***😊"][Math.floor(Math.random()***REMOVED*******REMOVED***4)],
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***message_type:***REMOVED***'text',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***timestamp,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_read:***REMOVED***!isFromUser***REMOVED***||***REMOVED***Math.random()***REMOVED***>***REMOVED***0.3,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_delivered:***REMOVED***true
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***});
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED***setMessages(mockMessages.sort((a,***REMOVED***b)***REMOVED***=>***REMOVED***a.timestamp.getTime()***REMOVED***-***REMOVED***b.timestamp.getTime()));
-***REMOVED******REMOVED***};
+  // Charger les messages pour un contact sélectionné
+  const loadMessagesForContact = (contact: ChatContact) => {
+    // Simulation de messages pour la démo
+    const mockMessages: Message[] = [];
+    const messageCount = Math.floor(Math.random() * 10) + 5;
+    
+    for (let i = 0; i < messageCount; i++) {
+      const isFromUser = Math.random() > 0.5;
+      const timestamp = new Date(Date.now() - (messageCount - i) * 300000); // Messages espacés de 5 min
+      
+      mockMessages.push({
+        id: `msg_${i}_${Date.now()}`,
+        sender_id: isFromUser ? user!.id : contact.profile.user_id,
+        receiver_id: isFromUser ? contact.profile.user_id : user!.id,
+        content: isFromUser 
+          ? [`Salut ${contact.profile.first_name} !`, "Comment ça va ?", "Tu es libre ce weekend ?", "Super !"][Math.floor(Math.random() * 4)]
+          : ["Salut !", "Ça va bien et toi ?", "Oui, pourquoi ?", "Génial ! 😊"][Math.floor(Math.random() * 4)],
+        message_type: 'text',
+        timestamp,
+        is_read: !isFromUser || Math.random() > 0.3,
+        is_delivered: true
+      });
+    }
+    
+    setMessages(mockMessages.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime()));
+  };
 
-***REMOVED******REMOVED***const***REMOVED***handleSelectContact***REMOVED***=***REMOVED***(contact:***REMOVED***ChatContact)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***setSelectedContact(contact);
-***REMOVED******REMOVED******REMOVED******REMOVED***loadMessagesForContact(contact);
-***REMOVED******REMOVED******REMOVED******REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Marquer***REMOVED***comme***REMOVED***lu
-***REMOVED******REMOVED******REMOVED******REMOVED***setContacts(prev***REMOVED***=>***REMOVED***prev.map(c***REMOVED***=>***REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***c.id***REMOVED***===***REMOVED***contact.id***REMOVED***?***REMOVED***{***REMOVED***...c,***REMOVED***unread_count:***REMOVED***0***REMOVED***}***REMOVED***:***REMOVED***c
-***REMOVED******REMOVED******REMOVED******REMOVED***));
-***REMOVED******REMOVED***};
+  const handleSelectContact = (contact: ChatContact) => {
+    setSelectedContact(contact);
+    loadMessagesForContact(contact);
+    
+    // Marquer comme lu
+    setContacts(prev => prev.map(c => 
+      c.id === contact.id ? { ...c, unread_count: 0 } : c
+    ));
+  };
 
-***REMOVED******REMOVED***const***REMOVED***handleSendMessage***REMOVED***=***REMOVED***(content:***REMOVED***string,***REMOVED***type:***REMOVED***'text'***REMOVED***|***REMOVED***'image'***REMOVED***|***REMOVED***'file'***REMOVED***=***REMOVED***'text')***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(!selectedContact***REMOVED***||***REMOVED***!user)***REMOVED***return;
+  const handleSendMessage = (content: string, type: 'text' | 'image' | 'file' = 'text') => {
+    if (!selectedContact || !user) return;
 
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***newMessage:***REMOVED***Message***REMOVED***=***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***`msg_${Date.now()}_${Math.random()}`,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***sender_id:***REMOVED***user.id,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***receiver_id:***REMOVED***selectedContact.profile.user_id,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***content,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***message_type:***REMOVED***type,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***timestamp:***REMOVED***new***REMOVED***Date(),
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_read:***REMOVED***false,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_delivered:***REMOVED***true
-***REMOVED******REMOVED******REMOVED******REMOVED***};
+    const newMessage: Message = {
+      id: `msg_${Date.now()}_${Math.random()}`,
+      sender_id: user.id,
+      receiver_id: selectedContact.profile.user_id,
+      content,
+      message_type: type,
+      timestamp: new Date(),
+      is_read: false,
+      is_delivered: true
+    };
 
-***REMOVED******REMOVED******REMOVED******REMOVED***setMessages(prev***REMOVED***=>***REMOVED***[...prev,***REMOVED***newMessage]);
-***REMOVED******REMOVED******REMOVED******REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Mettre***REMOVED***à***REMOVED***jour***REMOVED***le***REMOVED***dernier***REMOVED***message***REMOVED***du***REMOVED***contact
-***REMOVED******REMOVED******REMOVED******REMOVED***setContacts(prev***REMOVED***=>***REMOVED***prev.map(c***REMOVED***=>***REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***c.id***REMOVED***===***REMOVED***selectedContact.id***REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***{***REMOVED***...c,***REMOVED***last_message:***REMOVED***newMessage***REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***c
-***REMOVED******REMOVED******REMOVED******REMOVED***));
+    setMessages(prev => [...prev, newMessage]);
+    
+    // Mettre à jour le dernier message du contact
+    setContacts(prev => prev.map(c => 
+      c.id === selectedContact.id 
+        ? { ...c, last_message: newMessage }
+        : c
+    ));
 
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Simulation***REMOVED***de***REMOVED***réponse***REMOVED***automatique***REMOVED***après***REMOVED***2-5***REMOVED***secondes
-***REMOVED******REMOVED******REMOVED******REMOVED***setTimeout(()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***responses***REMOVED***=***REMOVED***[
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Merci***REMOVED***pour***REMOVED***ton***REMOVED***message***REMOVED***!",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"D'accord***REMOVED***👍",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Parfait***REMOVED***!",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Je***REMOVED***vois***REMOVED***ça",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Super***REMOVED***!",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Bisous***REMOVED***❤️"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***];
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***responseMessage:***REMOVED***Message***REMOVED***=***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***`response_${Date.now()}_${Math.random()}`,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***sender_id:***REMOVED***selectedContact.profile.user_id,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***receiver_id:***REMOVED***user.id,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***content:***REMOVED***responses[Math.floor(Math.random()***REMOVED*******REMOVED***responses.length)],
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***message_type:***REMOVED***'text',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***timestamp:***REMOVED***new***REMOVED***Date(),
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_read:***REMOVED***false,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_delivered:***REMOVED***true
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***};
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setMessages(prev***REMOVED***=>***REMOVED***[...prev,***REMOVED***responseMessage]);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setContacts(prev***REMOVED***=>***REMOVED***prev.map(c***REMOVED***=>***REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***c.id***REMOVED***===***REMOVED***selectedContact.id***REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***{***REMOVED***...c,***REMOVED***last_message:***REMOVED***responseMessage,***REMOVED***unread_count:***REMOVED***c.unread_count***REMOVED***+***REMOVED***1***REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***c
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***));
-***REMOVED******REMOVED******REMOVED******REMOVED***},***REMOVED***Math.random()***REMOVED*******REMOVED***3000***REMOVED***+***REMOVED***2000);
+    // Simulation de réponse automatique après 2-5 secondes
+    setTimeout(() => {
+      const responses = [
+        "Merci pour ton message !",
+        "D'accord 👍",
+        "Parfait !",
+        "Je vois ça",
+        "Super !",
+        "Bisous ❤️"
+      ];
+      
+      const responseMessage: Message = {
+        id: `response_${Date.now()}_${Math.random()}`,
+        sender_id: selectedContact.profile.user_id,
+        receiver_id: user.id,
+        content: responses[Math.floor(Math.random() * responses.length)],
+        message_type: 'text',
+        timestamp: new Date(),
+        is_read: false,
+        is_delivered: true
+      };
+      
+      setMessages(prev => [...prev, responseMessage]);
+      setContacts(prev => prev.map(c => 
+        c.id === selectedContact.id 
+          ? { ...c, last_message: responseMessage, unread_count: c.unread_count + 1 }
+          : c
+      ));
+    }, Math.random() * 3000 + 2000);
 
-***REMOVED******REMOVED******REMOVED******REMOVED***toast({
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***title:***REMOVED***"Message***REMOVED***envoyé",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***description:***REMOVED***`Message***REMOVED***envoyé***REMOVED***à***REMOVED***${selectedContact.profile.first_name}`,
-***REMOVED******REMOVED******REMOVED******REMOVED***});
-***REMOVED******REMOVED***};
+    toast({
+      title: "Message envoyé",
+      description: `Message envoyé à ${selectedContact.profile.first_name}`,
+    });
+  };
 
-***REMOVED******REMOVED***const***REMOVED***handleTyping***REMOVED***=***REMOVED***(isTyping:***REMOVED***boolean)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(!selectedContact***REMOVED***||***REMOVED***!user)***REMOVED***return;
-***REMOVED******REMOVED******REMOVED******REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Simulation***REMOVED***de***REMOVED***l'indicateur***REMOVED***de***REMOVED***frappe
-***REMOVED******REMOVED******REMOVED******REMOVED***console.log(`${user.user_metadata?.display_name}***REMOVED***is***REMOVED***${isTyping***REMOVED***?***REMOVED***'typing'***REMOVED***:***REMOVED***'not***REMOVED***typing'}`);
-***REMOVED******REMOVED***};
+  const handleTyping = (isTyping: boolean) => {
+    if (!selectedContact || !user) return;
+    
+    // Simulation de l'indicateur de frappe
+    console.log(`${user.user_metadata?.display_name} is ${isTyping ? 'typing' : 'not typing'}`);
+  };
 
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<DashboardLayout>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="container***REMOVED***mx-auto***REMOVED***px-4***REMOVED***py-6">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="grid***REMOVED***grid-cols-1***REMOVED***lg:grid-cols-3***REMOVED***gap-6***REMOVED***h-[700px]">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{/****REMOVED***Liste***REMOVED***des***REMOVED***contacts***REMOVED****/}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="lg:col-span-1">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<ContactList
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***contacts={contacts}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***selectedContact={selectedContact}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onSelectContact={handleSelectContact}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***isLoading={isLoading}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
+  return (
+    <DashboardLayout>
+      <div className="container mx-auto px-4 py-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[700px]">
+          {/* Liste des contacts */}
+          <div className="lg:col-span-1">
+            <ContactList
+              contacts={contacts}
+              selectedContact={selectedContact}
+              onSelectContact={handleSelectContact}
+              isLoading={isLoading}
+            />
+          </div>
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{/****REMOVED***Interface***REMOVED***de***REMOVED***chat***REMOVED****/}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="lg:col-span-2">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<ChatInterface
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***selectedContact={selectedContact}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***messages={messages}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onSendMessage={handleSendMessage}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onTyping={handleTyping}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***typingUsers={typingUsers}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED***</DashboardLayout>
-***REMOVED******REMOVED***);
+          {/* Interface de chat */}
+          <div className="lg:col-span-2">
+            <ChatInterface
+              selectedContact={selectedContact}
+              messages={messages}
+              onSendMessage={handleSendMessage}
+              onTyping={handleTyping}
+              typingUsers={typingUsers}
+            />
+          </div>
+        </div>
+      </div>
+    </DashboardLayout>
+  );
 };
 
-export***REMOVED***default***REMOVED***Chat;
+export default Chat;

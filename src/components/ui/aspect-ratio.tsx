@@ -1,5 +1,5 @@
-import***REMOVED*******REMOVED***as***REMOVED***AspectRatioPrimitive***REMOVED***from***REMOVED***"@radix-ui/react-aspect-ratio"
+import * as AspectRatioPrimitive from "@radix-ui/react-aspect-ratio"
 
-const***REMOVED***AspectRatio***REMOVED***=***REMOVED***AspectRatioPrimitive.Root
+const AspectRatio = AspectRatioPrimitive.Root
 
-export***REMOVED***{***REMOVED***AspectRatio***REMOVED***}
+export { AspectRatio }

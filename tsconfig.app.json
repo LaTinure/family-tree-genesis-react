@@ -1,30 +1,30 @@
 {
-***REMOVED******REMOVED***"compilerOptions":***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***"target":***REMOVED***"ES2020",
-***REMOVED******REMOVED******REMOVED******REMOVED***"useDefineForClassFields":***REMOVED***true,
-***REMOVED******REMOVED******REMOVED******REMOVED***"lib":***REMOVED***["ES2020",***REMOVED***"DOM",***REMOVED***"DOM.Iterable"],
-***REMOVED******REMOVED******REMOVED******REMOVED***"module":***REMOVED***"ESNext",
-***REMOVED******REMOVED******REMOVED******REMOVED***"skipLibCheck":***REMOVED***true,
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
 
-***REMOVED******REMOVED******REMOVED******REMOVED***/****REMOVED***Bundler***REMOVED***mode***REMOVED****/
-***REMOVED******REMOVED******REMOVED******REMOVED***"moduleResolution":***REMOVED***"bundler",
-***REMOVED******REMOVED******REMOVED******REMOVED***"allowImportingTsExtensions":***REMOVED***true,
-***REMOVED******REMOVED******REMOVED******REMOVED***"isolatedModules":***REMOVED***true,
-***REMOVED******REMOVED******REMOVED******REMOVED***"moduleDetection":***REMOVED***"force",
-***REMOVED******REMOVED******REMOVED******REMOVED***"noEmit":***REMOVED***true,
-***REMOVED******REMOVED******REMOVED******REMOVED***"jsx":***REMOVED***"react-jsx",
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
 
-***REMOVED******REMOVED******REMOVED******REMOVED***/****REMOVED***Linting***REMOVED****/
-***REMOVED******REMOVED******REMOVED******REMOVED***"strict":***REMOVED***false,
-***REMOVED******REMOVED******REMOVED******REMOVED***"noUnusedLocals":***REMOVED***false,
-***REMOVED******REMOVED******REMOVED******REMOVED***"noUnusedParameters":***REMOVED***false,
-***REMOVED******REMOVED******REMOVED******REMOVED***"noImplicitAny":***REMOVED***false,
-***REMOVED******REMOVED******REMOVED******REMOVED***"noFallthroughCasesInSwitch":***REMOVED***false,
+    /* Linting */
+    "strict": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitAny": false,
+    "noFallthroughCasesInSwitch": false,
 
-***REMOVED******REMOVED******REMOVED******REMOVED***"baseUrl":***REMOVED***".",
-***REMOVED******REMOVED******REMOVED******REMOVED***"paths":***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"@/*":***REMOVED***["./src/*"]
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED***},
-***REMOVED******REMOVED***"include":***REMOVED***["src"]
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["src"]
 }

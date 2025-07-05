@@ -1,58 +1,58 @@
---***REMOVED***Script***REMOVED***de***REMOVED***diagnostic***REMOVED***détaillé***REMOVED***pour***REMOVED***le***REMOVED***problème***REMOVED***de***REMOVED***rôle
---***REMOVED***À***REMOVED***exécuter***REMOVED***dans***REMOVED***l'éditeur***REMOVED***SQL***REMOVED***de***REMOVED***Supabase
+-- Script de diagnostic détaillé pour le problème de rôle
+-- À exécuter dans l'éditeur SQL de Supabase
 
---***REMOVED***1.***REMOVED***Vérifier***REMOVED***la***REMOVED***contrainte***REMOVED***actuelle
-SELECT***REMOVED***'===***REMOVED***CONTRAINTE***REMOVED***ACTUELLE***REMOVED***==='***REMOVED***as***REMOVED***section;
-SELECT***REMOVED***constraint_name,***REMOVED***check_clause
-FROM***REMOVED***information_schema.check_constraints
-WHERE***REMOVED***constraint_name***REMOVED***=***REMOVED***'profiles_role_check';
+-- 1. Vérifier la contrainte actuelle
+SELECT '=== CONTRAINTE ACTUELLE ===' as section;
+SELECT constraint_name, check_clause
+FROM information_schema.check_constraints
+WHERE constraint_name = 'profiles_role_check';
 
---***REMOVED***2.***REMOVED***Vérifier***REMOVED***les***REMOVED***valeurs***REMOVED***exactes***REMOVED***dans***REMOVED***la***REMOVED***table
-SELECT***REMOVED***'===***REMOVED***VALEURS***REMOVED***ACTUELLES***REMOVED***==='***REMOVED***as***REMOVED***section;
-SELECT***REMOVED***role,***REMOVED***LENGTH(role)***REMOVED***as***REMOVED***length,***REMOVED***ASCII(SUBSTRING(role,***REMOVED***1,***REMOVED***1))***REMOVED***as***REMOVED***first_char_ascii
-FROM***REMOVED***profiles
-GROUP***REMOVED***BY***REMOVED***role
-ORDER***REMOVED***BY***REMOVED***role;
+-- 2. Vérifier les valeurs exactes dans la table
+SELECT '=== VALEURS ACTUELLES ===' as section;
+SELECT role, LENGTH(role) as length, ASCII(SUBSTRING(role, 1, 1)) as first_char_ascii
+FROM profiles
+GROUP BY role
+ORDER BY role;
 
---***REMOVED***3.***REMOVED***Tester***REMOVED***les***REMOVED***valeurs***REMOVED***exactes
-SELECT***REMOVED***'===***REMOVED***TEST***REMOVED***DES***REMOVED***VALEURS***REMOVED***==='***REMOVED***as***REMOVED***section;
+-- 3. Tester les valeurs exactes
+SELECT '=== TEST DES VALEURS ===' as section;
 SELECT
-***REMOVED******REMOVED***'Membre'***REMOVED***as***REMOVED***test_value,
-***REMOVED******REMOVED***'Membre'***REMOVED***IN***REMOVED***('Membre',***REMOVED***'Administrateur')***REMOVED***as***REMOVED***is_valid,
-***REMOVED******REMOVED***LENGTH('Membre')***REMOVED***as***REMOVED***length,
-***REMOVED******REMOVED***ASCII(SUBSTRING('Membre',***REMOVED***1,***REMOVED***1))***REMOVED***as***REMOVED***first_char_ascii
-UNION***REMOVED***ALL
+  'Membre' as test_value,
+  'Membre' IN ('Membre', 'Administrateur') as is_valid,
+  LENGTH('Membre') as length,
+  ASCII(SUBSTRING('Membre', 1, 1)) as first_char_ascii
+UNION ALL
 SELECT
-***REMOVED******REMOVED***'Administrateur'***REMOVED***as***REMOVED***test_value,
-***REMOVED******REMOVED***'Administrateur'***REMOVED***IN***REMOVED***('Membre',***REMOVED***'Administrateur')***REMOVED***as***REMOVED***is_valid,
-***REMOVED******REMOVED***LENGTH('Administrateur')***REMOVED***as***REMOVED***length,
-***REMOVED******REMOVED***ASCII(SUBSTRING('Administrateur',***REMOVED***1,***REMOVED***1))***REMOVED***as***REMOVED***first_char_ascii;
+  'Administrateur' as test_value,
+  'Administrateur' IN ('Membre', 'Administrateur') as is_valid,
+  LENGTH('Administrateur') as length,
+  ASCII(SUBSTRING('Administrateur', 1, 1)) as first_char_ascii;
 
---***REMOVED***4.***REMOVED***Vérifier***REMOVED***la***REMOVED***structure***REMOVED***de***REMOVED***la***REMOVED***colonne
-SELECT***REMOVED***'===***REMOVED***STRUCTURE***REMOVED***DE***REMOVED***LA***REMOVED***COLONNE***REMOVED***==='***REMOVED***as***REMOVED***section;
-SELECT***REMOVED***column_name,***REMOVED***data_type,***REMOVED***is_nullable,***REMOVED***column_default,***REMOVED***character_maximum_length
-FROM***REMOVED***information_schema.columns
-WHERE***REMOVED***table_name***REMOVED***=***REMOVED***'profiles'***REMOVED***AND***REMOVED***column_name***REMOVED***=***REMOVED***'role';
+-- 4. Vérifier la structure de la colonne
+SELECT '=== STRUCTURE DE LA COLONNE ===' as section;
+SELECT column_name, data_type, is_nullable, column_default, character_maximum_length
+FROM information_schema.columns
+WHERE table_name = 'profiles' AND column_name = 'role';
 
---***REMOVED***5.***REMOVED***Lister***REMOVED***toutes***REMOVED***les***REMOVED***contraintes***REMOVED***de***REMOVED***la***REMOVED***table
-SELECT***REMOVED***'===***REMOVED***TOUTES***REMOVED***LES***REMOVED***CONTRAINTES***REMOVED***==='***REMOVED***as***REMOVED***section;
-SELECT***REMOVED***tc.constraint_name,***REMOVED***tc.constraint_type,***REMOVED***cc.check_clause
-FROM***REMOVED***information_schema.table_constraints***REMOVED***tc
-LEFT***REMOVED***JOIN***REMOVED***information_schema.check_constraints***REMOVED***cc***REMOVED***ON***REMOVED***tc.constraint_name***REMOVED***=***REMOVED***cc.constraint_name
-WHERE***REMOVED***tc.table_name***REMOVED***=***REMOVED***'profiles';
+-- 5. Lister toutes les contraintes de la table
+SELECT '=== TOUTES LES CONTRAINTES ===' as section;
+SELECT tc.constraint_name, tc.constraint_type, cc.check_clause
+FROM information_schema.table_constraints tc
+LEFT JOIN information_schema.check_constraints cc ON tc.constraint_name = cc.constraint_name
+WHERE tc.table_name = 'profiles';
 
---***REMOVED***6.***REMOVED***Test***REMOVED***d'insertion***REMOVED***avec***REMOVED***différentes***REMOVED***valeurs
-SELECT***REMOVED***'===***REMOVED***TEST***REMOVED***D''INSERTION***REMOVED***==='***REMOVED***as***REMOVED***section;
---***REMOVED***Test***REMOVED***avec***REMOVED***'Membre'
+-- 6. Test d'insertion avec différentes valeurs
+SELECT '=== TEST D''INSERTION ===' as section;
+-- Test avec 'Membre'
 BEGIN;
-***REMOVED******REMOVED***INSERT***REMOVED***INTO***REMOVED***profiles***REMOVED***(id,***REMOVED***user_id,***REMOVED***email,***REMOVED***first_name,***REMOVED***last_name,***REMOVED***role)
-***REMOVED******REMOVED***VALUES***REMOVED***('test-membre',***REMOVED***'test-membre',***REMOVED***'test@membre.com',***REMOVED***'Test',***REMOVED***'Membre',***REMOVED***'Membre');
-***REMOVED******REMOVED***SELECT***REMOVED***'Membre:***REMOVED***SUCCESS'***REMOVED***as***REMOVED***result;
+  INSERT INTO profiles (id, user_id, email, first_name, last_name, role)
+  VALUES ('test-membre', 'test-membre', 'test@membre.com', 'Test', 'Membre', 'Membre');
+  SELECT 'Membre: SUCCESS' as result;
 ROLLBACK;
 
---***REMOVED***Test***REMOVED***avec***REMOVED***'Administrateur'
+-- Test avec 'Administrateur'
 BEGIN;
-***REMOVED******REMOVED***INSERT***REMOVED***INTO***REMOVED***profiles***REMOVED***(id,***REMOVED***user_id,***REMOVED***email,***REMOVED***first_name,***REMOVED***last_name,***REMOVED***role)
-***REMOVED******REMOVED***VALUES***REMOVED***('test-admin',***REMOVED***'test-admin',***REMOVED***'test@admin.com',***REMOVED***'Test',***REMOVED***'Admin',***REMOVED***'Administrateur');
-***REMOVED******REMOVED***SELECT***REMOVED***'Administrateur:***REMOVED***SUCCESS'***REMOVED***as***REMOVED***result;
+  INSERT INTO profiles (id, user_id, email, first_name, last_name, role)
+  VALUES ('test-admin', 'test-admin', 'test@admin.com', 'Test', 'Admin', 'Administrateur');
+  SELECT 'Administrateur: SUCCESS' as result;
 ROLLBACK;

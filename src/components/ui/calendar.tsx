@@ -1,64 +1,64 @@
-import***REMOVED*******REMOVED***as***REMOVED***React***REMOVED***from***REMOVED***"react";
-import***REMOVED***{***REMOVED***ChevronLeft,***REMOVED***ChevronRight***REMOVED***}***REMOVED***from***REMOVED***"lucide-react";
-import***REMOVED***{***REMOVED***DayPicker***REMOVED***}***REMOVED***from***REMOVED***"react-day-picker";
+import * as React from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { DayPicker } from "react-day-picker";
 
-import***REMOVED***{***REMOVED***cn***REMOVED***}***REMOVED***from***REMOVED***"@/lib/utils";
-import***REMOVED***{***REMOVED***buttonVariants***REMOVED***}***REMOVED***from***REMOVED***"@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
 
-export***REMOVED***type***REMOVED***CalendarProps***REMOVED***=***REMOVED***React.ComponentProps<typeof***REMOVED***DayPicker>;
+export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
-function***REMOVED***Calendar({
-***REMOVED******REMOVED***className,
-***REMOVED******REMOVED***classNames,
-***REMOVED******REMOVED***showOutsideDays***REMOVED***=***REMOVED***true,
-***REMOVED******REMOVED***...props
-}:***REMOVED***CalendarProps)***REMOVED***{
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<DayPicker
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***showOutsideDays={showOutsideDays}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn("p-3",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***classNames={{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***months:***REMOVED***"flex***REMOVED***flex-col***REMOVED***sm:flex-row***REMOVED***space-y-4***REMOVED***sm:space-x-4***REMOVED***sm:space-y-0",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***month:***REMOVED***"space-y-4",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***caption:***REMOVED***"flex***REMOVED***justify-center***REMOVED***pt-1***REMOVED***relative***REMOVED***items-center",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***caption_label:***REMOVED***"text-sm***REMOVED***font-medium",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***nav:***REMOVED***"space-x-1***REMOVED***flex***REMOVED***items-center",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***nav_button:***REMOVED***cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***buttonVariants({***REMOVED***variant:***REMOVED***"outline"***REMOVED***}),
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"h-7***REMOVED***w-7***REMOVED***bg-transparent***REMOVED***p-0***REMOVED***opacity-50***REMOVED***hover:opacity-100"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***),
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***nav_button_previous:***REMOVED***"absolute***REMOVED***left-1",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***nav_button_next:***REMOVED***"absolute***REMOVED***right-1",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***table:***REMOVED***"w-full***REMOVED***border-collapse***REMOVED***space-y-1",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***head_row:***REMOVED***"flex",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***head_cell:
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"text-muted-foreground***REMOVED***rounded-md***REMOVED***w-9***REMOVED***font-normal***REMOVED***text-[0.8rem]",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***row:***REMOVED***"flex***REMOVED***w-full***REMOVED***mt-2",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***cell:***REMOVED***"h-9***REMOVED***w-9***REMOVED***text-center***REMOVED***text-sm***REMOVED***p-0***REMOVED***relative***REMOVED***[&:has([aria-selected].day-range-end)]:rounded-r-md***REMOVED***[&:has([aria-selected].day-outside)]:bg-accent/50***REMOVED***[&:has([aria-selected])]:bg-accent***REMOVED***first:[&:has([aria-selected])]:rounded-l-md***REMOVED***last:[&:has([aria-selected])]:rounded-r-md***REMOVED***focus-within:relative***REMOVED***focus-within:z-20",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***day:***REMOVED***cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***buttonVariants({***REMOVED***variant:***REMOVED***"ghost"***REMOVED***}),
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"h-9***REMOVED***w-9***REMOVED***p-0***REMOVED***font-normal***REMOVED***aria-selected:opacity-100"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***),
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***day_range_end:***REMOVED***"day-range-end",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***day_selected:
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"bg-primary***REMOVED***text-primary-foreground***REMOVED***hover:bg-primary***REMOVED***hover:text-primary-foreground***REMOVED***focus:bg-primary***REMOVED***focus:text-primary-foreground",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***day_today:***REMOVED***"bg-accent***REMOVED***text-accent-foreground",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***day_outside:
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"day-outside***REMOVED***text-muted-foreground***REMOVED***opacity-50***REMOVED***aria-selected:bg-accent/50***REMOVED***aria-selected:text-muted-foreground***REMOVED***aria-selected:opacity-30",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***day_disabled:***REMOVED***"text-muted-foreground***REMOVED***opacity-50",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***day_range_middle:
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"aria-selected:bg-accent***REMOVED***aria-selected:text-accent-foreground",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***day_hidden:***REMOVED***"invisible",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***...classNames,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***components={{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***IconLeft:***REMOVED***({***REMOVED***..._props***REMOVED***})***REMOVED***=>***REMOVED***<ChevronLeft***REMOVED***className="h-4***REMOVED***w-4"***REMOVED***/>,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***IconRight:***REMOVED***({***REMOVED***..._props***REMOVED***})***REMOVED***=>***REMOVED***<ChevronRight***REMOVED***className="h-4***REMOVED***w-4"***REMOVED***/>,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED***);
+function Calendar({
+  className,
+  classNames,
+  showOutsideDays = true,
+  ...props
+}: CalendarProps) {
+  return (
+    <DayPicker
+      showOutsideDays={showOutsideDays}
+      className={cn("p-3", className)}
+      classNames={{
+        months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
+        month: "space-y-4",
+        caption: "flex justify-center pt-1 relative items-center",
+        caption_label: "text-sm font-medium",
+        nav: "space-x-1 flex items-center",
+        nav_button: cn(
+          buttonVariants({ variant: "outline" }),
+          "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100"
+        ),
+        nav_button_previous: "absolute left-1",
+        nav_button_next: "absolute right-1",
+        table: "w-full border-collapse space-y-1",
+        head_row: "flex",
+        head_cell:
+          "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]",
+        row: "flex w-full mt-2",
+        cell: "h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+        day: cn(
+          buttonVariants({ variant: "ghost" }),
+          "h-9 w-9 p-0 font-normal aria-selected:opacity-100"
+        ),
+        day_range_end: "day-range-end",
+        day_selected:
+          "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
+        day_today: "bg-accent text-accent-foreground",
+        day_outside:
+          "day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30",
+        day_disabled: "text-muted-foreground opacity-50",
+        day_range_middle:
+          "aria-selected:bg-accent aria-selected:text-accent-foreground",
+        day_hidden: "invisible",
+        ...classNames,
+      }}
+      components={{
+        IconLeft: ({ ..._props }) => <ChevronLeft className="h-4 w-4" />,
+        IconRight: ({ ..._props }) => <ChevronRight className="h-4 w-4" />,
+      }}
+      {...props}
+    />
+  );
 }
-Calendar.displayName***REMOVED***=***REMOVED***"Calendar";
+Calendar.displayName = "Calendar";
 
-export***REMOVED***{***REMOVED***Calendar***REMOVED***};
+export { Calendar };

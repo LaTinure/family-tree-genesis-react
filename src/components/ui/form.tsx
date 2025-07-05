@@ -1,176 +1,176 @@
-import***REMOVED*******REMOVED***as***REMOVED***React***REMOVED***from***REMOVED***"react"
-import***REMOVED*******REMOVED***as***REMOVED***LabelPrimitive***REMOVED***from***REMOVED***"@radix-ui/react-label"
-import***REMOVED***{***REMOVED***Slot***REMOVED***}***REMOVED***from***REMOVED***"@radix-ui/react-slot"
-import***REMOVED***{
-***REMOVED******REMOVED***Controller,
-***REMOVED******REMOVED***ControllerProps,
-***REMOVED******REMOVED***FieldPath,
-***REMOVED******REMOVED***FieldValues,
-***REMOVED******REMOVED***FormProvider,
-***REMOVED******REMOVED***useFormContext,
-}***REMOVED***from***REMOVED***"react-hook-form"
+import * as React from "react"
+import * as LabelPrimitive from "@radix-ui/react-label"
+import { Slot } from "@radix-ui/react-slot"
+import {
+  Controller,
+  ControllerProps,
+  FieldPath,
+  FieldValues,
+  FormProvider,
+  useFormContext,
+} from "react-hook-form"
 
-import***REMOVED***{***REMOVED***cn***REMOVED***}***REMOVED***from***REMOVED***"@/lib/utils"
-import***REMOVED***{***REMOVED***Label***REMOVED***}***REMOVED***from***REMOVED***"@/components/ui/label"
+import { cn } from "@/lib/utils"
+import { Label } from "@/components/ui/label"
 
-const***REMOVED***Form***REMOVED***=***REMOVED***FormProvider
+const Form = FormProvider
 
-type***REMOVED***FormFieldContextValue<
-***REMOVED******REMOVED***TFieldValues***REMOVED***extends***REMOVED***FieldValues***REMOVED***=***REMOVED***FieldValues,
-***REMOVED******REMOVED***TName***REMOVED***extends***REMOVED***FieldPath<TFieldValues>***REMOVED***=***REMOVED***FieldPath<TFieldValues>
->***REMOVED***=***REMOVED***{
-***REMOVED******REMOVED***name:***REMOVED***TName
+type FormFieldContextValue<
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+> = {
+  name: TName
 }
 
-const***REMOVED***FormFieldContext***REMOVED***=***REMOVED***React.createContext<FormFieldContextValue>(
-***REMOVED******REMOVED***{}***REMOVED***as***REMOVED***FormFieldContextValue
+const FormFieldContext = React.createContext<FormFieldContextValue>(
+  {} as FormFieldContextValue
 )
 
-const***REMOVED***FormField***REMOVED***=***REMOVED***<
-***REMOVED******REMOVED***TFieldValues***REMOVED***extends***REMOVED***FieldValues***REMOVED***=***REMOVED***FieldValues,
-***REMOVED******REMOVED***TName***REMOVED***extends***REMOVED***FieldPath<TFieldValues>***REMOVED***=***REMOVED***FieldPath<TFieldValues>
+const FormField = <
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 >({
-***REMOVED******REMOVED***...props
-}:***REMOVED***ControllerProps<TFieldValues,***REMOVED***TName>)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<FormFieldContext.Provider***REMOVED***value={{***REMOVED***name:***REMOVED***props.name***REMOVED***}}>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Controller***REMOVED***{...props}***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED***</FormFieldContext.Provider>
-***REMOVED******REMOVED***)
+  ...props
+}: ControllerProps<TFieldValues, TName>) => {
+  return (
+    <FormFieldContext.Provider value={{ name: props.name }}>
+      <Controller {...props} />
+    </FormFieldContext.Provider>
+  )
 }
 
-const***REMOVED***useFormField***REMOVED***=***REMOVED***()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***fieldContext***REMOVED***=***REMOVED***React.useContext(FormFieldContext)
-***REMOVED******REMOVED***const***REMOVED***itemContext***REMOVED***=***REMOVED***React.useContext(FormItemContext)
-***REMOVED******REMOVED***const***REMOVED***{***REMOVED***getFieldState,***REMOVED***formState***REMOVED***}***REMOVED***=***REMOVED***useFormContext()
+const useFormField = () => {
+  const fieldContext = React.useContext(FormFieldContext)
+  const itemContext = React.useContext(FormItemContext)
+  const { getFieldState, formState } = useFormContext()
 
-***REMOVED******REMOVED***const***REMOVED***fieldState***REMOVED***=***REMOVED***getFieldState(fieldContext.name,***REMOVED***formState)
+  const fieldState = getFieldState(fieldContext.name, formState)
 
-***REMOVED******REMOVED***if***REMOVED***(!fieldContext)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***throw***REMOVED***new***REMOVED***Error("useFormField***REMOVED***should***REMOVED***be***REMOVED***used***REMOVED***within***REMOVED***<FormField>")
-***REMOVED******REMOVED***}
+  if (!fieldContext) {
+    throw new Error("useFormField should be used within <FormField>")
+  }
 
-***REMOVED******REMOVED***const***REMOVED***{***REMOVED***id***REMOVED***}***REMOVED***=***REMOVED***itemContext
+  const { id } = itemContext
 
-***REMOVED******REMOVED***return***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***id,
-***REMOVED******REMOVED******REMOVED******REMOVED***name:***REMOVED***fieldContext.name,
-***REMOVED******REMOVED******REMOVED******REMOVED***formItemId:***REMOVED***`${id}-form-item`,
-***REMOVED******REMOVED******REMOVED******REMOVED***formDescriptionId:***REMOVED***`${id}-form-item-description`,
-***REMOVED******REMOVED******REMOVED******REMOVED***formMessageId:***REMOVED***`${id}-form-item-message`,
-***REMOVED******REMOVED******REMOVED******REMOVED***...fieldState,
-***REMOVED******REMOVED***}
+  return {
+    id,
+    name: fieldContext.name,
+    formItemId: `${id}-form-item`,
+    formDescriptionId: `${id}-form-item-description`,
+    formMessageId: `${id}-form-item-message`,
+    ...fieldState,
+  }
 }
 
-type***REMOVED***FormItemContextValue***REMOVED***=***REMOVED***{
-***REMOVED******REMOVED***id:***REMOVED***string
+type FormItemContextValue = {
+  id: string
 }
 
-const***REMOVED***FormItemContext***REMOVED***=***REMOVED***React.createContext<FormItemContextValue>(
-***REMOVED******REMOVED***{}***REMOVED***as***REMOVED***FormItemContextValue
+const FormItemContext = React.createContext<FormItemContextValue>(
+  {} as FormItemContextValue
 )
 
-const***REMOVED***FormItem***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLDivElement,
-***REMOVED******REMOVED***React.HTMLAttributes<HTMLDivElement>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***id***REMOVED***=***REMOVED***React.useId()
+const FormItem = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => {
+  const id = React.useId()
 
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<FormItemContext.Provider***REMOVED***value={{***REMOVED***id***REMOVED***}}>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***ref={ref}***REMOVED***className={cn("space-y-2",***REMOVED***className)}***REMOVED***{...props}***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED***</FormItemContext.Provider>
-***REMOVED******REMOVED***)
+  return (
+    <FormItemContext.Provider value={{ id }}>
+      <div ref={ref} className={cn("space-y-2", className)} {...props} />
+    </FormItemContext.Provider>
+  )
 })
-FormItem.displayName***REMOVED***=***REMOVED***"FormItem"
+FormItem.displayName = "FormItem"
 
-const***REMOVED***FormLabel***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***LabelPrimitive.Root>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***LabelPrimitive.Root>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***{***REMOVED***error,***REMOVED***formItemId***REMOVED***}***REMOVED***=***REMOVED***useFormField()
+const FormLabel = React.forwardRef<
+  React.ElementRef<typeof LabelPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
+>(({ className, ...props }, ref) => {
+  const { error, formItemId } = useFormField()
 
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<Label
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(error***REMOVED***&&***REMOVED***"text-destructive",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***htmlFor={formItemId}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED***)
+  return (
+    <Label
+      ref={ref}
+      className={cn(error && "text-destructive", className)}
+      htmlFor={formItemId}
+      {...props}
+    />
+  )
 })
-FormLabel.displayName***REMOVED***=***REMOVED***"FormLabel"
+FormLabel.displayName = "FormLabel"
 
-const***REMOVED***FormControl***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***Slot>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***Slot>
->(({***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***{***REMOVED***error,***REMOVED***formItemId,***REMOVED***formDescriptionId,***REMOVED***formMessageId***REMOVED***}***REMOVED***=***REMOVED***useFormField()
+const FormControl = React.forwardRef<
+  React.ElementRef<typeof Slot>,
+  React.ComponentPropsWithoutRef<typeof Slot>
+>(({ ...props }, ref) => {
+  const { error, formItemId, formDescriptionId, formMessageId } = useFormField()
 
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<Slot
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id={formItemId}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***aria-describedby={
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***!error
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***`${formDescriptionId}`
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***`${formDescriptionId}***REMOVED***${formMessageId}`
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***aria-invalid={!!error}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED***)
+  return (
+    <Slot
+      ref={ref}
+      id={formItemId}
+      aria-describedby={
+        !error
+          ? `${formDescriptionId}`
+          : `${formDescriptionId} ${formMessageId}`
+      }
+      aria-invalid={!!error}
+      {...props}
+    />
+  )
 })
-FormControl.displayName***REMOVED***=***REMOVED***"FormControl"
+FormControl.displayName = "FormControl"
 
-const***REMOVED***FormDescription***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLParagraphElement,
-***REMOVED******REMOVED***React.HTMLAttributes<HTMLParagraphElement>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***{***REMOVED***formDescriptionId***REMOVED***}***REMOVED***=***REMOVED***useFormField()
+const FormDescription = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLParagraphElement>
+>(({ className, ...props }, ref) => {
+  const { formDescriptionId } = useFormField()
 
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<p
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id={formDescriptionId}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn("text-sm***REMOVED***text-muted-foreground",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED***)
+  return (
+    <p
+      ref={ref}
+      id={formDescriptionId}
+      className={cn("text-sm text-muted-foreground", className)}
+      {...props}
+    />
+  )
 })
-FormDescription.displayName***REMOVED***=***REMOVED***"FormDescription"
+FormDescription.displayName = "FormDescription"
 
-const***REMOVED***FormMessage***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLParagraphElement,
-***REMOVED******REMOVED***React.HTMLAttributes<HTMLParagraphElement>
->(({***REMOVED***className,***REMOVED***children,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***{***REMOVED***error,***REMOVED***formMessageId***REMOVED***}***REMOVED***=***REMOVED***useFormField()
-***REMOVED******REMOVED***const***REMOVED***body***REMOVED***=***REMOVED***error***REMOVED***?***REMOVED***String(error?.message)***REMOVED***:***REMOVED***children
+const FormMessage = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLParagraphElement>
+>(({ className, children, ...props }, ref) => {
+  const { error, formMessageId } = useFormField()
+  const body = error ? String(error?.message) : children
 
-***REMOVED******REMOVED***if***REMOVED***(!body)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***null
-***REMOVED******REMOVED***}
+  if (!body) {
+    return null
+  }
 
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<p
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id={formMessageId}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn("text-sm***REMOVED***font-medium***REMOVED***text-destructive",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{body}
-***REMOVED******REMOVED******REMOVED******REMOVED***</p>
-***REMOVED******REMOVED***)
+  return (
+    <p
+      ref={ref}
+      id={formMessageId}
+      className={cn("text-sm font-medium text-destructive", className)}
+      {...props}
+    >
+      {body}
+    </p>
+  )
 })
-FormMessage.displayName***REMOVED***=***REMOVED***"FormMessage"
+FormMessage.displayName = "FormMessage"
 
-export***REMOVED***{
-***REMOVED******REMOVED***useFormField,
-***REMOVED******REMOVED***Form,
-***REMOVED******REMOVED***FormItem,
-***REMOVED******REMOVED***FormLabel,
-***REMOVED******REMOVED***FormControl,
-***REMOVED******REMOVED***FormDescription,
-***REMOVED******REMOVED***FormMessage,
-***REMOVED******REMOVED***FormField,
+export {
+  useFormField,
+  Form,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormDescription,
+  FormMessage,
+  FormField,
 }

@@ -1,131 +1,131 @@
-import***REMOVED*******REMOVED***as***REMOVED***SheetPrimitive***REMOVED***from***REMOVED***"@radix-ui/react-dialog"
-import***REMOVED***{***REMOVED***cva,***REMOVED***type***REMOVED***VariantProps***REMOVED***}***REMOVED***from***REMOVED***"class-variance-authority"
-import***REMOVED***{***REMOVED***X***REMOVED***}***REMOVED***from***REMOVED***"lucide-react"
-import***REMOVED*******REMOVED***as***REMOVED***React***REMOVED***from***REMOVED***"react"
+import * as SheetPrimitive from "@radix-ui/react-dialog"
+import { cva, type VariantProps } from "class-variance-authority"
+import { X } from "lucide-react"
+import * as React from "react"
 
-import***REMOVED***{***REMOVED***cn***REMOVED***}***REMOVED***from***REMOVED***"@/lib/utils"
+import { cn } from "@/lib/utils"
 
-const***REMOVED***Sheet***REMOVED***=***REMOVED***SheetPrimitive.Root
+const Sheet = SheetPrimitive.Root
 
-const***REMOVED***SheetTrigger***REMOVED***=***REMOVED***SheetPrimitive.Trigger
+const SheetTrigger = SheetPrimitive.Trigger
 
-const***REMOVED***SheetClose***REMOVED***=***REMOVED***SheetPrimitive.Close
+const SheetClose = SheetPrimitive.Close
 
-const***REMOVED***SheetPortal***REMOVED***=***REMOVED***SheetPrimitive.Portal
+const SheetPortal = SheetPrimitive.Portal
 
-const***REMOVED***SheetOverlay***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***SheetPrimitive.Overlay>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***SheetPrimitive.Overlay>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<SheetPrimitive.Overlay
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"fixed***REMOVED***inset-0***REMOVED***z-50***REMOVED***bg-black/80***REMOVED******REMOVED***data-[state=open]:animate-in***REMOVED***data-[state=closed]:animate-out***REMOVED***data-[state=closed]:fade-out-0***REMOVED***data-[state=open]:fade-in-0",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED***/>
+const SheetOverlay = React.forwardRef<
+  React.ElementRef<typeof SheetPrimitive.Overlay>,
+  React.ComponentPropsWithoutRef<typeof SheetPrimitive.Overlay>
+>(({ className, ...props }, ref) => (
+  <SheetPrimitive.Overlay
+    className={cn(
+      "fixed inset-0 z-50 bg-black/80  data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      className
+    )}
+    {...props}
+    ref={ref}
+  />
 ))
-SheetOverlay.displayName***REMOVED***=***REMOVED***SheetPrimitive.Overlay.displayName
+SheetOverlay.displayName = SheetPrimitive.Overlay.displayName
 
-const***REMOVED***sheetVariants***REMOVED***=***REMOVED***cva(
-***REMOVED******REMOVED***"fixed***REMOVED***z-50***REMOVED***gap-4***REMOVED***bg-background***REMOVED***p-6***REMOVED***shadow-lg***REMOVED***transition***REMOVED***ease-in-out***REMOVED***data-[state=open]:animate-in***REMOVED***data-[state=closed]:animate-out***REMOVED***data-[state=closed]:duration-300***REMOVED***data-[state=open]:duration-500",
-***REMOVED******REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***variants:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***side:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***top:***REMOVED***"inset-x-0***REMOVED***top-0***REMOVED***border-b***REMOVED***data-[state=closed]:slide-out-to-top***REMOVED***data-[state=open]:slide-in-from-top",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***bottom:
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"inset-x-0***REMOVED***bottom-0***REMOVED***border-t***REMOVED***data-[state=closed]:slide-out-to-bottom***REMOVED***data-[state=open]:slide-in-from-bottom",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***left:***REMOVED***"inset-y-0***REMOVED***left-0***REMOVED***h-full***REMOVED***w-3/4***REMOVED***border-r***REMOVED***data-[state=closed]:slide-out-to-left***REMOVED***data-[state=open]:slide-in-from-left***REMOVED***sm:max-w-sm",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***right:
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"inset-y-0***REMOVED***right-0***REMOVED***h-full***REMOVED***w-3/4***REMOVED******REMOVED***border-l***REMOVED***data-[state=closed]:slide-out-to-right***REMOVED***data-[state=open]:slide-in-from-right***REMOVED***sm:max-w-sm",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***defaultVariants:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***side:***REMOVED***"right",
-***REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED***}
+const sheetVariants = cva(
+  "fixed z-50 gap-4 bg-background p-6 shadow-lg transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500",
+  {
+    variants: {
+      side: {
+        top: "inset-x-0 top-0 border-b data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top",
+        bottom:
+          "inset-x-0 bottom-0 border-t data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
+        left: "inset-y-0 left-0 h-full w-3/4 border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm",
+        right:
+          "inset-y-0 right-0 h-full w-3/4  border-l data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-sm",
+      },
+    },
+    defaultVariants: {
+      side: "right",
+    },
+  }
 )
 
-interface***REMOVED***SheetContentProps
-***REMOVED******REMOVED***extends***REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***SheetPrimitive.Content>,
-***REMOVED******REMOVED***VariantProps<typeof***REMOVED***sheetVariants>***REMOVED***{***REMOVED***}
+interface SheetContentProps
+  extends React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content>,
+  VariantProps<typeof sheetVariants> { }
 
-const***REMOVED***SheetContent***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***SheetPrimitive.Content>,
-***REMOVED******REMOVED***SheetContentProps
->(({***REMOVED***side***REMOVED***=***REMOVED***"right",***REMOVED***className,***REMOVED***children,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<SheetPortal>
-***REMOVED******REMOVED******REMOVED******REMOVED***<SheetOverlay***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED***<SheetPrimitive.Content
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(sheetVariants({***REMOVED***side***REMOVED***}),***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{children}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<SheetPrimitive.Close***REMOVED***className="absolute***REMOVED***right-4***REMOVED***top-4***REMOVED***rounded-sm***REMOVED***opacity-70***REMOVED***ring-offset-background***REMOVED***transition-opacity***REMOVED***hover:opacity-100***REMOVED***focus:outline-none***REMOVED***focus:ring-2***REMOVED***focus:ring-ring***REMOVED***focus:ring-offset-2***REMOVED***disabled:pointer-events-none***REMOVED***data-[state=open]:bg-secondary">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<X***REMOVED***className="h-4***REMOVED***w-4"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<span***REMOVED***className="sr-only">Close</span>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</SheetPrimitive.Close>
-***REMOVED******REMOVED******REMOVED******REMOVED***</SheetPrimitive.Content>
-***REMOVED******REMOVED***</SheetPortal>
+const SheetContent = React.forwardRef<
+  React.ElementRef<typeof SheetPrimitive.Content>,
+  SheetContentProps
+>(({ side = "right", className, children, ...props }, ref) => (
+  <SheetPortal>
+    <SheetOverlay />
+    <SheetPrimitive.Content
+      ref={ref}
+      className={cn(sheetVariants({ side }), className)}
+      {...props}
+    >
+      {children}
+      <SheetPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
+        <X className="h-4 w-4" />
+        <span className="sr-only">Close</span>
+      </SheetPrimitive.Close>
+    </SheetPrimitive.Content>
+  </SheetPortal>
 ))
-SheetContent.displayName***REMOVED***=***REMOVED***SheetPrimitive.Content.displayName
+SheetContent.displayName = SheetPrimitive.Content.displayName
 
-const***REMOVED***SheetHeader***REMOVED***=***REMOVED***({
-***REMOVED******REMOVED***className,
-***REMOVED******REMOVED***...props
-}:***REMOVED***React.HTMLAttributes<HTMLDivElement>)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"flex***REMOVED***flex-col***REMOVED***space-y-2***REMOVED***text-center***REMOVED***sm:text-left",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const SheetHeader = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={cn(
+      "flex flex-col space-y-2 text-center sm:text-left",
+      className
+    )}
+    {...props}
+  />
 )
-SheetHeader.displayName***REMOVED***=***REMOVED***"SheetHeader"
+SheetHeader.displayName = "SheetHeader"
 
-const***REMOVED***SheetFooter***REMOVED***=***REMOVED***({
-***REMOVED******REMOVED***className,
-***REMOVED******REMOVED***...props
-}:***REMOVED***React.HTMLAttributes<HTMLDivElement>)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"flex***REMOVED***flex-col-reverse***REMOVED***sm:flex-row***REMOVED***sm:justify-end***REMOVED***sm:space-x-2",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const SheetFooter = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={cn(
+      "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
+      className
+    )}
+    {...props}
+  />
 )
-SheetFooter.displayName***REMOVED***=***REMOVED***"SheetFooter"
+SheetFooter.displayName = "SheetFooter"
 
-const***REMOVED***SheetTitle***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***SheetPrimitive.Title>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***SheetPrimitive.Title>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<SheetPrimitive.Title
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn("text-lg***REMOVED***font-semibold***REMOVED***text-foreground",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const SheetTitle = React.forwardRef<
+  React.ElementRef<typeof SheetPrimitive.Title>,
+  React.ComponentPropsWithoutRef<typeof SheetPrimitive.Title>
+>(({ className, ...props }, ref) => (
+  <SheetPrimitive.Title
+    ref={ref}
+    className={cn("text-lg font-semibold text-foreground", className)}
+    {...props}
+  />
 ))
-SheetTitle.displayName***REMOVED***=***REMOVED***SheetPrimitive.Title.displayName
+SheetTitle.displayName = SheetPrimitive.Title.displayName
 
-const***REMOVED***SheetDescription***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***SheetPrimitive.Description>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***SheetPrimitive.Description>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<SheetPrimitive.Description
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn("text-sm***REMOVED***text-muted-foreground",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const SheetDescription = React.forwardRef<
+  React.ElementRef<typeof SheetPrimitive.Description>,
+  React.ComponentPropsWithoutRef<typeof SheetPrimitive.Description>
+>(({ className, ...props }, ref) => (
+  <SheetPrimitive.Description
+    ref={ref}
+    className={cn("text-sm text-muted-foreground", className)}
+    {...props}
+  />
 ))
-SheetDescription.displayName***REMOVED***=***REMOVED***SheetPrimitive.Description.displayName
+SheetDescription.displayName = SheetPrimitive.Description.displayName
 
-export***REMOVED***{
-***REMOVED******REMOVED***Sheet,***REMOVED***SheetClose,
-***REMOVED******REMOVED***SheetContent,***REMOVED***SheetDescription,***REMOVED***SheetFooter,***REMOVED***SheetHeader,***REMOVED***SheetOverlay,***REMOVED***SheetPortal,***REMOVED***SheetTitle,***REMOVED***SheetTrigger
+export {
+  Sheet, SheetClose,
+  SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetOverlay, SheetPortal, SheetTitle, SheetTrigger
 }
 

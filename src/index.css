@@ -1,213 +1,213 @@
 
-@import***REMOVED***url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-@tailwind***REMOVED***base;
-@tailwind***REMOVED***components;
-@tailwind***REMOVED***utilities;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@layer***REMOVED***base***REMOVED***{
-***REMOVED******REMOVED***:root***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***--background:***REMOVED***0***REMOVED***0%***REMOVED***100%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--foreground:***REMOVED***222.2***REMOVED***84%***REMOVED***4.9%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--card:***REMOVED***0***REMOVED***0%***REMOVED***100%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--card-foreground:***REMOVED***222.2***REMOVED***84%***REMOVED***4.9%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--popover:***REMOVED***0***REMOVED***0%***REMOVED***100%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--popover-foreground:***REMOVED***222.2***REMOVED***84%***REMOVED***4.9%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--primary:***REMOVED***147***REMOVED***86%***REMOVED***40%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--primary-foreground:***REMOVED***0***REMOVED***0%***REMOVED***100%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--secondary:***REMOVED***210***REMOVED***40%***REMOVED***98%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--secondary-foreground:***REMOVED***222.2***REMOVED***82%***REMOVED***12%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--muted:***REMOVED***210***REMOVED***40%***REMOVED***98%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--muted-foreground:***REMOVED***215.4***REMOVED***16.3%***REMOVED***46.9%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--accent:***REMOVED***147***REMOVED***86%***REMOVED***95%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--accent-foreground:***REMOVED***147***REMOVED***86%***REMOVED***20%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--destructive:***REMOVED***0***REMOVED***84.2%***REMOVED***60.2%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--destructive-foreground:***REMOVED***210***REMOVED***40%***REMOVED***98%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--border:***REMOVED***214.3***REMOVED***31.8%***REMOVED***91.4%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--input:***REMOVED***214.3***REMOVED***31.8%***REMOVED***91.4%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--ring:***REMOVED***147***REMOVED***86%***REMOVED***40%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--radius:***REMOVED***0.75rem;
-***REMOVED******REMOVED***}
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 147 86% 40%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 40% 98%;
+    --secondary-foreground: 222.2 82% 12%;
+    --muted: 210 40% 98%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 147 86% 95%;
+    --accent-foreground: 147 86% 20%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 147 86% 40%;
+    --radius: 0.75rem;
+  }
 
-***REMOVED******REMOVED***.dark***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***--background:***REMOVED***222.2***REMOVED***84%***REMOVED***4.9%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--foreground:***REMOVED***210***REMOVED***40%***REMOVED***98%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--card:***REMOVED***222.2***REMOVED***84%***REMOVED***4.9%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--card-foreground:***REMOVED***210***REMOVED***40%***REMOVED***98%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--popover:***REMOVED***222.2***REMOVED***84%***REMOVED***4.9%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--popover-foreground:***REMOVED***210***REMOVED***40%***REMOVED***98%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--primary:***REMOVED***147***REMOVED***86%***REMOVED***50%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--primary-foreground:***REMOVED***222.2***REMOVED***84%***REMOVED***4.9%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--secondary:***REMOVED***217.2***REMOVED***32.6%***REMOVED***17.5%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--secondary-foreground:***REMOVED***210***REMOVED***40%***REMOVED***98%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--muted:***REMOVED***217.2***REMOVED***32.6%***REMOVED***17.5%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--muted-foreground:***REMOVED***215***REMOVED***20.2%***REMOVED***65.1%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--accent:***REMOVED***217.2***REMOVED***32.6%***REMOVED***17.5%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--accent-foreground:***REMOVED***210***REMOVED***40%***REMOVED***98%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--destructive:***REMOVED***0***REMOVED***62.8%***REMOVED***30.6%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--destructive-foreground:***REMOVED***210***REMOVED***40%***REMOVED***98%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--border:***REMOVED***217.2***REMOVED***32.6%***REMOVED***17.5%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--input:***REMOVED***217.2***REMOVED***32.6%***REMOVED***17.5%;
-***REMOVED******REMOVED******REMOVED******REMOVED***--ring:***REMOVED***224.3***REMOVED***76.3%***REMOVED***94.1%;
-***REMOVED******REMOVED***}
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 147 86% 50%;
+    --primary-foreground: 222.2 84% 4.9%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 94.1%;
+  }
 }
 
-@layer***REMOVED***base***REMOVED***{
-***REMOVED******REMOVED*******REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***@apply***REMOVED***border-border;
-***REMOVED******REMOVED***}
-***REMOVED******REMOVED***
-***REMOVED******REMOVED***body***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***@apply***REMOVED***bg-background***REMOVED***text-foreground***REMOVED***font-sans;
-***REMOVED******REMOVED******REMOVED******REMOVED***font-feature-settings:***REMOVED***"rlig"***REMOVED***1,***REMOVED***"calt"***REMOVED***1;
-***REMOVED******REMOVED******REMOVED******REMOVED***font-family:***REMOVED***'Inter',***REMOVED***system-ui,***REMOVED***-apple-system,***REMOVED***sans-serif;
-***REMOVED******REMOVED***}
-***REMOVED******REMOVED***
-***REMOVED******REMOVED***html***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***scroll-behavior:***REMOVED***smooth;
-***REMOVED******REMOVED***}
-***REMOVED******REMOVED***
-***REMOVED******REMOVED***::selection***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***@apply***REMOVED***bg-whatsapp-200;
-***REMOVED******REMOVED***}
-***REMOVED******REMOVED***
-***REMOVED******REMOVED***:focus-visible***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***@apply***REMOVED***outline-none***REMOVED***ring-2***REMOVED***ring-whatsapp-500***REMOVED***ring-offset-2;
-***REMOVED******REMOVED***}
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  ::selection {
+    @apply bg-whatsapp-200;
+  }
+  
+  :focus-visible {
+    @apply outline-none ring-2 ring-whatsapp-500 ring-offset-2;
+  }
 }
 
-@layer***REMOVED***components***REMOVED***{
-***REMOVED******REMOVED***/****REMOVED***Animations***REMOVED***fluides***REMOVED****/
-***REMOVED******REMOVED***.animate-fade-in***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***animation:***REMOVED***fadeIn***REMOVED***0.6s***REMOVED***ease-out;
-***REMOVED******REMOVED***}
-***REMOVED******REMOVED***
-***REMOVED******REMOVED***.animate-slide-up***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***animation:***REMOVED***slideUp***REMOVED***0.4s***REMOVED***ease-out;
-***REMOVED******REMOVED***}
-***REMOVED******REMOVED***
-***REMOVED******REMOVED***.animate-scale-in***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***animation:***REMOVED***scaleIn***REMOVED***0.3s***REMOVED***ease-out;
-***REMOVED******REMOVED***}
-***REMOVED******REMOVED***
-***REMOVED******REMOVED***/****REMOVED***Cards***REMOVED***WhatsApp***REMOVED****/
-***REMOVED******REMOVED***.whatsapp-card***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***@apply***REMOVED***bg-white***REMOVED***rounded-xl***REMOVED***shadow-lg***REMOVED***border***REMOVED***border-whatsapp-100***REMOVED***hover:shadow-xl***REMOVED***transition-all***REMOVED***duration-300;
-***REMOVED******REMOVED***}
-***REMOVED******REMOVED***
-***REMOVED******REMOVED***.whatsapp-card:hover***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***@apply***REMOVED***transform***REMOVED***-translate-y-1;
-***REMOVED******REMOVED***}
-***REMOVED******REMOVED***
-***REMOVED******REMOVED***/****REMOVED***Boutons***REMOVED***WhatsApp***REMOVED****/
-***REMOVED******REMOVED***.btn-whatsapp***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***@apply***REMOVED***bg-whatsapp-600***REMOVED***hover:bg-whatsapp-700***REMOVED***text-white***REMOVED***font-medium***REMOVED***shadow-md***REMOVED***hover:shadow-lg***REMOVED***transition-all***REMOVED***duration-300***REMOVED***rounded-lg;
-***REMOVED******REMOVED***}
-***REMOVED******REMOVED***
-***REMOVED******REMOVED***.btn-whatsapp-outline***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***@apply***REMOVED***border-whatsapp-600***REMOVED***text-whatsapp-600***REMOVED***hover:bg-whatsapp-50***REMOVED***border-2***REMOVED***font-medium***REMOVED***transition-all***REMOVED***duration-300***REMOVED***rounded-lg;
-***REMOVED******REMOVED***}
-***REMOVED******REMOVED***
-***REMOVED******REMOVED***/****REMOVED***Inputs***REMOVED***WhatsApp***REMOVED****/
-***REMOVED******REMOVED***.input-whatsapp***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***@apply***REMOVED***transition-all***REMOVED***duration-200***REMOVED***border-gray-200***REMOVED***focus:border-whatsapp-500***REMOVED***focus:ring-whatsapp-500/20***REMOVED***focus:ring-2***REMOVED***rounded-lg;
-***REMOVED******REMOVED***}
-***REMOVED******REMOVED***
-***REMOVED******REMOVED***/****REMOVED***Avatars***REMOVED***avec***REMOVED***anneau***REMOVED***WhatsApp***REMOVED****/
-***REMOVED******REMOVED***.avatar-whatsapp***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***@apply***REMOVED***ring-2***REMOVED***ring-whatsapp-200***REMOVED***hover:ring-whatsapp-400***REMOVED***transition-all***REMOVED***duration-300;
-***REMOVED******REMOVED***}
-***REMOVED******REMOVED***
-***REMOVED******REMOVED***/****REMOVED***Scrollbar***REMOVED***personnalisée***REMOVED****/
-***REMOVED******REMOVED***.scrollbar-whatsapp***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***scrollbar-width:***REMOVED***thin;
-***REMOVED******REMOVED******REMOVED******REMOVED***scrollbar-color:***REMOVED***rgba(37,***REMOVED***211,***REMOVED***102,***REMOVED***0.3)***REMOVED***transparent;
-***REMOVED******REMOVED***}
-***REMOVED******REMOVED***
-***REMOVED******REMOVED***.scrollbar-whatsapp::-webkit-scrollbar***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***width:***REMOVED***6px;
-***REMOVED******REMOVED***}
-***REMOVED******REMOVED***
-***REMOVED******REMOVED***.scrollbar-whatsapp::-webkit-scrollbar-track***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***background:***REMOVED***transparent;
-***REMOVED******REMOVED***}
-***REMOVED******REMOVED***
-***REMOVED******REMOVED***.scrollbar-whatsapp::-webkit-scrollbar-thumb***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***background-color:***REMOVED***rgba(37,***REMOVED***211,***REMOVED***102,***REMOVED***0.3);
-***REMOVED******REMOVED******REMOVED******REMOVED***border-radius:***REMOVED***3px;
-***REMOVED******REMOVED***}
-***REMOVED******REMOVED***
-***REMOVED******REMOVED***.scrollbar-whatsapp::-webkit-scrollbar-thumb:hover***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***background-color:***REMOVED***rgba(37,***REMOVED***211,***REMOVED***102,***REMOVED***0.5);
-***REMOVED******REMOVED***}
-***REMOVED******REMOVED***
-***REMOVED******REMOVED***/****REMOVED***Badges***REMOVED***WhatsApp***REMOVED****/
-***REMOVED******REMOVED***.badge-whatsapp***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***@apply***REMOVED***bg-whatsapp-100***REMOVED***text-whatsapp-800***REMOVED***border***REMOVED***border-whatsapp-200***REMOVED***rounded-full***REMOVED***px-2***REMOVED***py-1***REMOVED***text-xs***REMOVED***font-medium;
-***REMOVED******REMOVED***}
-***REMOVED******REMOVED***
-***REMOVED******REMOVED***.badge-admin***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***@apply***REMOVED***bg-blue-100***REMOVED***text-blue-800***REMOVED***border***REMOVED***border-blue-200***REMOVED***rounded-full***REMOVED***px-2***REMOVED***py-1***REMOVED***text-xs***REMOVED***font-medium;
-***REMOVED******REMOVED***}
-***REMOVED******REMOVED***
-***REMOVED******REMOVED***.badge-patriarch***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***@apply***REMOVED***bg-yellow-100***REMOVED***text-yellow-800***REMOVED***border***REMOVED***border-yellow-200***REMOVED***rounded-full***REMOVED***px-2***REMOVED***py-1***REMOVED***text-xs***REMOVED***font-medium;
-***REMOVED******REMOVED***}
+@layer components {
+  /* Animations fluides */
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-out;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.4s ease-out;
+  }
+  
+  .animate-scale-in {
+    animation: scaleIn 0.3s ease-out;
+  }
+  
+  /* Cards WhatsApp */
+  .whatsapp-card {
+    @apply bg-white rounded-xl shadow-lg border border-whatsapp-100 hover:shadow-xl transition-all duration-300;
+  }
+  
+  .whatsapp-card:hover {
+    @apply transform -translate-y-1;
+  }
+  
+  /* Boutons WhatsApp */
+  .btn-whatsapp {
+    @apply bg-whatsapp-600 hover:bg-whatsapp-700 text-white font-medium shadow-md hover:shadow-lg transition-all duration-300 rounded-lg;
+  }
+  
+  .btn-whatsapp-outline {
+    @apply border-whatsapp-600 text-whatsapp-600 hover:bg-whatsapp-50 border-2 font-medium transition-all duration-300 rounded-lg;
+  }
+  
+  /* Inputs WhatsApp */
+  .input-whatsapp {
+    @apply transition-all duration-200 border-gray-200 focus:border-whatsapp-500 focus:ring-whatsapp-500/20 focus:ring-2 rounded-lg;
+  }
+  
+  /* Avatars avec anneau WhatsApp */
+  .avatar-whatsapp {
+    @apply ring-2 ring-whatsapp-200 hover:ring-whatsapp-400 transition-all duration-300;
+  }
+  
+  /* Scrollbar personnalisée */
+  .scrollbar-whatsapp {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(37, 211, 102, 0.3) transparent;
+  }
+  
+  .scrollbar-whatsapp::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .scrollbar-whatsapp::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .scrollbar-whatsapp::-webkit-scrollbar-thumb {
+    background-color: rgba(37, 211, 102, 0.3);
+    border-radius: 3px;
+  }
+  
+  .scrollbar-whatsapp::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(37, 211, 102, 0.5);
+  }
+  
+  /* Badges WhatsApp */
+  .badge-whatsapp {
+    @apply bg-whatsapp-100 text-whatsapp-800 border border-whatsapp-200 rounded-full px-2 py-1 text-xs font-medium;
+  }
+  
+  .badge-admin {
+    @apply bg-blue-100 text-blue-800 border border-blue-200 rounded-full px-2 py-1 text-xs font-medium;
+  }
+  
+  .badge-patriarch {
+    @apply bg-yellow-100 text-yellow-800 border border-yellow-200 rounded-full px-2 py-1 text-xs font-medium;
+  }
 }
 
-@keyframes***REMOVED***fadeIn***REMOVED***{
-***REMOVED******REMOVED***from***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***opacity:***REMOVED***0;
-***REMOVED******REMOVED******REMOVED******REMOVED***transform:***REMOVED***translateY(10px);
-***REMOVED******REMOVED***}
-***REMOVED******REMOVED***to***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***opacity:***REMOVED***1;
-***REMOVED******REMOVED******REMOVED******REMOVED***transform:***REMOVED***translateY(0);
-***REMOVED******REMOVED***}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-@keyframes***REMOVED***slideUp***REMOVED***{
-***REMOVED******REMOVED***from***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***opacity:***REMOVED***0;
-***REMOVED******REMOVED******REMOVED******REMOVED***transform:***REMOVED***translateY(20px);
-***REMOVED******REMOVED***}
-***REMOVED******REMOVED***to***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***opacity:***REMOVED***1;
-***REMOVED******REMOVED******REMOVED******REMOVED***transform:***REMOVED***translateY(0);
-***REMOVED******REMOVED***}
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-@keyframes***REMOVED***scaleIn***REMOVED***{
-***REMOVED******REMOVED***from***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***opacity:***REMOVED***0;
-***REMOVED******REMOVED******REMOVED******REMOVED***transform:***REMOVED***scale(0.95);
-***REMOVED******REMOVED***}
-***REMOVED******REMOVED***to***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***opacity:***REMOVED***1;
-***REMOVED******REMOVED******REMOVED******REMOVED***transform:***REMOVED***scale(1);
-***REMOVED******REMOVED***}
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-/****REMOVED***Responsive***REMOVED***design***REMOVED****/
-@media***REMOVED***(max-width:***REMOVED***768px)***REMOVED***{
-***REMOVED******REMOVED***.whatsapp-card***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***@apply***REMOVED***mx-2;
-***REMOVED******REMOVED***}
+/* Responsive design */
+@media (max-width: 768px) {
+  .whatsapp-card {
+    @apply mx-2;
+  }
 }
 
-/****REMOVED***Print***REMOVED***styles***REMOVED****/
-@media***REMOVED***print***REMOVED***{
-***REMOVED******REMOVED***.no-print***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***display:***REMOVED***none***REMOVED***!important;
-***REMOVED******REMOVED***}
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
 }
 
-/****REMOVED***Reduced***REMOVED***motion***REMOVED****/
-@media***REMOVED***(prefers-reduced-motion:***REMOVED***reduce)***REMOVED***{
-***REMOVED******REMOVED****,
-***REMOVED******REMOVED****::before,
-***REMOVED******REMOVED****::after***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***animation-duration:***REMOVED***0.01ms***REMOVED***!important;
-***REMOVED******REMOVED******REMOVED******REMOVED***animation-iteration-count:***REMOVED***1***REMOVED***!important;
-***REMOVED******REMOVED******REMOVED******REMOVED***transition-duration:***REMOVED***0.01ms***REMOVED***!important;
-***REMOVED******REMOVED***}
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -1,198 +1,198 @@
-import***REMOVED*******REMOVED***as***REMOVED***React***REMOVED***from***REMOVED***"react"
-import***REMOVED*******REMOVED***as***REMOVED***ContextMenuPrimitive***REMOVED***from***REMOVED***"@radix-ui/react-context-menu"
-import***REMOVED***{***REMOVED***Check,***REMOVED***ChevronRight,***REMOVED***Circle***REMOVED***}***REMOVED***from***REMOVED***"lucide-react"
+import * as React from "react"
+import * as ContextMenuPrimitive from "@radix-ui/react-context-menu"
+import { Check, ChevronRight, Circle } from "lucide-react"
 
-import***REMOVED***{***REMOVED***cn***REMOVED***}***REMOVED***from***REMOVED***"@/lib/utils"
+import { cn } from "@/lib/utils"
 
-const***REMOVED***ContextMenu***REMOVED***=***REMOVED***ContextMenuPrimitive.Root
+const ContextMenu = ContextMenuPrimitive.Root
 
-const***REMOVED***ContextMenuTrigger***REMOVED***=***REMOVED***ContextMenuPrimitive.Trigger
+const ContextMenuTrigger = ContextMenuPrimitive.Trigger
 
-const***REMOVED***ContextMenuGroup***REMOVED***=***REMOVED***ContextMenuPrimitive.Group
+const ContextMenuGroup = ContextMenuPrimitive.Group
 
-const***REMOVED***ContextMenuPortal***REMOVED***=***REMOVED***ContextMenuPrimitive.Portal
+const ContextMenuPortal = ContextMenuPrimitive.Portal
 
-const***REMOVED***ContextMenuSub***REMOVED***=***REMOVED***ContextMenuPrimitive.Sub
+const ContextMenuSub = ContextMenuPrimitive.Sub
 
-const***REMOVED***ContextMenuRadioGroup***REMOVED***=***REMOVED***ContextMenuPrimitive.RadioGroup
+const ContextMenuRadioGroup = ContextMenuPrimitive.RadioGroup
 
-const***REMOVED***ContextMenuSubTrigger***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***ContextMenuPrimitive.SubTrigger>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***ContextMenuPrimitive.SubTrigger>***REMOVED***&***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***inset?:***REMOVED***boolean
-***REMOVED******REMOVED***}
->(({***REMOVED***className,***REMOVED***inset,***REMOVED***children,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<ContextMenuPrimitive.SubTrigger
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"flex***REMOVED***cursor-default***REMOVED***select-none***REMOVED***items-center***REMOVED***rounded-sm***REMOVED***px-2***REMOVED***py-1.5***REMOVED***text-sm***REMOVED***outline-none***REMOVED***focus:bg-accent***REMOVED***focus:text-accent-foreground***REMOVED***data-[state=open]:bg-accent***REMOVED***data-[state=open]:text-accent-foreground",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***inset***REMOVED***&&***REMOVED***"pl-8",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED***{children}
-***REMOVED******REMOVED******REMOVED******REMOVED***<ChevronRight***REMOVED***className="ml-auto***REMOVED***h-4***REMOVED***w-4"***REMOVED***/>
-***REMOVED******REMOVED***</ContextMenuPrimitive.SubTrigger>
+const ContextMenuSubTrigger = React.forwardRef<
+  React.ElementRef<typeof ContextMenuPrimitive.SubTrigger>,
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.SubTrigger> & {
+    inset?: boolean
+  }
+>(({ className, inset, children, ...props }, ref) => (
+  <ContextMenuPrimitive.SubTrigger
+    ref={ref}
+    className={cn(
+      "flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground",
+      inset && "pl-8",
+      className
+    )}
+    {...props}
+  >
+    {children}
+    <ChevronRight className="ml-auto h-4 w-4" />
+  </ContextMenuPrimitive.SubTrigger>
 ))
-ContextMenuSubTrigger.displayName***REMOVED***=***REMOVED***ContextMenuPrimitive.SubTrigger.displayName
+ContextMenuSubTrigger.displayName = ContextMenuPrimitive.SubTrigger.displayName
 
-const***REMOVED***ContextMenuSubContent***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***ContextMenuPrimitive.SubContent>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***ContextMenuPrimitive.SubContent>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<ContextMenuPrimitive.SubContent
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"z-50***REMOVED***min-w-[8rem]***REMOVED***overflow-hidden***REMOVED***rounded-md***REMOVED***border***REMOVED***bg-popover***REMOVED***p-1***REMOVED***text-popover-foreground***REMOVED***shadow-md***REMOVED***data-[state=open]:animate-in***REMOVED***data-[state=closed]:animate-out***REMOVED***data-[state=closed]:fade-out-0***REMOVED***data-[state=open]:fade-in-0***REMOVED***data-[state=closed]:zoom-out-95***REMOVED***data-[state=open]:zoom-in-95***REMOVED***data-[side=bottom]:slide-in-from-top-2***REMOVED***data-[side=left]:slide-in-from-right-2***REMOVED***data-[side=right]:slide-in-from-left-2***REMOVED***data-[side=top]:slide-in-from-bottom-2",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const ContextMenuSubContent = React.forwardRef<
+  React.ElementRef<typeof ContextMenuPrimitive.SubContent>,
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.SubContent>
+>(({ className, ...props }, ref) => (
+  <ContextMenuPrimitive.SubContent
+    ref={ref}
+    className={cn(
+      "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+      className
+    )}
+    {...props}
+  />
 ))
-ContextMenuSubContent.displayName***REMOVED***=***REMOVED***ContextMenuPrimitive.SubContent.displayName
+ContextMenuSubContent.displayName = ContextMenuPrimitive.SubContent.displayName
 
-const***REMOVED***ContextMenuContent***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***ContextMenuPrimitive.Content>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***ContextMenuPrimitive.Content>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<ContextMenuPrimitive.Portal>
-***REMOVED******REMOVED******REMOVED******REMOVED***<ContextMenuPrimitive.Content
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"z-50***REMOVED***min-w-[8rem]***REMOVED***overflow-hidden***REMOVED***rounded-md***REMOVED***border***REMOVED***bg-popover***REMOVED***p-1***REMOVED***text-popover-foreground***REMOVED***shadow-md***REMOVED***animate-in***REMOVED***fade-in-80***REMOVED***data-[state=open]:animate-in***REMOVED***data-[state=closed]:animate-out***REMOVED***data-[state=closed]:fade-out-0***REMOVED***data-[state=open]:fade-in-0***REMOVED***data-[state=closed]:zoom-out-95***REMOVED***data-[state=open]:zoom-in-95***REMOVED***data-[side=bottom]:slide-in-from-top-2***REMOVED***data-[side=left]:slide-in-from-right-2***REMOVED***data-[side=right]:slide-in-from-left-2***REMOVED***data-[side=top]:slide-in-from-bottom-2",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED***</ContextMenuPrimitive.Portal>
+const ContextMenuContent = React.forwardRef<
+  React.ElementRef<typeof ContextMenuPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Content>
+>(({ className, ...props }, ref) => (
+  <ContextMenuPrimitive.Portal>
+    <ContextMenuPrimitive.Content
+      ref={ref}
+      className={cn(
+        "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md animate-in fade-in-80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        className
+      )}
+      {...props}
+    />
+  </ContextMenuPrimitive.Portal>
 ))
-ContextMenuContent.displayName***REMOVED***=***REMOVED***ContextMenuPrimitive.Content.displayName
+ContextMenuContent.displayName = ContextMenuPrimitive.Content.displayName
 
-const***REMOVED***ContextMenuItem***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***ContextMenuPrimitive.Item>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***ContextMenuPrimitive.Item>***REMOVED***&***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***inset?:***REMOVED***boolean
-***REMOVED******REMOVED***}
->(({***REMOVED***className,***REMOVED***inset,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<ContextMenuPrimitive.Item
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"relative***REMOVED***flex***REMOVED***cursor-default***REMOVED***select-none***REMOVED***items-center***REMOVED***rounded-sm***REMOVED***px-2***REMOVED***py-1.5***REMOVED***text-sm***REMOVED***outline-none***REMOVED***focus:bg-accent***REMOVED***focus:text-accent-foreground***REMOVED***data-[disabled]:pointer-events-none***REMOVED***data-[disabled]:opacity-50",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***inset***REMOVED***&&***REMOVED***"pl-8",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const ContextMenuItem = React.forwardRef<
+  React.ElementRef<typeof ContextMenuPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Item> & {
+    inset?: boolean
+  }
+>(({ className, inset, ...props }, ref) => (
+  <ContextMenuPrimitive.Item
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      inset && "pl-8",
+      className
+    )}
+    {...props}
+  />
 ))
-ContextMenuItem.displayName***REMOVED***=***REMOVED***ContextMenuPrimitive.Item.displayName
+ContextMenuItem.displayName = ContextMenuPrimitive.Item.displayName
 
-const***REMOVED***ContextMenuCheckboxItem***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***ContextMenuPrimitive.CheckboxItem>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***ContextMenuPrimitive.CheckboxItem>
->(({***REMOVED***className,***REMOVED***children,***REMOVED***checked,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<ContextMenuPrimitive.CheckboxItem
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"relative***REMOVED***flex***REMOVED***cursor-default***REMOVED***select-none***REMOVED***items-center***REMOVED***rounded-sm***REMOVED***py-1.5***REMOVED***pl-8***REMOVED***pr-2***REMOVED***text-sm***REMOVED***outline-none***REMOVED***focus:bg-accent***REMOVED***focus:text-accent-foreground***REMOVED***data-[disabled]:pointer-events-none***REMOVED***data-[disabled]:opacity-50",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***checked={checked}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED***<span***REMOVED***className="absolute***REMOVED***left-2***REMOVED***flex***REMOVED***h-3.5***REMOVED***w-3.5***REMOVED***items-center***REMOVED***justify-center">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<ContextMenuPrimitive.ItemIndicator>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Check***REMOVED***className="h-4***REMOVED***w-4"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</ContextMenuPrimitive.ItemIndicator>
-***REMOVED******REMOVED******REMOVED******REMOVED***</span>
-***REMOVED******REMOVED******REMOVED******REMOVED***{children}
-***REMOVED******REMOVED***</ContextMenuPrimitive.CheckboxItem>
+const ContextMenuCheckboxItem = React.forwardRef<
+  React.ElementRef<typeof ContextMenuPrimitive.CheckboxItem>,
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.CheckboxItem>
+>(({ className, children, checked, ...props }, ref) => (
+  <ContextMenuPrimitive.CheckboxItem
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      className
+    )}
+    checked={checked}
+    {...props}
+  >
+    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+      <ContextMenuPrimitive.ItemIndicator>
+        <Check className="h-4 w-4" />
+      </ContextMenuPrimitive.ItemIndicator>
+    </span>
+    {children}
+  </ContextMenuPrimitive.CheckboxItem>
 ))
-ContextMenuCheckboxItem.displayName***REMOVED***=
-***REMOVED******REMOVED***ContextMenuPrimitive.CheckboxItem.displayName
+ContextMenuCheckboxItem.displayName =
+  ContextMenuPrimitive.CheckboxItem.displayName
 
-const***REMOVED***ContextMenuRadioItem***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***ContextMenuPrimitive.RadioItem>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***ContextMenuPrimitive.RadioItem>
->(({***REMOVED***className,***REMOVED***children,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<ContextMenuPrimitive.RadioItem
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"relative***REMOVED***flex***REMOVED***cursor-default***REMOVED***select-none***REMOVED***items-center***REMOVED***rounded-sm***REMOVED***py-1.5***REMOVED***pl-8***REMOVED***pr-2***REMOVED***text-sm***REMOVED***outline-none***REMOVED***focus:bg-accent***REMOVED***focus:text-accent-foreground***REMOVED***data-[disabled]:pointer-events-none***REMOVED***data-[disabled]:opacity-50",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED***<span***REMOVED***className="absolute***REMOVED***left-2***REMOVED***flex***REMOVED***h-3.5***REMOVED***w-3.5***REMOVED***items-center***REMOVED***justify-center">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<ContextMenuPrimitive.ItemIndicator>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Circle***REMOVED***className="h-2***REMOVED***w-2***REMOVED***fill-current"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</ContextMenuPrimitive.ItemIndicator>
-***REMOVED******REMOVED******REMOVED******REMOVED***</span>
-***REMOVED******REMOVED******REMOVED******REMOVED***{children}
-***REMOVED******REMOVED***</ContextMenuPrimitive.RadioItem>
+const ContextMenuRadioItem = React.forwardRef<
+  React.ElementRef<typeof ContextMenuPrimitive.RadioItem>,
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.RadioItem>
+>(({ className, children, ...props }, ref) => (
+  <ContextMenuPrimitive.RadioItem
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      className
+    )}
+    {...props}
+  >
+    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+      <ContextMenuPrimitive.ItemIndicator>
+        <Circle className="h-2 w-2 fill-current" />
+      </ContextMenuPrimitive.ItemIndicator>
+    </span>
+    {children}
+  </ContextMenuPrimitive.RadioItem>
 ))
-ContextMenuRadioItem.displayName***REMOVED***=***REMOVED***ContextMenuPrimitive.RadioItem.displayName
+ContextMenuRadioItem.displayName = ContextMenuPrimitive.RadioItem.displayName
 
-const***REMOVED***ContextMenuLabel***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***ContextMenuPrimitive.Label>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***ContextMenuPrimitive.Label>***REMOVED***&***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***inset?:***REMOVED***boolean
-***REMOVED******REMOVED***}
->(({***REMOVED***className,***REMOVED***inset,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<ContextMenuPrimitive.Label
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"px-2***REMOVED***py-1.5***REMOVED***text-sm***REMOVED***font-semibold***REMOVED***text-foreground",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***inset***REMOVED***&&***REMOVED***"pl-8",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const ContextMenuLabel = React.forwardRef<
+  React.ElementRef<typeof ContextMenuPrimitive.Label>,
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Label> & {
+    inset?: boolean
+  }
+>(({ className, inset, ...props }, ref) => (
+  <ContextMenuPrimitive.Label
+    ref={ref}
+    className={cn(
+      "px-2 py-1.5 text-sm font-semibold text-foreground",
+      inset && "pl-8",
+      className
+    )}
+    {...props}
+  />
 ))
-ContextMenuLabel.displayName***REMOVED***=***REMOVED***ContextMenuPrimitive.Label.displayName
+ContextMenuLabel.displayName = ContextMenuPrimitive.Label.displayName
 
-const***REMOVED***ContextMenuSeparator***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***ContextMenuPrimitive.Separator>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***ContextMenuPrimitive.Separator>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<ContextMenuPrimitive.Separator
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn("-mx-1***REMOVED***my-1***REMOVED***h-px***REMOVED***bg-border",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const ContextMenuSeparator = React.forwardRef<
+  React.ElementRef<typeof ContextMenuPrimitive.Separator>,
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Separator>
+>(({ className, ...props }, ref) => (
+  <ContextMenuPrimitive.Separator
+    ref={ref}
+    className={cn("-mx-1 my-1 h-px bg-border", className)}
+    {...props}
+  />
 ))
-ContextMenuSeparator.displayName***REMOVED***=***REMOVED***ContextMenuPrimitive.Separator.displayName
+ContextMenuSeparator.displayName = ContextMenuPrimitive.Separator.displayName
 
-const***REMOVED***ContextMenuShortcut***REMOVED***=***REMOVED***({
-***REMOVED******REMOVED***className,
-***REMOVED******REMOVED***...props
-}:***REMOVED***React.HTMLAttributes<HTMLSpanElement>)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<span
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"ml-auto***REMOVED***text-xs***REMOVED***tracking-widest***REMOVED***text-muted-foreground",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED***)
+const ContextMenuShortcut = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLSpanElement>) => {
+  return (
+    <span
+      className={cn(
+        "ml-auto text-xs tracking-widest text-muted-foreground",
+        className
+      )}
+      {...props}
+    />
+  )
 }
-ContextMenuShortcut.displayName***REMOVED***=***REMOVED***"ContextMenuShortcut"
+ContextMenuShortcut.displayName = "ContextMenuShortcut"
 
-export***REMOVED***{
-***REMOVED******REMOVED***ContextMenu,
-***REMOVED******REMOVED***ContextMenuTrigger,
-***REMOVED******REMOVED***ContextMenuContent,
-***REMOVED******REMOVED***ContextMenuItem,
-***REMOVED******REMOVED***ContextMenuCheckboxItem,
-***REMOVED******REMOVED***ContextMenuRadioItem,
-***REMOVED******REMOVED***ContextMenuLabel,
-***REMOVED******REMOVED***ContextMenuSeparator,
-***REMOVED******REMOVED***ContextMenuShortcut,
-***REMOVED******REMOVED***ContextMenuGroup,
-***REMOVED******REMOVED***ContextMenuPortal,
-***REMOVED******REMOVED***ContextMenuSub,
-***REMOVED******REMOVED***ContextMenuSubContent,
-***REMOVED******REMOVED***ContextMenuSubTrigger,
-***REMOVED******REMOVED***ContextMenuRadioGroup,
+export {
+  ContextMenu,
+  ContextMenuTrigger,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuCheckboxItem,
+  ContextMenuRadioItem,
+  ContextMenuLabel,
+  ContextMenuSeparator,
+  ContextMenuShortcut,
+  ContextMenuGroup,
+  ContextMenuPortal,
+  ContextMenuSub,
+  ContextMenuSubContent,
+  ContextMenuSubTrigger,
+  ContextMenuRadioGroup,
 }

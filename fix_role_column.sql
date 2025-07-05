@@ -1,23 +1,23 @@
---***REMOVED***Script***REMOVED***SQL***REMOVED***manuel***REMOVED***pour***REMOVED***corriger***REMOVED***le***REMOVED***champ***REMOVED***role
---***REMOVED***À***REMOVED***exécuter***REMOVED***dans***REMOVED***l'éditeur***REMOVED***SQL***REMOVED***de***REMOVED***Supabase***REMOVED***si***REMOVED***la***REMOVED***migration***REMOVED***automatique***REMOVED***échoue
+-- Script SQL manuel pour corriger le champ role
+-- À exécuter dans l'éditeur SQL de Supabase si la migration automatique échoue
 
---***REMOVED***1.***REMOVED***Supprimer***REMOVED***les***REMOVED***contraintes***REMOVED***existantes
-ALTER***REMOVED***TABLE***REMOVED***profiles***REMOVED***DROP***REMOVED***CONSTRAINT***REMOVED***IF***REMOVED***EXISTS***REMOVED***profiles_role_check;
+-- 1. Supprimer les contraintes existantes
+ALTER TABLE profiles DROP CONSTRAINT IF EXISTS profiles_role_check;
 
---***REMOVED***2.***REMOVED***Mettre***REMOVED***à***REMOVED***jour***REMOVED***les***REMOVED***valeurs***REMOVED***existantes
-UPDATE***REMOVED***profiles
-SET***REMOVED***role***REMOVED***=***REMOVED***'Membre'
-WHERE***REMOVED***role***REMOVED***IS***REMOVED***NULL***REMOVED***OR***REMOVED***role***REMOVED***=***REMOVED***''***REMOVED***OR***REMOVED***role***REMOVED***NOT***REMOVED***IN***REMOVED***('Membre',***REMOVED***'Administrateur');
+-- 2. Mettre à jour les valeurs existantes
+UPDATE profiles
+SET role = 'Membre'
+WHERE role IS NULL OR role = '' OR role NOT IN ('Membre', 'Administrateur');
 
---***REMOVED***3.***REMOVED***Ajouter***REMOVED***la***REMOVED***nouvelle***REMOVED***contrainte
-ALTER***REMOVED***TABLE***REMOVED***profiles
-ADD***REMOVED***CONSTRAINT***REMOVED***profiles_role_check***REMOVED***CHECK***REMOVED***(role***REMOVED***IN***REMOVED***('Membre',***REMOVED***'Administrateur'));
+-- 3. Ajouter la nouvelle contrainte
+ALTER TABLE profiles
+ADD CONSTRAINT profiles_role_check CHECK (role IN ('Membre', 'Administrateur'));
 
---***REMOVED***4.***REMOVED***Créer***REMOVED***l'index***REMOVED***s'il***REMOVED***n'existe***REMOVED***pas
-CREATE***REMOVED***INDEX***REMOVED***IF***REMOVED***NOT***REMOVED***EXISTS***REMOVED***idx_profiles_role***REMOVED***ON***REMOVED***profiles(role);
+-- 4. Créer l'index s'il n'existe pas
+CREATE INDEX IF NOT EXISTS idx_profiles_role ON profiles(role);
 
---***REMOVED***5.***REMOVED***Vérifier***REMOVED***le***REMOVED***résultat
-SELECT***REMOVED***DISTINCT***REMOVED***role***REMOVED***FROM***REMOVED***profiles***REMOVED***ORDER***REMOVED***BY***REMOVED***role;
+-- 5. Vérifier le résultat
+SELECT DISTINCT role FROM profiles ORDER BY role;
 
---***REMOVED***6.***REMOVED***Ajouter***REMOVED***le***REMOVED***commentaire
-COMMENT***REMOVED***ON***REMOVED***COLUMN***REMOVED***profiles.role***REMOVED***IS***REMOVED***'Rôle***REMOVED***du***REMOVED***membre***REMOVED***dans***REMOVED***la***REMOVED***famille:***REMOVED***Membre***REMOVED***ou***REMOVED***Administrateur';
+-- 6. Ajouter le commentaire
+COMMENT ON COLUMN profiles.role IS 'Rôle du membre dans la famille: Membre ou Administrateur';

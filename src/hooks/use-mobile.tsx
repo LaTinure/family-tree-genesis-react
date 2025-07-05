@@ -1,19 +1,19 @@
-import***REMOVED*******REMOVED***as***REMOVED***React***REMOVED***from***REMOVED***"react"
+import * as React from "react"
 
-const***REMOVED***MOBILE_BREAKPOINT***REMOVED***=***REMOVED***768
+const MOBILE_BREAKPOINT = 768
 
-export***REMOVED***function***REMOVED***useIsMobile()***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***[isMobile,***REMOVED***setIsMobile]***REMOVED***=***REMOVED***React.useState<boolean***REMOVED***|***REMOVED***undefined>(undefined)
+export function useIsMobile() {
+  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined)
 
-***REMOVED******REMOVED***React.useEffect(()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***mql***REMOVED***=***REMOVED***window.matchMedia(`(max-width:***REMOVED***${MOBILE_BREAKPOINT***REMOVED***-***REMOVED***1}px)`)
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***onChange***REMOVED***=***REMOVED***()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setIsMobile(window.innerWidth***REMOVED***<***REMOVED***MOBILE_BREAKPOINT)
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***mql.addEventListener("change",***REMOVED***onChange)
-***REMOVED******REMOVED******REMOVED******REMOVED***setIsMobile(window.innerWidth***REMOVED***<***REMOVED***MOBILE_BREAKPOINT)
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***()***REMOVED***=>***REMOVED***mql.removeEventListener("change",***REMOVED***onChange)
-***REMOVED******REMOVED***},***REMOVED***[])
+  React.useEffect(() => {
+    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`)
+    const onChange = () => {
+      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
+    }
+    mql.addEventListener("change", onChange)
+    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
+    return () => mql.removeEventListener("change", onChange)
+  }, [])
 
-***REMOVED******REMOVED***return***REMOVED***!!isMobile
+  return !!isMobile
 }

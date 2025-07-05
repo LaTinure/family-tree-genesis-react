@@ -1,90 +1,90 @@
 
-import***REMOVED***{***REMOVED***z***REMOVED***}***REMOVED***from***REMOVED***'zod';
+import { z } from 'zod';
 
-//***REMOVED***Nouveaux***REMOVED***rôles***REMOVED***utilisateurs
-export***REMOVED***const***REMOVED***userRoles***REMOVED***=***REMOVED***[
-***REMOVED******REMOVED***'Administrateur',
-***REMOVED******REMOVED***'Patriarche',***REMOVED***
-***REMOVED******REMOVED***'Matriarche',
-***REMOVED******REMOVED***'Membre',
-***REMOVED******REMOVED***'Visiteur',
-***REMOVED******REMOVED***'Invité'
-]***REMOVED***as***REMOVED***const;
+// Nouveaux rôles utilisateurs
+export const userRoles = [
+  'Administrateur',
+  'Patriarche', 
+  'Matriarche',
+  'Membre',
+  'Visiteur',
+  'Invité'
+] as const;
 
-export***REMOVED***const***REMOVED***relationshipTypes***REMOVED***=***REMOVED***[
-***REMOVED******REMOVED***'patriarche',
-***REMOVED******REMOVED***'matriarche',
-***REMOVED******REMOVED***'conjoint',
-***REMOVED******REMOVED***'fils',
-***REMOVED******REMOVED***'fille',
-***REMOVED******REMOVED***'frere',
-***REMOVED******REMOVED***'soeur',
-***REMOVED******REMOVED***'pere',
-***REMOVED******REMOVED***'mere',
-***REMOVED******REMOVED***'grand-pere',
-***REMOVED******REMOVED***'grand-mere',
-***REMOVED******REMOVED***'petit-fils',
-***REMOVED******REMOVED***'petite-fille',
-***REMOVED******REMOVED***'oncle',
-***REMOVED******REMOVED***'tante',
-***REMOVED******REMOVED***'neveu',
-***REMOVED******REMOVED***'niece',
-***REMOVED******REMOVED***'cousin',
-***REMOVED******REMOVED***'cousine',
-***REMOVED******REMOVED***'epoux',
-***REMOVED******REMOVED***'epouse',
-***REMOVED******REMOVED***'beau-pere',
-***REMOVED******REMOVED***'belle-mere',
-***REMOVED******REMOVED***'beau-fils',
-***REMOVED******REMOVED***'belle-fille'
-]***REMOVED***as***REMOVED***const;
+export const relationshipTypes = [
+  'patriarche',
+  'matriarche',
+  'conjoint',
+  'fils',
+  'fille',
+  'frere',
+  'soeur',
+  'pere',
+  'mere',
+  'grand-pere',
+  'grand-mere',
+  'petit-fils',
+  'petite-fille',
+  'oncle',
+  'tante',
+  'neveu',
+  'niece',
+  'cousin',
+  'cousine',
+  'epoux',
+  'epouse',
+  'beau-pere',
+  'belle-mere',
+  'beau-fils',
+  'belle-fille'
+] as const;
 
-export***REMOVED***const***REMOVED***civiliteOptions***REMOVED***=***REMOVED***['M.',***REMOVED***'Mme']***REMOVED***as***REMOVED***const;
+export const civiliteOptions = ['M.', 'Mme'] as const;
 
-export***REMOVED***const***REMOVED***familyMemberSchema***REMOVED***=***REMOVED***z.object({
-***REMOVED******REMOVED***first_name:***REMOVED***z.string().min(1,***REMOVED***"Le***REMOVED***prénom***REMOVED***est***REMOVED***requis"),
-***REMOVED******REMOVED***last_name:***REMOVED***z.string().min(1,***REMOVED***"Le***REMOVED***nom***REMOVED***est***REMOVED***requis"),
-***REMOVED******REMOVED***email:***REMOVED***z.string().email("Email***REMOVED***invalide"),
-***REMOVED******REMOVED***civilite:***REMOVED***z.enum(civiliteOptions),
-***REMOVED******REMOVED***phone:***REMOVED***z.string().optional(),
-***REMOVED******REMOVED***profession:***REMOVED***z.string().optional(),
-***REMOVED******REMOVED***current_location:***REMOVED***z.string().optional(),
-***REMOVED******REMOVED***birth_place:***REMOVED***z.string().optional(),
-***REMOVED******REMOVED***birth_date:***REMOVED***z.string().optional(),
-***REMOVED******REMOVED***avatar_url:***REMOVED***z.string().optional(),
-***REMOVED******REMOVED***photo_url:***REMOVED***z.string().optional(),
-***REMOVED******REMOVED***relationship_type:***REMOVED***z.enum(relationshipTypes),
-***REMOVED******REMOVED***father_id:***REMOVED***z.string().optional(),
-***REMOVED******REMOVED***mother_id:***REMOVED***z.string().optional(),
-***REMOVED******REMOVED***situation:***REMOVED***z.string().optional(),
-***REMOVED******REMOVED***user_role:***REMOVED***z.enum(userRoles).default('Membre')
+export const familyMemberSchema = z.object({
+  first_name: z.string().min(1, "Le prénom est requis"),
+  last_name: z.string().min(1, "Le nom est requis"),
+  email: z.string().email("Email invalide"),
+  civilite: z.enum(civiliteOptions),
+  phone: z.string().optional(),
+  profession: z.string().optional(),
+  current_location: z.string().optional(),
+  birth_place: z.string().optional(),
+  birth_date: z.string().optional(),
+  avatar_url: z.string().optional(),
+  photo_url: z.string().optional(),
+  relationship_type: z.enum(relationshipTypes),
+  father_id: z.string().optional(),
+  mother_id: z.string().optional(),
+  situation: z.string().optional(),
+  user_role: z.enum(userRoles).default('Membre')
 });
 
-export***REMOVED***const***REMOVED***familyRegisterSchema***REMOVED***=***REMOVED***z.object({
-***REMOVED******REMOVED***first_name:***REMOVED***z.string().min(1,***REMOVED***"Le***REMOVED***prénom***REMOVED***est***REMOVED***requis"),
-***REMOVED******REMOVED***last_name:***REMOVED***z.string().min(1,***REMOVED***"Le***REMOVED***nom***REMOVED***est***REMOVED***requis"),
-***REMOVED******REMOVED***email:***REMOVED***z.string().email("Email***REMOVED***invalide"),
-***REMOVED******REMOVED***password:***REMOVED***z.string().min(6,***REMOVED***"Le***REMOVED***mot***REMOVED***de***REMOVED***passe***REMOVED***doit***REMOVED***contenir***REMOVED***au***REMOVED***moins***REMOVED***6***REMOVED***caractères"),
-***REMOVED******REMOVED***civilite:***REMOVED***z.enum(civiliteOptions),
-***REMOVED******REMOVED***phone:***REMOVED***z.string().optional(),
-***REMOVED******REMOVED***profession:***REMOVED***z.string().optional(),
-***REMOVED******REMOVED***current_location:***REMOVED***z.string().optional(),
-***REMOVED******REMOVED***birth_place:***REMOVED***z.string().optional(),
-***REMOVED******REMOVED***birth_date:***REMOVED***z.string().optional(),
-***REMOVED******REMOVED***photo_url:***REMOVED***z.string().optional(),
-***REMOVED******REMOVED***relationship_type:***REMOVED***z.enum(relationshipTypes),
-***REMOVED******REMOVED***situation:***REMOVED***z.string().optional(),
-***REMOVED******REMOVED***user_role:***REMOVED***z.enum(userRoles).default('Membre')
+export const familyRegisterSchema = z.object({
+  first_name: z.string().min(1, "Le prénom est requis"),
+  last_name: z.string().min(1, "Le nom est requis"),
+  email: z.string().email("Email invalide"),
+  password: z.string().min(6, "Le mot de passe doit contenir au moins 6 caractères"),
+  civilite: z.enum(civiliteOptions),
+  phone: z.string().optional(),
+  profession: z.string().optional(),
+  current_location: z.string().optional(),
+  birth_place: z.string().optional(),
+  birth_date: z.string().optional(),
+  photo_url: z.string().optional(),
+  relationship_type: z.enum(relationshipTypes),
+  situation: z.string().optional(),
+  user_role: z.enum(userRoles).default('Membre')
 });
 
-export***REMOVED***const***REMOVED***loginSchema***REMOVED***=***REMOVED***z.object({
-***REMOVED******REMOVED***email:***REMOVED***z.string().email("Email***REMOVED***invalide"),
-***REMOVED******REMOVED***password:***REMOVED***z.string().min(1,***REMOVED***"Le***REMOVED***mot***REMOVED***de***REMOVED***passe***REMOVED***est***REMOVED***requis")
+export const loginSchema = z.object({
+  email: z.string().email("Email invalide"),
+  password: z.string().min(1, "Le mot de passe est requis")
 });
 
-export***REMOVED***type***REMOVED***RelationshipType***REMOVED***=***REMOVED***typeof***REMOVED***relationshipTypes[number];
-export***REMOVED***type***REMOVED***Civilite***REMOVED***=***REMOVED***typeof***REMOVED***civiliteOptions[number];
-export***REMOVED***type***REMOVED***UserRole***REMOVED***=***REMOVED***typeof***REMOVED***userRoles[number];
-export***REMOVED***type***REMOVED***FamilyMemberFormData***REMOVED***=***REMOVED***z.infer<typeof***REMOVED***familyMemberSchema>;
-export***REMOVED***type***REMOVED***FamilyRegisterFormData***REMOVED***=***REMOVED***z.infer<typeof***REMOVED***familyRegisterSchema>;
-export***REMOVED***type***REMOVED***LoginFormData***REMOVED***=***REMOVED***z.infer<typeof***REMOVED***loginSchema>;
+export type RelationshipType = typeof relationshipTypes[number];
+export type Civilite = typeof civiliteOptions[number];
+export type UserRole = typeof userRoles[number];
+export type FamilyMemberFormData = z.infer<typeof familyMemberSchema>;
+export type FamilyRegisterFormData = z.infer<typeof familyRegisterSchema>;
+export type LoginFormData = z.infer<typeof loginSchema>;

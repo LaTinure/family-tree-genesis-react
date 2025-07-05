@@ -1,115 +1,115 @@
-import***REMOVED*******REMOVED***as***REMOVED***React***REMOVED***from***REMOVED***"react"
-import***REMOVED***{***REMOVED***Slot***REMOVED***}***REMOVED***from***REMOVED***"@radix-ui/react-slot"
-import***REMOVED***{***REMOVED***ChevronRight,***REMOVED***MoreHorizontal***REMOVED***}***REMOVED***from***REMOVED***"lucide-react"
+import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
+import { ChevronRight, MoreHorizontal } from "lucide-react"
 
-import***REMOVED***{***REMOVED***cn***REMOVED***}***REMOVED***from***REMOVED***"@/lib/utils"
+import { cn } from "@/lib/utils"
 
-const***REMOVED***Breadcrumb***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLElement,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<"nav">***REMOVED***&***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***separator?:***REMOVED***React.ReactNode
-***REMOVED******REMOVED***}
->(({***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***<nav***REMOVED***ref={ref}***REMOVED***aria-label="breadcrumb"***REMOVED***{...props}***REMOVED***/>)
-Breadcrumb.displayName***REMOVED***=***REMOVED***"Breadcrumb"
+const Breadcrumb = React.forwardRef<
+  HTMLElement,
+  React.ComponentPropsWithoutRef<"nav"> & {
+    separator?: React.ReactNode
+  }
+>(({ ...props }, ref) => <nav ref={ref} aria-label="breadcrumb" {...props} />)
+Breadcrumb.displayName = "Breadcrumb"
 
-const***REMOVED***BreadcrumbList***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLOListElement,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<"ol">
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<ol
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"flex***REMOVED***flex-wrap***REMOVED***items-center***REMOVED***gap-1.5***REMOVED***break-words***REMOVED***text-sm***REMOVED***text-muted-foreground***REMOVED***sm:gap-2.5",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const BreadcrumbList = React.forwardRef<
+  HTMLOListElement,
+  React.ComponentPropsWithoutRef<"ol">
+>(({ className, ...props }, ref) => (
+  <ol
+    ref={ref}
+    className={cn(
+      "flex flex-wrap items-center gap-1.5 break-words text-sm text-muted-foreground sm:gap-2.5",
+      className
+    )}
+    {...props}
+  />
 ))
-BreadcrumbList.displayName***REMOVED***=***REMOVED***"BreadcrumbList"
+BreadcrumbList.displayName = "BreadcrumbList"
 
-const***REMOVED***BreadcrumbItem***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLLIElement,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<"li">
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<li
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn("inline-flex***REMOVED***items-center***REMOVED***gap-1.5",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const BreadcrumbItem = React.forwardRef<
+  HTMLLIElement,
+  React.ComponentPropsWithoutRef<"li">
+>(({ className, ...props }, ref) => (
+  <li
+    ref={ref}
+    className={cn("inline-flex items-center gap-1.5", className)}
+    {...props}
+  />
 ))
-BreadcrumbItem.displayName***REMOVED***=***REMOVED***"BreadcrumbItem"
+BreadcrumbItem.displayName = "BreadcrumbItem"
 
-const***REMOVED***BreadcrumbLink***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLAnchorElement,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<"a">***REMOVED***&***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***asChild?:***REMOVED***boolean
-***REMOVED******REMOVED***}
->(({***REMOVED***asChild,***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***Comp***REMOVED***=***REMOVED***asChild***REMOVED***?***REMOVED***Slot***REMOVED***:***REMOVED***"a"
+const BreadcrumbLink = React.forwardRef<
+  HTMLAnchorElement,
+  React.ComponentPropsWithoutRef<"a"> & {
+    asChild?: boolean
+  }
+>(({ asChild, className, ...props }, ref) => {
+  const Comp = asChild ? Slot : "a"
 
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<Comp
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn("transition-colors***REMOVED***hover:text-foreground",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED***)
+  return (
+    <Comp
+      ref={ref}
+      className={cn("transition-colors hover:text-foreground", className)}
+      {...props}
+    />
+  )
 })
-BreadcrumbLink.displayName***REMOVED***=***REMOVED***"BreadcrumbLink"
+BreadcrumbLink.displayName = "BreadcrumbLink"
 
-const***REMOVED***BreadcrumbPage***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLSpanElement,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<"span">
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<span
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***role="link"
-***REMOVED******REMOVED******REMOVED******REMOVED***aria-disabled="true"
-***REMOVED******REMOVED******REMOVED******REMOVED***aria-current="page"
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn("font-normal***REMOVED***text-foreground",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const BreadcrumbPage = React.forwardRef<
+  HTMLSpanElement,
+  React.ComponentPropsWithoutRef<"span">
+>(({ className, ...props }, ref) => (
+  <span
+    ref={ref}
+    role="link"
+    aria-disabled="true"
+    aria-current="page"
+    className={cn("font-normal text-foreground", className)}
+    {...props}
+  />
 ))
-BreadcrumbPage.displayName***REMOVED***=***REMOVED***"BreadcrumbPage"
+BreadcrumbPage.displayName = "BreadcrumbPage"
 
-const***REMOVED***BreadcrumbSeparator***REMOVED***=***REMOVED***({
-***REMOVED******REMOVED***children,
-***REMOVED******REMOVED***className,
-***REMOVED******REMOVED***...props
-}:***REMOVED***React.ComponentProps<"li">)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<li
-***REMOVED******REMOVED******REMOVED******REMOVED***role="presentation"
-***REMOVED******REMOVED******REMOVED******REMOVED***aria-hidden="true"
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn("[&>svg]:size-3.5",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED***{children***REMOVED***??***REMOVED***<ChevronRight***REMOVED***/>}
-***REMOVED******REMOVED***</li>
+const BreadcrumbSeparator = ({
+  children,
+  className,
+  ...props
+}: React.ComponentProps<"li">) => (
+  <li
+    role="presentation"
+    aria-hidden="true"
+    className={cn("[&>svg]:size-3.5", className)}
+    {...props}
+  >
+    {children ?? <ChevronRight />}
+  </li>
 )
-BreadcrumbSeparator.displayName***REMOVED***=***REMOVED***"BreadcrumbSeparator"
+BreadcrumbSeparator.displayName = "BreadcrumbSeparator"
 
-const***REMOVED***BreadcrumbEllipsis***REMOVED***=***REMOVED***({
-***REMOVED******REMOVED***className,
-***REMOVED******REMOVED***...props
-}:***REMOVED***React.ComponentProps<"span">)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<span
-***REMOVED******REMOVED******REMOVED******REMOVED***role="presentation"
-***REMOVED******REMOVED******REMOVED******REMOVED***aria-hidden="true"
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn("flex***REMOVED***h-9***REMOVED***w-9***REMOVED***items-center***REMOVED***justify-center",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED***<MoreHorizontal***REMOVED***className="h-4***REMOVED***w-4"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED***<span***REMOVED***className="sr-only">More</span>
-***REMOVED******REMOVED***</span>
+const BreadcrumbEllipsis = ({
+  className,
+  ...props
+}: React.ComponentProps<"span">) => (
+  <span
+    role="presentation"
+    aria-hidden="true"
+    className={cn("flex h-9 w-9 items-center justify-center", className)}
+    {...props}
+  >
+    <MoreHorizontal className="h-4 w-4" />
+    <span className="sr-only">More</span>
+  </span>
 )
-BreadcrumbEllipsis.displayName***REMOVED***=***REMOVED***"BreadcrumbElipssis"
+BreadcrumbEllipsis.displayName = "BreadcrumbElipssis"
 
-export***REMOVED***{
-***REMOVED******REMOVED***Breadcrumb,
-***REMOVED******REMOVED***BreadcrumbList,
-***REMOVED******REMOVED***BreadcrumbItem,
-***REMOVED******REMOVED***BreadcrumbLink,
-***REMOVED******REMOVED***BreadcrumbPage,
-***REMOVED******REMOVED***BreadcrumbSeparator,
-***REMOVED******REMOVED***BreadcrumbEllipsis,
+export {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+  BreadcrumbEllipsis,
 }

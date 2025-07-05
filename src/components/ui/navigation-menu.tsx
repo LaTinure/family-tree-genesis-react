@@ -1,128 +1,128 @@
-import***REMOVED*******REMOVED***as***REMOVED***React***REMOVED***from***REMOVED***"react"
-import***REMOVED*******REMOVED***as***REMOVED***NavigationMenuPrimitive***REMOVED***from***REMOVED***"@radix-ui/react-navigation-menu"
-import***REMOVED***{***REMOVED***cva***REMOVED***}***REMOVED***from***REMOVED***"class-variance-authority"
-import***REMOVED***{***REMOVED***ChevronDown***REMOVED***}***REMOVED***from***REMOVED***"lucide-react"
+import * as React from "react"
+import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu"
+import { cva } from "class-variance-authority"
+import { ChevronDown } from "lucide-react"
 
-import***REMOVED***{***REMOVED***cn***REMOVED***}***REMOVED***from***REMOVED***"@/lib/utils"
+import { cn } from "@/lib/utils"
 
-const***REMOVED***NavigationMenu***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***NavigationMenuPrimitive.Root>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***NavigationMenuPrimitive.Root>
->(({***REMOVED***className,***REMOVED***children,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<NavigationMenuPrimitive.Root
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"relative***REMOVED***z-10***REMOVED***flex***REMOVED***max-w-max***REMOVED***flex-1***REMOVED***items-center***REMOVED***justify-center",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED***{children}
-***REMOVED******REMOVED******REMOVED******REMOVED***<NavigationMenuViewport***REMOVED***/>
-***REMOVED******REMOVED***</NavigationMenuPrimitive.Root>
+const NavigationMenu = React.forwardRef<
+  React.ElementRef<typeof NavigationMenuPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Root>
+>(({ className, children, ...props }, ref) => (
+  <NavigationMenuPrimitive.Root
+    ref={ref}
+    className={cn(
+      "relative z-10 flex max-w-max flex-1 items-center justify-center",
+      className
+    )}
+    {...props}
+  >
+    {children}
+    <NavigationMenuViewport />
+  </NavigationMenuPrimitive.Root>
 ))
-NavigationMenu.displayName***REMOVED***=***REMOVED***NavigationMenuPrimitive.Root.displayName
+NavigationMenu.displayName = NavigationMenuPrimitive.Root.displayName
 
-const***REMOVED***NavigationMenuList***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***NavigationMenuPrimitive.List>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***NavigationMenuPrimitive.List>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<NavigationMenuPrimitive.List
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"group***REMOVED***flex***REMOVED***flex-1***REMOVED***list-none***REMOVED***items-center***REMOVED***justify-center***REMOVED***space-x-1",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const NavigationMenuList = React.forwardRef<
+  React.ElementRef<typeof NavigationMenuPrimitive.List>,
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.List>
+>(({ className, ...props }, ref) => (
+  <NavigationMenuPrimitive.List
+    ref={ref}
+    className={cn(
+      "group flex flex-1 list-none items-center justify-center space-x-1",
+      className
+    )}
+    {...props}
+  />
 ))
-NavigationMenuList.displayName***REMOVED***=***REMOVED***NavigationMenuPrimitive.List.displayName
+NavigationMenuList.displayName = NavigationMenuPrimitive.List.displayName
 
-const***REMOVED***NavigationMenuItem***REMOVED***=***REMOVED***NavigationMenuPrimitive.Item
+const NavigationMenuItem = NavigationMenuPrimitive.Item
 
-const***REMOVED***navigationMenuTriggerStyle***REMOVED***=***REMOVED***cva(
-***REMOVED******REMOVED***"group***REMOVED***inline-flex***REMOVED***h-10***REMOVED***w-max***REMOVED***items-center***REMOVED***justify-center***REMOVED***rounded-md***REMOVED***bg-background***REMOVED***px-4***REMOVED***py-2***REMOVED***text-sm***REMOVED***font-medium***REMOVED***transition-colors***REMOVED***hover:bg-accent***REMOVED***hover:text-accent-foreground***REMOVED***focus:bg-accent***REMOVED***focus:text-accent-foreground***REMOVED***focus:outline-none***REMOVED***disabled:pointer-events-none***REMOVED***disabled:opacity-50***REMOVED***data-[active]:bg-accent/50***REMOVED***data-[state=open]:bg-accent/50"
+const navigationMenuTriggerStyle = cva(
+  "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
 )
 
-const***REMOVED***NavigationMenuTrigger***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***NavigationMenuPrimitive.Trigger>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***NavigationMenuPrimitive.Trigger>
->(({***REMOVED***className,***REMOVED***children,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<NavigationMenuPrimitive.Trigger
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(navigationMenuTriggerStyle(),***REMOVED***"group",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED***{children}{"***REMOVED***"}
-***REMOVED******REMOVED******REMOVED******REMOVED***<ChevronDown
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className="relative***REMOVED***top-[1px]***REMOVED***ml-1***REMOVED***h-3***REMOVED***w-3***REMOVED***transition***REMOVED***duration-200***REMOVED***group-data-[state=open]:rotate-180"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***aria-hidden="true"
-***REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED***</NavigationMenuPrimitive.Trigger>
+const NavigationMenuTrigger = React.forwardRef<
+  React.ElementRef<typeof NavigationMenuPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Trigger>
+>(({ className, children, ...props }, ref) => (
+  <NavigationMenuPrimitive.Trigger
+    ref={ref}
+    className={cn(navigationMenuTriggerStyle(), "group", className)}
+    {...props}
+  >
+    {children}{" "}
+    <ChevronDown
+      className="relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180"
+      aria-hidden="true"
+    />
+  </NavigationMenuPrimitive.Trigger>
 ))
-NavigationMenuTrigger.displayName***REMOVED***=***REMOVED***NavigationMenuPrimitive.Trigger.displayName
+NavigationMenuTrigger.displayName = NavigationMenuPrimitive.Trigger.displayName
 
-const***REMOVED***NavigationMenuContent***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***NavigationMenuPrimitive.Content>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***NavigationMenuPrimitive.Content>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<NavigationMenuPrimitive.Content
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"left-0***REMOVED***top-0***REMOVED***w-full***REMOVED***data-[motion^=from-]:animate-in***REMOVED***data-[motion^=to-]:animate-out***REMOVED***data-[motion^=from-]:fade-in***REMOVED***data-[motion^=to-]:fade-out***REMOVED***data-[motion=from-end]:slide-in-from-right-52***REMOVED***data-[motion=from-start]:slide-in-from-left-52***REMOVED***data-[motion=to-end]:slide-out-to-right-52***REMOVED***data-[motion=to-start]:slide-out-to-left-52***REMOVED***md:absolute***REMOVED***md:w-auto***REMOVED***",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const NavigationMenuContent = React.forwardRef<
+  React.ElementRef<typeof NavigationMenuPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Content>
+>(({ className, ...props }, ref) => (
+  <NavigationMenuPrimitive.Content
+    ref={ref}
+    className={cn(
+      "left-0 top-0 w-full data-[motion^=from-]:animate-in data-[motion^=to-]:animate-out data-[motion^=from-]:fade-in data-[motion^=to-]:fade-out data-[motion=from-end]:slide-in-from-right-52 data-[motion=from-start]:slide-in-from-left-52 data-[motion=to-end]:slide-out-to-right-52 data-[motion=to-start]:slide-out-to-left-52 md:absolute md:w-auto ",
+      className
+    )}
+    {...props}
+  />
 ))
-NavigationMenuContent.displayName***REMOVED***=***REMOVED***NavigationMenuPrimitive.Content.displayName
+NavigationMenuContent.displayName = NavigationMenuPrimitive.Content.displayName
 
-const***REMOVED***NavigationMenuLink***REMOVED***=***REMOVED***NavigationMenuPrimitive.Link
+const NavigationMenuLink = NavigationMenuPrimitive.Link
 
-const***REMOVED***NavigationMenuViewport***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***NavigationMenuPrimitive.Viewport>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***NavigationMenuPrimitive.Viewport>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<div***REMOVED***className={cn("absolute***REMOVED***left-0***REMOVED***top-full***REMOVED***flex***REMOVED***justify-center")}>
-***REMOVED******REMOVED******REMOVED******REMOVED***<NavigationMenuPrimitive.Viewport
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"origin-top-center***REMOVED***relative***REMOVED***mt-1.5***REMOVED***h-[var(--radix-navigation-menu-viewport-height)]***REMOVED***w-full***REMOVED***overflow-hidden***REMOVED***rounded-md***REMOVED***border***REMOVED***bg-popover***REMOVED***text-popover-foreground***REMOVED***shadow-lg***REMOVED***data-[state=open]:animate-in***REMOVED***data-[state=closed]:animate-out***REMOVED***data-[state=closed]:zoom-out-95***REMOVED***data-[state=open]:zoom-in-90***REMOVED***md:w-[var(--radix-navigation-menu-viewport-width)]",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED***</div>
+const NavigationMenuViewport = React.forwardRef<
+  React.ElementRef<typeof NavigationMenuPrimitive.Viewport>,
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Viewport>
+>(({ className, ...props }, ref) => (
+  <div className={cn("absolute left-0 top-full flex justify-center")}>
+    <NavigationMenuPrimitive.Viewport
+      className={cn(
+        "origin-top-center relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-90 md:w-[var(--radix-navigation-menu-viewport-width)]",
+        className
+      )}
+      ref={ref}
+      {...props}
+    />
+  </div>
 ))
-NavigationMenuViewport.displayName***REMOVED***=
-***REMOVED******REMOVED***NavigationMenuPrimitive.Viewport.displayName
+NavigationMenuViewport.displayName =
+  NavigationMenuPrimitive.Viewport.displayName
 
-const***REMOVED***NavigationMenuIndicator***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***NavigationMenuPrimitive.Indicator>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***NavigationMenuPrimitive.Indicator>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<NavigationMenuPrimitive.Indicator
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"top-full***REMOVED***z-[1]***REMOVED***flex***REMOVED***h-1.5***REMOVED***items-end***REMOVED***justify-center***REMOVED***overflow-hidden***REMOVED***data-[state=visible]:animate-in***REMOVED***data-[state=hidden]:animate-out***REMOVED***data-[state=hidden]:fade-out***REMOVED***data-[state=visible]:fade-in",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="relative***REMOVED***top-[60%]***REMOVED***h-2***REMOVED***w-2***REMOVED***rotate-45***REMOVED***rounded-tl-sm***REMOVED***bg-border***REMOVED***shadow-md"***REMOVED***/>
-***REMOVED******REMOVED***</NavigationMenuPrimitive.Indicator>
+const NavigationMenuIndicator = React.forwardRef<
+  React.ElementRef<typeof NavigationMenuPrimitive.Indicator>,
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Indicator>
+>(({ className, ...props }, ref) => (
+  <NavigationMenuPrimitive.Indicator
+    ref={ref}
+    className={cn(
+      "top-full z-[1] flex h-1.5 items-end justify-center overflow-hidden data-[state=visible]:animate-in data-[state=hidden]:animate-out data-[state=hidden]:fade-out data-[state=visible]:fade-in",
+      className
+    )}
+    {...props}
+  >
+    <div className="relative top-[60%] h-2 w-2 rotate-45 rounded-tl-sm bg-border shadow-md" />
+  </NavigationMenuPrimitive.Indicator>
 ))
-NavigationMenuIndicator.displayName***REMOVED***=
-***REMOVED******REMOVED***NavigationMenuPrimitive.Indicator.displayName
+NavigationMenuIndicator.displayName =
+  NavigationMenuPrimitive.Indicator.displayName
 
-export***REMOVED***{
-***REMOVED******REMOVED***navigationMenuTriggerStyle,
-***REMOVED******REMOVED***NavigationMenu,
-***REMOVED******REMOVED***NavigationMenuList,
-***REMOVED******REMOVED***NavigationMenuItem,
-***REMOVED******REMOVED***NavigationMenuContent,
-***REMOVED******REMOVED***NavigationMenuTrigger,
-***REMOVED******REMOVED***NavigationMenuLink,
-***REMOVED******REMOVED***NavigationMenuIndicator,
-***REMOVED******REMOVED***NavigationMenuViewport,
+export {
+  navigationMenuTriggerStyle,
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuItem,
+  NavigationMenuContent,
+  NavigationMenuTrigger,
+  NavigationMenuLink,
+  NavigationMenuIndicator,
+  NavigationMenuViewport,
 }

@@ -1,59 +1,59 @@
-import***REMOVED*******REMOVED***as***REMOVED***React***REMOVED***from***REMOVED***"react"
-import***REMOVED***{***REMOVED***cva,***REMOVED***type***REMOVED***VariantProps***REMOVED***}***REMOVED***from***REMOVED***"class-variance-authority"
+import * as React from "react"
+import { cva, type VariantProps } from "class-variance-authority"
 
-import***REMOVED***{***REMOVED***cn***REMOVED***}***REMOVED***from***REMOVED***"@/lib/utils"
+import { cn } from "@/lib/utils"
 
-const***REMOVED***alertVariants***REMOVED***=***REMOVED***cva(
-***REMOVED******REMOVED***"relative***REMOVED***w-full***REMOVED***rounded-lg***REMOVED***border***REMOVED***p-4***REMOVED***[&>svg~*]:pl-7***REMOVED***[&>svg+div]:translate-y-[-3px]***REMOVED***[&>svg]:absolute***REMOVED***[&>svg]:left-4***REMOVED***[&>svg]:top-4***REMOVED***[&>svg]:text-foreground",
-***REMOVED******REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***variants:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***variant:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***default:***REMOVED***"bg-background***REMOVED***text-foreground",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***destructive:
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"border-destructive/50***REMOVED***text-destructive***REMOVED***dark:border-destructive***REMOVED***[&>svg]:text-destructive",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***defaultVariants:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***variant:***REMOVED***"default",
-***REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED***}
+const alertVariants = cva(
+  "relative w-full rounded-lg border p-4 [&>svg~*]:pl-7 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground",
+  {
+    variants: {
+      variant: {
+        default: "bg-background text-foreground",
+        destructive:
+          "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  }
 )
 
-const***REMOVED***Alert***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLDivElement,
-***REMOVED******REMOVED***React.HTMLAttributes<HTMLDivElement>***REMOVED***&***REMOVED***VariantProps<typeof***REMOVED***alertVariants>
->(({***REMOVED***className,***REMOVED***variant,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***role="alert"
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(alertVariants({***REMOVED***variant***REMOVED***}),***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const Alert = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof alertVariants>
+>(({ className, variant, ...props }, ref) => (
+  <div
+    ref={ref}
+    role="alert"
+    className={cn(alertVariants({ variant }), className)}
+    {...props}
+  />
 ))
-Alert.displayName***REMOVED***=***REMOVED***"Alert"
+Alert.displayName = "Alert"
 
-const***REMOVED***AlertTitle***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLParagraphElement,
-***REMOVED******REMOVED***React.HTMLAttributes<HTMLHeadingElement>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<h5
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn("mb-1***REMOVED***font-medium***REMOVED***leading-none***REMOVED***tracking-tight",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const AlertTitle = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLHeadingElement>
+>(({ className, ...props }, ref) => (
+  <h5
+    ref={ref}
+    className={cn("mb-1 font-medium leading-none tracking-tight", className)}
+    {...props}
+  />
 ))
-AlertTitle.displayName***REMOVED***=***REMOVED***"AlertTitle"
+AlertTitle.displayName = "AlertTitle"
 
-const***REMOVED***AlertDescription***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLParagraphElement,
-***REMOVED******REMOVED***React.HTMLAttributes<HTMLParagraphElement>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn("text-sm***REMOVED***[&_p]:leading-relaxed",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const AlertDescription = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLParagraphElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn("text-sm [&_p]:leading-relaxed", className)}
+    {...props}
+  />
 ))
-AlertDescription.displayName***REMOVED***=***REMOVED***"AlertDescription"
+AlertDescription.displayName = "AlertDescription"
 
-export***REMOVED***{***REMOVED***Alert,***REMOVED***AlertTitle,***REMOVED***AlertDescription***REMOVED***}
+export { Alert, AlertTitle, AlertDescription }

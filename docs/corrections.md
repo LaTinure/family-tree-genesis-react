@@ -1,165 +1,165 @@
 
-#***REMOVED***Corrections***REMOVED***apportées***REMOVED***au***REMOVED***projet***REMOVED***d'arbre***REMOVED***généalogique
+# Corrections apportées au projet d'arbre généalogique
 
-##***REMOVED***Date:***REMOVED***23***REMOVED***juin***REMOVED***2025
+## Date: 23 juin 2025
 
-###***REMOVED***Dernière***REMOVED***correction***REMOVED***:***REMOVED***Implémentation***REMOVED***fonctionnalité***REMOVED***"Delete***REMOVED***All"
+### Dernière correction : Implémentation fonctionnalité "Delete All"
 
-####***REMOVED***Problème***REMOVED***identifié
-Besoin***REMOVED***d'une***REMOVED***fonctionnalité***REMOVED***pour***REMOVED***supprimer***REMOVED***complètement***REMOVED***toutes***REMOVED***les***REMOVED***données***REMOVED***du***REMOVED***projet***REMOVED***(reset***REMOVED***complet)***REMOVED***à***REMOVED***des***REMOVED***fins***REMOVED***de***REMOVED***développement***REMOVED***et***REMOVED***de***REMOVED***test.
+#### Problème identifié
+Besoin d'une fonctionnalité pour supprimer complètement toutes les données du projet (reset complet) à des fins de développement et de test.
 
-####***REMOVED***Corrections***REMOVED***apportées
+#### Corrections apportées
 
-#####***REMOVED***1.***REMOVED***Création***REMOVED***de***REMOVED***l'Edge***REMOVED***Function***REMOVED***de***REMOVED***suppression
--***REMOVED*****Fichier**:***REMOVED***`supabase/functions/delete-all-data/index.ts`
--***REMOVED*****Fonction**:***REMOVED***Suppression***REMOVED***complète***REMOVED***et***REMOVED***sécurisée***REMOVED***de***REMOVED***toutes***REMOVED***les***REMOVED***données
--***REMOVED*****Fonctionnalités**:
-***REMOVED******REMOVED***-***REMOVED***Suppression***REMOVED***de***REMOVED***tous***REMOVED***les***REMOVED***utilisateurs***REMOVED***authentifiés***REMOVED***via***REMOVED***`supabaseAdmin.auth.admin.deleteUser()`
-***REMOVED******REMOVED***-***REMOVED***Vidage***REMOVED***de***REMOVED***toutes***REMOVED***les***REMOVED***tables***REMOVED***publiques***REMOVED***dans***REMOVED***l'ordre***REMOVED***correct
-***REMOVED******REMOVED***-***REMOVED***Gestion***REMOVED***CORS***REMOVED***pour***REMOVED***appels***REMOVED***frontend
-***REMOVED******REMOVED***-***REMOVED***Logging***REMOVED***détaillé***REMOVED***pour***REMOVED***audit***REMOVED***et***REMOVED***débogage
-***REMOVED******REMOVED***-***REMOVED***Retour***REMOVED***JSON***REMOVED***avec***REMOVED***statistiques***REMOVED***de***REMOVED***suppression
+##### 1. Création de l'Edge Function de suppression
+- **Fichier**: `supabase/functions/delete-all-data/index.ts`
+- **Fonction**: Suppression complète et sécurisée de toutes les données
+- **Fonctionnalités**:
+  - Suppression de tous les utilisateurs authentifiés via `supabaseAdmin.auth.admin.deleteUser()`
+  - Vidage de toutes les tables publiques dans l'ordre correct
+  - Gestion CORS pour appels frontend
+  - Logging détaillé pour audit et débogage
+  - Retour JSON avec statistiques de suppression
 
-#####***REMOVED***2.***REMOVED***Intégration***REMOVED***frontend
--***REMOVED*****Fichier**:***REMOVED***`src/pages/Index.tsx`
--***REMOVED*****Modification**:***REMOVED***Ajout***REMOVED***du***REMOVED***bouton***REMOVED***"Delete***REMOVED***All"***REMOVED***avec***REMOVED***double***REMOVED***confirmation
--***REMOVED*****Sécurité**:***REMOVED***
-***REMOVED******REMOVED***-***REMOVED***Première***REMOVED***confirmation***REMOVED***générale
-***REMOVED******REMOVED***-***REMOVED***Seconde***REMOVED***confirmation***REMOVED***explicite
-***REMOVED******REMOVED***-***REMOVED***Indicateur***REMOVED***de***REMOVED***chargement***REMOVED***pendant***REMOVED***l'opération
-***REMOVED******REMOVED***-***REMOVED***Déconnexion***REMOVED***automatique***REMOVED***après***REMOVED***suppression
+##### 2. Intégration frontend
+- **Fichier**: `src/pages/Index.tsx`
+- **Modification**: Ajout du bouton "Delete All" avec double confirmation
+- **Sécurité**: 
+  - Première confirmation générale
+  - Seconde confirmation explicite
+  - Indicateur de chargement pendant l'opération
+  - Déconnexion automatique après suppression
 
-#####***REMOVED***3.***REMOVED***Workflow***REMOVED***d'exécution
-1.***REMOVED*****Déclenchement**:***REMOVED***Clic***REMOVED***sur***REMOVED***bouton***REMOVED***"Delete***REMOVED***All"
-2.***REMOVED*****Confirmations**:***REMOVED***Double***REMOVED***validation***REMOVED***utilisateur
-3.***REMOVED*****Appel***REMOVED***API**:***REMOVED***`supabase.functions.invoke('delete-all-data')`
-4.***REMOVED*****Backend**:***REMOVED***
-***REMOVED******REMOVED******REMOVED***-***REMOVED***Suppression***REMOVED***utilisateurs***REMOVED***auth
-***REMOVED******REMOVED******REMOVED***-***REMOVED***Vidage***REMOVED***tables***REMOVED***publiques
-***REMOVED******REMOVED******REMOVED***-***REMOVED***Logging***REMOVED***des***REMOVED***opérations
-5.***REMOVED*****Frontend**:
-***REMOVED******REMOVED******REMOVED***-***REMOVED***Toast***REMOVED***de***REMOVED***confirmation
-***REMOVED******REMOVED******REMOVED***-***REMOVED***Déconnexion***REMOVED***utilisateur
-***REMOVED******REMOVED******REMOVED***-***REMOVED***Rechargement***REMOVED***page
+##### 3. Workflow d'exécution
+1. **Déclenchement**: Clic sur bouton "Delete All"
+2. **Confirmations**: Double validation utilisateur
+3. **Appel API**: `supabase.functions.invoke('delete-all-data')`
+4. **Backend**: 
+   - Suppression utilisateurs auth
+   - Vidage tables publiques
+   - Logging des opérations
+5. **Frontend**:
+   - Toast de confirmation
+   - Déconnexion utilisateur
+   - Rechargement page
 
-#####***REMOVED***4.***REMOVED***Méthode***REMOVED***d'appel***REMOVED***de***REMOVED***chaque***REMOVED***fichier
+##### 4. Méthode d'appel de chaque fichier
 
-######***REMOVED***Edge***REMOVED***Function***REMOVED***(`supabase/functions/delete-all-data/index.ts`)
+###### Edge Function (`supabase/functions/delete-all-data/index.ts`)
 ```typescript
-//***REMOVED***Appel***REMOVED***depuis***REMOVED***le***REMOVED***frontend
-const***REMOVED***{***REMOVED***data,***REMOVED***error***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase.functions.invoke('delete-all-data',***REMOVED***{
-***REMOVED******REMOVED***method:***REMOVED***'POST'
+// Appel depuis le frontend
+const { data, error } = await supabase.functions.invoke('delete-all-data', {
+  method: 'POST'
 });
 ```
 
-######***REMOVED***Composant***REMOVED***Frontend***REMOVED***(`src/pages/Index.tsx`)
+###### Composant Frontend (`src/pages/Index.tsx`)
 ```typescript
-const***REMOVED***handleDeleteAll***REMOVED***=***REMOVED***async***REMOVED***()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***//***REMOVED***Double***REMOVED***confirmation
-***REMOVED******REMOVED***if***REMOVED***(!confirm('Premier***REMOVED***avertissement'))***REMOVED***return;
-***REMOVED******REMOVED***if***REMOVED***(!confirm('Confirmation***REMOVED***finale'))***REMOVED***return;
-***REMOVED******REMOVED***
-***REMOVED******REMOVED***//***REMOVED***Exécution
-***REMOVED******REMOVED***setIsDeleting(true);
-***REMOVED******REMOVED***try***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***data,***REMOVED***error***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase.functions.invoke('delete-all-data');
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(error)***REMOVED***throw***REMOVED***error;
-***REMOVED******REMOVED******REMOVED******REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Succès***REMOVED***:***REMOVED***déconnexion***REMOVED***et***REMOVED***rechargement
-***REMOVED******REMOVED******REMOVED******REMOVED***await***REMOVED***supabase.auth.signOut();
-***REMOVED******REMOVED******REMOVED******REMOVED***window.location.reload();
-***REMOVED******REMOVED***}***REMOVED***catch***REMOVED***(error)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Gestion***REMOVED***d'erreur***REMOVED***avec***REMOVED***toast
-***REMOVED******REMOVED***}***REMOVED***finally***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***setIsDeleting(false);
-***REMOVED******REMOVED***}
+const handleDeleteAll = async () => {
+  // Double confirmation
+  if (!confirm('Premier avertissement')) return;
+  if (!confirm('Confirmation finale')) return;
+  
+  // Exécution
+  setIsDeleting(true);
+  try {
+    const { data, error } = await supabase.functions.invoke('delete-all-data');
+    if (error) throw error;
+    
+    // Succès : déconnexion et rechargement
+    await supabase.auth.signOut();
+    window.location.reload();
+  } catch (error) {
+    // Gestion d'erreur avec toast
+  } finally {
+    setIsDeleting(false);
+  }
 };
 ```
 
-####***REMOVED***Adaptation***REMOVED***pour***REMOVED***autres***REMOVED***projets
+#### Adaptation pour autres projets
 
-#####***REMOVED***Variables***REMOVED***d'environnement***REMOVED***requises
--***REMOVED***`SUPABASE_URL`:***REMOVED***URL***REMOVED***du***REMOVED***projet***REMOVED***Supabase
--***REMOVED***`SUPABASE_SERVICE_ROLE_KEY`:***REMOVED***Clé***REMOVED***de***REMOVED***service***REMOVED***pour***REMOVED***permissions***REMOVED***admin
+##### Variables d'environnement requises
+- `SUPABASE_URL`: URL du projet Supabase
+- `SUPABASE_SERVICE_ROLE_KEY`: Clé de service pour permissions admin
 
-#####***REMOVED***Fichiers***REMOVED***à***REMOVED***créer/modifier
-1.***REMOVED*****Edge***REMOVED***Function**:***REMOVED***`supabase/functions/delete-all-data/index.ts`
-2.***REMOVED*****Frontend**:***REMOVED***Composant***REMOVED***avec***REMOVED***bouton***REMOVED***(page***REMOVED***ou***REMOVED***menu***REMOVED***utilisateur)
-3.***REMOVED*****Configuration**:***REMOVED***Variables***REMOVED***d'environnement***REMOVED***Supabase
+##### Fichiers à créer/modifier
+1. **Edge Function**: `supabase/functions/delete-all-data/index.ts`
+2. **Frontend**: Composant avec bouton (page ou menu utilisateur)
+3. **Configuration**: Variables d'environnement Supabase
 
-#####***REMOVED***Adaptations***REMOVED***spécifiques
-1.***REMOVED*****Tables***REMOVED***à***REMOVED***supprimer**:***REMOVED***Modifier***REMOVED***le***REMOVED***tableau***REMOVED***`tablesToDelete`***REMOVED***selon***REMOVED***votre***REMOVED***schéma
-2.***REMOVED*****Ordre***REMOVED***de***REMOVED***suppression**:***REMOVED***Respecter***REMOVED***les***REMOVED***contraintes***REMOVED***de***REMOVED***clés***REMOVED***étrangères
-3.***REMOVED*****Interface***REMOVED***utilisateur**:***REMOVED***Adapter***REMOVED***les***REMOVED***confirmations***REMOVED***et***REMOVED***messages
-4.***REMOVED*****Permissions**:***REMOVED***Vérifier***REMOVED***les***REMOVED***RLS***REMOVED***policies***REMOVED***et***REMOVED***accès***REMOVED***admin
+##### Adaptations spécifiques
+1. **Tables à supprimer**: Modifier le tableau `tablesToDelete` selon votre schéma
+2. **Ordre de suppression**: Respecter les contraintes de clés étrangères
+3. **Interface utilisateur**: Adapter les confirmations et messages
+4. **Permissions**: Vérifier les RLS policies et accès admin
 
-#####***REMOVED***Code***REMOVED***type***REMOVED***pour***REMOVED***menu***REMOVED***utilisateur
+##### Code type pour menu utilisateur
 ```typescript
-//***REMOVED***Alternative***REMOVED***:***REMOVED***menu***REMOVED***dropdown***REMOVED***utilisateur
-import***REMOVED***{***REMOVED***DropdownMenu,***REMOVED***DropdownMenuItem***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/dropdown-menu';
+// Alternative : menu dropdown utilisateur
+import { DropdownMenu, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 
 <DropdownMenuItem
-***REMOVED******REMOVED***onClick={handleDeleteAll}
-***REMOVED******REMOVED***className="text-red-600"
+  onClick={handleDeleteAll}
+  className="text-red-600"
 >
-***REMOVED******REMOVED***<Trash2***REMOVED***className="mr-2***REMOVED***h-4***REMOVED***w-4"***REMOVED***/>
-***REMOVED******REMOVED***Delete***REMOVED***All
+  <Trash2 className="mr-2 h-4 w-4" />
+  Delete All
 </DropdownMenuItem>
 ```
 
-####***REMOVED***Tests***REMOVED***recommandés
-1.***REMOVED*****Environnement***REMOVED***dev**:***REMOVED***Tester***REMOVED***d'abord***REMOVED***sur***REMOVED***données***REMOVED***non***REMOVED***critiques
-2.***REMOVED*****Permissions**:***REMOVED***Vérifier***REMOVED***que***REMOVED***seuls***REMOVED***les***REMOVED***admins***REMOVED***ont***REMOVED***accès
-3.***REMOVED*****Logs**:***REMOVED***Contrôler***REMOVED***les***REMOVED***logs***REMOVED***de***REMOVED***l'Edge***REMOVED***Function
-4.***REMOVED*****Rollback**:***REMOVED***S'assurer***REMOVED***qu'aucune***REMOVED***donnée***REMOVED***critique***REMOVED***n'est***REMOVED***affectée
+#### Tests recommandés
+1. **Environnement dev**: Tester d'abord sur données non critiques
+2. **Permissions**: Vérifier que seuls les admins ont accès
+3. **Logs**: Contrôler les logs de l'Edge Function
+4. **Rollback**: S'assurer qu'aucune donnée critique n'est affectée
 
-####***REMOVED***Sécurité***REMOVED***implémentée
--***REMOVED***✅***REMOVED***Double***REMOVED***confirmation***REMOVED***obligatoire
--***REMOVED***✅***REMOVED***Utilisation***REMOVED***de***REMOVED***la***REMOVED***service***REMOVED***role***REMOVED***key
--***REMOVED***✅***REMOVED***Logging***REMOVED***complet***REMOVED***des***REMOVED***opérations
--***REMOVED***✅***REMOVED***Gestion***REMOVED***d'erreurs***REMOVED***robuste
--***REMOVED***✅***REMOVED***Interface***REMOVED***utilisateur***REMOVED***explicite
--***REMOVED***✅***REMOVED***Déconnexion***REMOVED***automatique***REMOVED***post-suppression
+#### Sécurité implémentée
+- ✅ Double confirmation obligatoire
+- ✅ Utilisation de la service role key
+- ✅ Logging complet des opérations
+- ✅ Gestion d'erreurs robuste
+- ✅ Interface utilisateur explicite
+- ✅ Déconnexion automatique post-suppression
 
 ---
 
-##***REMOVED***Date:***REMOVED***22***REMOVED***décembre***REMOVED***2024
+## Date: 22 décembre 2024
 
-###***REMOVED***Problème***REMOVED***identifié
-Le***REMOVED***formulaire***REMOVED***d'inscription***REMOVED***affichait***REMOVED***toujours***REMOVED***les***REMOVED***éléments***REMOVED***liés***REMOVED***au***REMOVED***patriarche/matriarche***REMOVED***(bandeau,***REMOVED***champs***REMOVED***de***REMOVED***relation,***REMOVED***etc.)***REMOVED***même***REMOVED***quand***REMOVED***il***REMOVED***y***REMOVED***avait***REMOVED***déjà***REMOVED***des***REMOVED***enregistrements***REMOVED***dans***REMOVED***la***REMOVED***table***REMOVED***`profiles`.
+### Problème identifié
+Le formulaire d'inscription affichait toujours les éléments liés au patriarche/matriarche (bandeau, champs de relation, etc.) même quand il y avait déjà des enregistrements dans la table `profiles`.
 
-###***REMOVED***Corrections***REMOVED***apportées
+### Corrections apportées
 
-####***REMOVED***1.***REMOVED***Amélioration***REMOVED***de***REMOVED***la***REMOVED***logique***REMOVED***de***REMOVED***vérification***REMOVED***des***REMOVED***profils***REMOVED***existants
--***REMOVED*****Fichier**:***REMOVED***`src/components/family/FamilyRegisterForm.tsx`
--***REMOVED*****Modification**:***REMOVED***Ajout***REMOVED***de***REMOVED***la***REMOVED***variable***REMOVED***d'état***REMOVED***`hasAnyProfiles`***REMOVED***pour***REMOVED***suivre***REMOVED***précisément***REMOVED***s'il***REMOVED***y***REMOVED***a***REMOVED***des***REMOVED***profils***REMOVED***existants
--***REMOVED*****Impact**:***REMOVED***Permet***REMOVED***de***REMOVED***distinguer***REMOVED***clairement***REMOVED***entre***REMOVED***"premier***REMOVED***utilisateur"***REMOVED***et***REMOVED***"utilisateurs***REMOVED***suivants"
+#### 1. Amélioration de la logique de vérification des profils existants
+- **Fichier**: `src/components/family/FamilyRegisterForm.tsx`
+- **Modification**: Ajout de la variable d'état `hasAnyProfiles` pour suivre précisément s'il y a des profils existants
+- **Impact**: Permet de distinguer clairement entre "premier utilisateur" et "utilisateurs suivants"
 
-####***REMOVED***2.***REMOVED***Conditionnement***REMOVED***des***REMOVED***éléments***REMOVED***d'interface
--***REMOVED*****Bandeau***REMOVED***"Racine***REMOVED***de***REMOVED***l'Arbre***REMOVED***Familial"**:***REMOVED***
-***REMOVED******REMOVED***-***REMOVED*****Avant**:***REMOVED***Affiché***REMOVED***si***REMOVED***`isFirstUser`***REMOVED***était***REMOVED***true
-***REMOVED******REMOVED***-***REMOVED*****Après**:***REMOVED***Affiché***REMOVED***seulement***REMOVED***si***REMOVED***`isFirstUser***REMOVED***&&***REMOVED***!hasAnyProfiles`
-***REMOVED******REMOVED***
--***REMOVED*****Champs***REMOVED***de***REMOVED***relation***REMOVED***familiale**:
-***REMOVED******REMOVED***-***REMOVED*****Avant**:***REMOVED***Cachés***REMOVED***si***REMOVED***`!isFirstUser`
-***REMOVED******REMOVED***-***REMOVED*****Après**:***REMOVED***Affichés***REMOVED***seulement***REMOVED***si***REMOVED***`!isFirstUser***REMOVED***&&***REMOVED***hasAnyProfiles`
+#### 2. Conditionnement des éléments d'interface
+- **Bandeau "Racine de l'Arbre Familial"**: 
+  - **Avant**: Affiché si `isFirstUser` était true
+  - **Après**: Affiché seulement si `isFirstUser && !hasAnyProfiles`
+  
+- **Champs de relation familiale**:
+  - **Avant**: Cachés si `!isFirstUser`
+  - **Après**: Affichés seulement si `!isFirstUser && hasAnyProfiles`
 
--***REMOVED*****Champs***REMOVED***parents***REMOVED***et***REMOVED***conjoint**:
-***REMOVED******REMOVED***-***REMOVED*****Avant**:***REMOVED***Cachés***REMOVED***si***REMOVED***`!isFirstUser`
-***REMOVED******REMOVED***-***REMOVED*****Après**:***REMOVED***Affichés***REMOVED***seulement***REMOVED***si***REMOVED***`!isFirstUser***REMOVED***&&***REMOVED***hasAnyProfiles`
+- **Champs parents et conjoint**:
+  - **Avant**: Cachés si `!isFirstUser`
+  - **Après**: Affichés seulement si `!isFirstUser && hasAnyProfiles`
 
-####***REMOVED***3.***REMOVED***Amélioration***REMOVED***du***REMOVED***texte***REMOVED***du***REMOVED***bouton***REMOVED***de***REMOVED***soumission
--***REMOVED*****Modification**:***REMOVED***Le***REMOVED***texte***REMOVED***change***REMOVED***dynamiquement***REMOVED***selon***REMOVED***le***REMOVED***statut***REMOVED***de***REMOVED***l'utilisateur
-***REMOVED******REMOVED***-***REMOVED***Premier***REMOVED***utilisateur:***REMOVED***"🌳***REMOVED***Créer***REMOVED***l'arbre***REMOVED***familial"
-***REMOVED******REMOVED***-***REMOVED***Utilisateurs***REMOVED***suivants:***REMOVED***"Rejoindre***REMOVED***la***REMOVED***famille"
+#### 3. Amélioration du texte du bouton de soumission
+- **Modification**: Le texte change dynamiquement selon le statut de l'utilisateur
+  - Premier utilisateur: "🌳 Créer l'arbre familial"
+  - Utilisateurs suivants: "Rejoindre la famille"
 
-###***REMOVED***Résultat
--***REMOVED***✅***REMOVED***Le***REMOVED***bandeau***REMOVED***patriarche/matriarche***REMOVED***n'apparaît***REMOVED***que***REMOVED***pour***REMOVED***le***REMOVED***tout***REMOVED***premier***REMOVED***utilisateur
--***REMOVED***✅***REMOVED***Les***REMOVED***champs***REMOVED***de***REMOVED***relation***REMOVED***familiale***REMOVED***n'apparaissent***REMOVED***que***REMOVED***pour***REMOVED***les***REMOVED***utilisateurs***REMOVED***suivants
--***REMOVED***✅***REMOVED***L'interface***REMOVED***s'adapte***REMOVED***correctement***REMOVED***selon***REMOVED***le***REMOVED***contexte***REMOVED***(premier***REMOVED***vs***REMOVED***suivants)
--***REMOVED***✅***REMOVED***Pas***REMOVED***d'éléments***REMOVED***confus***REMOVED***affichés***REMOVED***quand***REMOVED***ils***REMOVED***ne***REMOVED***devraient***REMOVED***pas***REMOVED***l'être
+### Résultat
+- ✅ Le bandeau patriarche/matriarche n'apparaît que pour le tout premier utilisateur
+- ✅ Les champs de relation familiale n'apparaissent que pour les utilisateurs suivants
+- ✅ L'interface s'adapte correctement selon le contexte (premier vs suivants)
+- ✅ Pas d'éléments confus affichés quand ils ne devraient pas l'être
 
-###***REMOVED***Tests***REMOVED***recommandés
-1.***REMOVED***Tester***REMOVED***l'inscription***REMOVED***du***REMOVED***premier***REMOVED***utilisateur***REMOVED***(doit***REMOVED***voir***REMOVED***le***REMOVED***bandeau***REMOVED***patriarche)
-2.***REMOVED***Tester***REMOVED***l'inscription***REMOVED***d'un***REMOVED***second***REMOVED***utilisateur***REMOVED***(ne***REMOVED***doit***REMOVED***pas***REMOVED***voir***REMOVED***le***REMOVED***bandeau,***REMOVED***doit***REMOVED***voir***REMOVED***les***REMOVED***champs***REMOVED***de***REMOVED***relation)
-3.***REMOVED***Vérifier***REMOVED***que***REMOVED***la***REMOVED***base***REMOVED***de***REMOVED***données***REMOVED***est***REMOVED***correctement***REMOVED***interrogée***REMOVED***pour***REMOVED***déterminer***REMOVED***l'état
+### Tests recommandés
+1. Tester l'inscription du premier utilisateur (doit voir le bandeau patriarche)
+2. Tester l'inscription d'un second utilisateur (ne doit pas voir le bandeau, doit voir les champs de relation)
+3. Vérifier que la base de données est correctement interrogée pour déterminer l'état

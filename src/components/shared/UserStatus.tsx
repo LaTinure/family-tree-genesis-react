@@ -1,107 +1,107 @@
-import***REMOVED***React***REMOVED***from***REMOVED***'react';
-import***REMOVED***{***REMOVED***Avatar,***REMOVED***AvatarFallback,***REMOVED***AvatarImage***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/avatar';
-import***REMOVED***{***REMOVED***Badge***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/badge';
-import***REMOVED***{***REMOVED***Crown,***REMOVED***Shield,***REMOVED***User,***REMOVED***Circle***REMOVED***}***REMOVED***from***REMOVED***'lucide-react';
-import***REMOVED***{***REMOVED***useAuth***REMOVED***}***REMOVED***from***REMOVED***'@/hooks/useAuth';
+import React from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Crown, Shield, User, Circle } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 
-export***REMOVED***const***REMOVED***UserStatus:***REMOVED***React.FC***REMOVED***=***REMOVED***()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***{***REMOVED***profile***REMOVED***}***REMOVED***=***REMOVED***useAuth();
+export const UserStatus: React.FC = () => {
+  const { profile } = useAuth();
 
-***REMOVED******REMOVED***if***REMOVED***(!profile)***REMOVED***return***REMOVED***null;
+  if (!profile) return null;
 
-***REMOVED******REMOVED***const***REMOVED***getRoleIcon***REMOVED***=***REMOVED***()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(profile.is_patriarch)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***<Crown***REMOVED***className="w-4***REMOVED***h-4***REMOVED***text-yellow-600"***REMOVED***/>;
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(profile.is_admin)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***<Shield***REMOVED***className="w-4***REMOVED***h-4***REMOVED***text-blue-600"***REMOVED***/>;
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***<User***REMOVED***className="w-4***REMOVED***h-4***REMOVED***text-gray-600"***REMOVED***/>;
-***REMOVED******REMOVED***};
+  const getRoleIcon = () => {
+    if (profile.is_patriarch) {
+      return <Crown className="w-4 h-4 text-yellow-600" />;
+    }
+    if (profile.is_admin) {
+      return <Shield className="w-4 h-4 text-blue-600" />;
+    }
+    return <User className="w-4 h-4 text-gray-600" />;
+  };
 
-***REMOVED******REMOVED***const***REMOVED***getRoleText***REMOVED***=***REMOVED***()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(profile.is_patriarch)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***profile.civilite***REMOVED***===***REMOVED***'M.'***REMOVED***?***REMOVED***'Patriarche'***REMOVED***:***REMOVED***'Matriarche';
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(profile.is_admin)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***'Administrateur';
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***'Membre';
-***REMOVED******REMOVED***};
+  const getRoleText = () => {
+    if (profile.is_patriarch) {
+      return profile.civilite === 'M.' ? 'Patriarche' : 'Matriarche';
+    }
+    if (profile.is_admin) {
+      return 'Administrateur';
+    }
+    return 'Membre';
+  };
 
-***REMOVED******REMOVED***const***REMOVED***getRoleColor***REMOVED***=***REMOVED***()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(profile.is_patriarch)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***'bg-yellow-100***REMOVED***text-yellow-800***REMOVED***border-yellow-200';
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(profile.is_admin)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***'bg-blue-100***REMOVED***text-blue-800***REMOVED***border-blue-200';
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***'bg-gray-100***REMOVED***text-gray-800***REMOVED***border-gray-200';
-***REMOVED******REMOVED***};
+  const getRoleColor = () => {
+    if (profile.is_patriarch) {
+      return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+    }
+    if (profile.is_admin) {
+      return 'bg-blue-100 text-blue-800 border-blue-200';
+    }
+    return 'bg-gray-100 text-gray-800 border-gray-200';
+  };
 
-***REMOVED******REMOVED***const***REMOVED***getInitials***REMOVED***=***REMOVED***(firstName:***REMOVED***string,***REMOVED***lastName:***REMOVED***string)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***`${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
-***REMOVED******REMOVED***};
+  const getInitials = (firstName: string, lastName: string) => {
+    return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
+  };
 
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="flex***REMOVED***items-center***REMOVED***space-x-3***REMOVED***p-3***REMOVED***bg-white***REMOVED***rounded-lg***REMOVED***shadow-sm***REMOVED***border***REMOVED***border-gray-200">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{/****REMOVED***Avatar***REMOVED***avec***REMOVED***indicateur***REMOVED***de***REMOVED***statut***REMOVED****/}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="relative">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Avatar***REMOVED***className="h-12***REMOVED***w-12">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<AvatarImage
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***src={profile.photo_url***REMOVED***||***REMOVED***profile.avatar_url***REMOVED***||***REMOVED***"/images/profile01.png"}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***alt={profile.first_name}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<AvatarFallback***REMOVED***className="bg-whatsapp-100***REMOVED***text-whatsapp-700">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{getInitials(profile.first_name,***REMOVED***profile.last_name)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</AvatarFallback>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Avatar>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{/****REMOVED***Indicateur***REMOVED***de***REMOVED***statut***REMOVED***en***REMOVED***ligne***REMOVED****/}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="absolute***REMOVED***-bottom-1***REMOVED***-right-1">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Circle***REMOVED***className="w-4***REMOVED***h-4***REMOVED***text-green-500***REMOVED***fill-current"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
+  return (
+    <div className="flex items-center space-x-3 p-3 bg-white rounded-lg shadow-sm border border-gray-200">
+      {/* Avatar avec indicateur de statut */}
+      <div className="relative">
+        <Avatar className="h-12 w-12">
+          <AvatarImage
+            src={profile.photo_url || profile.avatar_url || "/images/profile01.png"}
+            alt={profile.first_name}
+          />
+          <AvatarFallback className="bg-whatsapp-100 text-whatsapp-700">
+            {getInitials(profile.first_name, profile.last_name)}
+          </AvatarFallback>
+        </Avatar>
+        {/* Indicateur de statut en ligne */}
+        <div className="absolute -bottom-1 -right-1">
+          <Circle className="w-4 h-4 text-green-500 fill-current" />
+        </div>
+      </div>
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{/****REMOVED***Informations***REMOVED***utilisateur***REMOVED****/}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="flex-1***REMOVED***min-w-0">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="flex***REMOVED***items-center***REMOVED***space-x-2">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<h4***REMOVED***className="text-sm***REMOVED***font-semibold***REMOVED***text-gray-900***REMOVED***truncate">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{profile.first_name}***REMOVED***{profile.last_name}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</h4>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{getRoleIcon()}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<p***REMOVED***className="text-xs***REMOVED***text-gray-500***REMOVED***truncate">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{profile.email}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</p>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="flex***REMOVED***items-center***REMOVED***space-x-2***REMOVED***mt-1">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Badge***REMOVED***variant="outline"***REMOVED***className={`text-xs***REMOVED***${getRoleColor()}`}>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{getRoleText()}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Badge>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{profile.relationship_type***REMOVED***&&***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Badge***REMOVED***variant="secondary"***REMOVED***className="text-xs">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{profile.relationship_type}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Badge>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
+      {/* Informations utilisateur */}
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center space-x-2">
+          <h4 className="text-sm font-semibold text-gray-900 truncate">
+            {profile.first_name} {profile.last_name}
+          </h4>
+          {getRoleIcon()}
+        </div>
+        <p className="text-xs text-gray-500 truncate">
+          {profile.email}
+        </p>
+        <div className="flex items-center space-x-2 mt-1">
+          <Badge variant="outline" className={`text-xs ${getRoleColor()}`}>
+            {getRoleText()}
+          </Badge>
+          {profile.relationship_type && (
+            <Badge variant="secondary" className="text-xs">
+              {profile.relationship_type}
+            </Badge>
+          )}
+        </div>
+      </div>
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{/****REMOVED***Informations***REMOVED***supplémentaires***REMOVED****/}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="text-right***REMOVED***text-xs***REMOVED***text-gray-500">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="flex***REMOVED***flex-col***REMOVED***space-y-1">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{profile.current_location***REMOVED***&&***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="flex***REMOVED***items-center***REMOVED***space-x-1">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<span>📍</span>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<span***REMOVED***className="truncate***REMOVED***max-w-20">{profile.current_location}</span>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{profile.profession***REMOVED***&&***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="flex***REMOVED***items-center***REMOVED***space-x-1">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<span>💼</span>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<span***REMOVED***className="truncate***REMOVED***max-w-20">{profile.profession}</span>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED***);
+      {/* Informations supplémentaires */}
+      <div className="text-right text-xs text-gray-500">
+        <div className="flex flex-col space-y-1">
+          {profile.current_location && (
+            <div className="flex items-center space-x-1">
+              <span>📍</span>
+              <span className="truncate max-w-20">{profile.current_location}</span>
+            </div>
+          )}
+          {profile.profession && (
+            <div className="flex items-center space-x-1">
+              <span>💼</span>
+              <span className="truncate max-w-20">{profile.profession}</span>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 };

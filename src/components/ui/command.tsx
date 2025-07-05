@@ -1,153 +1,153 @@
-import***REMOVED*******REMOVED***as***REMOVED***React***REMOVED***from***REMOVED***"react"
-import***REMOVED***{***REMOVED***type***REMOVED***DialogProps***REMOVED***}***REMOVED***from***REMOVED***"@radix-ui/react-dialog"
-import***REMOVED***{***REMOVED***Command***REMOVED***as***REMOVED***CommandPrimitive***REMOVED***}***REMOVED***from***REMOVED***"cmdk"
-import***REMOVED***{***REMOVED***Search***REMOVED***}***REMOVED***from***REMOVED***"lucide-react"
+import * as React from "react"
+import { type DialogProps } from "@radix-ui/react-dialog"
+import { Command as CommandPrimitive } from "cmdk"
+import { Search } from "lucide-react"
 
-import***REMOVED***{***REMOVED***cn***REMOVED***}***REMOVED***from***REMOVED***"@/lib/utils"
-import***REMOVED***{***REMOVED***Dialog,***REMOVED***DialogContent***REMOVED***}***REMOVED***from***REMOVED***"@/components/ui/dialog"
+import { cn } from "@/lib/utils"
+import { Dialog, DialogContent } from "@/components/ui/dialog"
 
-const***REMOVED***Command***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***CommandPrimitive>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***CommandPrimitive>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<CommandPrimitive
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"flex***REMOVED***h-full***REMOVED***w-full***REMOVED***flex-col***REMOVED***overflow-hidden***REMOVED***rounded-md***REMOVED***bg-popover***REMOVED***text-popover-foreground",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const Command = React.forwardRef<
+  React.ElementRef<typeof CommandPrimitive>,
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive>
+>(({ className, ...props }, ref) => (
+  <CommandPrimitive
+    ref={ref}
+    className={cn(
+      "flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground",
+      className
+    )}
+    {...props}
+  />
 ))
-Command.displayName***REMOVED***=***REMOVED***CommandPrimitive.displayName
+Command.displayName = CommandPrimitive.displayName
 
-interface***REMOVED***CommandDialogProps***REMOVED***extends***REMOVED***DialogProps***REMOVED***{}
+interface CommandDialogProps extends DialogProps {}
 
-const***REMOVED***CommandDialog***REMOVED***=***REMOVED***({***REMOVED***children,***REMOVED***...props***REMOVED***}:***REMOVED***CommandDialogProps)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<Dialog***REMOVED***{...props}>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<DialogContent***REMOVED***className="overflow-hidden***REMOVED***p-0***REMOVED***shadow-lg">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Command***REMOVED***className="[&_[cmdk-group-heading]]:px-2***REMOVED***[&_[cmdk-group-heading]]:font-medium***REMOVED***[&_[cmdk-group-heading]]:text-muted-foreground***REMOVED***[&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0***REMOVED***[&_[cmdk-group]]:px-2***REMOVED***[&_[cmdk-input-wrapper]_svg]:h-5***REMOVED***[&_[cmdk-input-wrapper]_svg]:w-5***REMOVED***[&_[cmdk-input]]:h-12***REMOVED***[&_[cmdk-item]]:px-2***REMOVED***[&_[cmdk-item]]:py-3***REMOVED***[&_[cmdk-item]_svg]:h-5***REMOVED***[&_[cmdk-item]_svg]:w-5">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{children}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Command>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</DialogContent>
-***REMOVED******REMOVED******REMOVED******REMOVED***</Dialog>
-***REMOVED******REMOVED***)
+const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
+  return (
+    <Dialog {...props}>
+      <DialogContent className="overflow-hidden p-0 shadow-lg">
+        <Command className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
+          {children}
+        </Command>
+      </DialogContent>
+    </Dialog>
+  )
 }
 
-const***REMOVED***CommandInput***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***CommandPrimitive.Input>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***CommandPrimitive.Input>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<div***REMOVED***className="flex***REMOVED***items-center***REMOVED***border-b***REMOVED***px-3"***REMOVED***cmdk-input-wrapper="">
-***REMOVED******REMOVED******REMOVED******REMOVED***<Search***REMOVED***className="mr-2***REMOVED***h-4***REMOVED***w-4***REMOVED***shrink-0***REMOVED***opacity-50"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED***<CommandPrimitive.Input
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"flex***REMOVED***h-11***REMOVED***w-full***REMOVED***rounded-md***REMOVED***bg-transparent***REMOVED***py-3***REMOVED***text-sm***REMOVED***outline-none***REMOVED***placeholder:text-muted-foreground***REMOVED***disabled:cursor-not-allowed***REMOVED***disabled:opacity-50",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED***</div>
+const CommandInput = React.forwardRef<
+  React.ElementRef<typeof CommandPrimitive.Input>,
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
+>(({ className, ...props }, ref) => (
+  <div className="flex items-center border-b px-3" cmdk-input-wrapper="">
+    <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+    <CommandPrimitive.Input
+      ref={ref}
+      className={cn(
+        "flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+        className
+      )}
+      {...props}
+    />
+  </div>
 ))
 
-CommandInput.displayName***REMOVED***=***REMOVED***CommandPrimitive.Input.displayName
+CommandInput.displayName = CommandPrimitive.Input.displayName
 
-const***REMOVED***CommandList***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***CommandPrimitive.List>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***CommandPrimitive.List>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<CommandPrimitive.List
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn("max-h-[300px]***REMOVED***overflow-y-auto***REMOVED***overflow-x-hidden",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const CommandList = React.forwardRef<
+  React.ElementRef<typeof CommandPrimitive.List>,
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive.List>
+>(({ className, ...props }, ref) => (
+  <CommandPrimitive.List
+    ref={ref}
+    className={cn("max-h-[300px] overflow-y-auto overflow-x-hidden", className)}
+    {...props}
+  />
 ))
 
-CommandList.displayName***REMOVED***=***REMOVED***CommandPrimitive.List.displayName
+CommandList.displayName = CommandPrimitive.List.displayName
 
-const***REMOVED***CommandEmpty***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***CommandPrimitive.Empty>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***CommandPrimitive.Empty>
->((props,***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<CommandPrimitive.Empty
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className="py-6***REMOVED***text-center***REMOVED***text-sm"
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const CommandEmpty = React.forwardRef<
+  React.ElementRef<typeof CommandPrimitive.Empty>,
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Empty>
+>((props, ref) => (
+  <CommandPrimitive.Empty
+    ref={ref}
+    className="py-6 text-center text-sm"
+    {...props}
+  />
 ))
 
-CommandEmpty.displayName***REMOVED***=***REMOVED***CommandPrimitive.Empty.displayName
+CommandEmpty.displayName = CommandPrimitive.Empty.displayName
 
-const***REMOVED***CommandGroup***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***CommandPrimitive.Group>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***CommandPrimitive.Group>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<CommandPrimitive.Group
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"overflow-hidden***REMOVED***p-1***REMOVED***text-foreground***REMOVED***[&_[cmdk-group-heading]]:px-2***REMOVED***[&_[cmdk-group-heading]]:py-1.5***REMOVED***[&_[cmdk-group-heading]]:text-xs***REMOVED***[&_[cmdk-group-heading]]:font-medium***REMOVED***[&_[cmdk-group-heading]]:text-muted-foreground",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const CommandGroup = React.forwardRef<
+  React.ElementRef<typeof CommandPrimitive.Group>,
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Group>
+>(({ className, ...props }, ref) => (
+  <CommandPrimitive.Group
+    ref={ref}
+    className={cn(
+      "overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground",
+      className
+    )}
+    {...props}
+  />
 ))
 
-CommandGroup.displayName***REMOVED***=***REMOVED***CommandPrimitive.Group.displayName
+CommandGroup.displayName = CommandPrimitive.Group.displayName
 
-const***REMOVED***CommandSeparator***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***CommandPrimitive.Separator>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***CommandPrimitive.Separator>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<CommandPrimitive.Separator
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn("-mx-1***REMOVED***h-px***REMOVED***bg-border",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const CommandSeparator = React.forwardRef<
+  React.ElementRef<typeof CommandPrimitive.Separator>,
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Separator>
+>(({ className, ...props }, ref) => (
+  <CommandPrimitive.Separator
+    ref={ref}
+    className={cn("-mx-1 h-px bg-border", className)}
+    {...props}
+  />
 ))
-CommandSeparator.displayName***REMOVED***=***REMOVED***CommandPrimitive.Separator.displayName
+CommandSeparator.displayName = CommandPrimitive.Separator.displayName
 
-const***REMOVED***CommandItem***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***CommandPrimitive.Item>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***CommandPrimitive.Item>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<CommandPrimitive.Item
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"relative***REMOVED***flex***REMOVED***cursor-default***REMOVED***select-none***REMOVED***items-center***REMOVED***rounded-sm***REMOVED***px-2***REMOVED***py-1.5***REMOVED***text-sm***REMOVED***outline-none***REMOVED***data-[disabled=true]:pointer-events-none***REMOVED***data-[selected='true']:bg-accent***REMOVED***data-[selected=true]:text-accent-foreground***REMOVED***data-[disabled=true]:opacity-50",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const CommandItem = React.forwardRef<
+  React.ElementRef<typeof CommandPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Item>
+>(({ className, ...props }, ref) => (
+  <CommandPrimitive.Item
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled=true]:pointer-events-none data-[selected='true']:bg-accent data-[selected=true]:text-accent-foreground data-[disabled=true]:opacity-50",
+      className
+    )}
+    {...props}
+  />
 ))
 
-CommandItem.displayName***REMOVED***=***REMOVED***CommandPrimitive.Item.displayName
+CommandItem.displayName = CommandPrimitive.Item.displayName
 
-const***REMOVED***CommandShortcut***REMOVED***=***REMOVED***({
-***REMOVED******REMOVED***className,
-***REMOVED******REMOVED***...props
-}:***REMOVED***React.HTMLAttributes<HTMLSpanElement>)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<span
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"ml-auto***REMOVED***text-xs***REMOVED***tracking-widest***REMOVED***text-muted-foreground",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED***)
+const CommandShortcut = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLSpanElement>) => {
+  return (
+    <span
+      className={cn(
+        "ml-auto text-xs tracking-widest text-muted-foreground",
+        className
+      )}
+      {...props}
+    />
+  )
 }
-CommandShortcut.displayName***REMOVED***=***REMOVED***"CommandShortcut"
+CommandShortcut.displayName = "CommandShortcut"
 
-export***REMOVED***{
-***REMOVED******REMOVED***Command,
-***REMOVED******REMOVED***CommandDialog,
-***REMOVED******REMOVED***CommandInput,
-***REMOVED******REMOVED***CommandList,
-***REMOVED******REMOVED***CommandEmpty,
-***REMOVED******REMOVED***CommandGroup,
-***REMOVED******REMOVED***CommandItem,
-***REMOVED******REMOVED***CommandShortcut,
-***REMOVED******REMOVED***CommandSeparator,
+export {
+  Command,
+  CommandDialog,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+  CommandShortcut,
+  CommandSeparator,
 }

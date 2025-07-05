@@ -1,154 +1,154 @@
 
-import***REMOVED***{***REMOVED***useState,***REMOVED***useEffect***REMOVED***}***REMOVED***from***REMOVED***'react';
-import***REMOVED***{***REMOVED***FamilyMember,***REMOVED***FamilyTreeNode***REMOVED***}***REMOVED***from***REMOVED***'@/types/family';
-import***REMOVED***{***REMOVED***supabase***REMOVED***}***REMOVED***from***REMOVED***'@/integrations/supabase/client';
+import { useState, useEffect } from 'react';
+import { FamilyMember, FamilyTreeNode } from '@/types/family';
+import { supabase } from '@/integrations/supabase/client';
 
-export***REMOVED***const***REMOVED***useFamilyTree***REMOVED***=***REMOVED***()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***[familyTree,***REMOVED***setFamilyTree]***REMOVED***=***REMOVED***useState<FamilyTreeNode[]>([]);
-***REMOVED******REMOVED***const***REMOVED***[loading,***REMOVED***setLoading]***REMOVED***=***REMOVED***useState(true);
-***REMOVED******REMOVED***const***REMOVED***[error,***REMOVED***setError]***REMOVED***=***REMOVED***useState<string***REMOVED***|***REMOVED***null>(null);
+export const useFamilyTree = () => {
+  const [familyTree, setFamilyTree] = useState<FamilyTreeNode[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-***REMOVED******REMOVED***useEffect(()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***fetchFamilyTree();
-***REMOVED******REMOVED***},***REMOVED***[]);
+  useEffect(() => {
+    fetchFamilyTree();
+  }, []);
 
-***REMOVED******REMOVED***const***REMOVED***fetchFamilyTree***REMOVED***=***REMOVED***async***REMOVED***()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***try***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setLoading(true);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***data,***REMOVED***error***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.from('profiles')
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.select('*')
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.order('created_at',***REMOVED***{***REMOVED***ascending:***REMOVED***true***REMOVED***});
+  const fetchFamilyTree = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .order('created_at', { ascending: true });
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(error)***REMOVED***throw***REMOVED***error;
+      if (error) throw error;
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(data)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***members:***REMOVED***FamilyMember[]***REMOVED***=***REMOVED***data.map(profile***REMOVED***=>***REMOVED***({
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***profile.id,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_id:***REMOVED***profile.user_id,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***first_name:***REMOVED***profile.first_name***REMOVED***||***REMOVED***'',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***last_name:***REMOVED***profile.last_name***REMOVED***||***REMOVED***'',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***email:***REMOVED***profile.email***REMOVED***||***REMOVED***'',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***civilite:***REMOVED***profile.civilite***REMOVED***as***REMOVED***'M.'***REMOVED***|***REMOVED***'Mme'***REMOVED***||***REMOVED***'M.',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***phone:***REMOVED***profile.phone,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***profession:***REMOVED***profile.profession,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***current_location:***REMOVED***profile.current_location,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***birth_place:***REMOVED***profile.birth_place,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***birth_date:***REMOVED***profile.birth_date,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***avatar_url:***REMOVED***profile.avatar_url,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***photo_url:***REMOVED***profile.photo_url,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***relationship_type:***REMOVED***profile.relationship_type***REMOVED***as***REMOVED***any***REMOVED***||***REMOVED***'conjoint',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***father_id:***REMOVED***profile.father_id,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***mother_id:***REMOVED***profile.mother_id,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***father_name:***REMOVED***profile.father_name,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***mother_name:***REMOVED***profile.mother_name,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***spouse_name:***REMOVED***'',***REMOVED***//***REMOVED***Default***REMOVED***value
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_admin:***REMOVED***profile.is_admin***REMOVED***||***REMOVED***false,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_patriarch:***REMOVED***profile.is_patriarch***REMOVED***||***REMOVED***false,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_parent:***REMOVED***profile.is_parent***REMOVED***||***REMOVED***false,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***situation:***REMOVED***profile.situation,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***role:***REMOVED***(profile.role***REMOVED***as***REMOVED***any)***REMOVED***||***REMOVED***'Membre',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at:***REMOVED***profile.created_at,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***updated_at:***REMOVED***profile.updated_at,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}));
+      if (data) {
+        const members: FamilyMember[] = data.map(profile => ({
+          id: profile.id,
+          user_id: profile.user_id,
+          first_name: profile.first_name || '',
+          last_name: profile.last_name || '',
+          email: profile.email || '',
+          civilite: profile.civilite as 'M.' | 'Mme' || 'M.',
+          phone: profile.phone,
+          profession: profile.profession,
+          current_location: profile.current_location,
+          birth_place: profile.birth_place,
+          birth_date: profile.birth_date,
+          avatar_url: profile.avatar_url,
+          photo_url: profile.photo_url,
+          relationship_type: profile.relationship_type as any || 'conjoint',
+          father_id: profile.father_id,
+          mother_id: profile.mother_id,
+          father_name: profile.father_name,
+          mother_name: profile.mother_name,
+          spouse_name: '', // Default value
+          is_admin: profile.is_admin || false,
+          is_patriarch: profile.is_patriarch || false,
+          is_parent: profile.is_parent || false,
+          situation: profile.situation,
+          role: (profile.role as any) || 'Membre',
+          created_at: profile.created_at,
+          updated_at: profile.updated_at,
+        }));
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***treeNodes***REMOVED***=***REMOVED***buildFamilyTree(members);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setFamilyTree(treeNodes);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***catch***REMOVED***(err)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***console.error('Error***REMOVED***fetching***REMOVED***family***REMOVED***tree:',***REMOVED***err);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setError(err***REMOVED***instanceof***REMOVED***Error***REMOVED***?***REMOVED***err.message***REMOVED***:***REMOVED***'Unknown***REMOVED***error');
-***REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***finally***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setLoading(false);
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED***};
+        const treeNodes = buildFamilyTree(members);
+        setFamilyTree(treeNodes);
+      }
+    } catch (err) {
+      console.error('Error fetching family tree:', err);
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-***REMOVED******REMOVED***const***REMOVED***buildFamilyTree***REMOVED***=***REMOVED***(members:***REMOVED***FamilyMember[]):***REMOVED***FamilyTreeNode[]***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***nodeMap***REMOVED***=***REMOVED***new***REMOVED***Map<string,***REMOVED***FamilyTreeNode>();
-***REMOVED******REMOVED******REMOVED******REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Create***REMOVED***nodes***REMOVED***for***REMOVED***all***REMOVED***members
-***REMOVED******REMOVED******REMOVED******REMOVED***members.forEach(member***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***nodeMap.set(member.id,***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***member.id,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***member,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***children:***REMOVED***[],
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***level:***REMOVED***0,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***x:***REMOVED***0,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***y:***REMOVED***0,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***});
-***REMOVED******REMOVED******REMOVED******REMOVED***});
+  const buildFamilyTree = (members: FamilyMember[]): FamilyTreeNode[] => {
+    const nodeMap = new Map<string, FamilyTreeNode>();
+    
+    // Create nodes for all members
+    members.forEach(member => {
+      nodeMap.set(member.id, {
+        id: member.id,
+        member,
+        children: [],
+        level: 0,
+        x: 0,
+        y: 0,
+      });
+    });
 
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***rootNodes:***REMOVED***FamilyTreeNode[]***REMOVED***=***REMOVED***[];
-***REMOVED******REMOVED******REMOVED******REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Find***REMOVED***patriarchs/matriarchs***REMOVED***as***REMOVED***root***REMOVED***nodes
-***REMOVED******REMOVED******REMOVED******REMOVED***members.forEach(member***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(member.is_patriarch***REMOVED***||***REMOVED***member.relationship_type***REMOVED***===***REMOVED***'patriarche'***REMOVED***||***REMOVED***member.relationship_type***REMOVED***===***REMOVED***'matriarche')***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***node***REMOVED***=***REMOVED***nodeMap.get(member.id);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(node)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***rootNodes.push(node);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***});
+    const rootNodes: FamilyTreeNode[] = [];
+    
+    // Find patriarchs/matriarchs as root nodes
+    members.forEach(member => {
+      if (member.is_patriarch || member.relationship_type === 'patriarche' || member.relationship_type === 'matriarche') {
+        const node = nodeMap.get(member.id);
+        if (node) {
+          rootNodes.push(node);
+        }
+      }
+    });
 
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***If***REMOVED***no***REMOVED***patriarchs***REMOVED***found,***REMOVED***use***REMOVED***members***REMOVED***without***REMOVED***parents***REMOVED***as***REMOVED***roots
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(rootNodes.length***REMOVED***===***REMOVED***0)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***members.forEach(member***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(!member.father_id***REMOVED***&&***REMOVED***!member.mother_id)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***node***REMOVED***=***REMOVED***nodeMap.get(member.id);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(node)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***rootNodes.push(node);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***});
-***REMOVED******REMOVED******REMOVED******REMOVED***}
+    // If no patriarchs found, use members without parents as roots
+    if (rootNodes.length === 0) {
+      members.forEach(member => {
+        if (!member.father_id && !member.mother_id) {
+          const node = nodeMap.get(member.id);
+          if (node) {
+            rootNodes.push(node);
+          }
+        }
+      });
+    }
 
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Build***REMOVED***parent-child***REMOVED***relationships
-***REMOVED******REMOVED******REMOVED******REMOVED***members.forEach(member***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***node***REMOVED***=***REMOVED***nodeMap.get(member.id);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(node***REMOVED***&&***REMOVED***(member.father_id***REMOVED***||***REMOVED***member.mother_id))***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***parent***REMOVED***=***REMOVED***nodeMap.get(member.father_id***REMOVED***||***REMOVED***member.mother_id***REMOVED***||***REMOVED***'');
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(parent)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***parent.children***REMOVED***=***REMOVED***parent.children***REMOVED***||***REMOVED***[];
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***parent.children.push(node);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***node.level***REMOVED***=***REMOVED***parent.level***REMOVED***+***REMOVED***1;
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***});
+    // Build parent-child relationships
+    members.forEach(member => {
+      const node = nodeMap.get(member.id);
+      if (node && (member.father_id || member.mother_id)) {
+        const parent = nodeMap.get(member.father_id || member.mother_id || '');
+        if (parent) {
+          parent.children = parent.children || [];
+          parent.children.push(node);
+          node.level = parent.level + 1;
+        }
+      }
+    });
 
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***rootNodes;
-***REMOVED******REMOVED***};
+    return rootNodes;
+  };
 
-***REMOVED******REMOVED***const***REMOVED***getMockData***REMOVED***=***REMOVED***():***REMOVED***FamilyMember[]***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***[
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***'1',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_id:***REMOVED***'1',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***first_name:***REMOVED***'Jean',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***last_name:***REMOVED***'Dupont',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***email:***REMOVED***'jean.dupont@example.com',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***civilite:***REMOVED***'M.',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***relationship_type:***REMOVED***'patriarche',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***birth_date:***REMOVED***'1950-01-01',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***birth_place:***REMOVED***'Paris',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***current_location:***REMOVED***'Lyon',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***phone:***REMOVED***'+33123456789',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***avatar_url:***REMOVED***'/images/profile01.png',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***spouse_name:***REMOVED***'',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_admin:***REMOVED***true,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_patriarch:***REMOVED***true,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_parent:***REMOVED***true,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***role:***REMOVED***'Administrateur',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at:***REMOVED***new***REMOVED***Date().toISOString(),
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***updated_at:***REMOVED***new***REMOVED***Date().toISOString(),
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***];
-***REMOVED******REMOVED***};
+  const getMockData = (): FamilyMember[] => {
+    return [
+      {
+        id: '1',
+        user_id: '1',
+        first_name: 'Jean',
+        last_name: 'Dupont',
+        email: 'jean.dupont@example.com',
+        civilite: 'M.',
+        relationship_type: 'patriarche',
+        birth_date: '1950-01-01',
+        birth_place: 'Paris',
+        current_location: 'Lyon',
+        phone: '+33123456789',
+        avatar_url: '/images/profile01.png',
+        spouse_name: '',
+        is_admin: true,
+        is_patriarch: true,
+        is_parent: true,
+        role: 'Administrateur',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      },
+    ];
+  };
 
-***REMOVED******REMOVED***return***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***familyTree,
-***REMOVED******REMOVED******REMOVED******REMOVED***loading,
-***REMOVED******REMOVED******REMOVED******REMOVED***error,
-***REMOVED******REMOVED******REMOVED******REMOVED***refetch:***REMOVED***fetchFamilyTree,
-***REMOVED******REMOVED******REMOVED******REMOVED***getMockData,
-***REMOVED******REMOVED***};
+  return {
+    familyTree,
+    loading,
+    error,
+    refetch: fetchFamilyTree,
+    getMockData,
+  };
 };

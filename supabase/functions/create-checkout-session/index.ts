@@ -1,127 +1,220 @@
-import***REMOVED***{***REMOVED***serve***REMOVED***}***REMOVED***from***REMOVED***"https://deno.land/std@0.168.0/http/server.ts";
-import***REMOVED***{***REMOVED***createClient***REMOVED***}***REMOVED***from***REMOVED***'https://esm.sh/@supabase/supabase-js@2';
-import***REMOVED***Stripe***REMOVED***from***REMOVED***'https://esm.sh/stripe@12.0.0';
+Bon on va remplacer les clés par leur variables respectives :
+Celui dans mon projet local, IDE Cursor, pas dans supabase Studio :
+//
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import Stripe from 'https://esm.sh/stripe@12.0.0';
 
-const***REMOVED***stripe***REMOVED***=***REMOVED***new***REMOVED***Stripe(Deno.env.get('STRIPE_SECRET_KEY')!,***REMOVED***{
-***REMOVED******REMOVED***apiVersion:***REMOVED***'2023-10-16'
+const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY'), {
+  apiVersion: '2023-10-16'
 });
 
-
-const***REMOVED***corsHeaders***REMOVED***=***REMOVED***{
-***REMOVED******REMOVED***'Access-Control-Allow-Origin':***REMOVED***'*',
-***REMOVED******REMOVED***'Access-Control-Allow-Headers':***REMOVED***'authorization,***REMOVED***x-client-info,***REMOVED***apikey,***REMOVED***content-type'
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type'
 };
 
-serve(async***REMOVED***(req)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***if***REMOVED***(req.method***REMOVED***===***REMOVED***'OPTIONS')***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***new***REMOVED***Response('ok',***REMOVED***{***REMOVED***headers:***REMOVED***corsHeaders***REMOVED***});
-***REMOVED******REMOVED***}
+serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
+  }
 
-***REMOVED******REMOVED***try***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***authHeader***REMOVED***=***REMOVED***req.headers.get('Authorization');
-***REMOVED******REMOVED******REMOVED******REMOVED***console.log("🔑***REMOVED***Authorization***REMOVED***header:",***REMOVED***authHeader);
+  try {
+    const authHeader = req.headers.get('Authorization');
+    console.log("🔑 Authorization header:", authHeader);
 
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***supabase***REMOVED***=***REMOVED***createClient(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Deno.env.get('SUPABASE_URL')!,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Deno.env.get('SUPABASE_ANON_KEY')!,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***global:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***headers:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Authorization:***REMOVED***authHeader
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***);
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL') ?? 'https://aaxfvyorhasbwlaovrdf.supabase.co',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFheGZ2eW9yaGFzYndsYW92cmRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA0MTk3MDUsImV4cCI6MjA2NTk5NTcwNX0.nrHzEadlemmCkxEaN8KAdKVwzuSIUQRKw50ze-FP60E',
+      {
+        global: {
+          headers: {
+            Authorization: authHeader
+          }
+        }
+      }
+    );
 
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    console.log("👤 User fetched:", user);
 
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***data:***REMOVED***{***REMOVED***user***REMOVED***},***REMOVED***error:***REMOVED***authError***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase.auth.getUser();
-***REMOVED******REMOVED******REMOVED******REMOVED***console.log("👤***REMOVED***User***REMOVED***fetched:",***REMOVED***user);
+    if (authError || !user) {
+      console.log("⛔ Auth error:", authError);
+      return new Response(JSON.stringify({
+        error: 'Non autorisé'
+      }), {
+        status: 401,
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json'
+        }
+      });
+    }
 
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(authError***REMOVED***||***REMOVED***!user)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***console.log("⛔***REMOVED***Auth***REMOVED***error:",***REMOVED***authError);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***new***REMOVED***Response(JSON.stringify({
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***error:***REMOVED***'Non***REMOVED***autorisé'
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}),***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***status:***REMOVED***401,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***headers:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***...corsHeaders,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***'Content-Type':***REMOVED***'application/json'
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***});
-***REMOVED******REMOVED******REMOVED******REMOVED***}
+    const body = await req.json();
+    console.log("📦 Requête JSON:", body);
 
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***body***REMOVED***=***REMOVED***await***REMOVED***req.json();
-***REMOVED******REMOVED******REMOVED******REMOVED***console.log("📦***REMOVED***Requête***REMOVED***JSON:",***REMOVED***body);
+    const { successUrl, cancelUrl, customAmount = 500, user_id } = body;
 
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***successUrl,***REMOVED***cancelUrl,***REMOVED***customAmount***REMOVED***=***REMOVED***500,***REMOVED***user_id***REMOVED***}***REMOVED***=***REMOVED***body;
+    // Vérifier que l'utilisateur n'a pas déjà une dynastie
+    const { data: existingProfile } = await supabase
+      .from('profiles')
+      .select('dynasty_id')
+      .eq('user_id', user.id)
+      .single();
 
-***REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Vérifier***REMOVED***que***REMOVED***l'utilisateur***REMOVED***n'a***REMOVED***pas***REMOVED***déjà***REMOVED***une***REMOVED***dynastie
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***data:***REMOVED***existingProfile***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.from('profiles')
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.select('dynasty_id')
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.eq('user_id',***REMOVED***user.id)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.single();
+    if (existingProfile?.dynasty_id) {
+      console.log("⚠️ User a déjà une dynastie:", existingProfile.dynasty_id);
+      return new Response(JSON.stringify({
+        error: 'Vous possédez déjà une dynastie'
+      }), {
+        status: 400,
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json'
+        }
+      });
+    }
 
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(existingProfile?.dynasty_id)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***console.log("⚠️***REMOVED***User***REMOVED***a***REMOVED***déjà***REMOVED***une***REMOVED***dynastie:",***REMOVED***existingProfile.dynasty_id);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***new***REMOVED***Response(JSON.stringify({
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***error:***REMOVED***'Vous***REMOVED***possédez***REMOVED***déjà***REMOVED***une***REMOVED***dynastie'
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}),***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***status:***REMOVED***400,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***headers:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***...corsHeaders,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***'Content-Type':***REMOVED***'application/json'
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***});
-***REMOVED******REMOVED******REMOVED******REMOVED***}
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price_data: {
+            currency: 'eur',
+            product_data: {
+              name: 'Création de Dynastie',
+              description: 'Accès premium pour créer et gérer votre arbre généalogique familial'
+            },
+            unit_amount: customAmount
+          },
+          quantity: 1
+        }
+      ],
+      mode: 'payment',
+      success_url: successUrl || `${req.headers.get('origin')}/dynasty/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: cancelUrl || `${req.headers.get('origin')}/dynasty`,
+      metadata: {
+        user_id: user_id || user.id,
+        product_type: 'dynasty_creation',
+        user_email: user.email,
+        session_id: session.id // Ajouter le session_id pour debug
+      }
+    });
 
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***session***REMOVED***=***REMOVED***await***REMOVED***stripe.checkout.sessions.create({
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***payment_method_types:***REMOVED***['card'],
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***line_items:***REMOVED***[
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***price_data:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***currency:***REMOVED***'eur',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***product_data:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***name:***REMOVED***'Création***REMOVED***de***REMOVED***Dynastie',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***description:***REMOVED***'Accès***REMOVED***premium***REMOVED***pour***REMOVED***créer***REMOVED***et***REMOVED***gérer***REMOVED***votre***REMOVED***arbre***REMOVED***généalogique***REMOVED***familial'
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***unit_amount:***REMOVED***customAmount
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***quantity:***REMOVED***1
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***],
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***mode:***REMOVED***'payment',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***success_url:***REMOVED***successUrl***REMOVED***||***REMOVED***`${req.headers.get('origin')}/dynasty/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***cancel_url:***REMOVED***cancelUrl***REMOVED***||***REMOVED***`${req.headers.get('origin')}/dynasty`,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***metadata:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_id:***REMOVED***user_id***REMOVED***||***REMOVED***user.id,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***product_type:***REMOVED***'dynasty_creation',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_email:***REMOVED***user.email,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***session_id:***REMOVED***session.id***REMOVED***//***REMOVED***Ajouter***REMOVED***le***REMOVED***session_id***REMOVED***pour***REMOVED***debug
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***});
+    console.log("✅ Session Stripe créée :", session.id);
 
-***REMOVED******REMOVED******REMOVED******REMOVED***console.log("✅***REMOVED***Session***REMOVED***Stripe***REMOVED***créée***REMOVED***:",***REMOVED***session.id);
-
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***new***REMOVED***Response(JSON.stringify({
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***sessionId:***REMOVED***session.id
-***REMOVED******REMOVED******REMOVED******REMOVED***}),***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***status:***REMOVED***200,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***headers:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***...corsHeaders,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***'Content-Type':***REMOVED***'application/json'
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***});
-***REMOVED******REMOVED***}***REMOVED***catch***REMOVED***(error)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***console.error('🔥***REMOVED***Erreur***REMOVED***interne:',***REMOVED***error);
-***REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***new***REMOVED***Response(JSON.stringify({
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***error:***REMOVED***'Erreur***REMOVED***interne***REMOVED***du***REMOVED***serveur'
-***REMOVED******REMOVED******REMOVED******REMOVED***}),***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***status:***REMOVED***500,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***headers:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***...corsHeaders,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***'Content-Type':***REMOVED***'application/json'
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***});
-***REMOVED******REMOVED***}
+    return new Response(JSON.stringify({
+      sessionId: session.id
+    }), {
+      status: 200,
+      headers: {
+        ...corsHeaders,
+        'Content-Type': 'application/json'
+      }
+    });
+  } catch (error) {
+    console.error('🔥 Erreur interne:', error);
+    return new Response(JSON.stringify({
+      error: 'Erreur interne du serveur'
+    }), {
+      status: 500,
+      headers: {
+        ...corsHeaders,
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+});
+// Celui dans supabase Studio en ligne
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import Stripe from 'https://esm.sh/stripe@12.0.0';
+const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY'), {
+  apiVersion: '2023-10-16'
+});
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type'
+};
+serve(async (req)=>{
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', {
+      headers: corsHeaders
+    });
+  }
+  try {
+    const authHeader = req.headers.get('Authorization');
+    console.log("🔑 Authorization header:", authHeader);
+    const supabase = createClient(Deno.env.get('SUPABASE_URL') ?? '', Deno.env.get('SUPABASE_ANON_KEY') ?? '', {
+      global: {
+        headers: {
+          Authorization: authHeader
+        }
+      }
+    });
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    console.log("👤 User fetched:", user);
+    if (authError || !user) {
+      console.log("⛔ Auth error:", authError);
+      return new Response(JSON.stringify({
+        error: 'Non autorisé'
+      }), {
+        status: 401,
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json'
+        }
+      });
+    }
+    const body = await req.json();
+    console.log("📦 Requête JSON:", body);
+    const { successUrl, cancelUrl, customAmount = 500, user_id } = body;
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: [
+        'card'
+      ],
+      line_items: [
+        {
+          price_data: {
+            currency: 'eur',
+            product_data: {
+              name: 'Création de Dynastie',
+              description: 'Accès premium pour créer et gérer votre arbre généalogique familial'
+            },
+            unit_amount: customAmount
+          },
+          quantity: 1
+        }
+      ],
+      mode: 'payment',
+      success_url: successUrl || `${req.headers.get('origin')}/dynasty/create?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: cancelUrl || `${req.headers.get('origin')}/dynasty`,
+      metadata: {
+        user_id: user_id || user.id,
+        product_type: 'dynasty_creation'
+      }
+    });
+    console.log("✅ Session Stripe créée :", session.id);
+    return new Response(JSON.stringify({
+      sessionId: session.id
+    }), {
+      status: 200,
+      headers: {
+        ...corsHeaders,
+        'Content-Type': 'application/json'
+      }
+    });
+  } catch (error) {
+    console.error('🔥 Erreur interne:', error);
+    return new Response(JSON.stringify({
+      error: 'Erreur interne du serveur'
+    }), {
+      status: 500,
+      headers: {
+        ...corsHeaders,
+        'Content-Type': 'application/json'
+      }
+    });
+  }
 });

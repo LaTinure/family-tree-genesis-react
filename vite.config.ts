@@ -1,22 +1,22 @@
-import***REMOVED***{***REMOVED***defineConfig***REMOVED***}***REMOVED***from***REMOVED***"vite";
-import***REMOVED***react***REMOVED***from***REMOVED***"@vitejs/plugin-react-swc";
-import***REMOVED***path***REMOVED***from***REMOVED***"path";
-import***REMOVED***{***REMOVED***componentTagger***REMOVED***}***REMOVED***from***REMOVED***"lovable-tagger";
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react-swc";
+import path from "path";
+import { componentTagger } from "lovable-tagger";
 
-//***REMOVED***https://vitejs.dev/config/
-export***REMOVED***default***REMOVED***defineConfig(({***REMOVED***mode***REMOVED***})***REMOVED***=>***REMOVED***({
-***REMOVED******REMOVED***server:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***host:***REMOVED***"::",
-***REMOVED******REMOVED******REMOVED******REMOVED***port:***REMOVED***8080,
-***REMOVED******REMOVED***},
-***REMOVED******REMOVED***plugins:***REMOVED***[
-***REMOVED******REMOVED******REMOVED******REMOVED***react(),
-***REMOVED******REMOVED******REMOVED******REMOVED***mode***REMOVED***===***REMOVED***'development'***REMOVED***&&
-***REMOVED******REMOVED******REMOVED******REMOVED***componentTagger(),
-***REMOVED******REMOVED***].filter(Boolean),
-***REMOVED******REMOVED***resolve:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***alias:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"@":***REMOVED***path.resolve(__dirname,***REMOVED***"./src"),
-***REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED***},
+// https://vitejs.dev/config/
+export default defineConfig(({ mode }) => ({
+  server: {
+    host: "::",
+    port: 8080,
+  },
+  plugins: [
+    react(),
+    mode === 'development' &&
+    componentTagger(),
+  ].filter(Boolean),
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
 }));

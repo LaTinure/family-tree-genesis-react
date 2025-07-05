@@ -1,29 +1,29 @@
-import***REMOVED***js***REMOVED***from***REMOVED***"@eslint/js";
-import***REMOVED***globals***REMOVED***from***REMOVED***"globals";
-import***REMOVED***reactHooks***REMOVED***from***REMOVED***"eslint-plugin-react-hooks";
-import***REMOVED***reactRefresh***REMOVED***from***REMOVED***"eslint-plugin-react-refresh";
-import***REMOVED***tseslint***REMOVED***from***REMOVED***"typescript-eslint";
+import js from "@eslint/js";
+import globals from "globals";
+import reactHooks from "eslint-plugin-react-hooks";
+import reactRefresh from "eslint-plugin-react-refresh";
+import tseslint from "typescript-eslint";
 
-export***REMOVED***default***REMOVED***tseslint.config(
-***REMOVED******REMOVED***{***REMOVED***ignores:***REMOVED***["dist"]***REMOVED***},
-***REMOVED******REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***extends:***REMOVED***[js.configs.recommended,***REMOVED***...tseslint.configs.recommended],
-***REMOVED******REMOVED******REMOVED******REMOVED***files:***REMOVED***["**/*.{ts,tsx}"],
-***REMOVED******REMOVED******REMOVED******REMOVED***languageOptions:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ecmaVersion:***REMOVED***2020,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***globals:***REMOVED***globals.browser,
-***REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***plugins:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"react-hooks":***REMOVED***reactHooks,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"react-refresh":***REMOVED***reactRefresh,
-***REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***rules:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***...reactHooks.configs.recommended.rules,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"react-refresh/only-export-components":***REMOVED***[
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"warn",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{***REMOVED***allowConstantExport:***REMOVED***true***REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***],
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"@typescript-eslint/no-unused-vars":***REMOVED***"off",
-***REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED***}
+export default tseslint.config(
+  { ignores: ["dist"] },
+  {
+    extends: [js.configs.recommended, ...tseslint.configs.recommended],
+    files: ["**/*.{ts,tsx}"],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.browser,
+    },
+    plugins: {
+      "react-hooks": reactHooks,
+      "react-refresh": reactRefresh,
+    },
+    rules: {
+      ...reactHooks.configs.recommended.rules,
+      "react-refresh/only-export-components": [
+        "warn",
+        { allowConstantExport: true },
+      ],
+      "@typescript-eslint/no-unused-vars": "off",
+    },
+  }
 );

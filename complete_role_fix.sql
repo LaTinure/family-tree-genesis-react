@@ -1,41 +1,41 @@
---***REMOVED***Script***REMOVED***de***REMOVED***correction***REMOVED***complet***REMOVED***pour***REMOVED***le***REMOVED***problème***REMOVED***de***REMOVED***rôle
---***REMOVED***À***REMOVED***exécuter***REMOVED***dans***REMOVED***l'éditeur***REMOVED***SQL***REMOVED***de***REMOVED***Supabase
+-- Script de correction complet pour le problème de rôle
+-- À exécuter dans l'éditeur SQL de Supabase
 
---***REMOVED***1.***REMOVED***Supprimer***REMOVED***toutes***REMOVED***les***REMOVED***contraintes***REMOVED***liées***REMOVED***au***REMOVED***rôle
-ALTER***REMOVED***TABLE***REMOVED***profiles***REMOVED***DROP***REMOVED***CONSTRAINT***REMOVED***IF***REMOVED***EXISTS***REMOVED***profiles_role_check;
-ALTER***REMOVED***TABLE***REMOVED***profiles***REMOVED***DROP***REMOVED***CONSTRAINT***REMOVED***IF***REMOVED***EXISTS***REMOVED***profiles_role_check_1;
-ALTER***REMOVED***TABLE***REMOVED***profiles***REMOVED***DROP***REMOVED***CONSTRAINT***REMOVED***IF***REMOVED***EXISTS***REMOVED***profiles_role_check_2;
+-- 1. Supprimer toutes les contraintes liées au rôle
+ALTER TABLE profiles DROP CONSTRAINT IF EXISTS profiles_role_check;
+ALTER TABLE profiles DROP CONSTRAINT IF EXISTS profiles_role_check_1;
+ALTER TABLE profiles DROP CONSTRAINT IF EXISTS profiles_role_check_2;
 
---***REMOVED***2.***REMOVED***Mettre***REMOVED***à***REMOVED***jour***REMOVED***toutes***REMOVED***les***REMOVED***valeurs***REMOVED***problématiques
-UPDATE***REMOVED***profiles
-SET***REMOVED***role***REMOVED***=***REMOVED***'Membre'
-WHERE***REMOVED***role***REMOVED***IS***REMOVED***NULL***REMOVED***OR***REMOVED***role***REMOVED***=***REMOVED***''***REMOVED***OR***REMOVED***role***REMOVED***NOT***REMOVED***IN***REMOVED***('Membre',***REMOVED***'Administrateur');
+-- 2. Mettre à jour toutes les valeurs problématiques
+UPDATE profiles
+SET role = 'Membre'
+WHERE role IS NULL OR role = '' OR role NOT IN ('Membre', 'Administrateur');
 
---***REMOVED***3.***REMOVED***S'assurer***REMOVED***que***REMOVED***la***REMOVED***colonne***REMOVED***a***REMOVED***la***REMOVED***bonne***REMOVED***valeur***REMOVED***par***REMOVED***défaut
-ALTER***REMOVED***TABLE***REMOVED***profiles***REMOVED***ALTER***REMOVED***COLUMN***REMOVED***role***REMOVED***SET***REMOVED***DEFAULT***REMOVED***'Membre';
+-- 3. S'assurer que la colonne a la bonne valeur par défaut
+ALTER TABLE profiles ALTER COLUMN role SET DEFAULT 'Membre';
 
---***REMOVED***4.***REMOVED***Ajouter***REMOVED***la***REMOVED***nouvelle***REMOVED***contrainte***REMOVED***avec***REMOVED***les***REMOVED***bonnes***REMOVED***valeurs
-ALTER***REMOVED***TABLE***REMOVED***profiles
-ADD***REMOVED***CONSTRAINT***REMOVED***profiles_role_check***REMOVED***CHECK***REMOVED***(role***REMOVED***IN***REMOVED***('Membre',***REMOVED***'Administrateur'));
+-- 4. Ajouter la nouvelle contrainte avec les bonnes valeurs
+ALTER TABLE profiles
+ADD CONSTRAINT profiles_role_check CHECK (role IN ('Membre', 'Administrateur'));
 
---***REMOVED***5.***REMOVED***Créer***REMOVED***l'index***REMOVED***de***REMOVED***performance
-CREATE***REMOVED***INDEX***REMOVED***IF***REMOVED***NOT***REMOVED***EXISTS***REMOVED***idx_profiles_role***REMOVED***ON***REMOVED***profiles(role);
+-- 5. Créer l'index de performance
+CREATE INDEX IF NOT EXISTS idx_profiles_role ON profiles(role);
 
---***REMOVED***6.***REMOVED***Vérifier***REMOVED***le***REMOVED***résultat
-SELECT***REMOVED***'Vérification***REMOVED***des***REMOVED***rôles:'***REMOVED***as***REMOVED***info;
-SELECT***REMOVED***DISTINCT***REMOVED***role,***REMOVED***COUNT(*)***REMOVED***as***REMOVED***count
-FROM***REMOVED***profiles
-GROUP***REMOVED***BY***REMOVED***role
-ORDER***REMOVED***BY***REMOVED***role;
+-- 6. Vérifier le résultat
+SELECT 'Vérification des rôles:' as info;
+SELECT DISTINCT role, COUNT(*) as count
+FROM profiles
+GROUP BY role
+ORDER BY role;
 
---***REMOVED***7.***REMOVED***Vérifier***REMOVED***la***REMOVED***contrainte
-SELECT***REMOVED***'Contrainte***REMOVED***créée:'***REMOVED***as***REMOVED***info;
-SELECT***REMOVED***constraint_name,***REMOVED***check_clause
-FROM***REMOVED***information_schema.check_constraints
-WHERE***REMOVED***constraint_name***REMOVED***=***REMOVED***'profiles_role_check';
+-- 7. Vérifier la contrainte
+SELECT 'Contrainte créée:' as info;
+SELECT constraint_name, check_clause
+FROM information_schema.check_constraints
+WHERE constraint_name = 'profiles_role_check';
 
---***REMOVED***8.***REMOVED***Test***REMOVED***d'insertion***REMOVED***(optionnel***REMOVED***-***REMOVED***commenté***REMOVED***pour***REMOVED***sécurité)
---***REMOVED***INSERT***REMOVED***INTO***REMOVED***profiles***REMOVED***(user_id,***REMOVED***email,***REMOVED***first_name,***REMOVED***last_name,***REMOVED***role)
---***REMOVED***VALUES***REMOVED***('test-user',***REMOVED***'test@test.com',***REMOVED***'Test',***REMOVED***'User',***REMOVED***'Membre');
+-- 8. Test d'insertion (optionnel - commenté pour sécurité)
+-- INSERT INTO profiles (user_id, email, first_name, last_name, role)
+-- VALUES ('test-user', 'test@test.com', 'Test', 'User', 'Membre');
 
-SELECT***REMOVED***'Correction***REMOVED***terminée***REMOVED***avec***REMOVED***succès!'***REMOVED***as***REMOVED***status;
+SELECT 'Correction terminée avec succès!' as status;

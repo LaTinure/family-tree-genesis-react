@@ -1,112 +1,112 @@
 
-export***REMOVED***interface***REMOVED***FamilyMember***REMOVED***{
-***REMOVED******REMOVED***id:***REMOVED***string;
-***REMOVED******REMOVED***user_id:***REMOVED***string;
-***REMOVED******REMOVED***first_name:***REMOVED***string;
-***REMOVED******REMOVED***last_name:***REMOVED***string;
-***REMOVED******REMOVED***email:***REMOVED***string;
-***REMOVED******REMOVED***civilite:***REMOVED***'M.'***REMOVED***|***REMOVED***'Mme';
-***REMOVED******REMOVED***phone?:***REMOVED***string;
-***REMOVED******REMOVED***profession?:***REMOVED***string;
-***REMOVED******REMOVED***current_location?:***REMOVED***string;
-***REMOVED******REMOVED***birth_place?:***REMOVED***string;
-***REMOVED******REMOVED***birth_date?:***REMOVED***string;
-***REMOVED******REMOVED***avatar_url?:***REMOVED***string;
-***REMOVED******REMOVED***photo_url?:***REMOVED***string;
-***REMOVED******REMOVED***relationship_type:***REMOVED***'patriarche'***REMOVED***|***REMOVED***'matriarche'***REMOVED***|***REMOVED***'conjoint'***REMOVED***|***REMOVED***'fils'***REMOVED***|***REMOVED***'fille'***REMOVED***|***REMOVED***'frere'***REMOVED***|***REMOVED***'soeur'***REMOVED***|***REMOVED***'pere'***REMOVED***|***REMOVED***'mere'***REMOVED***|***REMOVED***'grand-pere'***REMOVED***|***REMOVED***'grand-mere'***REMOVED***|***REMOVED***'petit-fils'***REMOVED***|***REMOVED***'petite-fille'***REMOVED***|***REMOVED***'oncle'***REMOVED***|***REMOVED***'tante'***REMOVED***|***REMOVED***'neveu'***REMOVED***|***REMOVED***'niece'***REMOVED***|***REMOVED***'cousin'***REMOVED***|***REMOVED***'cousine'***REMOVED***|***REMOVED***'epoux'***REMOVED***|***REMOVED***'epouse'***REMOVED***|***REMOVED***'beau-pere'***REMOVED***|***REMOVED***'belle-mere'***REMOVED***|***REMOVED***'beau-fils'***REMOVED***|***REMOVED***'belle-fille';
-***REMOVED******REMOVED***father_id?:***REMOVED***string;
-***REMOVED******REMOVED***mother_id?:***REMOVED***string;
-***REMOVED******REMOVED***father_name?:***REMOVED***string;
-***REMOVED******REMOVED***mother_name?:***REMOVED***string;
-***REMOVED******REMOVED***spouse_name:***REMOVED***string;
-***REMOVED******REMOVED***is_admin:***REMOVED***boolean;
-***REMOVED******REMOVED***is_patriarch:***REMOVED***boolean;
-***REMOVED******REMOVED***is_parent:***REMOVED***boolean;
-***REMOVED******REMOVED***situation?:***REMOVED***string;
-***REMOVED******REMOVED***user_role:***REMOVED***'Administrateur'***REMOVED***|***REMOVED***'Patriarche'***REMOVED***|***REMOVED***'Matriarche'***REMOVED***|***REMOVED***'Membre'***REMOVED***|***REMOVED***'Visiteur'***REMOVED***|***REMOVED***'Invité';
-***REMOVED******REMOVED***created_at:***REMOVED***string;
-***REMOVED******REMOVED***updated_at:***REMOVED***string;
+export interface FamilyMember {
+  id: string;
+  user_id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  civilite: 'M.' | 'Mme';
+  phone?: string;
+  profession?: string;
+  current_location?: string;
+  birth_place?: string;
+  birth_date?: string;
+  avatar_url?: string;
+  photo_url?: string;
+  relationship_type: 'patriarche' | 'matriarche' | 'conjoint' | 'fils' | 'fille' | 'frere' | 'soeur' | 'pere' | 'mere' | 'grand-pere' | 'grand-mere' | 'petit-fils' | 'petite-fille' | 'oncle' | 'tante' | 'neveu' | 'niece' | 'cousin' | 'cousine' | 'epoux' | 'epouse' | 'beau-pere' | 'belle-mere' | 'beau-fils' | 'belle-fille';
+  father_id?: string;
+  mother_id?: string;
+  father_name?: string;
+  mother_name?: string;
+  spouse_name: string;
+  is_admin: boolean;
+  is_patriarch: boolean;
+  is_parent: boolean;
+  situation?: string;
+  user_role: 'Administrateur' | 'Patriarche' | 'Matriarche' | 'Membre' | 'Visiteur' | 'Invité';
+  created_at: string;
+  updated_at: string;
 }
 
-export***REMOVED***interface***REMOVED***NewFamilyMember***REMOVED***{
-***REMOVED******REMOVED***first_name:***REMOVED***string;
-***REMOVED******REMOVED***last_name:***REMOVED***string;
-***REMOVED******REMOVED***email:***REMOVED***string;
-***REMOVED******REMOVED***civilite:***REMOVED***'M.'***REMOVED***|***REMOVED***'Mme';
-***REMOVED******REMOVED***phone?:***REMOVED***string;
-***REMOVED******REMOVED***profession?:***REMOVED***string;
-***REMOVED******REMOVED***current_location?:***REMOVED***string;
-***REMOVED******REMOVED***birth_place?:***REMOVED***string;
-***REMOVED******REMOVED***birth_date?:***REMOVED***string;
-***REMOVED******REMOVED***avatar_url?:***REMOVED***string;
-***REMOVED******REMOVED***photo_url?:***REMOVED***string;
-***REMOVED******REMOVED***relationship_type:***REMOVED***'patriarche'***REMOVED***|***REMOVED***'matriarche'***REMOVED***|***REMOVED***'conjoint'***REMOVED***|***REMOVED***'fils'***REMOVED***|***REMOVED***'fille'***REMOVED***|***REMOVED***'frere'***REMOVED***|***REMOVED***'soeur'***REMOVED***|***REMOVED***'pere'***REMOVED***|***REMOVED***'mere'***REMOVED***|***REMOVED***'grand-pere'***REMOVED***|***REMOVED***'grand-mere'***REMOVED***|***REMOVED***'petit-fils'***REMOVED***|***REMOVED***'petite-fille'***REMOVED***|***REMOVED***'oncle'***REMOVED***|***REMOVED***'tante'***REMOVED***|***REMOVED***'neveu'***REMOVED***|***REMOVED***'niece'***REMOVED***|***REMOVED***'cousin'***REMOVED***|***REMOVED***'cousine'***REMOVED***|***REMOVED***'epoux'***REMOVED***|***REMOVED***'epouse'***REMOVED***|***REMOVED***'beau-pere'***REMOVED***|***REMOVED***'belle-mere'***REMOVED***|***REMOVED***'beau-fils'***REMOVED***|***REMOVED***'belle-fille';
-***REMOVED******REMOVED***father_id?:***REMOVED***string;
-***REMOVED******REMOVED***mother_id?:***REMOVED***string;
-***REMOVED******REMOVED***situation?:***REMOVED***string;
-***REMOVED******REMOVED***user_role?:***REMOVED***'Administrateur'***REMOVED***|***REMOVED***'Patriarche'***REMOVED***|***REMOVED***'Matriarche'***REMOVED***|***REMOVED***'Membre'***REMOVED***|***REMOVED***'Visiteur'***REMOVED***|***REMOVED***'Invité';
+export interface NewFamilyMember {
+  first_name: string;
+  last_name: string;
+  email: string;
+  civilite: 'M.' | 'Mme';
+  phone?: string;
+  profession?: string;
+  current_location?: string;
+  birth_place?: string;
+  birth_date?: string;
+  avatar_url?: string;
+  photo_url?: string;
+  relationship_type: 'patriarche' | 'matriarche' | 'conjoint' | 'fils' | 'fille' | 'frere' | 'soeur' | 'pere' | 'mere' | 'grand-pere' | 'grand-mere' | 'petit-fils' | 'petite-fille' | 'oncle' | 'tante' | 'neveu' | 'niece' | 'cousin' | 'cousine' | 'epoux' | 'epouse' | 'beau-pere' | 'belle-mere' | 'beau-fils' | 'belle-fille';
+  father_id?: string;
+  mother_id?: string;
+  situation?: string;
+  user_role?: 'Administrateur' | 'Patriarche' | 'Matriarche' | 'Membre' | 'Visiteur' | 'Invité';
 }
 
-export***REMOVED***interface***REMOVED***FamilyNotification***REMOVED***{
-***REMOVED******REMOVED***id:***REMOVED***string;
-***REMOVED******REMOVED***title:***REMOVED***string;
-***REMOVED******REMOVED***message:***REMOVED***string;
-***REMOVED******REMOVED***type:***REMOVED***'error'***REMOVED***|***REMOVED***'info'***REMOVED***|***REMOVED***'warning'***REMOVED***|***REMOVED***'success';
-***REMOVED******REMOVED***user_id:***REMOVED***string;
-***REMOVED******REMOVED***read:***REMOVED***boolean;
-***REMOVED******REMOVED***created_at:***REMOVED***string;
-***REMOVED******REMOVED***family_id:***REMOVED***string;
+export interface FamilyNotification {
+  id: string;
+  title: string;
+  message: string;
+  type: 'error' | 'info' | 'warning' | 'success';
+  user_id: string;
+  read: boolean;
+  created_at: string;
+  family_id: string;
 }
 
-export***REMOVED***interface***REMOVED***Media***REMOVED***{
-***REMOVED******REMOVED***id:***REMOVED***string;
-***REMOVED******REMOVED***title:***REMOVED***string;
-***REMOVED******REMOVED***description?:***REMOVED***string;
-***REMOVED******REMOVED***video_url:***REMOVED***string;
-***REMOVED******REMOVED***thumbnail_url?:***REMOVED***string;
-***REMOVED******REMOVED***duration?:***REMOVED***number;
-***REMOVED******REMOVED***created_by?:***REMOVED***string;
-***REMOVED******REMOVED***created_at:***REMOVED***string;
-***REMOVED******REMOVED***updated_at:***REMOVED***string;
+export interface Media {
+  id: string;
+  title: string;
+  description?: string;
+  video_url: string;
+  thumbnail_url?: string;
+  duration?: number;
+  created_by?: string;
+  created_at: string;
+  updated_at: string;
 }
 
-export***REMOVED***interface***REMOVED***FamilyTreeNode***REMOVED***{
-***REMOVED******REMOVED***id:***REMOVED***string;
-***REMOVED******REMOVED***name:***REMOVED***string;
-***REMOVED******REMOVED***children?:***REMOVED***FamilyTreeNode[];
+export interface FamilyTreeNode {
+  id: string;
+  name: string;
+  children?: FamilyTreeNode[];
 }
 
-export***REMOVED***interface***REMOVED***InvitationData***REMOVED***{
-***REMOVED******REMOVED***id:***REMOVED***string;
-***REMOVED******REMOVED***token:***REMOVED***string;
-***REMOVED******REMOVED***dynasty_id:***REMOVED***string;
-***REMOVED******REMOVED***dynasty_name:***REMOVED***string;
-***REMOVED******REMOVED***user_role:***REMOVED***string;
-***REMOVED******REMOVED***affiliation?:***REMOVED***string;
-***REMOVED******REMOVED***invited_by_name?:***REMOVED***string;
-***REMOVED******REMOVED***expires_at:***REMOVED***string;
-***REMOVED******REMOVED***used:***REMOVED***boolean;
+export interface InvitationData {
+  id: string;
+  token: string;
+  dynasty_id: string;
+  dynasty_name: string;
+  user_role: string;
+  affiliation?: string;
+  invited_by_name?: string;
+  expires_at: string;
+  used: boolean;
 }
 
-export***REMOVED***interface***REMOVED***Dynasty***REMOVED***{
-***REMOVED******REMOVED***id:***REMOVED***string;
-***REMOVED******REMOVED***name:***REMOVED***string;
-***REMOVED******REMOVED***location?:***REMOVED***string;
-***REMOVED******REMOVED***description?:***REMOVED***string;
-***REMOVED******REMOVED***founding_year?:***REMOVED***string;
-***REMOVED******REMOVED***created_by?:***REMOVED***string;
-***REMOVED******REMOVED***created_at:***REMOVED***string;
-***REMOVED******REMOVED***updated_at:***REMOVED***string;
+export interface Dynasty {
+  id: string;
+  name: string;
+  location?: string;
+  description?: string;
+  founding_year?: string;
+  created_by?: string;
+  created_at: string;
+  updated_at: string;
 }
 
-export***REMOVED***interface***REMOVED***DynastyCreationToken***REMOVED***{
-***REMOVED******REMOVED***id:***REMOVED***string;
-***REMOVED******REMOVED***token:***REMOVED***string;
-***REMOVED******REMOVED***stripe_session_id?:***REMOVED***string;
-***REMOVED******REMOVED***code_promo?:***REMOVED***string;
-***REMOVED******REMOVED***is_used:***REMOVED***boolean;
-***REMOVED******REMOVED***used_at?:***REMOVED***string;
-***REMOVED******REMOVED***created_by?:***REMOVED***string;
-***REMOVED******REMOVED***expires_at:***REMOVED***string;
-***REMOVED******REMOVED***created_at:***REMOVED***string;
+export interface DynastyCreationToken {
+  id: string;
+  token: string;
+  stripe_session_id?: string;
+  code_promo?: string;
+  is_used: boolean;
+  used_at?: string;
+  created_by?: string;
+  expires_at: string;
+  created_at: string;
 }

@@ -1,39 +1,39 @@
 
-import***REMOVED***{***REMOVED***Card,***REMOVED***CardContent,***REMOVED***CardHeader,***REMOVED***CardTitle***REMOVED***}***REMOVED***from***REMOVED***"@/components/ui/card";
-import***REMOVED***{***REMOVED***LucideIcon***REMOVED***}***REMOVED***from***REMOVED***"lucide-react";
-import***REMOVED***{***REMOVED***cn***REMOVED***}***REMOVED***from***REMOVED***"@/lib/utils";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { LucideIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-interface***REMOVED***StatsCardProps***REMOVED***{
-***REMOVED******REMOVED***title:***REMOVED***string;
-***REMOVED******REMOVED***value:***REMOVED***string***REMOVED***|***REMOVED***number;
-***REMOVED******REMOVED***icon:***REMOVED***LucideIcon;
-***REMOVED******REMOVED***trend?:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***value:***REMOVED***number;
-***REMOVED******REMOVED******REMOVED******REMOVED***label:***REMOVED***string;
-***REMOVED******REMOVED***};
-***REMOVED******REMOVED***className?:***REMOVED***string;
+interface StatsCardProps {
+  title: string;
+  value: string | number;
+  icon: LucideIcon;
+  trend?: {
+    value: number;
+    label: string;
+  };
+  className?: string;
 }
 
-export***REMOVED***const***REMOVED***StatsCard***REMOVED***=***REMOVED***({***REMOVED***title,***REMOVED***value,***REMOVED***icon:***REMOVED***Icon,***REMOVED***trend,***REMOVED***className***REMOVED***}:***REMOVED***StatsCardProps)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<Card***REMOVED***className={cn("hover:shadow-lg***REMOVED***transition-all***REMOVED***duration-300",***REMOVED***className)}>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<CardHeader***REMOVED***className="flex***REMOVED***flex-row***REMOVED***items-center***REMOVED***justify-between***REMOVED***space-y-0***REMOVED***pb-2">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<CardTitle***REMOVED***className="text-sm***REMOVED***font-medium***REMOVED***text-muted-foreground">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{title}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</CardTitle>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Icon***REMOVED***className="h-4***REMOVED***w-4***REMOVED***text-muted-foreground"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</CardHeader>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<CardContent>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="text-2xl***REMOVED***font-bold">{value}</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{trend***REMOVED***&&***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<p***REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"text-xs",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***trend.value***REMOVED***>***REMOVED***0***REMOVED***?***REMOVED***"text-green-600"***REMOVED***:***REMOVED***"text-red-600"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{trend.value***REMOVED***>***REMOVED***0***REMOVED***?***REMOVED***'+'***REMOVED***:***REMOVED***''}{trend.value}%***REMOVED***{trend.label}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</p>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</CardContent>
-***REMOVED******REMOVED******REMOVED******REMOVED***</Card>
-***REMOVED******REMOVED***);
+export const StatsCard = ({ title, value, icon: Icon, trend, className }: StatsCardProps) => {
+  return (
+    <Card className={cn("hover:shadow-lg transition-all duration-300", className)}>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium text-muted-foreground">
+          {title}
+        </CardTitle>
+        <Icon className="h-4 w-4 text-muted-foreground" />
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">{value}</div>
+        {trend && (
+          <p className={cn(
+            "text-xs",
+            trend.value > 0 ? "text-green-600" : "text-red-600"
+          )}>
+            {trend.value > 0 ? '+' : ''}{trend.value}% {trend.label}
+          </p>
+        )}
+      </CardContent>
+    </Card>
+  );
 };

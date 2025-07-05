@@ -1,110 +1,110 @@
 
-import***REMOVED***{***REMOVED***useState,***REMOVED***useEffect***REMOVED***}***REMOVED***from***REMOVED***'react';
-import***REMOVED***{***REMOVED***useSearchParams***REMOVED***}***REMOVED***from***REMOVED***'react-router-dom';
-import***REMOVED***{***REMOVED***useQuery***REMOVED***}***REMOVED***from***REMOVED***'@tanstack/react-query';
-import***REMOVED***{***REMOVED***supabase***REMOVED***}***REMOVED***from***REMOVED***'@/integrations/supabase/client';
-import***REMOVED***{***REMOVED***InvitationData***REMOVED***}***REMOVED***from***REMOVED***'@/types/family';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { InvitationData } from '@/types/family';
 
-interface***REMOVED***UseInvitationReturn***REMOVED***{
-***REMOVED******REMOVED***invitationData:***REMOVED***InvitationData***REMOVED***|***REMOVED***null;
-***REMOVED******REMOVED***isLoading:***REMOVED***boolean;
-***REMOVED******REMOVED***error:***REMOVED***string***REMOVED***|***REMOVED***null;
-***REMOVED******REMOVED***isInvitationValid:***REMOVED***boolean;
-***REMOVED******REMOVED***isExpired:***REMOVED***boolean;
-***REMOVED******REMOVED***isUsed:***REMOVED***boolean;
-***REMOVED******REMOVED***validateToken:***REMOVED***(token:***REMOVED***string)***REMOVED***=>***REMOVED***Promise<void>;
+interface UseInvitationReturn {
+  invitationData: InvitationData | null;
+  isLoading: boolean;
+  error: string | null;
+  isInvitationValid: boolean;
+  isExpired: boolean;
+  isUsed: boolean;
+  validateToken: (token: string) => Promise<void>;
 }
 
-export***REMOVED***const***REMOVED***useInvitation***REMOVED***=***REMOVED***():***REMOVED***UseInvitationReturn***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***[searchParams]***REMOVED***=***REMOVED***useSearchParams();
-***REMOVED******REMOVED***const***REMOVED***[inviteToken,***REMOVED***setInviteToken]***REMOVED***=***REMOVED***useState<string***REMOVED***|***REMOVED***null>(null);
+export const useInvitation = (): UseInvitationReturn => {
+  const [searchParams] = useSearchParams();
+  const [inviteToken, setInviteToken] = useState<string | null>(null);
 
-***REMOVED******REMOVED***//***REMOVED***Récupérer***REMOVED***le***REMOVED***token***REMOVED***depuis***REMOVED***l'URL
-***REMOVED******REMOVED***useEffect(()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***token***REMOVED***=***REMOVED***searchParams.get('token')***REMOVED***||***REMOVED***searchParams.get('invite');
-***REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(token)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setInviteToken(token);
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED***},***REMOVED***[searchParams]);
+  // Récupérer le token depuis l'URL
+  useEffect(() => {
+    const token = searchParams.get('token') || searchParams.get('invite');
+    if (token) {
+      setInviteToken(token);
+    }
+  }, [searchParams]);
 
-***REMOVED******REMOVED***//***REMOVED***Vérifier***REMOVED***le***REMOVED***token***REMOVED***d'invitation
-***REMOVED******REMOVED***const***REMOVED***{***REMOVED***data:***REMOVED***invitationData,***REMOVED***isLoading,***REMOVED***error,***REMOVED***refetch***REMOVED***}***REMOVED***=***REMOVED***useQuery({
-***REMOVED******REMOVED******REMOVED******REMOVED***queryKey:***REMOVED***['invitation',***REMOVED***inviteToken],
-***REMOVED******REMOVED******REMOVED******REMOVED***queryFn:***REMOVED***async***REMOVED***():***REMOVED***Promise<InvitationData>***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(!inviteToken)***REMOVED***throw***REMOVED***new***REMOVED***Error('Token***REMOVED***manquant');
+  // Vérifier le token d'invitation
+  const { data: invitationData, isLoading, error, refetch } = useQuery({
+    queryKey: ['invitation', inviteToken],
+    queryFn: async (): Promise<InvitationData> => {
+      if (!inviteToken) throw new Error('Token manquant');
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***data,***REMOVED***error***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.from('invites')
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.select(`
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***token,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***dynasty_id,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_role,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***affiliation,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***expires_at,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***used,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***invited_by
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***`)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.eq('token',***REMOVED***inviteToken)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.single();
+      const { data, error } = await supabase
+        .from('invites')
+        .select(`
+          id,
+          token,
+          dynasty_id,
+          user_role,
+          affiliation,
+          expires_at,
+          used,
+          invited_by
+        `)
+        .eq('token', inviteToken)
+        .single();
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(error)***REMOVED***throw***REMOVED***error;
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(!data)***REMOVED***throw***REMOVED***new***REMOVED***Error('Invitation***REMOVED***invalide');
+      if (error) throw error;
+      if (!data) throw new Error('Invitation invalide');
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Récupérer***REMOVED***le***REMOVED***nom***REMOVED***de***REMOVED***la***REMOVED***dynastie
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***data:***REMOVED***dynastyData***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.from('dynasties')
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.select('name')
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.eq('id',***REMOVED***data.dynasty_id)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.single();
+      // Récupérer le nom de la dynastie
+      const { data: dynastyData } = await supabase
+        .from('dynasties')
+        .select('name')
+        .eq('id', data.dynasty_id)
+        .single();
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Récupérer***REMOVED***le***REMOVED***nom***REMOVED***de***REMOVED***la***REMOVED***personne***REMOVED***qui***REMOVED***a***REMOVED***invité***REMOVED***(si***REMOVED***applicable)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***let***REMOVED***invited_by_name***REMOVED***=***REMOVED***undefined;
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(data.invited_by)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***data:***REMOVED***inviterData***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.from('profiles')
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.select('first_name,***REMOVED***last_name')
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.eq('user_id',***REMOVED***data.invited_by)
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***.single();
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(inviterData)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***invited_by_name***REMOVED***=***REMOVED***`${inviterData.first_name}***REMOVED***${inviterData.last_name}`;
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
+      // Récupérer le nom de la personne qui a invité (si applicable)
+      let invited_by_name = undefined;
+      if (data.invited_by) {
+        const { data: inviterData } = await supabase
+          .from('profiles')
+          .select('first_name, last_name')
+          .eq('user_id', data.invited_by)
+          .single();
+        
+        if (inviterData) {
+          invited_by_name = `${inviterData.first_name} ${inviterData.last_name}`;
+        }
+      }
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***data.id,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***token:***REMOVED***data.token,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***dynasty_id:***REMOVED***data.dynasty_id,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***dynasty_name:***REMOVED***dynastyData?.name***REMOVED***||***REMOVED***'Dynastie',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_role:***REMOVED***data.user_role,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***affiliation:***REMOVED***data.affiliation,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***invited_by_name,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***expires_at:***REMOVED***data.expires_at,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***used:***REMOVED***data.used***REMOVED***||***REMOVED***false
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***as***REMOVED***InvitationData;
-***REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***enabled:***REMOVED***!!inviteToken,
-***REMOVED******REMOVED******REMOVED******REMOVED***retry:***REMOVED***false
-***REMOVED******REMOVED***});
+      return {
+        id: data.id,
+        token: data.token,
+        dynasty_id: data.dynasty_id,
+        dynasty_name: dynastyData?.name || 'Dynastie',
+        user_role: data.user_role,
+        affiliation: data.affiliation,
+        invited_by_name,
+        expires_at: data.expires_at,
+        used: data.used || false
+      } as InvitationData;
+    },
+    enabled: !!inviteToken,
+    retry: false
+  });
 
-***REMOVED******REMOVED***//***REMOVED***Fonction***REMOVED***pour***REMOVED***valider***REMOVED***un***REMOVED***token***REMOVED***manuellement
-***REMOVED******REMOVED***const***REMOVED***validateToken***REMOVED***=***REMOVED***async***REMOVED***(token:***REMOVED***string)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***setInviteToken(token);
-***REMOVED******REMOVED***};
+  // Fonction pour valider un token manuellement
+  const validateToken = async (token: string) => {
+    setInviteToken(token);
+  };
 
-***REMOVED******REMOVED***//***REMOVED***Vérifications
-***REMOVED******REMOVED***const***REMOVED***isExpired***REMOVED***=***REMOVED***invitationData***REMOVED***?***REMOVED***new***REMOVED***Date(invitationData.expires_at)***REMOVED***<***REMOVED***new***REMOVED***Date()***REMOVED***:***REMOVED***false;
-***REMOVED******REMOVED***const***REMOVED***isUsed***REMOVED***=***REMOVED***invitationData?.used***REMOVED***||***REMOVED***false;
-***REMOVED******REMOVED***const***REMOVED***isInvitationValid***REMOVED***=***REMOVED***!!invitationData***REMOVED***&&***REMOVED***!isExpired***REMOVED***&&***REMOVED***!isUsed;
+  // Vérifications
+  const isExpired = invitationData ? new Date(invitationData.expires_at) < new Date() : false;
+  const isUsed = invitationData?.used || false;
+  const isInvitationValid = !!invitationData && !isExpired && !isUsed;
 
-***REMOVED******REMOVED***return***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***invitationData:***REMOVED***invitationData***REMOVED***||***REMOVED***null,
-***REMOVED******REMOVED******REMOVED******REMOVED***isLoading,
-***REMOVED******REMOVED******REMOVED******REMOVED***error:***REMOVED***error***REMOVED***?***REMOVED***(error***REMOVED***as***REMOVED***Error).message***REMOVED***:***REMOVED***null,
-***REMOVED******REMOVED******REMOVED******REMOVED***isInvitationValid,
-***REMOVED******REMOVED******REMOVED******REMOVED***isExpired,
-***REMOVED******REMOVED******REMOVED******REMOVED***isUsed,
-***REMOVED******REMOVED******REMOVED******REMOVED***validateToken
-***REMOVED******REMOVED***};
+  return {
+    invitationData: invitationData || null,
+    isLoading,
+    error: error ? (error as Error).message : null,
+    isInvitationValid,
+    isExpired,
+    isUsed,
+    validateToken
+  };
 };

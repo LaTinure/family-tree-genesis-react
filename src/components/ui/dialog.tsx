@@ -1,120 +1,120 @@
-import***REMOVED*******REMOVED***as***REMOVED***React***REMOVED***from***REMOVED***"react"
-import***REMOVED*******REMOVED***as***REMOVED***DialogPrimitive***REMOVED***from***REMOVED***"@radix-ui/react-dialog"
-import***REMOVED***{***REMOVED***X***REMOVED***}***REMOVED***from***REMOVED***"lucide-react"
+import * as React from "react"
+import * as DialogPrimitive from "@radix-ui/react-dialog"
+import { X } from "lucide-react"
 
-import***REMOVED***{***REMOVED***cn***REMOVED***}***REMOVED***from***REMOVED***"@/lib/utils"
+import { cn } from "@/lib/utils"
 
-const***REMOVED***Dialog***REMOVED***=***REMOVED***DialogPrimitive.Root
+const Dialog = DialogPrimitive.Root
 
-const***REMOVED***DialogTrigger***REMOVED***=***REMOVED***DialogPrimitive.Trigger
+const DialogTrigger = DialogPrimitive.Trigger
 
-const***REMOVED***DialogPortal***REMOVED***=***REMOVED***DialogPrimitive.Portal
+const DialogPortal = DialogPrimitive.Portal
 
-const***REMOVED***DialogClose***REMOVED***=***REMOVED***DialogPrimitive.Close
+const DialogClose = DialogPrimitive.Close
 
-const***REMOVED***DialogOverlay***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***DialogPrimitive.Overlay>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***DialogPrimitive.Overlay>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<DialogPrimitive.Overlay
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"fixed***REMOVED***inset-0***REMOVED***z-50***REMOVED***bg-black/80***REMOVED******REMOVED***data-[state=open]:animate-in***REMOVED***data-[state=closed]:animate-out***REMOVED***data-[state=closed]:fade-out-0***REMOVED***data-[state=open]:fade-in-0",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const DialogOverlay = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Overlay>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Overlay
+    ref={ref}
+    className={cn(
+      "fixed inset-0 z-50 bg-black/80  data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      className
+    )}
+    {...props}
+  />
 ))
-DialogOverlay.displayName***REMOVED***=***REMOVED***DialogPrimitive.Overlay.displayName
+DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
 
-const***REMOVED***DialogContent***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***DialogPrimitive.Content>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***DialogPrimitive.Content>
->(({***REMOVED***className,***REMOVED***children,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<DialogPortal>
-***REMOVED******REMOVED******REMOVED******REMOVED***<DialogOverlay***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED***<DialogPrimitive.Content
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"fixed***REMOVED***left-[50%]***REMOVED***top-[50%]***REMOVED***z-50***REMOVED***grid***REMOVED***w-full***REMOVED***max-w-lg***REMOVED***translate-x-[-50%]***REMOVED***translate-y-[-50%]***REMOVED***gap-4***REMOVED***border***REMOVED***bg-background***REMOVED***p-6***REMOVED***shadow-lg***REMOVED***duration-200***REMOVED***data-[state=open]:animate-in***REMOVED***data-[state=closed]:animate-out***REMOVED***data-[state=closed]:fade-out-0***REMOVED***data-[state=open]:fade-in-0***REMOVED***data-[state=closed]:zoom-out-95***REMOVED***data-[state=open]:zoom-in-95***REMOVED***data-[state=closed]:slide-out-to-left-1/2***REMOVED***data-[state=closed]:slide-out-to-top-[48%]***REMOVED***data-[state=open]:slide-in-from-left-1/2***REMOVED***data-[state=open]:slide-in-from-top-[48%]***REMOVED***sm:rounded-lg",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED******REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{children}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<DialogPrimitive.Close***REMOVED***className="absolute***REMOVED***right-4***REMOVED***top-4***REMOVED***rounded-sm***REMOVED***opacity-70***REMOVED***ring-offset-background***REMOVED***transition-opacity***REMOVED***hover:opacity-100***REMOVED***focus:outline-none***REMOVED***focus:ring-2***REMOVED***focus:ring-ring***REMOVED***focus:ring-offset-2***REMOVED***disabled:pointer-events-none***REMOVED***data-[state=open]:bg-accent***REMOVED***data-[state=open]:text-muted-foreground">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<X***REMOVED***className="h-4***REMOVED***w-4"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<span***REMOVED***className="sr-only">Close</span>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</DialogPrimitive.Close>
-***REMOVED******REMOVED******REMOVED******REMOVED***</DialogPrimitive.Content>
-***REMOVED******REMOVED***</DialogPortal>
+const DialogContent = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
+>(({ className, children, ...props }, ref) => (
+  <DialogPortal>
+    <DialogOverlay />
+    <DialogPrimitive.Content
+      ref={ref}
+      className={cn(
+        "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
+        className
+      )}
+      {...props}
+    >
+      {children}
+      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+        <X className="h-4 w-4" />
+        <span className="sr-only">Close</span>
+      </DialogPrimitive.Close>
+    </DialogPrimitive.Content>
+  </DialogPortal>
 ))
-DialogContent.displayName***REMOVED***=***REMOVED***DialogPrimitive.Content.displayName
+DialogContent.displayName = DialogPrimitive.Content.displayName
 
-const***REMOVED***DialogHeader***REMOVED***=***REMOVED***({
-***REMOVED******REMOVED***className,
-***REMOVED******REMOVED***...props
-}:***REMOVED***React.HTMLAttributes<HTMLDivElement>)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"flex***REMOVED***flex-col***REMOVED***space-y-1.5***REMOVED***text-center***REMOVED***sm:text-left",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const DialogHeader = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={cn(
+      "flex flex-col space-y-1.5 text-center sm:text-left",
+      className
+    )}
+    {...props}
+  />
 )
-DialogHeader.displayName***REMOVED***=***REMOVED***"DialogHeader"
+DialogHeader.displayName = "DialogHeader"
 
-const***REMOVED***DialogFooter***REMOVED***=***REMOVED***({
-***REMOVED******REMOVED***className,
-***REMOVED******REMOVED***...props
-}:***REMOVED***React.HTMLAttributes<HTMLDivElement>)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<div
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"flex***REMOVED***flex-col-reverse***REMOVED***sm:flex-row***REMOVED***sm:justify-end***REMOVED***sm:space-x-2",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const DialogFooter = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={cn(
+      "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
+      className
+    )}
+    {...props}
+  />
 )
-DialogFooter.displayName***REMOVED***=***REMOVED***"DialogFooter"
+DialogFooter.displayName = "DialogFooter"
 
-const***REMOVED***DialogTitle***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***DialogPrimitive.Title>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***DialogPrimitive.Title>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<DialogPrimitive.Title
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"text-lg***REMOVED***font-semibold***REMOVED***leading-none***REMOVED***tracking-tight",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const DialogTitle = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Title>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Title
+    ref={ref}
+    className={cn(
+      "text-lg font-semibold leading-none tracking-tight",
+      className
+    )}
+    {...props}
+  />
 ))
-DialogTitle.displayName***REMOVED***=***REMOVED***DialogPrimitive.Title.displayName
+DialogTitle.displayName = DialogPrimitive.Title.displayName
 
-const***REMOVED***DialogDescription***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***React.ElementRef<typeof***REMOVED***DialogPrimitive.Description>,
-***REMOVED******REMOVED***React.ComponentPropsWithoutRef<typeof***REMOVED***DialogPrimitive.Description>
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<DialogPrimitive.Description
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn("text-sm***REMOVED***text-muted-foreground",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const DialogDescription = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Description>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Description
+    ref={ref}
+    className={cn("text-sm text-muted-foreground", className)}
+    {...props}
+  />
 ))
-DialogDescription.displayName***REMOVED***=***REMOVED***DialogPrimitive.Description.displayName
+DialogDescription.displayName = DialogPrimitive.Description.displayName
 
-export***REMOVED***{
-***REMOVED******REMOVED***Dialog,
-***REMOVED******REMOVED***DialogPortal,
-***REMOVED******REMOVED***DialogOverlay,
-***REMOVED******REMOVED***DialogClose,
-***REMOVED******REMOVED***DialogTrigger,
-***REMOVED******REMOVED***DialogContent,
-***REMOVED******REMOVED***DialogHeader,
-***REMOVED******REMOVED***DialogFooter,
-***REMOVED******REMOVED***DialogTitle,
-***REMOVED******REMOVED***DialogDescription,
+export {
+  Dialog,
+  DialogPortal,
+  DialogOverlay,
+  DialogClose,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
 }

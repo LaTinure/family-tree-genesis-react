@@ -1,3 +1,3 @@
-import***REMOVED***{***REMOVED***useToast,***REMOVED***toast***REMOVED***}***REMOVED***from***REMOVED***"@/hooks/use-toast";
+import { useToast, toast } from "@/hooks/use-toast";
 
-export***REMOVED***{***REMOVED***useToast,***REMOVED***toast***REMOVED***};
+export { useToast, toast };

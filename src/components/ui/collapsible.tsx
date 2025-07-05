@@ -1,9 +1,9 @@
-import***REMOVED*******REMOVED***as***REMOVED***CollapsiblePrimitive***REMOVED***from***REMOVED***"@radix-ui/react-collapsible"
+import * as CollapsiblePrimitive from "@radix-ui/react-collapsible"
 
-const***REMOVED***Collapsible***REMOVED***=***REMOVED***CollapsiblePrimitive.Root
+const Collapsible = CollapsiblePrimitive.Root
 
-const***REMOVED***CollapsibleTrigger***REMOVED***=***REMOVED***CollapsiblePrimitive.CollapsibleTrigger
+const CollapsibleTrigger = CollapsiblePrimitive.CollapsibleTrigger
 
-const***REMOVED***CollapsibleContent***REMOVED***=***REMOVED***CollapsiblePrimitive.CollapsibleContent
+const CollapsibleContent = CollapsiblePrimitive.CollapsibleContent
 
-export***REMOVED***{***REMOVED***Collapsible,***REMOVED***CollapsibleTrigger,***REMOVED***CollapsibleContent***REMOVED***}
+export { Collapsible, CollapsibleTrigger, CollapsibleContent }

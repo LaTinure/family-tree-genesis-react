@@ -1,4 +1,4 @@
-#***REMOVED***Logs
+# Logs
 logs
 *.log
 npm-debug.log*
@@ -12,7 +12,7 @@ dist
 dist-ssr
 *.local
 
-#***REMOVED***Editor***REMOVED***directories***REMOVED***and***REMOVED***files
+# Editor directories and files
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -23,10 +23,10 @@ dist-ssr
 *.sln
 *.sw?
 
-#***REMOVED***Local***REMOVED***Netlify***REMOVED***folder
+# Local Netlify folder
 .netlify
 
-#***REMOVED***Sensitive***REMOVED***files
+# Sensitive files
 docs/Stripe_Key.txt
 *.key
 *.pem

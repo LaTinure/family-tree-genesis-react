@@ -1,117 +1,117 @@
-import***REMOVED*******REMOVED***as***REMOVED***React***REMOVED***from***REMOVED***"react"
-import***REMOVED***{***REMOVED***ChevronLeft,***REMOVED***ChevronRight,***REMOVED***MoreHorizontal***REMOVED***}***REMOVED***from***REMOVED***"lucide-react"
+import * as React from "react"
+import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react"
 
-import***REMOVED***{***REMOVED***cn***REMOVED***}***REMOVED***from***REMOVED***"@/lib/utils"
-import***REMOVED***{***REMOVED***ButtonProps,***REMOVED***buttonVariants***REMOVED***}***REMOVED***from***REMOVED***"@/components/ui/button"
+import { cn } from "@/lib/utils"
+import { ButtonProps, buttonVariants } from "@/components/ui/button"
 
-const***REMOVED***Pagination***REMOVED***=***REMOVED***({***REMOVED***className,***REMOVED***...props***REMOVED***}:***REMOVED***React.ComponentProps<"nav">)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<nav
-***REMOVED******REMOVED******REMOVED******REMOVED***role="navigation"
-***REMOVED******REMOVED******REMOVED******REMOVED***aria-label="pagination"
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn("mx-auto***REMOVED***flex***REMOVED***w-full***REMOVED***justify-center",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const Pagination = ({ className, ...props }: React.ComponentProps<"nav">) => (
+  <nav
+    role="navigation"
+    aria-label="pagination"
+    className={cn("mx-auto flex w-full justify-center", className)}
+    {...props}
+  />
 )
-Pagination.displayName***REMOVED***=***REMOVED***"Pagination"
+Pagination.displayName = "Pagination"
 
-const***REMOVED***PaginationContent***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLUListElement,
-***REMOVED******REMOVED***React.ComponentProps<"ul">
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<ul
-***REMOVED******REMOVED******REMOVED******REMOVED***ref={ref}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn("flex***REMOVED***flex-row***REMOVED***items-center***REMOVED***gap-1",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const PaginationContent = React.forwardRef<
+  HTMLUListElement,
+  React.ComponentProps<"ul">
+>(({ className, ...props }, ref) => (
+  <ul
+    ref={ref}
+    className={cn("flex flex-row items-center gap-1", className)}
+    {...props}
+  />
 ))
-PaginationContent.displayName***REMOVED***=***REMOVED***"PaginationContent"
+PaginationContent.displayName = "PaginationContent"
 
-const***REMOVED***PaginationItem***REMOVED***=***REMOVED***React.forwardRef<
-***REMOVED******REMOVED***HTMLLIElement,
-***REMOVED******REMOVED***React.ComponentProps<"li">
->(({***REMOVED***className,***REMOVED***...props***REMOVED***},***REMOVED***ref)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<li***REMOVED***ref={ref}***REMOVED***className={cn("",***REMOVED***className)}***REMOVED***{...props}***REMOVED***/>
+const PaginationItem = React.forwardRef<
+  HTMLLIElement,
+  React.ComponentProps<"li">
+>(({ className, ...props }, ref) => (
+  <li ref={ref} className={cn("", className)} {...props} />
 ))
-PaginationItem.displayName***REMOVED***=***REMOVED***"PaginationItem"
+PaginationItem.displayName = "PaginationItem"
 
-type***REMOVED***PaginationLinkProps***REMOVED***=***REMOVED***{
-***REMOVED******REMOVED***isActive?:***REMOVED***boolean
-}***REMOVED***&***REMOVED***Pick<ButtonProps,***REMOVED***"size">***REMOVED***&
-***REMOVED******REMOVED***React.ComponentProps<"a">
+type PaginationLinkProps = {
+  isActive?: boolean
+} & Pick<ButtonProps, "size"> &
+  React.ComponentProps<"a">
 
-const***REMOVED***PaginationLink***REMOVED***=***REMOVED***({
-***REMOVED******REMOVED***className,
-***REMOVED******REMOVED***isActive,
-***REMOVED******REMOVED***size***REMOVED***=***REMOVED***"icon",
-***REMOVED******REMOVED***...props
-}:***REMOVED***PaginationLinkProps)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<a
-***REMOVED******REMOVED******REMOVED******REMOVED***aria-current={isActive***REMOVED***?***REMOVED***"page"***REMOVED***:***REMOVED***undefined}
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***buttonVariants({
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***variant:***REMOVED***isActive***REMOVED***?***REMOVED***"outline"***REMOVED***:***REMOVED***"ghost",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***size,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}),
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***className
-***REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***/>
+const PaginationLink = ({
+  className,
+  isActive,
+  size = "icon",
+  ...props
+}: PaginationLinkProps) => (
+  <a
+    aria-current={isActive ? "page" : undefined}
+    className={cn(
+      buttonVariants({
+        variant: isActive ? "outline" : "ghost",
+        size,
+      }),
+      className
+    )}
+    {...props}
+  />
 )
-PaginationLink.displayName***REMOVED***=***REMOVED***"PaginationLink"
+PaginationLink.displayName = "PaginationLink"
 
-const***REMOVED***PaginationPrevious***REMOVED***=***REMOVED***({
-***REMOVED******REMOVED***className,
-***REMOVED******REMOVED***...props
-}:***REMOVED***React.ComponentProps<typeof***REMOVED***PaginationLink>)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<PaginationLink
-***REMOVED******REMOVED******REMOVED******REMOVED***aria-label="Go***REMOVED***to***REMOVED***previous***REMOVED***page"
-***REMOVED******REMOVED******REMOVED******REMOVED***size="default"
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn("gap-1***REMOVED***pl-2.5",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED***<ChevronLeft***REMOVED***className="h-4***REMOVED***w-4"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED***<span>Previous</span>
-***REMOVED******REMOVED***</PaginationLink>
+const PaginationPrevious = ({
+  className,
+  ...props
+}: React.ComponentProps<typeof PaginationLink>) => (
+  <PaginationLink
+    aria-label="Go to previous page"
+    size="default"
+    className={cn("gap-1 pl-2.5", className)}
+    {...props}
+  >
+    <ChevronLeft className="h-4 w-4" />
+    <span>Previous</span>
+  </PaginationLink>
 )
-PaginationPrevious.displayName***REMOVED***=***REMOVED***"PaginationPrevious"
+PaginationPrevious.displayName = "PaginationPrevious"
 
-const***REMOVED***PaginationNext***REMOVED***=***REMOVED***({
-***REMOVED******REMOVED***className,
-***REMOVED******REMOVED***...props
-}:***REMOVED***React.ComponentProps<typeof***REMOVED***PaginationLink>)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<PaginationLink
-***REMOVED******REMOVED******REMOVED******REMOVED***aria-label="Go***REMOVED***to***REMOVED***next***REMOVED***page"
-***REMOVED******REMOVED******REMOVED******REMOVED***size="default"
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn("gap-1***REMOVED***pr-2.5",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED***<span>Next</span>
-***REMOVED******REMOVED******REMOVED******REMOVED***<ChevronRight***REMOVED***className="h-4***REMOVED***w-4"***REMOVED***/>
-***REMOVED******REMOVED***</PaginationLink>
+const PaginationNext = ({
+  className,
+  ...props
+}: React.ComponentProps<typeof PaginationLink>) => (
+  <PaginationLink
+    aria-label="Go to next page"
+    size="default"
+    className={cn("gap-1 pr-2.5", className)}
+    {...props}
+  >
+    <span>Next</span>
+    <ChevronRight className="h-4 w-4" />
+  </PaginationLink>
 )
-PaginationNext.displayName***REMOVED***=***REMOVED***"PaginationNext"
+PaginationNext.displayName = "PaginationNext"
 
-const***REMOVED***PaginationEllipsis***REMOVED***=***REMOVED***({
-***REMOVED******REMOVED***className,
-***REMOVED******REMOVED***...props
-}:***REMOVED***React.ComponentProps<"span">)***REMOVED***=>***REMOVED***(
-***REMOVED******REMOVED***<span
-***REMOVED******REMOVED******REMOVED******REMOVED***aria-hidden
-***REMOVED******REMOVED******REMOVED******REMOVED***className={cn("flex***REMOVED***h-9***REMOVED***w-9***REMOVED***items-center***REMOVED***justify-center",***REMOVED***className)}
-***REMOVED******REMOVED******REMOVED******REMOVED***{...props}
-***REMOVED******REMOVED***>
-***REMOVED******REMOVED******REMOVED******REMOVED***<MoreHorizontal***REMOVED***className="h-4***REMOVED***w-4"***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED***<span***REMOVED***className="sr-only">More***REMOVED***pages</span>
-***REMOVED******REMOVED***</span>
+const PaginationEllipsis = ({
+  className,
+  ...props
+}: React.ComponentProps<"span">) => (
+  <span
+    aria-hidden
+    className={cn("flex h-9 w-9 items-center justify-center", className)}
+    {...props}
+  >
+    <MoreHorizontal className="h-4 w-4" />
+    <span className="sr-only">More pages</span>
+  </span>
 )
-PaginationEllipsis.displayName***REMOVED***=***REMOVED***"PaginationEllipsis"
+PaginationEllipsis.displayName = "PaginationEllipsis"
 
-export***REMOVED***{
-***REMOVED******REMOVED***Pagination,
-***REMOVED******REMOVED***PaginationContent,
-***REMOVED******REMOVED***PaginationEllipsis,
-***REMOVED******REMOVED***PaginationItem,
-***REMOVED******REMOVED***PaginationLink,
-***REMOVED******REMOVED***PaginationNext,
-***REMOVED******REMOVED***PaginationPrevious,
+export {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
 }

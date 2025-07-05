@@ -1,27 +1,27 @@
-import***REMOVED***{***REMOVED***Tabs,***REMOVED***TabsContent,***REMOVED***TabsList,***REMOVED***TabsTrigger***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/tabs';
-import***REMOVED***{***REMOVED***FormHeader***REMOVED***}***REMOVED***from***REMOVED***'@/components/shared/FormHeader';
-import***REMOVED***{***REMOVED***FamilyLoginForm***REMOVED***}***REMOVED***from***REMOVED***'@/components/auth/FamilyLoginForm';
-import***REMOVED***{***REMOVED***FamilyRegisterForm***REMOVED***}***REMOVED***from***REMOVED***'@/components/auth/FamilyRegisterForm';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { FormHeader } from '@/components/shared/FormHeader';
+import { FamilyLoginForm } from '@/components/auth/FamilyLoginForm';
+import { FamilyRegisterForm } from '@/components/auth/FamilyRegisterForm';
 
-export***REMOVED***const***REMOVED***AuthPage***REMOVED***=***REMOVED***()***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<div***REMOVED***className="w-full***REMOVED***max-w-md***REMOVED***mx-auto***REMOVED***p-6">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<FormHeader
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***title="Bienvenue"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***subtitle="Connectez-vous***REMOVED***ou***REMOVED***créez***REMOVED***un***REMOVED***compte***REMOVED***pour***REMOVED***accéder***REMOVED***à***REMOVED***voptre***REMOVED***arbre***REMOVED***familial"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Tabs***REMOVED***defaultValue="login"***REMOVED***className="w-full">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<TabsList***REMOVED***className="grid***REMOVED***w-full***REMOVED***grid-cols-2">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<TabsTrigger***REMOVED***value="login">Connexion</TabsTrigger>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<TabsTrigger***REMOVED***value="register">Inscription</TabsTrigger>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</TabsList>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<TabsContent***REMOVED***value="login">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<FamilyLoginForm***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</TabsContent>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<TabsContent***REMOVED***value="register">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<FamilyRegisterForm***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</TabsContent>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Tabs>
-***REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED***);
+export const AuthPage = () => {
+  return (
+    <div className="w-full max-w-md mx-auto p-6">
+      <FormHeader
+        title="Bienvenue"
+        subtitle="Connectez-vous ou créez un compte pour accéder à voptre arbre familial"
+      />
+      <Tabs defaultValue="login" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="login">Connexion</TabsTrigger>
+          <TabsTrigger value="register">Inscription</TabsTrigger>
+        </TabsList>
+        <TabsContent value="login">
+          <FamilyLoginForm />
+        </TabsContent>
+        <TabsContent value="register">
+          <FamilyRegisterForm />
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
 };

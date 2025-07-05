@@ -1,714 +1,714 @@
-export***REMOVED***type***REMOVED***Json***REMOVED***=
-***REMOVED******REMOVED***|***REMOVED***string
-***REMOVED******REMOVED***|***REMOVED***number
-***REMOVED******REMOVED***|***REMOVED***boolean
-***REMOVED******REMOVED***|***REMOVED***null
-***REMOVED******REMOVED***|***REMOVED***{***REMOVED***[key:***REMOVED***string]:***REMOVED***Json***REMOVED***|***REMOVED***undefined***REMOVED***}
-***REMOVED******REMOVED***|***REMOVED***Json[]
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
 
-export***REMOVED***type***REMOVED***Database***REMOVED***=***REMOVED***{
-***REMOVED******REMOVED***public:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***Tables:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***dynasties:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Row:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_by:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***description:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***founding_year:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***location:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***name:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***updated_at:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Insert:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_by?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***description?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***founding_year?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***location?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***name:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***updated_at?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Update:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_by?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***description?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***founding_year?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***location?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***name?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***updated_at?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Relationships:***REMOVED***[]
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***dynasty_creation_tokens:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Row:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***code_promo:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_by:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***expires_at:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_used:***REMOVED***boolean***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***stripe_session_id:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***token:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***used_at:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Insert:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***code_promo?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_by?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***expires_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_used?:***REMOVED***boolean***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***stripe_session_id?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***token:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***used_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Update:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***code_promo?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_by?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***expires_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_used?:***REMOVED***boolean***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***stripe_session_id?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***token?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***used_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Relationships:***REMOVED***[]
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***family_members:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Row:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***dynasty_id:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***profile_id:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***role:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***tree_id:***REMOVED***number***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***updated_at:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Insert:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***dynasty_id?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***profile_id?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***role?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***tree_id?:***REMOVED***number***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***updated_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Update:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***dynasty_id?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***profile_id?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***role?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***tree_id?:***REMOVED***number***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***updated_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Relationships:***REMOVED***[
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***foreignKeyName:***REMOVED***"family_members_tree_id_fkey"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***columns:***REMOVED***["tree_id"]
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***isOneToOne:***REMOVED***false
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***referencedRelation:***REMOVED***"family_trees"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***referencedColumns:***REMOVED***["id"]
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***]
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***family_trees:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Row:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_by:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***description:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***dynasty_id:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***number
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***name:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***updated_at:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Insert:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_by?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***description?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***dynasty_id?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id?:***REMOVED***number
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***name?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***updated_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Update:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_by?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***description?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***dynasty_id?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id?:***REMOVED***number
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***name?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***updated_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Relationships:***REMOVED***[]
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***invites:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Row:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***affiliation:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***dynasty_id:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***email:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***expires_at:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***invited_by:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***token:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***used:***REMOVED***boolean***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_role:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Insert:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***affiliation?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***dynasty_id:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***email?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***expires_at?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***invited_by?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***token:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***used?:***REMOVED***boolean***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_role:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Update:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***affiliation?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***dynasty_id?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***email?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***expires_at?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***invited_by?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***token?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***used?:***REMOVED***boolean***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_role?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Relationships:***REMOVED***[]
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***medias:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Row:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_by:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***description:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***duration:***REMOVED***number***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***thumbnail_url:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***title:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***updated_at:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***video_url:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Insert:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_by?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***description?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***duration?:***REMOVED***number***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***thumbnail_url?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***title:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***updated_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***video_url:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Update:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_by?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***description?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***duration?:***REMOVED***number***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***thumbnail_url?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***title?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***updated_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***video_url?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Relationships:***REMOVED***[]
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***messages:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Row:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***content:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_admin_message:***REMOVED***boolean***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***sender_id:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Insert:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***content:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_admin_message?:***REMOVED***boolean***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***sender_id?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Update:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***content?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_admin_message?:***REMOVED***boolean***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***sender_id?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Relationships:***REMOVED***[]
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***notifications:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Row:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data:***REMOVED***Json***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***dynasty_id:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***message:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***read:***REMOVED***boolean***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***title:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***type:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_id:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Insert:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data?:***REMOVED***Json***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***dynasty_id?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***message:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***read?:***REMOVED***boolean***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***title:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***type:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_id?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Update:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***data?:***REMOVED***Json***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***dynasty_id?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***message?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***read?:***REMOVED***boolean***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***title?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***type?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_id?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Relationships:***REMOVED***[]
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***profiles:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Row:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***affiliated_member:***REMOVED***Json***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***affiliation:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***avatar_url:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***birth_date:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***birth_place:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***civilite:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***civility:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***current_location:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***dynasty_id:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***email:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***father_id:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***father_name:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***first_name:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_admin:***REMOVED***boolean***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_parent:***REMOVED***boolean***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_patriarch:***REMOVED***boolean***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***last_name:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***mother_id:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***mother_name:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***parent_id:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***phone:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***photo_url:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***profession:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***relationship_type:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***role:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***role_radio:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***situation:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***updated_at:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_id:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_role:***REMOVED***Database["public"]["Enums"]["user_role"]***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Insert:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***affiliated_member?:***REMOVED***Json***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***affiliation?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***avatar_url?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***birth_date?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***birth_place?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***civilite?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***civility?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***current_location?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***dynasty_id?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***email?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***father_id?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***father_name?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***first_name?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_admin?:***REMOVED***boolean***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_parent?:***REMOVED***boolean***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_patriarch?:***REMOVED***boolean***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***last_name?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***mother_id?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***mother_name?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***parent_id?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***phone?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***photo_url?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***profession?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***relationship_type?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***role?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***role_radio?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***situation?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***updated_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_id:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_role?:***REMOVED***Database["public"]["Enums"]["user_role"]***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Update:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***affiliated_member?:***REMOVED***Json***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***affiliation?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***avatar_url?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***birth_date?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***birth_place?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***civilite?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***civility?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***current_location?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***dynasty_id?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***email?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***father_id?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***father_name?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***first_name?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_admin?:***REMOVED***boolean***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_parent?:***REMOVED***boolean***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***is_patriarch?:***REMOVED***boolean***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***last_name?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***mother_id?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***mother_name?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***parent_id?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***phone?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***photo_url?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***profession?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***relationship_type?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***role?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***role_radio?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***situation?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***updated_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_id?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_role?:***REMOVED***Database["public"]["Enums"]["user_role"]***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Relationships:***REMOVED***[]
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***relationships:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Row:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***dynasty_id:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***person1_id:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***person2_id:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***updated_at:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Insert:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***dynasty_id?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***person1_id?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***person2_id?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***updated_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Update:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***dynasty_id?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***person1_id?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***person2_id?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***updated_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Relationships:***REMOVED***[]
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***site_settings:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Row:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***family_tree_title:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***number
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***members_page_title:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***updated_at:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Insert:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***family_tree_title?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id?:***REMOVED***number
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***members_page_title?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***updated_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Update:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***created_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***family_tree_title?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id?:***REMOVED***number
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***members_page_title?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***updated_at?:***REMOVED***string***REMOVED***|***REMOVED***null
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Relationships:***REMOVED***[]
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***Views:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***[_***REMOVED***in***REMOVED***never]:***REMOVED***never
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***Functions:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***create_invitation:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Args:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***p_dynasty_id:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***p_user_role:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***p_expires_at?:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Returns:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***token:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}[]
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***get_invitation_data:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Args:***REMOVED***{***REMOVED***invite_token:***REMOVED***string***REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Returns:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***id:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***token:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***dynasty_id:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***dynasty_name:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_role:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***expires_at:***REMOVED***string
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***used:***REMOVED***boolean
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}[]
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***mark_invitation_used:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Args:***REMOVED***{***REMOVED***invite_id:***REMOVED***string***REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Returns:***REMOVED***boolean
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***Enums:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***civilite:***REMOVED***"M."***REMOVED***|***REMOVED***"Mme"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***family_title:
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"M."
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"Mme"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"Patriarche"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"Matriarche"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"Père"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"Mère"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"Fils"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"Fille"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"Grand-père"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"Grand-mère"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"Petit-fils"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"Petite-fille"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"Oncle"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"Tante"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"Neveu"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"Nièce"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"Cousin"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"Cousine"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"Époux"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"Épouse"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"Beau-père"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"Belle-mère"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"Beau-fils"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"Belle-fille"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"Frère"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"Sœur"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***relationship_type:
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"patriarche"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"matriarche"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"fils"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"fille"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"père"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"mère"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"cousin"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"cousine"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"tante"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"oncle"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"neveu"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"nièce"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"petit-fils"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"petite-fille"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"grand-père"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"grand-mère"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"époux"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"épouse"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"beau-père"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"belle-mère"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"beau-fils"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"belle-fille"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"frère"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"sœur"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_role:
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"Administrateur"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"Patriarche"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"Matriarche"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"Membre"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"Visiteur"
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***"Invité"
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***CompositeTypes:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***[_***REMOVED***in***REMOVED***never]:***REMOVED***never
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED***}
+export type Database = {
+  public: {
+    Tables: {
+      dynasties: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          founding_year: string | null
+          id: string
+          location: string | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          founding_year?: string | null
+          id?: string
+          location?: string | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          founding_year?: string | null
+          id?: string
+          location?: string | null
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      dynasty_creation_tokens: {
+        Row: {
+          code_promo: string | null
+          created_at: string | null
+          created_by: string | null
+          expires_at: string | null
+          id: string
+          is_used: boolean | null
+          stripe_session_id: string | null
+          token: string
+          used_at: string | null
+        }
+        Insert: {
+          code_promo?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          is_used?: boolean | null
+          stripe_session_id?: string | null
+          token: string
+          used_at?: string | null
+        }
+        Update: {
+          code_promo?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          is_used?: boolean | null
+          stripe_session_id?: string | null
+          token?: string
+          used_at?: string | null
+        }
+        Relationships: []
+      }
+      family_members: {
+        Row: {
+          created_at: string | null
+          dynasty_id: string | null
+          id: string
+          profile_id: string | null
+          role: string | null
+          tree_id: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          dynasty_id?: string | null
+          id?: string
+          profile_id?: string | null
+          role?: string | null
+          tree_id?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          dynasty_id?: string | null
+          id?: string
+          profile_id?: string | null
+          role?: string | null
+          tree_id?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "family_members_tree_id_fkey"
+            columns: ["tree_id"]
+            isOneToOne: false
+            referencedRelation: "family_trees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      family_trees: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          dynasty_id: string | null
+          id: number
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          dynasty_id?: string | null
+          id?: number
+          name?: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          dynasty_id?: string | null
+          id?: number
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      invites: {
+        Row: {
+          affiliation: string | null
+          created_at: string | null
+          dynasty_id: string
+          email: string | null
+          expires_at: string
+          id: string
+          invited_by: string | null
+          token: string
+          used: boolean | null
+          user_role: string
+        }
+        Insert: {
+          affiliation?: string | null
+          created_at?: string | null
+          dynasty_id: string
+          email?: string | null
+          expires_at?: string
+          id?: string
+          invited_by?: string | null
+          token: string
+          used?: boolean | null
+          user_role: string
+        }
+        Update: {
+          affiliation?: string | null
+          created_at?: string | null
+          dynasty_id?: string
+          email?: string | null
+          expires_at?: string
+          id?: string
+          invited_by?: string | null
+          token?: string
+          used?: boolean | null
+          user_role?: string
+        }
+        Relationships: []
+      }
+      medias: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          duration: number | null
+          id: string
+          thumbnail_url: string | null
+          title: string
+          updated_at: string | null
+          video_url: string
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          duration?: number | null
+          id?: string
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string | null
+          video_url: string
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          duration?: number | null
+          id?: string
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string | null
+          video_url?: string
+        }
+        Relationships: []
+      }
+      messages: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          is_admin_message: boolean | null
+          sender_id: string | null
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          is_admin_message?: boolean | null
+          sender_id?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          is_admin_message?: boolean | null
+          sender_id?: string | null
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          created_at: string | null
+          data: Json | null
+          dynasty_id: string | null
+          id: string
+          message: string
+          read: boolean | null
+          title: string
+          type: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          data?: Json | null
+          dynasty_id?: string | null
+          id?: string
+          message: string
+          read?: boolean | null
+          title: string
+          type: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          data?: Json | null
+          dynasty_id?: string | null
+          id?: string
+          message?: string
+          read?: boolean | null
+          title?: string
+          type?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          affiliated_member: Json | null
+          affiliation: string | null
+          avatar_url: string | null
+          birth_date: string | null
+          birth_place: string | null
+          civilite: string | null
+          civility: string | null
+          created_at: string | null
+          current_location: string | null
+          dynasty_id: string | null
+          email: string | null
+          father_id: string | null
+          father_name: string | null
+          first_name: string | null
+          id: string
+          is_admin: boolean | null
+          is_parent: boolean | null
+          is_patriarch: boolean | null
+          last_name: string | null
+          mother_id: string | null
+          mother_name: string | null
+          parent_id: string | null
+          phone: string | null
+          photo_url: string | null
+          profession: string | null
+          relationship_type: string | null
+          role: string | null
+          role_radio: string | null
+          situation: string | null
+          updated_at: string | null
+          user_id: string
+          user_role: Database["public"]["Enums"]["user_role"] | null
+        }
+        Insert: {
+          affiliated_member?: Json | null
+          affiliation?: string | null
+          avatar_url?: string | null
+          birth_date?: string | null
+          birth_place?: string | null
+          civilite?: string | null
+          civility?: string | null
+          created_at?: string | null
+          current_location?: string | null
+          dynasty_id?: string | null
+          email?: string | null
+          father_id?: string | null
+          father_name?: string | null
+          first_name?: string | null
+          id: string
+          is_admin?: boolean | null
+          is_parent?: boolean | null
+          is_patriarch?: boolean | null
+          last_name?: string | null
+          mother_id?: string | null
+          mother_name?: string | null
+          parent_id?: string | null
+          phone?: string | null
+          photo_url?: string | null
+          profession?: string | null
+          relationship_type?: string | null
+          role?: string | null
+          role_radio?: string | null
+          situation?: string | null
+          updated_at?: string | null
+          user_id: string
+          user_role?: Database["public"]["Enums"]["user_role"] | null
+        }
+        Update: {
+          affiliated_member?: Json | null
+          affiliation?: string | null
+          avatar_url?: string | null
+          birth_date?: string | null
+          birth_place?: string | null
+          civilite?: string | null
+          civility?: string | null
+          created_at?: string | null
+          current_location?: string | null
+          dynasty_id?: string | null
+          email?: string | null
+          father_id?: string | null
+          father_name?: string | null
+          first_name?: string | null
+          id?: string
+          is_admin?: boolean | null
+          is_parent?: boolean | null
+          is_patriarch?: boolean | null
+          last_name?: string | null
+          mother_id?: string | null
+          mother_name?: string | null
+          parent_id?: string | null
+          phone?: string | null
+          photo_url?: string | null
+          profession?: string | null
+          relationship_type?: string | null
+          role?: string | null
+          role_radio?: string | null
+          situation?: string | null
+          updated_at?: string | null
+          user_id?: string
+          user_role?: Database["public"]["Enums"]["user_role"] | null
+        }
+        Relationships: []
+      }
+      relationships: {
+        Row: {
+          created_at: string | null
+          dynasty_id: string | null
+          id: string
+          person1_id: string | null
+          person2_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          dynasty_id?: string | null
+          id?: string
+          person1_id?: string | null
+          person2_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          dynasty_id?: string | null
+          id?: string
+          person1_id?: string | null
+          person2_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      site_settings: {
+        Row: {
+          created_at: string | null
+          family_tree_title: string | null
+          id: number
+          members_page_title: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          family_tree_title?: string | null
+          id?: number
+          members_page_title?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          family_tree_title?: string | null
+          id?: number
+          members_page_title?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      create_invitation: {
+        Args: {
+          p_dynasty_id: string
+          p_user_role: string
+          p_expires_at?: string
+        }
+        Returns: {
+          id: string
+          token: string
+        }[]
+      }
+      get_invitation_data: {
+        Args: { invite_token: string }
+        Returns: {
+          id: string
+          token: string
+          dynasty_id: string
+          dynasty_name: string
+          user_role: string
+          expires_at: string
+          used: boolean
+        }[]
+      }
+      mark_invitation_used: {
+        Args: { invite_id: string }
+        Returns: boolean
+      }
+    }
+    Enums: {
+      civilite: "M." | "Mme"
+      family_title:
+        | "M."
+        | "Mme"
+        | "Patriarche"
+        | "Matriarche"
+        | "Père"
+        | "Mère"
+        | "Fils"
+        | "Fille"
+        | "Grand-père"
+        | "Grand-mère"
+        | "Petit-fils"
+        | "Petite-fille"
+        | "Oncle"
+        | "Tante"
+        | "Neveu"
+        | "Nièce"
+        | "Cousin"
+        | "Cousine"
+        | "Époux"
+        | "Épouse"
+        | "Beau-père"
+        | "Belle-mère"
+        | "Beau-fils"
+        | "Belle-fille"
+        | "Frère"
+        | "Sœur"
+      relationship_type:
+        | "patriarche"
+        | "matriarche"
+        | "fils"
+        | "fille"
+        | "père"
+        | "mère"
+        | "cousin"
+        | "cousine"
+        | "tante"
+        | "oncle"
+        | "neveu"
+        | "nièce"
+        | "petit-fils"
+        | "petite-fille"
+        | "grand-père"
+        | "grand-mère"
+        | "époux"
+        | "épouse"
+        | "beau-père"
+        | "belle-mère"
+        | "beau-fils"
+        | "belle-fille"
+        | "frère"
+        | "sœur"
+      user_role:
+        | "Administrateur"
+        | "Patriarche"
+        | "Matriarche"
+        | "Membre"
+        | "Visiteur"
+        | "Invité"
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
 }
 
-type***REMOVED***DefaultSchema***REMOVED***=***REMOVED***Database[Extract<keyof***REMOVED***Database,***REMOVED***"public">]
+type DefaultSchema = Database[Extract<keyof Database, "public">]
 
-export***REMOVED***type***REMOVED***Tables<
-***REMOVED******REMOVED***DefaultSchemaTableNameOrOptions***REMOVED***extends
-***REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***keyof***REMOVED***(DefaultSchema["Tables"]***REMOVED***&***REMOVED***DefaultSchema["Views"])
-***REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***{***REMOVED***schema:***REMOVED***keyof***REMOVED***Database***REMOVED***},
-***REMOVED******REMOVED***TableName***REMOVED***extends***REMOVED***DefaultSchemaTableNameOrOptions***REMOVED***extends***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***schema:***REMOVED***keyof***REMOVED***Database
-***REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***keyof***REMOVED***(Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]***REMOVED***&
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-***REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***never***REMOVED***=***REMOVED***never,
->***REMOVED***=***REMOVED***DefaultSchemaTableNameOrOptions***REMOVED***extends***REMOVED***{***REMOVED***schema:***REMOVED***keyof***REMOVED***Database***REMOVED***}
-***REMOVED******REMOVED***?***REMOVED***(Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]***REMOVED***&
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName]***REMOVED***extends***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Row:***REMOVED***infer***REMOVED***R
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***R
-***REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***never
-***REMOVED******REMOVED***:***REMOVED***DefaultSchemaTableNameOrOptions***REMOVED***extends***REMOVED***keyof***REMOVED***(DefaultSchema["Tables"]***REMOVED***&
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***DefaultSchema["Views"])
-***REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***(DefaultSchema["Tables"]***REMOVED***&
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions]***REMOVED***extends***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Row:***REMOVED***infer***REMOVED***R
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***R
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***never
-***REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***never
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof Database },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
+  ? (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
 
-export***REMOVED***type***REMOVED***TablesInsert<
-***REMOVED******REMOVED***DefaultSchemaTableNameOrOptions***REMOVED***extends
-***REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***keyof***REMOVED***DefaultSchema["Tables"]
-***REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***{***REMOVED***schema:***REMOVED***keyof***REMOVED***Database***REMOVED***},
-***REMOVED******REMOVED***TableName***REMOVED***extends***REMOVED***DefaultSchemaTableNameOrOptions***REMOVED***extends***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***schema:***REMOVED***keyof***REMOVED***Database
-***REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***keyof***REMOVED***Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-***REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***never***REMOVED***=***REMOVED***never,
->***REMOVED***=***REMOVED***DefaultSchemaTableNameOrOptions***REMOVED***extends***REMOVED***{***REMOVED***schema:***REMOVED***keyof***REMOVED***Database***REMOVED***}
-***REMOVED******REMOVED***?***REMOVED***Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName]***REMOVED***extends***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Insert:***REMOVED***infer***REMOVED***I
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***I
-***REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***never
-***REMOVED******REMOVED***:***REMOVED***DefaultSchemaTableNameOrOptions***REMOVED***extends***REMOVED***keyof***REMOVED***DefaultSchema["Tables"]
-***REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions]***REMOVED***extends***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Insert:***REMOVED***infer***REMOVED***I
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***I
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***never
-***REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***never
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof Database },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
+  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
 
-export***REMOVED***type***REMOVED***TablesUpdate<
-***REMOVED******REMOVED***DefaultSchemaTableNameOrOptions***REMOVED***extends
-***REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***keyof***REMOVED***DefaultSchema["Tables"]
-***REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***{***REMOVED***schema:***REMOVED***keyof***REMOVED***Database***REMOVED***},
-***REMOVED******REMOVED***TableName***REMOVED***extends***REMOVED***DefaultSchemaTableNameOrOptions***REMOVED***extends***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***schema:***REMOVED***keyof***REMOVED***Database
-***REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***keyof***REMOVED***Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-***REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***never***REMOVED***=***REMOVED***never,
->***REMOVED***=***REMOVED***DefaultSchemaTableNameOrOptions***REMOVED***extends***REMOVED***{***REMOVED***schema:***REMOVED***keyof***REMOVED***Database***REMOVED***}
-***REMOVED******REMOVED***?***REMOVED***Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName]***REMOVED***extends***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Update:***REMOVED***infer***REMOVED***U
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***U
-***REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***never
-***REMOVED******REMOVED***:***REMOVED***DefaultSchemaTableNameOrOptions***REMOVED***extends***REMOVED***keyof***REMOVED***DefaultSchema["Tables"]
-***REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions]***REMOVED***extends***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Update:***REMOVED***infer***REMOVED***U
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***U
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***never
-***REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***never
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof Database },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
+  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
 
-export***REMOVED***type***REMOVED***Enums<
-***REMOVED******REMOVED***DefaultSchemaEnumNameOrOptions***REMOVED***extends
-***REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***keyof***REMOVED***DefaultSchema["Enums"]
-***REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***{***REMOVED***schema:***REMOVED***keyof***REMOVED***Database***REMOVED***},
-***REMOVED******REMOVED***EnumName***REMOVED***extends***REMOVED***DefaultSchemaEnumNameOrOptions***REMOVED***extends***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***schema:***REMOVED***keyof***REMOVED***Database
-***REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***keyof***REMOVED***Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-***REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***never***REMOVED***=***REMOVED***never,
->***REMOVED***=***REMOVED***DefaultSchemaEnumNameOrOptions***REMOVED***extends***REMOVED***{***REMOVED***schema:***REMOVED***keyof***REMOVED***Database***REMOVED***}
-***REMOVED******REMOVED***?***REMOVED***Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
-***REMOVED******REMOVED***:***REMOVED***DefaultSchemaEnumNameOrOptions***REMOVED***extends***REMOVED***keyof***REMOVED***DefaultSchema["Enums"]
-***REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
-***REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***never
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof Database },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends { schema: keyof Database }
+  ? Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
 
-export***REMOVED***type***REMOVED***CompositeTypes<
-***REMOVED******REMOVED***PublicCompositeTypeNameOrOptions***REMOVED***extends
-***REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***keyof***REMOVED***DefaultSchema["CompositeTypes"]
-***REMOVED******REMOVED******REMOVED******REMOVED***|***REMOVED***{***REMOVED***schema:***REMOVED***keyof***REMOVED***Database***REMOVED***},
-***REMOVED******REMOVED***CompositeTypeName***REMOVED***extends***REMOVED***PublicCompositeTypeNameOrOptions***REMOVED***extends***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***schema:***REMOVED***keyof***REMOVED***Database
-***REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***keyof***REMOVED***Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-***REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***never***REMOVED***=***REMOVED***never,
->***REMOVED***=***REMOVED***PublicCompositeTypeNameOrOptions***REMOVED***extends***REMOVED***{***REMOVED***schema:***REMOVED***keyof***REMOVED***Database***REMOVED***}
-***REMOVED******REMOVED***?***REMOVED***Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
-***REMOVED******REMOVED***:***REMOVED***PublicCompositeTypeNameOrOptions***REMOVED***extends***REMOVED***keyof***REMOVED***DefaultSchema["CompositeTypes"]
-***REMOVED******REMOVED******REMOVED******REMOVED***?***REMOVED***DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-***REMOVED******REMOVED******REMOVED******REMOVED***:***REMOVED***never
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof Database },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
 
-export***REMOVED***const***REMOVED***Constants***REMOVED***=***REMOVED***{
-***REMOVED******REMOVED***public:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***Enums:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***civilite:***REMOVED***["M.",***REMOVED***"Mme"],
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***family_title:***REMOVED***[
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"M.",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Mme",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Patriarche",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Matriarche",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Père",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Mère",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Fils",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Fille",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Grand-père",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Grand-mère",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Petit-fils",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Petite-fille",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Oncle",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Tante",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Neveu",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Nièce",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Cousin",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Cousine",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Époux",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Épouse",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Beau-père",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Belle-mère",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Beau-fils",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Belle-fille",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Frère",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Sœur",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***],
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***relationship_type:***REMOVED***[
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"patriarche",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"matriarche",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"fils",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"fille",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"père",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"mère",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"cousin",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"cousine",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"tante",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"oncle",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"neveu",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"nièce",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"petit-fils",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"petite-fille",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"grand-père",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"grand-mère",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"époux",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"épouse",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"beau-père",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"belle-mère",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"beau-fils",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"belle-fille",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"frère",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"sœur",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***],
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_role:***REMOVED***[
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Administrateur",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Patriarche",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Matriarche",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Membre",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Visiteur",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***"Invité",
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***],
-***REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED***},
-}***REMOVED***as***REMOVED***const
+export const Constants = {
+  public: {
+    Enums: {
+      civilite: ["M.", "Mme"],
+      family_title: [
+        "M.",
+        "Mme",
+        "Patriarche",
+        "Matriarche",
+        "Père",
+        "Mère",
+        "Fils",
+        "Fille",
+        "Grand-père",
+        "Grand-mère",
+        "Petit-fils",
+        "Petite-fille",
+        "Oncle",
+        "Tante",
+        "Neveu",
+        "Nièce",
+        "Cousin",
+        "Cousine",
+        "Époux",
+        "Épouse",
+        "Beau-père",
+        "Belle-mère",
+        "Beau-fils",
+        "Belle-fille",
+        "Frère",
+        "Sœur",
+      ],
+      relationship_type: [
+        "patriarche",
+        "matriarche",
+        "fils",
+        "fille",
+        "père",
+        "mère",
+        "cousin",
+        "cousine",
+        "tante",
+        "oncle",
+        "neveu",
+        "nièce",
+        "petit-fils",
+        "petite-fille",
+        "grand-père",
+        "grand-mère",
+        "époux",
+        "épouse",
+        "beau-père",
+        "belle-mère",
+        "beau-fils",
+        "belle-fille",
+        "frère",
+        "sœur",
+      ],
+      user_role: [
+        "Administrateur",
+        "Patriarche",
+        "Matriarche",
+        "Membre",
+        "Visiteur",
+        "Invité",
+      ],
+    },
+  },
+} as const

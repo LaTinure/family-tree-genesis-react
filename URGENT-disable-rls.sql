@@ -1,13 +1,13 @@
---***REMOVED***URGENT:***REMOVED***Désactiver***REMOVED***complètement***REMOVED***RLS***REMOVED***pour***REMOVED***permettre***REMOVED***l'accès
---***REMOVED***Copier***REMOVED***et***REMOVED***coller***REMOVED***IMMÉDIATEMENT***REMOVED***dans***REMOVED***l'éditeur***REMOVED***SQL***REMOVED***de***REMOVED***Supabase
+-- URGENT: Désactiver complètement RLS pour permettre l'accès
+-- Copier et coller IMMÉDIATEMENT dans l'éditeur SQL de Supabase
 
---***REMOVED***1.***REMOVED***Désactiver***REMOVED***RLS***REMOVED***complètement***REMOVED***(solution***REMOVED***d'urgence)
-ALTER***REMOVED***TABLE***REMOVED***profiles***REMOVED***DISABLE***REMOVED***ROW***REMOVED***LEVEL***REMOVED***SECURITY;
+-- 1. Désactiver RLS complètement (solution d'urgence)
+ALTER TABLE profiles DISABLE ROW LEVEL SECURITY;
 
---***REMOVED***2.***REMOVED***Vérifier***REMOVED***que***REMOVED***ça***REMOVED***fonctionne
-SELECT***REMOVED***COUNT(*)***REMOVED***as***REMOVED***total_profiles***REMOVED***FROM***REMOVED***profiles;
-SELECT***REMOVED***first_name,***REMOVED***last_name,***REMOVED***email,***REMOVED***role_radio***REMOVED***FROM***REMOVED***profiles***REMOVED***LIMIT***REMOVED***5;
+-- 2. Vérifier que ça fonctionne
+SELECT COUNT(*) as total_profiles FROM profiles;
+SELECT first_name, last_name, email, role_radio FROM profiles LIMIT 5;
 
---***REMOVED***3.***REMOVED***Si***REMOVED***vous***REMOVED***voulez***REMOVED***réactiver***REMOVED***RLS***REMOVED***plus***REMOVED***tard***REMOVED***avec***REMOVED***des***REMOVED***politiques***REMOVED***permissives:
---***REMOVED***ALTER***REMOVED***TABLE***REMOVED***profiles***REMOVED***ENABLE***REMOVED***ROW***REMOVED***LEVEL***REMOVED***SECURITY;
---***REMOVED***CREATE***REMOVED***POLICY***REMOVED***"Allow***REMOVED***all"***REMOVED***ON***REMOVED***profiles***REMOVED***FOR***REMOVED***ALL***REMOVED***USING***REMOVED***(true)***REMOVED***WITH***REMOVED***CHECK***REMOVED***(true);
+-- 3. Si vous voulez réactiver RLS plus tard avec des politiques permissives:
+-- ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+-- CREATE POLICY "Allow all" ON profiles FOR ALL USING (true) WITH CHECK (true);

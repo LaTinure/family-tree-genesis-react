@@ -1,64 +1,64 @@
---***REMOVED***Fonction***REMOVED***pour***REMOVED***récupérer***REMOVED***les***REMOVED***données***REMOVED***d'une***REMOVED***invitation
-CREATE***REMOVED***OR***REMOVED***REPLACE***REMOVED***FUNCTION***REMOVED***get_invitation_data(invite_token***REMOVED***TEXT)
-RETURNS***REMOVED***TABLE***REMOVED***(
-***REMOVED******REMOVED***id***REMOVED***UUID,
-***REMOVED******REMOVED***token***REMOVED***TEXT,
-***REMOVED******REMOVED***dynasty_id***REMOVED***UUID,
-***REMOVED******REMOVED***dynasty_name***REMOVED***TEXT,
-***REMOVED******REMOVED***user_role***REMOVED***TEXT,
-***REMOVED******REMOVED***expires_at***REMOVED***TIMESTAMPTZ,
-***REMOVED******REMOVED***used***REMOVED***BOOLEAN
-)***REMOVED***AS***REMOVED***$$
+-- Fonction pour récupérer les données d'une invitation
+CREATE OR REPLACE FUNCTION get_invitation_data(invite_token TEXT)
+RETURNS TABLE (
+  id UUID,
+  token TEXT,
+  dynasty_id UUID,
+  dynasty_name TEXT,
+  user_role TEXT,
+  expires_at TIMESTAMPTZ,
+  used BOOLEAN
+) AS $$
 BEGIN
-***REMOVED******REMOVED***RETURN***REMOVED***QUERY
-***REMOVED******REMOVED***SELECT
-***REMOVED******REMOVED******REMOVED******REMOVED***i.id,
-***REMOVED******REMOVED******REMOVED******REMOVED***i.token,
-***REMOVED******REMOVED******REMOVED******REMOVED***i.dynasty_id,
-***REMOVED******REMOVED******REMOVED******REMOVED***d.name***REMOVED***as***REMOVED***dynasty_name,
-***REMOVED******REMOVED******REMOVED******REMOVED***i.user_role,
-***REMOVED******REMOVED******REMOVED******REMOVED***i.expires_at,
-***REMOVED******REMOVED******REMOVED******REMOVED***i.used
-***REMOVED******REMOVED***FROM***REMOVED***invites***REMOVED***i
-***REMOVED******REMOVED***LEFT***REMOVED***JOIN***REMOVED***dynasties***REMOVED***d***REMOVED***ON***REMOVED***i.dynasty_id***REMOVED***=***REMOVED***d.id
-***REMOVED******REMOVED***WHERE***REMOVED***i.token***REMOVED***=***REMOVED***invite_token;
+  RETURN QUERY
+  SELECT
+    i.id,
+    i.token,
+    i.dynasty_id,
+    d.name as dynasty_name,
+    i.user_role,
+    i.expires_at,
+    i.used
+  FROM invites i
+  LEFT JOIN dynasties d ON i.dynasty_id = d.id
+  WHERE i.token = invite_token;
 END;
-$$***REMOVED***LANGUAGE***REMOVED***plpgsql***REMOVED***SECURITY***REMOVED***DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
---***REMOVED***Fonction***REMOVED***pour***REMOVED***marquer***REMOVED***une***REMOVED***invitation***REMOVED***comme***REMOVED***utilisée
-CREATE***REMOVED***OR***REMOVED***REPLACE***REMOVED***FUNCTION***REMOVED***mark_invitation_used(invite_id***REMOVED***UUID)
-RETURNS***REMOVED***BOOLEAN***REMOVED***AS***REMOVED***$$
+-- Fonction pour marquer une invitation comme utilisée
+CREATE OR REPLACE FUNCTION mark_invitation_used(invite_id UUID)
+RETURNS BOOLEAN AS $$
 BEGIN
-***REMOVED******REMOVED***UPDATE***REMOVED***invites
-***REMOVED******REMOVED***SET***REMOVED***used***REMOVED***=***REMOVED***true,***REMOVED***updated_at***REMOVED***=***REMOVED***NOW()
-***REMOVED******REMOVED***WHERE***REMOVED***id***REMOVED***=***REMOVED***invite_id;
+  UPDATE invites
+  SET used = true, updated_at = NOW()
+  WHERE id = invite_id;
 
-***REMOVED******REMOVED***RETURN***REMOVED***FOUND;
+  RETURN FOUND;
 END;
-$$***REMOVED***LANGUAGE***REMOVED***plpgsql***REMOVED***SECURITY***REMOVED***DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
---***REMOVED***Fonction***REMOVED***pour***REMOVED***créer***REMOVED***une***REMOVED***nouvelle***REMOVED***invitation
-CREATE***REMOVED***OR***REMOVED***REPLACE***REMOVED***FUNCTION***REMOVED***create_invitation(
-***REMOVED******REMOVED***p_dynasty_id***REMOVED***UUID,
-***REMOVED******REMOVED***p_user_role***REMOVED***TEXT,
-***REMOVED******REMOVED***p_expires_at***REMOVED***TIMESTAMPTZ***REMOVED***DEFAULT***REMOVED***(NOW()***REMOVED***+***REMOVED***INTERVAL***REMOVED***'7***REMOVED***days')
+-- Fonction pour créer une nouvelle invitation
+CREATE OR REPLACE FUNCTION create_invitation(
+  p_dynasty_id UUID,
+  p_user_role TEXT,
+  p_expires_at TIMESTAMPTZ DEFAULT (NOW() + INTERVAL '7 days')
 )
-RETURNS***REMOVED***TABLE***REMOVED***(
-***REMOVED******REMOVED***id***REMOVED***UUID,
-***REMOVED******REMOVED***token***REMOVED***TEXT
-)***REMOVED***AS***REMOVED***$$
+RETURNS TABLE (
+  id UUID,
+  token TEXT
+) AS $$
 DECLARE
-***REMOVED******REMOVED***new_token***REMOVED***TEXT;
-***REMOVED******REMOVED***new_id***REMOVED***UUID;
+  new_token TEXT;
+  new_id UUID;
 BEGIN
-***REMOVED******REMOVED***--***REMOVED***Générer***REMOVED***un***REMOVED***token***REMOVED***unique
-***REMOVED******REMOVED***new_token***REMOVED***:=***REMOVED***encode(gen_random_bytes(32),***REMOVED***'hex');
+  -- Générer un token unique
+  new_token := encode(gen_random_bytes(32), 'hex');
 
-***REMOVED******REMOVED***--***REMOVED***Insérer***REMOVED***l'invitation
-***REMOVED******REMOVED***INSERT***REMOVED***INTO***REMOVED***invites***REMOVED***(dynasty_id,***REMOVED***user_role,***REMOVED***token,***REMOVED***expires_at)
-***REMOVED******REMOVED***VALUES***REMOVED***(p_dynasty_id,***REMOVED***p_user_role,***REMOVED***new_token,***REMOVED***p_expires_at)
-***REMOVED******REMOVED***RETURNING***REMOVED***id,***REMOVED***token***REMOVED***INTO***REMOVED***new_id,***REMOVED***new_token;
+  -- Insérer l'invitation
+  INSERT INTO invites (dynasty_id, user_role, token, expires_at)
+  VALUES (p_dynasty_id, p_user_role, new_token, p_expires_at)
+  RETURNING id, token INTO new_id, new_token;
 
-***REMOVED******REMOVED***RETURN***REMOVED***QUERY***REMOVED***SELECT***REMOVED***new_id,***REMOVED***new_token;
+  RETURN QUERY SELECT new_id, new_token;
 END;
-$$***REMOVED***LANGUAGE***REMOVED***plpgsql***REMOVED***SECURITY***REMOVED***DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER;

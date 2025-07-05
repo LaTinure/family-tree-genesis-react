@@ -1,39 +1,39 @@
-import***REMOVED***{***REMOVED***clsx,***REMOVED***type***REMOVED***ClassValue***REMOVED***}***REMOVED***from***REMOVED***"clsx"
-import***REMOVED***{***REMOVED***twMerge***REMOVED***}***REMOVED***from***REMOVED***"tailwind-merge"
+import { clsx, type ClassValue } from "clsx"
+import { twMerge } from "tailwind-merge"
 
-export***REMOVED***function***REMOVED***cn(...inputs:***REMOVED***ClassValue[])***REMOVED***{
-***REMOVED******REMOVED***return***REMOVED***twMerge(clsx(inputs))
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
 }
 
-//***REMOVED***Fonction***REMOVED***pour***REMOVED***formater***REMOVED***l'affiliation/relationship_type
-export***REMOVED***const***REMOVED***formatRelationshipType***REMOVED***=***REMOVED***(relationshipType:***REMOVED***string):***REMOVED***string***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***relationshipMap:***REMOVED***Record<string,***REMOVED***string>***REMOVED***=***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***'fils':***REMOVED***'Fils',
-***REMOVED******REMOVED******REMOVED******REMOVED***'fille':***REMOVED***'Fille',
-***REMOVED******REMOVED******REMOVED******REMOVED***'père':***REMOVED***'Père',
-***REMOVED******REMOVED******REMOVED******REMOVED***'mère':***REMOVED***'Mère',
-***REMOVED******REMOVED******REMOVED******REMOVED***'cousin':***REMOVED***'Cousin',
-***REMOVED******REMOVED******REMOVED******REMOVED***'cousine':***REMOVED***'Cousine',
-***REMOVED******REMOVED******REMOVED******REMOVED***'tante':***REMOVED***'Tante',
-***REMOVED******REMOVED******REMOVED******REMOVED***'oncle':***REMOVED***'Oncle',
-***REMOVED******REMOVED******REMOVED******REMOVED***'neveu':***REMOVED***'Neveu',
-***REMOVED******REMOVED******REMOVED******REMOVED***'nièce':***REMOVED***'Nièce',
-***REMOVED******REMOVED******REMOVED******REMOVED***'petit-fils':***REMOVED***'Petit-fils',
-***REMOVED******REMOVED******REMOVED******REMOVED***'petite-fille':***REMOVED***'Petite-fille',
-***REMOVED******REMOVED******REMOVED******REMOVED***'grand-père':***REMOVED***'Grand-père',
-***REMOVED******REMOVED******REMOVED******REMOVED***'grande-mère':***REMOVED***'Grand-mère',
-***REMOVED******REMOVED******REMOVED******REMOVED***'époux':***REMOVED***'Époux',
-***REMOVED******REMOVED******REMOVED******REMOVED***'épouse':***REMOVED***'Épouse',
-***REMOVED******REMOVED******REMOVED******REMOVED***'patriarche':***REMOVED***'Patriarche',
-***REMOVED******REMOVED******REMOVED******REMOVED***'matriarche':***REMOVED***'Matriarche',
-***REMOVED******REMOVED******REMOVED******REMOVED***'conjoint':***REMOVED***'Conjoint',
-***REMOVED******REMOVED******REMOVED******REMOVED***'beau-fils':***REMOVED***'Beau-fils',
-***REMOVED******REMOVED******REMOVED******REMOVED***'belle-fille':***REMOVED***'Belle-fille',
-***REMOVED******REMOVED******REMOVED******REMOVED***'beau-père':***REMOVED***'Beau-père',
-***REMOVED******REMOVED******REMOVED******REMOVED***'belle-mère':***REMOVED***'Belle-mère',
-***REMOVED******REMOVED******REMOVED******REMOVED***'frère':***REMOVED***'Frère',
-***REMOVED******REMOVED******REMOVED******REMOVED***'sœur':***REMOVED***'Sœur'
-***REMOVED******REMOVED***};
+// Fonction pour formater l'affiliation/relationship_type
+export const formatRelationshipType = (relationshipType: string): string => {
+  const relationshipMap: Record<string, string> = {
+    'fils': 'Fils',
+    'fille': 'Fille',
+    'père': 'Père',
+    'mère': 'Mère',
+    'cousin': 'Cousin',
+    'cousine': 'Cousine',
+    'tante': 'Tante',
+    'oncle': 'Oncle',
+    'neveu': 'Neveu',
+    'nièce': 'Nièce',
+    'petit-fils': 'Petit-fils',
+    'petite-fille': 'Petite-fille',
+    'grand-père': 'Grand-père',
+    'grande-mère': 'Grand-mère',
+    'époux': 'Époux',
+    'épouse': 'Épouse',
+    'patriarche': 'Patriarche',
+    'matriarche': 'Matriarche',
+    'conjoint': 'Conjoint',
+    'beau-fils': 'Beau-fils',
+    'belle-fille': 'Belle-fille',
+    'beau-père': 'Beau-père',
+    'belle-mère': 'Belle-mère',
+    'frère': 'Frère',
+    'sœur': 'Sœur'
+  };
 
-***REMOVED******REMOVED***return***REMOVED***relationshipMap[relationshipType.toLowerCase()]***REMOVED***||***REMOVED***relationshipType;
+  return relationshipMap[relationshipType.toLowerCase()] || relationshipType;
 };
