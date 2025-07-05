@@ -2,9 +2,10 @@ import***REMOVED***{***REMOVED***serve***REMOVED***}***REMOVED***from***REMOVED*
 import***REMOVED***{***REMOVED***createClient***REMOVED***}***REMOVED***from***REMOVED***'https://esm.sh/@supabase/supabase-js@2';
 import***REMOVED***Stripe***REMOVED***from***REMOVED***'https://esm.sh/stripe@12.0.0';
 
-const***REMOVED***stripe***REMOVED***=***REMOVED***new***REMOVED***Stripe('***REMOVED***',***REMOVED***{
+const***REMOVED***stripe***REMOVED***=***REMOVED***new***REMOVED***Stripe(Deno.env.get('STRIPE_SECRET_KEY')!,***REMOVED***{
 ***REMOVED******REMOVED***apiVersion:***REMOVED***'2023-10-16'
 });
+
 
 const***REMOVED***corsHeaders***REMOVED***=***REMOVED***{
 ***REMOVED******REMOVED***'Access-Control-Allow-Origin':***REMOVED***'*',
@@ -21,8 +22,8 @@ serve(async***REMOVED***(req)***REMOVED***=>***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED***console.log("🔑***REMOVED***Authorization***REMOVED***header:",***REMOVED***authHeader);
 
 ***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***supabase***REMOVED***=***REMOVED***createClient(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Deno.env.get('SUPABASE_URL')***REMOVED***??***REMOVED***'https://aaxfvyorhasbwlaovrdf.supabase.co',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Deno.env.get('SUPABASE_ANON_KEY')***REMOVED***??***REMOVED***'***REMOVED***',
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Deno.env.get('SUPABASE_URL')!,
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***Deno.env.get('SUPABASE_ANON_KEY')!,
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***global:***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***headers:***REMOVED***{
@@ -31,6 +32,7 @@ serve(async***REMOVED***(req)***REMOVED***=>***REMOVED***{
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
 ***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
 ***REMOVED******REMOVED******REMOVED******REMOVED***);
+
 
 ***REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***data:***REMOVED***{***REMOVED***user***REMOVED***},***REMOVED***error:***REMOVED***authError***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***supabase.auth.getUser();
 ***REMOVED******REMOVED******REMOVED******REMOVED***console.log("👤***REMOVED***User***REMOVED***fetched:",***REMOVED***user);
