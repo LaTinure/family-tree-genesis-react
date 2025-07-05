@@ -1,7 +1,8 @@
 
+//src\hooks\useAuth.tsx
 import***REMOVED***{***REMOVED***createContext,***REMOVED***useContext,***REMOVED***useEffect,***REMOVED***useState,***REMOVED***ReactNode***REMOVED***}***REMOVED***from***REMOVED***'react';
 import***REMOVED***{***REMOVED***User,***REMOVED***Session***REMOVED***}***REMOVED***from***REMOVED***'@supabase/supabase-js';
-import***REMOVED***{***REMOVED***supabase***REMOVED***}***REMOVED***from***REMOVED***'@/integrations/supabase/client';
+import***REMOVED***{***REMOVED***supabase***REMOVED***}***REMOVED***from***REMOVED***'@/lib/supabaseClient';
 import***REMOVED***{***REMOVED***FamilyMember***REMOVED***}***REMOVED***from***REMOVED***'@/types/family';
 
 interface***REMOVED***AuthContextType***REMOVED***{

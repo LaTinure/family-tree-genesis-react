@@ -11,7 +11,7 @@
 ***REMOVED******REMOVED******REMOVED******REMOVED***"preview":***REMOVED***"vite***REMOVED***preview"
 ***REMOVED******REMOVED***},
 ***REMOVED******REMOVED***"dependencies":***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***"@hookform/resolvers":***REMOVED***"^3.9.0",
+***REMOVED******REMOVED******REMOVED******REMOVED***"@hookform/resolvers":***REMOVED***"^3.10.0",
 ***REMOVED******REMOVED******REMOVED******REMOVED***"@radix-ui/react-accordion":***REMOVED***"^1.2.0",
 ***REMOVED******REMOVED******REMOVED******REMOVED***"@radix-ui/react-alert-dialog":***REMOVED***"^1.1.1",
 ***REMOVED******REMOVED******REMOVED******REMOVED***"@radix-ui/react-aspect-ratio":***REMOVED***"^1.1.0",
@@ -63,6 +63,7 @@
 ***REMOVED******REMOVED******REMOVED******REMOVED***"tailwind-merge":***REMOVED***"^2.5.2",
 ***REMOVED******REMOVED******REMOVED******REMOVED***"tailwindcss-animate":***REMOVED***"^1.0.7",
 ***REMOVED******REMOVED******REMOVED******REMOVED***"vaul":***REMOVED***"^0.9.3",
+***REMOVED******REMOVED******REMOVED******REMOVED***"yup":***REMOVED***"^1.6.1",
 ***REMOVED******REMOVED******REMOVED******REMOVED***"zod":***REMOVED***"^3.23.8"
 ***REMOVED******REMOVED***},
 ***REMOVED******REMOVED***"devDependencies":***REMOVED***{
