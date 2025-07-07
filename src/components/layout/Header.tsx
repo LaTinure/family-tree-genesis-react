@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
@@ -7,7 +8,6 @@ import { ROUTES } from '@/lib/constants/routes';
 import { Menu, X, Facebook, Twitter, Instagram, Linkedin, MessageCircle, Star, Settings, UserPlus, Flag, MessageSquare, LogOut, TreePine, Users, Shield, Loader2, Bell, Calendar, User, Database } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
-import { api } from '@/services/api';
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 
@@ -80,17 +80,25 @@ const Header = () => {
     setShowDeleteDialog(false);
     setIsDeleting(true);
     try {
-      const result = await api.admin.deleteAllUsers(deleteCode);
-      if (result.success) {
+      // Call the delete-all-data edge function directly
+      const { data, error } = await supabase.functions.invoke('delete-all-data', {
+        body: { secretCode: deleteCode }
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      if (data?.success) {
         toast({
           title: 'Suppression complète réussie',
-          description: `${(result as any).stats?.auth_users ?? result.deletedUsers ?? 0} utilisateurs supprimés.`,
+          description: `${data.stats?.auth_users ?? data.deletedUsers ?? 0} utilisateurs supprimés.`,
         });
         window.location.href = '/';
       } else {
         toast({
           title: 'Erreur',
-          description: result.message || 'Suppression échouée',
+          description: data?.message || 'Suppression échouée',
           variant: 'destructive',
         });
       }
@@ -296,7 +304,7 @@ const Header = () => {
                         {profile?.first_name || profile?.email?.split('@')[0] || 'Utilisateur'} {profile?.last_name || ''}
                       </p>
                       <p className="text-xs text-gray-500">
-                        {profile?.email} - {profile?.role === 'admin' || profile?.is_admin ? 'Administrateur' : 'Membre'} (Mode Test)
+                        {profile?.email} - {profile?.user_role === 'Administrateur' || profile?.is_admin ? 'Administrateur' : 'Membre'} (Mode Test)
                       </p>
                       <p className="text-xs text-gray-400">
                         ID: {profile?.id?.substring(0, 8)}...
