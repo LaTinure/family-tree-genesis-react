@@ -1,103 +1,114 @@
-import***REMOVED***{***REMOVED***useForm***REMOVED***}***REMOVED***from***REMOVED***'react-hook-form';
-import***REMOVED***{***REMOVED***yupResolver***REMOVED***}***REMOVED***from***REMOVED***'@hookform/resolvers/yup';
-import***REMOVED*******REMOVED***as***REMOVED***yup***REMOVED***from***REMOVED***'yup';
-import***REMOVED***{***REMOVED***useState***REMOVED***}***REMOVED***from***REMOVED***'react';
-import***REMOVED***{***REMOVED***useAuth***REMOVED***}***REMOVED***from***REMOVED***'@/hooks/useAuth';
-import***REMOVED***{***REMOVED***Input***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/input';
-import***REMOVED***{***REMOVED***Button***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/button';
-import***REMOVED***{***REMOVED***Card,***REMOVED***CardContent,***REMOVED***CardDescription,***REMOVED***CardHeader,***REMOVED***CardTitle***REMOVED***}***REMOVED***from***REMOVED***'@/components/ui/card';
-import***REMOVED***{***REMOVED***loadStripe***REMOVED***}***REMOVED***from***REMOVED***'@stripe/stripe-js';
-import***REMOVED***{***REMOVED***useToast***REMOVED***}***REMOVED***from***REMOVED***'@/hooks/use-toast';
 
-const***REMOVED***stripePromise***REMOVED***=***REMOVED***loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY!);
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+import { useAuth } from '@/hooks/useAuth';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { loadStripe } from '@stripe/stripe-js';
+import { useToast } from '@/hooks/use-toast';
 
-const***REMOVED***schema***REMOVED***=***REMOVED***yup.object().shape({
-***REMOVED******REMOVED***email:***REMOVED***yup.string().email('Email***REMOVED***invalide').required('Email***REMOVED***requis'),
-***REMOVED******REMOVED***card:***REMOVED***yup.string().required('Carte***REMOVED***test***REMOVED***requise***REMOVED***(utilisez***REMOVED***4242***REMOVED***4242***REMOVED***4242***REMOVED***4242)'),
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY!);
+
+const schema = yup.object().shape({
+  email: yup.string().email('Email invalide').required('Email requis'),
+  card: yup.string().required('Carte test requise (utilisez 4242 4242 4242 4242)'),
 });
 
-export***REMOVED***default***REMOVED***function***REMOVED***DynastyPaymentForm({***REMOVED***onSuccess***REMOVED***}:***REMOVED***{***REMOVED***onSuccess:***REMOVED***()***REMOVED***=>***REMOVED***void***REMOVED***})***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***{***REMOVED***user,***REMOVED***profile,***REMOVED***session***REMOVED***}***REMOVED***=***REMOVED***useAuth();
-***REMOVED******REMOVED***const***REMOVED***{***REMOVED***toast***REMOVED***}***REMOVED***=***REMOVED***useToast();
-***REMOVED******REMOVED***const***REMOVED***[loading,***REMOVED***setLoading]***REMOVED***=***REMOVED***useState(false);
-***REMOVED******REMOVED***const***REMOVED***[error,***REMOVED***setError]***REMOVED***=***REMOVED***useState<string***REMOVED***|***REMOVED***null>(null);
+interface DynastyPaymentFormProps {
+  onSuccess: () => void;
+}
 
-***REMOVED******REMOVED***const***REMOVED***form***REMOVED***=***REMOVED***useForm({
-***REMOVED******REMOVED******REMOVED******REMOVED***resolver:***REMOVED***yupResolver(schema),
-***REMOVED******REMOVED******REMOVED******REMOVED***defaultValues:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***email:***REMOVED***profile?.email***REMOVED***||***REMOVED***user?.email***REMOVED***||***REMOVED***'',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***card:***REMOVED***'',
-***REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED***});
+export default function DynastyPaymentForm({ onSuccess }: DynastyPaymentFormProps) {
+  const { user, profile, session } = useAuth();
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-***REMOVED******REMOVED***const***REMOVED***onSubmit***REMOVED***=***REMOVED***async***REMOVED***(values:***REMOVED***any)***REMOVED***=>***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED***setLoading(true);
-***REMOVED******REMOVED******REMOVED******REMOVED***setError(null);
-***REMOVED******REMOVED******REMOVED******REMOVED***try***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Authentifier***REMOVED***l'utilisateur***REMOVED***et***REMOVED***récupérer***REMOVED***le***REMOVED***JWT
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***jwt***REMOVED***=***REMOVED***session?.access_token;
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(!jwt)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setError('Vous***REMOVED***devez***REMOVED***être***REMOVED***connecté***REMOVED***pour***REMOVED***effectuer***REMOVED***ce***REMOVED***paiement.');
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setLoading(false);
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***return;
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***stripe***REMOVED***=***REMOVED***await***REMOVED***stripePromise;
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//***REMOVED***Appel***REMOVED***à***REMOVED***la***REMOVED***function***REMOVED***Supabase***REMOVED***pour***REMOVED***créer***REMOVED***la***REMOVED***session***REMOVED***Stripe
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***response***REMOVED***=***REMOVED***await***REMOVED***fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-checkout-session`,***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***method:***REMOVED***'POST',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***headers:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***'Content-Type':***REMOVED***'application/json',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***'Authorization':***REMOVED***`Bearer***REMOVED***${jwt}`,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***body:***REMOVED***JSON.stringify({
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***successUrl:***REMOVED***`${window.location.origin}/dynasty/create?session_id={CHECKOUT_SESSION_ID}`,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***cancelUrl:***REMOVED***`${window.location.origin}/dynasty/payment?cancel=1`,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***customAmount:***REMOVED***500,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***email:***REMOVED***values.email,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_id:***REMOVED***user?.id,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***}),
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***});
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(!response.ok)***REMOVED***throw***REMOVED***new***REMOVED***Error('Erreur***REMOVED***lors***REMOVED***de***REMOVED***la***REMOVED***création***REMOVED***de***REMOVED***la***REMOVED***session***REMOVED***Stripe');
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***const***REMOVED***{***REMOVED***sessionId***REMOVED***}***REMOVED***=***REMOVED***await***REMOVED***response.json();
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***if***REMOVED***(stripe)***REMOVED***await***REMOVED***stripe.redirectToCheckout({***REMOVED***sessionId***REMOVED***});
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***onSuccess();
-***REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***catch***REMOVED***(e:***REMOVED***any)***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setError(e.message***REMOVED***||***REMOVED***'Erreur***REMOVED***inconnue');
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***toast({***REMOVED***title:***REMOVED***'Erreur***REMOVED***de***REMOVED***paiement',***REMOVED***description:***REMOVED***e.message***REMOVED***||***REMOVED***'Erreur***REMOVED***inconnue',***REMOVED***variant:***REMOVED***'destructive'***REMOVED***});
-***REMOVED******REMOVED******REMOVED******REMOVED***}***REMOVED***finally***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***setLoading(false);
-***REMOVED******REMOVED******REMOVED******REMOVED***}
-***REMOVED******REMOVED***};
+  const form = useForm({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      email: profile?.email || user?.email || '',
+      card: '',
+    },
+  });
 
-***REMOVED******REMOVED***return***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED***<form***REMOVED***onSubmit={form.handleSubmit(onSubmit)}***REMOVED***className="space-y-4">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Card***REMOVED***className="shadow-none***REMOVED***border-0***REMOVED***bg-transparent">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<CardHeader***REMOVED***className="pb-2">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<CardTitle***REMOVED***className="text-xl">Informations***REMOVED***de***REMOVED***paiement</CardTitle>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<CardDescription>Remplissez***REMOVED***ce***REMOVED***formulaire***REMOVED***pour***REMOVED***accéder***REMOVED***au***REMOVED***paiement***REMOVED***sécurisé***REMOVED***Stripe.</CardDescription>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</CardHeader>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<CardContent***REMOVED***className="space-y-4">
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<label***REMOVED***className="block***REMOVED***text-sm***REMOVED***font-medium***REMOVED***mb-1">Email</label>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Input***REMOVED***type="email"***REMOVED***{...form.register('email')}***REMOVED***disabled={!!profile?.email}***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{form.formState.errors.email***REMOVED***&&***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<p***REMOVED***className="text-red-500***REMOVED***text-xs***REMOVED***mt-1">{form.formState.errors.email.message***REMOVED***as***REMOVED***string}</p>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<label***REMOVED***className="block***REMOVED***text-sm***REMOVED***font-medium***REMOVED***mb-1">Carte***REMOVED***test</label>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Input***REMOVED***type="text"***REMOVED***placeholder="4242***REMOVED***4242***REMOVED***4242***REMOVED***4242"***REMOVED***{...form.register('card')}***REMOVED***/>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<p***REMOVED***className="text-xs***REMOVED***text-gray-500***REMOVED***mt-1">Utilisez***REMOVED***la***REMOVED***carte***REMOVED***test***REMOVED***Stripe***REMOVED***:***REMOVED***4242***REMOVED***4242***REMOVED***4242***REMOVED***4242</p>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{form.formState.errors.card***REMOVED***&&***REMOVED***(
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<p***REMOVED***className="text-red-500***REMOVED***text-xs***REMOVED***mt-1">{form.formState.errors.card.message***REMOVED***as***REMOVED***string}</p>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***)}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</div>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{error***REMOVED***&&***REMOVED***<div***REMOVED***className="text-red-600***REMOVED***text-sm">{error}</div>}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***<Button***REMOVED***type="submit"***REMOVED***className="w-full"***REMOVED***disabled={loading}>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{loading***REMOVED***?***REMOVED***'Traitement...'***REMOVED***:***REMOVED***'Accéder***REMOVED***au***REMOVED***paiement***REMOVED***sécurisé'}
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Button>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</CardContent>
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***</Card>
-***REMOVED******REMOVED******REMOVED******REMOVED***</form>
-***REMOVED******REMOVED***);
+  const onSubmit = async (values: any) => {
+    setLoading(true);
+    setError(null);
+    try {
+      // Authentifier l'utilisateur et récupérer le JWT
+      const jwt = session?.access_token;
+      if (!jwt) {
+        setError('Vous devez être connecté pour effectuer ce paiement.');
+        setLoading(false);
+        return;
+      }
+      
+      const stripe = await stripePromise;
+      
+      // Appel à la function Supabase pour créer la session Stripe
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-checkout-session`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${jwt}`,
+        },
+        body: JSON.stringify({
+          successUrl: `${window.location.origin}/dynasty/create?session_id={CHECKOUT_SESSION_ID}`,
+          cancelUrl: `${window.location.origin}/dynasty/payment?cancel=1`,
+          customAmount: 500,
+          email: values.email,
+          user_id: user?.id,
+        }),
+      });
+      
+      if (!response.ok) throw new Error('Erreur lors de la création de la session Stripe');
+      
+      const { sessionId } = await response.json();
+      
+      if (stripe) await stripe.redirectToCheckout({ sessionId });
+      
+      onSuccess();
+    } catch (e: any) {
+      setError(e.message || 'Erreur inconnue');
+      toast({ title: 'Erreur de paiement', description: e.message || 'Erreur inconnue', variant: 'destructive' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <Card className="shadow-none border-0 bg-transparent">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-xl">Informations de paiement</CardTitle>
+          <CardDescription>Remplissez ce formulaire pour accéder au paiement sécurisé Stripe.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium mb-1">Email</label>
+            <Input type="email" {...form.register('email')} disabled={!!profile?.email} />
+            {form.formState.errors.email && (
+              <p className="text-red-500 text-xs mt-1">{form.formState.errors.email.message as string}</p>
+            )}
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Carte test</label>
+            <Input type="text" placeholder="4242 4242 4242 4242" {...form.register('card')} />
+            <p className="text-xs text-gray-500 mt-1">Utilisez la carte test Stripe : 4242 4242 4242 4242</p>
+            {form.formState.errors.card && (
+              <p className="text-red-500 text-xs mt-1">{form.formState.errors.card.message as string}</p>
+            )}
+          </div>
+          {error && <div className="text-red-600 text-sm">{error}</div>}
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? 'Traitement...' : 'Accéder au paiement sécurisé'}
+          </Button>
+        </CardContent>
+      </Card>
+    </form>
+  );
 }
