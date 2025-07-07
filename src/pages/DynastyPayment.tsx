@@ -28,8 +28,8 @@ export default function DynastyPayment() {
     try {
       const { data, error } = await supabase.functions.invoke('create-checkout-session', {
         body: {
-          successUrl: `${window.location.origin}/dynasty/checkout/success`,
-          cancelUrl: `${window.location.origin}/dynasty`,
+          successUrl: `${window.location.origin}/dynasty/create`,
+          cancelUrl: `${window.location.origin}/dynasty/payment`,
           customAmount: 1000, // 10€ en centimes
           user_id: user.id
         }
@@ -39,9 +39,11 @@ export default function DynastyPayment() {
         throw error;
       }
 
-      if (data?.sessionId) {
+      if (data?.url) {
         // Rediriger vers Stripe Checkout
-        window.location.href = `https://checkout.stripe.com/pay/${data.sessionId}`;
+        window.location.href = data.url;
+      } else {
+        throw new Error('URL de paiement non reçue');
       }
     } catch (error: any) {
       console.error('Erreur paiement:', error);

@@ -2,6 +2,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import Stripe from 'https://esm.sh/stripe@12.0.0';
+import crypto from 'node:crypto';
 
 const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY'), {
   apiVersion: '2023-10-16'
@@ -74,6 +75,48 @@ serve(async (req) => {
       });
     }
 
+    // Créer un token de création de dynastie AVANT le paiement
+    const createToken = crypto.randomUUID();
+    const expiresAt = new Date();
+    expiresAt.setHours(expiresAt.getHours() + 1); // Expire dans 1 heure
+
+    // Utiliser le service role pour insérer le token
+    const supabaseService = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+      {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false
+        }
+      }
+    );
+
+    const { error: tokenError } = await supabaseService
+      .from('dynasty_creation_tokens')
+      .insert({
+        token: createToken,
+        user_id: user.id,
+        status: 'pending',
+        amount: customAmount,
+        expires_at: expiresAt.toISOString(),
+        is_used: false
+      });
+
+    if (tokenError) {
+      console.error('❌ Erreur création token:', tokenError);
+      return new Response(JSON.stringify({
+        error: 'Erreur lors de la préparation du paiement'
+      }), {
+        status: 500,
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json'
+        }
+      });
+    }
+
+    // Créer la session Stripe avec le token dans l'URL de succès
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
@@ -90,19 +133,29 @@ serve(async (req) => {
         }
       ],
       mode: 'payment',
-      success_url: successUrl || `${req.headers.get('origin')}/dynasty/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: cancelUrl || `${req.headers.get('origin')}/dynasty`,
+      success_url: `${req.headers.get('origin')}/dynasty/create?create_token=${createToken}`,
+      cancel_url: cancelUrl || `${req.headers.get('origin')}/dynasty/payment`,
       metadata: {
         user_id: user_id || user.id,
         product_type: 'dynasty_creation',
-        user_email: user.email
+        user_email: user.email,
+        create_token: createToken
       }
     });
 
-    console.log("✅ Session Stripe créée :", session.id);
+    // Mettre à jour le token avec l'ID de session Stripe
+    await supabaseService
+      .from('dynasty_creation_tokens')
+      .update({
+        stripe_session_id: session.id
+      })
+      .eq('token', createToken);
+
+    console.log("✅ Session Stripe créée avec token:", session.id, createToken);
 
     return new Response(JSON.stringify({
-      sessionId: session.id
+      sessionId: session.id,
+      url: session.url
     }), {
       status: 200,
       headers: {

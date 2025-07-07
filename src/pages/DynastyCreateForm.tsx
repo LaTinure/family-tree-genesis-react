@@ -62,14 +62,16 @@ const DynastyCreateForm = () => {
           .from('dynasty_creation_tokens')
           .select('*')
           .eq('token', createToken)
+          .eq('status', 'paid')
           .eq('is_used', false)
           .gt('expires_at', new Date().toISOString())
           .single();
 
         if (error || !data) {
+          console.error('Token invalide:', error);
           toast({
             title: 'Token invalide',
-            description: 'Ce token de création a expiré ou a déjà été utilisé.',
+            description: 'Ce token de création a expiré, n\'a pas été payé ou a déjà été utilisé.',
             variant: 'destructive',
           });
           navigate('/dynasty/payment');
@@ -129,14 +131,14 @@ const DynastyCreateForm = () => {
         console.error('Erreur mise à jour token:', tokenError);
       }
 
-      // 3. Créer une invitation pour le fondateur
+      // 3. Créer une invitation pour le fondateur (Patriarche/Administrateur)
       const inviteToken = crypto.randomUUID();
       const { error: inviteError } = await supabase
         .from('invites')
         .insert({
           dynasty_id: dynasty.id,
           token: inviteToken,
-          user_role: 'Administrateur',
+          user_role: 'Patriarche',
           affiliation: 'Fondateur',
           expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24h
           invited_by: null, // System
@@ -174,7 +176,7 @@ const DynastyCreateForm = () => {
       <div className="min-h-screen bg-gradient-to-br from-whatsapp-50 via-green-50 to-emerald-50 flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-whatsapp-600" />
-          <p className="text-gray-600">Vérification de votre autorisation...</p>
+          <p className="text-gray-600">Vérification de votre paiement...</p>
         </div>
       </div>
     );
@@ -191,7 +193,7 @@ const DynastyCreateForm = () => {
           <Crown className="w-16 h-16 text-whatsapp-600 mx-auto mb-4" />
           <h1 className="text-3xl font-bold text-whatsapp-700 mb-2">Créer votre Dynastie</h1>
           <p className="text-gray-600">
-            Félicitations ! Vous allez devenir le fondateur de votre propre dynastie familiale.
+            Félicitations ! Votre paiement a été confirmé. Créez maintenant votre dynastie.
           </p>
         </div>
 
@@ -203,7 +205,7 @@ const DynastyCreateForm = () => {
             <Alert className="border-green-200 bg-green-50">
               <CheckCircle className="h-4 w-4" />
               <AlertDescription className="text-green-800">
-                Token validé ! Vous êtes autorisé à créer votre dynastie.
+                Paiement confirmé ! Vous êtes autorisé à créer votre dynastie.
               </AlertDescription>
             </Alert>
           </CardHeader>
@@ -256,8 +258,8 @@ const DynastyCreateForm = () => {
               <Alert className="border-blue-200 bg-blue-50">
                 <AlertTriangle className="h-4 w-4" />
                 <AlertDescription className="text-blue-800 text-sm">
-                  Une fois votre dynastie créée, vous deviendrez automatiquement le premier 
-                  administrateur et pourrez inviter d'autres membres de votre famille.
+                  Une fois votre dynastie créée, vous deviendrez automatiquement le Patriarche 
+                  et pourrez inviter d'autres membres de votre famille.
                 </AlertDescription>
               </Alert>
 
