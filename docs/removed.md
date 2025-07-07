@@ -7,3 +7,6 @@ Les fichiers suivants ont été supprimés du projet car ils contenaient la cha�
 - git-filter-repo.py
 - fix-rls-complete.sql
 - src/pages/DynastyPaymentSuccess.tsx
+- src/lib/supabaseClient.ts
+
+**Note** : Le fichier `src/lib/supabaseClient.ts` a été recréé proprement avec la configuration appropriée pour Vite + React + TypeScript.
