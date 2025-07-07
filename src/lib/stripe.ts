@@ -1,61 +1,62 @@
-import***REMOVED***Stripe***REMOVED***from***REMOVED***'stripe';
 
-//***REMOVED***Configuration***REMOVED***Stripe
-export***REMOVED***const***REMOVED***stripe***REMOVED***=***REMOVED***new***REMOVED***Stripe(import.meta.env.VITE_STRIPE_SECRET_KEY!,***REMOVED***{
-***REMOVED******REMOVED***apiVersion:***REMOVED***'2023-10-16',
+import Stripe from 'stripe';
+
+// Configuration Stripe
+export const stripe = new Stripe(import.meta.env.VITE_STRIPE_SECRET_KEY!, {
+  apiVersion: '2023-10-16',
 });
 
-//***REMOVED***Types***REMOVED***pour***REMOVED***les***REMOVED***sessions***REMOVED***de***REMOVED***paiement
-export***REMOVED***interface***REMOVED***CreateCheckoutSessionParams***REMOVED***{
-***REMOVED******REMOVED***successUrl:***REMOVED***string;
-***REMOVED******REMOVED***cancelUrl:***REMOVED***string;
-***REMOVED******REMOVED***priceId?:***REMOVED***string;
-***REMOVED******REMOVED***customAmount?:***REMOVED***number;***REMOVED***//***REMOVED***en***REMOVED***centimes
+// Types pour les sessions de paiement
+export interface CreateCheckoutSessionParams {
+  successUrl: string;
+  cancelUrl: string;
+  priceId?: string;
+  customAmount?: number; // en centimes
 }
 
-//***REMOVED***Fonction***REMOVED***pour***REMOVED***créer***REMOVED***une***REMOVED***session***REMOVED***de***REMOVED***checkout
-export***REMOVED***async***REMOVED***function***REMOVED***createCheckoutSession({
-***REMOVED******REMOVED***successUrl,
-***REMOVED******REMOVED***cancelUrl,
-***REMOVED******REMOVED***priceId,
-***REMOVED******REMOVED***customAmount***REMOVED***=***REMOVED***500***REMOVED***//***REMOVED***5€***REMOVED***par***REMOVED***défaut
-}:***REMOVED***CreateCheckoutSessionParams)***REMOVED***{
-***REMOVED******REMOVED***const***REMOVED***session***REMOVED***=***REMOVED***await***REMOVED***stripe.checkout.sessions.create({
-***REMOVED******REMOVED******REMOVED******REMOVED***payment_method_types:***REMOVED***['card'],
-***REMOVED******REMOVED******REMOVED******REMOVED***line_items:***REMOVED***[
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***price_data:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***currency:***REMOVED***'eur',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***product_data:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***name:***REMOVED***'Création***REMOVED***de***REMOVED***Dynastie',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***description:***REMOVED***'Accès***REMOVED***premium***REMOVED***pour***REMOVED***créer***REMOVED***et***REMOVED***gérer***REMOVED***votre***REMOVED***arbre***REMOVED***généalogique***REMOVED***familial',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***images:***REMOVED***['https://your-domain.com/dynasty-icon.png'],***REMOVED***//***REMOVED***Optionnel
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***unit_amount:***REMOVED***customAmount,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***quantity:***REMOVED***1,
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED******REMOVED******REMOVED***],
-***REMOVED******REMOVED******REMOVED******REMOVED***mode:***REMOVED***'payment',
-***REMOVED******REMOVED******REMOVED******REMOVED***success_url:***REMOVED***successUrl,
-***REMOVED******REMOVED******REMOVED******REMOVED***cancel_url:***REMOVED***cancelUrl,
-***REMOVED******REMOVED******REMOVED******REMOVED***metadata:***REMOVED***{
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***product_type:***REMOVED***'dynasty_creation',
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***user_id:***REMOVED***'current_user_id',***REMOVED***//***REMOVED***À***REMOVED***remplacer***REMOVED***par***REMOVED***l'ID***REMOVED***utilisateur***REMOVED***réel
-***REMOVED******REMOVED******REMOVED******REMOVED***},
-***REMOVED******REMOVED***});
+// Fonction pour créer une session de checkout
+export async function createCheckoutSession({
+  successUrl,
+  cancelUrl,
+  priceId,
+  customAmount = 500 // 5€ par défaut
+}: CreateCheckoutSessionParams) {
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ['card'],
+    line_items: [
+      {
+        price_data: {
+          currency: 'eur',
+          product_data: {
+            name: 'Création de Dynastie',
+            description: 'Accès premium pour créer et gérer votre arbre généalogique familial',
+            images: ['https://your-domain.com/dynasty-icon.png'], // Optionnel
+          },
+          unit_amount: customAmount,
+        },
+        quantity: 1,
+      },
+    ],
+    mode: 'payment',
+    success_url: successUrl,
+    cancel_url: cancelUrl,
+    metadata: {
+      product_type: 'dynasty_creation',
+      user_id: 'current_user_id', // À remplacer par l'ID utilisateur réel
+    },
+  });
 
-***REMOVED******REMOVED***return***REMOVED***session;
+  return session;
 }
 
-//***REMOVED***Fonction***REMOVED***pour***REMOVED***récupérer***REMOVED***une***REMOVED***session
-export***REMOVED***async***REMOVED***function***REMOVED***retrieveSession(sessionId:***REMOVED***string)***REMOVED***{
-***REMOVED******REMOVED***return***REMOVED***await***REMOVED***stripe.checkout.sessions.retrieve(sessionId);
+// Fonction pour récupérer une session
+export async function retrieveSession(sessionId: string) {
+  return await stripe.checkout.sessions.retrieve(sessionId);
 }
 
-//***REMOVED***Fonction***REMOVED***pour***REMOVED***lister***REMOVED***les***REMOVED***paiements
-export***REMOVED***async***REMOVED***function***REMOVED***listPayments(limit***REMOVED***=***REMOVED***10)***REMOVED***{
-***REMOVED******REMOVED***return***REMOVED***await***REMOVED***stripe.paymentIntents.list({
-***REMOVED******REMOVED******REMOVED******REMOVED***limit,
-***REMOVED******REMOVED***});
+// Fonction pour lister les paiements
+export async function listPayments(limit = 10) {
+  return await stripe.paymentIntents.list({
+    limit,
+  });
 }
