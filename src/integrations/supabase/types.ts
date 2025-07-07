@@ -44,37 +44,40 @@ export type Database = {
       }
       dynasty_creation_tokens: {
         Row: {
-          code_promo: string | null
+          amount: number | null
           created_at: string | null
-          created_by: string | null
           expires_at: string | null
           id: string
           is_used: boolean | null
+          status: string | null
           stripe_session_id: string | null
           token: string
           used_at: string | null
+          user_id: string | null
         }
         Insert: {
-          code_promo?: string | null
+          amount?: number | null
           created_at?: string | null
-          created_by?: string | null
           expires_at?: string | null
           id?: string
           is_used?: boolean | null
+          status?: string | null
           stripe_session_id?: string | null
           token: string
           used_at?: string | null
+          user_id?: string | null
         }
         Update: {
-          code_promo?: string | null
+          amount?: number | null
           created_at?: string | null
-          created_by?: string | null
           expires_at?: string | null
           id?: string
           is_used?: boolean | null
+          status?: string | null
           stripe_session_id?: string | null
           token?: string
           used_at?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }

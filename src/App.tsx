@@ -35,6 +35,7 @@ import Help from '@/pages/Help';
 import DynastySelector from '@/pages/DynastySelector';
 import DynastyCreateForm from '@/pages/DynastyCreateForm';
 import DynastyPayment from '@/pages/DynastyPayment';
+import DynastyPaymentSuccess from '@/pages/DynastyPaymentSuccess';
 import DynastyInviteHandler from '@/components/DynastyInviteHandler';
 import Media from '@/pages/dashboard/Media';
 
@@ -84,6 +85,7 @@ function App() {
             <Route path={ROUTES.DYNASTY.SELECTOR} element={<Layout><DynastySelector /></Layout>} />
             <Route path={ROUTES.DYNASTY.CREATE} element={<Layout><DynastyCreateForm /></Layout>} />
             <Route path="/dynasty/payment" element={<Layout><DynastyPayment /></Layout>} />
+            <Route path="/dynasty/checkout/success" element={<Layout><DynastyPaymentSuccess /></Layout>} />
             <Route path={ROUTES.INVITE} element={<Layout><DynastyInviteHandler /></Layout>} />
 
             {/* Routes protégées */}

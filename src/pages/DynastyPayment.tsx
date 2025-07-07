@@ -1,111 +1,57 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { CreditCard, Gift, Loader2, CheckCircle, AlertTriangle } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Crown, CreditCard, Loader2, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
 
-const DynastyPayment = () => {
+export default function DynastyPayment() {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [promoCode, setPromoCode] = useState('');
-  const [isValidatingPromo, setIsValidatingPromo] = useState(false);
-  const [isPaymentLoading, setIsPaymentLoading] = useState(false);
+  const { user } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const validatePromoCode = async () => {
-    if (!promoCode.trim()) {
+  const handlePayment = async () => {
+    if (!user) {
       toast({
-        title: 'Code promo manquant',
-        description: 'Veuillez entrer un code promo valide.',
+        title: 'Connexion requise',
+        description: 'Vous devez être connecté pour créer une dynastie.',
         variant: 'destructive',
       });
       return;
     }
 
-    setIsValidatingPromo(true);
+    setIsLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('dynasty_creation_tokens')
-        .select('*')
-        .eq('code_promo', promoCode.trim())
-        .eq('is_used', false)
-        .gt('expires_at', new Date().toISOString())
-        .single();
-
-      if (error || !data) {
-        toast({
-          title: 'Code promo invalide',
-          description: 'Ce code promo n\'existe pas, a expiré ou a déjà été utilisé.',
-          variant: 'destructive',
-        });
-        return;
-      }
-
-      toast({
-        title: 'Code promo valide !',
-        description: 'Redirection vers la création de votre dynastie...',
+      const { data, error } = await supabase.functions.invoke('create-checkout-session', {
+        body: {
+          successUrl: `${window.location.origin}/dynasty/checkout/success`,
+          cancelUrl: `${window.location.origin}/dynasty`,
+          customAmount: 1000, // 10€ en centimes
+          user_id: user.id
+        }
       });
-
-      setTimeout(() => {
-        navigate(`/dynasty/create?create_token=${data.token}`);
-      }, 1500);
-
-    } catch (error) {
-      console.error('Erreur validation code promo:', error);
-      toast({
-        title: 'Erreur',
-        description: 'Une erreur est survenue lors de la vérification du code promo.',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsValidatingPromo(false);
-    }
-  };
-
-  const handleStripePayment = async () => {
-    setIsPaymentLoading(true);
-    try {
-      // Simuler le paiement Stripe (à implémenter selon vos besoins)
-      // Pour l'instant, on génère un token directement
-      const token = crypto.randomUUID();
-      
-      const { error } = await supabase
-        .from('dynasty_creation_tokens')
-        .insert({
-          token,
-          stripe_session_id: 'session_' + token,
-          is_used: false,
-          expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24h
-        });
 
       if (error) {
         throw error;
       }
 
-      toast({
-        title: 'Paiement réussi !',
-        description: 'Redirection vers la création de votre dynastie...',
-      });
-
-      setTimeout(() => {
-        navigate(`/dynasty/create?create_token=${token}`);
-      }, 1500);
-
-    } catch (error) {
+      if (data?.sessionId) {
+        // Rediriger vers Stripe Checkout
+        window.location.href = `https://checkout.stripe.com/pay/${data.sessionId}`;
+      }
+    } catch (error: any) {
       console.error('Erreur paiement:', error);
       toast({
-        title: 'Erreur de paiement',
-        description: 'Une erreur est survenue lors du traitement du paiement.',
+        title: 'Erreur',
+        description: error.message || 'Une erreur est survenue lors du paiement.',
         variant: 'destructive',
       });
     } finally {
-      setIsPaymentLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -113,94 +59,68 @@ const DynastyPayment = () => {
     <div className="min-h-screen bg-gradient-to-br from-whatsapp-50 via-green-50 to-emerald-50 flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-whatsapp-700 mb-2">Créer une Dynastie</h1>
+          <Crown className="w-16 h-16 text-whatsapp-600 mx-auto mb-4" />
+          <h1 className="text-3xl font-bold text-whatsapp-700 mb-2">Créer votre Dynastie</h1>
           <p className="text-gray-600">
-            Choisissez votre méthode pour débuter votre arbre généalogique familial
+            Devenez le fondateur de votre propre arbre généalogique familial.
           </p>
         </div>
 
         <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
           <CardHeader className="text-center">
-            <CardTitle className="text-xl text-gray-900">Options de création</CardTitle>
+            <CardTitle className="text-xl text-gray-900">
+              Abonnement Premium Dynastie
+            </CardTitle>
+            <CardDescription>
+              Accès complet pour créer et gérer votre arbre généalogique
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* Option Paiement Stripe */}
-            <div className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <CreditCard className="w-5 h-5 text-whatsapp-600" />
-                <h3 className="font-semibold text-gray-900">Paiement sécurisé</h3>
-              </div>
-              <p className="text-sm text-gray-600">
-                Créez votre dynastie pour 29.99€ et bénéficiez de toutes les fonctionnalités premium.
-              </p>
-              <Button
-                onClick={handleStripePayment}
-                disabled={isPaymentLoading}
-                className="w-full bg-gradient-to-r from-whatsapp-500 to-whatsapp-600 hover:from-whatsapp-600 hover:to-whatsapp-700"
-              >
-                {isPaymentLoading ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Traitement...
-                  </>
-                ) : (
-                  'Payer et Créer ma Dynastie'
-                )}
-              </Button>
+            {/* Prix */}
+            <div className="text-center">
+              <div className="text-4xl font-bold text-whatsapp-600">10€</div>
+              <div className="text-sm text-gray-600">Paiement unique</div>
             </div>
 
-            <Separator />
-
-            {/* Option Code Promo */}
-            <div className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <Gift className="w-5 h-5 text-green-600" />
-                <h3 className="font-semibold text-gray-900">Code promo</h3>
+            {/* Fonctionnalités */}
+            <div className="space-y-3">
+              <div className="flex items-center space-x-3">
+                <Crown className="w-5 h-5 text-whatsapp-600" />
+                <span className="text-gray-700">Devenez Patriarche de votre dynastie</span>
               </div>
-              <p className="text-sm text-gray-600">
-                Vous avez un code promo ? Entrez-le ci-dessous pour créer votre dynastie gratuitement.
-              </p>
-              <div className="space-y-3">
-                <div>
-                  <Label htmlFor="promo-code">Code promo</Label>
-                  <Input
-                    id="promo-code"
-                    type="text"
-                    value={promoCode}
-                    onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
-                    placeholder="Entrez votre code promo"
-                    className="font-mono"
-                    disabled={isValidatingPromo}
-                  />
-                </div>
-                <Button
-                  onClick={validatePromoCode}
-                  disabled={!promoCode.trim() || isValidatingPromo}
-                  variant="outline"
-                  className="w-full border-green-500 text-green-600 hover:bg-green-50"
-                >
-                  {isValidatingPromo ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Vérification...
-                    </>
-                  ) : (
-                    <>
-                      <CheckCircle className="w-4 h-4 mr-2" />
-                      Valider le code promo
-                    </>
-                  )}
-                </Button>
+              <div className="flex items-center space-x-3">
+                <Crown className="w-5 h-5 text-whatsapp-600" />
+                <span className="text-gray-700">Invitez un nombre illimité de membres</span>
+              </div>
+              <div className="flex items-center space-x-3">
+                <Crown className="w-5 h-5 text-whatsapp-600" />
+                <span className="text-gray-700">Arbre généalogique privé et sécurisé</span>
               </div>
             </div>
 
-            <Alert className="border-blue-200 bg-blue-50">
-              <AlertTriangle className="h-4 w-4" />
-              <AlertDescription className="text-blue-800 text-sm">
-                Une fois votre paiement effectué ou votre code promo validé, vous pourrez créer votre dynastie 
-                et devenir automatiquement le premier administrateur.
-              </AlertDescription>
-            </Alert>
+            {/* Bouton de paiement */}
+            <Button
+              onClick={handlePayment}
+              disabled={isLoading}
+              className="w-full bg-gradient-to-r from-whatsapp-500 to-whatsapp-600 hover:from-whatsapp-600 hover:to-whatsapp-700 text-white py-3 text-lg font-semibold"
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  Redirection vers le paiement...
+                </>
+              ) : (
+                <>
+                  <CreditCard className="w-5 h-5 mr-2" />
+                  Payer 10€ et créer ma dynastie
+                </>
+              )}
+            </Button>
+
+            {/* Note sécurité */}
+            <div className="text-xs text-gray-500 text-center">
+              Paiement sécurisé via Stripe. Aucune donnée bancaire n'est stockée sur nos serveurs.
+            </div>
           </CardContent>
         </Card>
 
@@ -209,13 +129,13 @@ const DynastyPayment = () => {
             variant="ghost"
             onClick={() => navigate('/dynasty')}
             className="text-whatsapp-600 hover:text-whatsapp-700"
+            disabled={isLoading}
           >
-            ← Retour à l'accueil
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Retour à la sélection
           </Button>
         </div>
       </div>
     </div>
   );
-};
-
-export default DynastyPayment;
+}
