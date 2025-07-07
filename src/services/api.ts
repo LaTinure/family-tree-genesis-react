@@ -3,6 +3,47 @@ import { supabase } from '@/integrations/supabase/client';
 import { FamilyMember, NewFamilyMember, FamilyNotification, Media } from '@/types/family';
 
 export const familyApi = {
+  async createTemporaryUser(userData: { email: string; phone: string }): Promise<{ user_id: string; email: string; phone: string }> {
+    const user_id = crypto.randomUUID();
+
+    // Créer un profil temporaire dans la base de données
+    const { data, error } = await supabase
+      .from('profiles')
+      .insert([{
+        id: user_id,
+        user_id: user_id,
+        email: userData.email,
+        phone: userData.phone,
+        first_name: '',
+        last_name: '',
+        civilite: 'M.',
+        user_role: 'Membre',
+        is_admin: false,
+        is_patriarch: false,
+        is_parent: false,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      }])
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Erreur création utilisateur temporaire:', error);
+      // En cas d'erreur, on retourne quand même les données pour continuer le processus
+      return {
+        user_id,
+        email: userData.email,
+        phone: userData.phone
+      };
+    }
+
+    return {
+      user_id,
+      email: userData.email,
+      phone: userData.phone
+    };
+  },
+
   async getAll(): Promise<FamilyMember[]> {
     const { data, error } = await supabase
       .from('profiles')

@@ -1,104 +1,130 @@
-
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-import Stripe from 'https://esm.sh/stripe@12.0.0';
+import Stripe from "https://deno.land/x/stripe@v0.24.0/mod.ts";
 
-const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY'), {
-  apiVersion: '2023-10-16'
-});
+const stripe = Stripe(Deno.env.get('STRIPE_SECRET_KEY')!);
+const endpointSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET')!;
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type'
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
 serve(async (req) => {
-  const signature = req.headers.get('stripe-signature');
-  console.log("🔍 Webhook reçu avec signature:", signature);
-
-  if (!signature) {
-    console.error("❌ Signature manquante");
-    return new Response('No signature', { status: 400 });
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
   }
 
   try {
     const body = await req.text();
-    const webhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET');
-    
-    if (!webhookSecret) {
-      console.error("❌ STRIPE_WEBHOOK_SECRET manquant");
-      return new Response('Webhook secret not configured', { status: 500 });
+    const signature = req.headers.get('stripe-signature');
+
+    if (!signature) {
+      console.error('❌ Signature Stripe manquante');
+      return new Response(JSON.stringify({ error: 'Signature manquante' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
-    const event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
-    console.log("✅ Événement Stripe validé:", event.type);
+    let event: Stripe.Event;
 
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
-      {
-        auth: {
-          autoRefreshToken: false,
-          persistSession: false
+    try {
+      event = stripe.webhooks.constructEvent(body, signature, endpointSecret);
+    } catch (err) {
+      console.error('❌ Erreur signature webhook:', err);
+      return new Response(JSON.stringify({ error: 'Signature invalide' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    console.log('📦 Événement Stripe reçu:', event.type);
+
+    // Gérer l'événement checkout.session.completed
+    if (event.type === 'checkout.session.completed') {
+      const session = event.data.object as Stripe.Checkout.Session;
+
+      console.log('✅ Paiement complété pour session:', session.id);
+      console.log('📋 Métadonnées:', session.metadata);
+
+      const createToken = session.metadata?.create_token;
+      const userId = session.metadata?.user_id;
+      const isTempUser = session.metadata?.is_temp_user === 'true';
+
+      if (!createToken) {
+        console.error('❌ create_token manquant dans les métadonnées');
+        return new Response(JSON.stringify({ error: 'Token manquant' }), {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      // Mettre à jour le token en base
+      const supabaseService = createClient(
+        Deno.env.get('SUPABASE_URL')!,
+        Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
+        { auth: { autoRefreshToken: false, persistSession: false } }
+      );
+
+      const now = new Date();
+      const updateData = {
+        status: 'paid',
+        paid_at: now.toISOString(),
+        stripe_session_id: session.id,
+        log: [{ status: 'paid', at: now.toISOString(), session_id: session.id }],
+      };
+
+      const { error: updateError } = await supabaseService
+        .from('dynasty_creation_tokens')
+        .update(updateData)
+        .eq('token', createToken)
+        .eq('status', 'pending'); // Sécurité: seulement si encore pending
+
+      if (updateError) {
+        console.error('❌ Erreur mise à jour token:', updateError);
+        return new Response(JSON.stringify({ error: 'Erreur mise à jour token' }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      console.log('✅ Token mis à jour:', createToken, '-> paid');
+
+      // Si c'est un utilisateur temporaire, créer le profil
+      if (isTempUser && userId) {
+        const { error: profileError } = await supabaseService
+          .from('profiles')
+          .insert({
+            user_id: userId,
+            email: session.metadata?.user_email,
+            phone: session.metadata?.user_phone,
+            is_temp_user: true,
+            created_at: now.toISOString(),
+          });
+
+        if (profileError) {
+          console.error('⚠️ Erreur création profil temporaire:', profileError);
+          // Ne pas échouer le webhook pour ça
+        } else {
+          console.log('✅ Profil temporaire créé pour:', userId);
         }
       }
-    );
-
-    switch (event.type) {
-      case 'checkout.session.completed':
-        const session = event.data.object as Stripe.Checkout.Session;
-        console.log("💳 Paiement confirmé pour session:", session.id);
-
-        // Marquer le token comme payé
-        const { data: tokenData, error: updateError } = await supabase
-          .from('dynasty_creation_tokens')
-          .update({
-            status: 'paid'
-          })
-          .eq('stripe_session_id', session.id)
-          .select()
-          .single();
-
-        if (updateError) {
-          console.error('❌ Erreur mise à jour token:', updateError);
-          return new Response('Error updating token', { status: 500 });
-        }
-
-        console.log("✅ Token marqué comme payé:", tokenData?.token);
-        break;
-
-      case 'checkout.session.expired':
-        const expiredSession = event.data.object as Stripe.Checkout.Session;
-        console.log("⏰ Session expirée:", expiredSession.id);
-
-        // Marquer le token comme expiré
-        await supabase
-          .from('dynasty_creation_tokens')
-          .update({
-            status: 'expired'
-          })
-          .eq('stripe_session_id', expiredSession.id);
-
-        console.log("✅ Token marqué comme expiré");
-        break;
-
-      default:
-        console.log(`🔔 Événement non géré: ${event.type}`);
     }
 
     return new Response(JSON.stringify({ received: true }), {
       status: 200,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
 
   } catch (error) {
     console.error('🔥 Erreur webhook:', error);
     return new Response(JSON.stringify({
-      error: 'Webhook error',
-      message: error.message
+      error: 'Erreur interne du serveur',
+      details: error?.message,
     }), {
-      status: 400,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 });

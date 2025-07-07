@@ -1,302 +1,289 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Crown, Loader2, AlertTriangle, CheckCircle } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '../hooks/use-toast';
+import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
+import { Label } from '../components/ui/label';
+import { Textarea } from '../components/ui/textarea';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
+import { Alert, AlertDescription } from '../components/ui/alert';
+import { Loader2, CheckCircle, AlertCircle } from 'lucide-react';
+import { supabase } from '../lib/supabaseClient';
 
-const dynastySchema = z.object({
-  name: z.string().min(2, 'Le nom doit contenir au moins 2 caractères'),
-  location: z.string().optional(),
-  description: z.string().optional(),
-  founding_year: z.string().optional(),
-});
+interface TokenValidation {
+  isValid: boolean;
+  isPaid: boolean;
+  isExpired: boolean;
+  isUsed: boolean;
+  loading: boolean;
+}
 
-type DynastyFormData = z.infer<typeof dynastySchema>;
-
-const DynastyCreateForm = () => {
-  const navigate = useNavigate();
+export default function DynastyCreateForm() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const { toast } = useToast();
-  const { user } = useAuth();
+
+  const [tokenValidation, setTokenValidation] = useState<TokenValidation>({
+    isValid: false,
+    isPaid: false,
+    isExpired: false,
+    isUsed: false,
+    loading: true,
+  });
+
+  const [formData, setFormData] = useState({
+    dynastyName: '',
+    dynastyDescription: '',
+  });
+
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [tokenValid, setTokenValid] = useState(false);
-  const [tokenChecking, setTokenChecking] = useState(true);
-  const [tokenData, setTokenData] = useState<any>(null);
 
   const createToken = searchParams.get('create_token');
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<DynastyFormData>({
-    resolver: zodResolver(dynastySchema),
-  });
-
-  // Vérifier le token au chargement de la page
   useEffect(() => {
-    const validateCreateToken = async () => {
-      if (!createToken) {
-        toast({
-          title: 'Token manquant',
-          description: 'Aucun token de création valide trouvé. Veuillez effectuer un paiement d\'abord.',
-          variant: 'destructive',
+    if (!createToken) {
+      setTokenValidation({
+        isValid: false,
+        isPaid: false,
+        isExpired: false,
+        isUsed: false,
+        loading: false,
+      });
+      return;
+    }
+
+    validateToken();
+  }, [createToken]);
+
+  const validateToken = async () => {
+    try {
+      const { data: tokenData, error } = await supabase
+        .from('dynasty_creation_tokens')
+        .select('*')
+        .eq('token', createToken)
+        .single();
+
+      if (error || !tokenData) {
+        setTokenValidation({
+          isValid: false,
+          isPaid: false,
+          isExpired: false,
+          isUsed: false,
+          loading: false,
         });
-        navigate('/dynasty/payment');
         return;
       }
 
-      try {
-        const { data, error } = await supabase
-          .from('dynasty_creation_tokens')
-          .select('*')
-          .eq('token', createToken)
-          .eq('status', 'paid')
-          .eq('is_used', false)
-          .gt('expires_at', new Date().toISOString())
-          .single();
+      const now = new Date();
+      const isExpired = new Date(tokenData.expires_at) < now;
 
-        if (error || !data) {
-          console.error('Token invalide:', error);
-          toast({
-            title: 'Token invalide',
-            description: 'Ce token de création a expiré, n\'a pas été payé ou a déjà été utilisé.',
-            variant: 'destructive',
-          });
-          navigate('/dynasty/payment');
-          return;
-        }
-
-        setTokenData(data);
-        setTokenValid(true);
-      } catch (error) {
-        console.error('Erreur validation token:', error);
-        toast({
-          title: 'Erreur',
-          description: 'Une erreur est survenue lors de la validation du token.',
-          variant: 'destructive',
-        });
-        navigate('/dynasty/payment');
-      } finally {
-        setTokenChecking(false);
-      }
-    };
-
-    validateCreateToken();
-  }, [createToken, navigate, toast]);
-
-  const onSubmit = async (data: DynastyFormData) => {
-    if (!user || !tokenValid || !tokenData) return;
-
-    setIsSubmitting(true);
-    try {
-      // 1. Créer la dynastie
-      const { data: dynasty, error: dynastyError } = await supabase
-        .from('dynasties')
-        .insert({
-          name: data.name,
-          location: data.location,
-          description: data.description,
-          founding_year: data.founding_year,
-          created_by: user.id,
-        })
-        .select()
-        .single();
-
-      if (dynastyError || !dynasty) {
-        throw new Error('Erreur lors de la création de la dynastie');
-      }
-
-      // 2. Marquer le token comme utilisé
-      const { error: tokenError } = await supabase
-        .from('dynasty_creation_tokens')
-        .update({
-          is_used: true,
-          used_at: new Date().toISOString(),
-        })
-        .eq('token', createToken);
-
-      if (tokenError) {
-        console.error('Erreur mise à jour token:', tokenError);
-      }
-
-      // 3. Créer une invitation pour le fondateur (Patriarche/Administrateur)
-      const inviteToken = crypto.randomUUID();
-      const { error: inviteError } = await supabase
-        .from('invites')
-        .insert({
-          dynasty_id: dynasty.id,
-          token: inviteToken,
-          user_role: 'Patriarche',
-          affiliation: 'Fondateur',
-          expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24h
-          invited_by: null, // System
-        });
-
-      if (inviteError) {
-        console.error('Erreur création invitation:', inviteError);
-        throw new Error('Erreur lors de la création de l\'invitation');
-      }
-
-      toast({
-        title: 'Dynastie créée avec succès !',
-        description: 'Redirection vers la création de votre profil d\'administrateur...',
+      setTokenValidation({
+        isValid: true,
+        isPaid: tokenData.status === 'paid',
+        isExpired,
+        isUsed: tokenData.is_used,
+        loading: false,
       });
 
-      // 4. Rediriger vers l'inscription avec le token d'invitation
-      setTimeout(() => {
-        navigate(`/auth-family?mode=register&token=${inviteToken}`);
-      }, 1500);
+    } catch (error) {
+      console.error('Erreur validation token:', error);
+      setTokenValidation({
+        isValid: false,
+        isPaid: false,
+        isExpired: false,
+        isUsed: false,
+        loading: false,
+      });
+    }
+  };
 
-    } catch (error: any) {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!createToken || !formData.dynastyName.trim()) {
+      toast({
+        title: "Erreur",
+        description: "Veuillez remplir tous les champs requis",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('/api/create-dynasty', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
+        },
+        body: JSON.stringify({
+          createToken,
+          dynastyName: formData.dynastyName.trim(),
+          dynastyDescription: formData.dynastyDescription.trim(),
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Erreur lors de la création de la dynastie');
+      }
+
+      toast({
+        title: "Succès !",
+        description: "Votre dynastie a été créée avec succès",
+      });
+
+      // Rediriger vers auth-family avec le token admin
+      navigate(`/auth-family?token=${result.dynasty.admin_invite_token}`);
+
+    } catch (error) {
       console.error('Erreur création dynastie:', error);
       toast({
-        title: 'Erreur',
-        description: error.message || 'Une erreur est survenue lors de la création de la dynastie.',
-        variant: 'destructive',
+        title: "Erreur",
+        description: error instanceof Error ? error.message : "Erreur lors de la création de la dynastie",
+        variant: "destructive",
       });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  if (tokenChecking) {
+  if (tokenValidation.loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-whatsapp-50 via-green-50 to-emerald-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-whatsapp-600" />
-          <p className="text-gray-600">Vérification de votre paiement...</p>
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+          <p>Vérification du token de paiement...</p>
         </div>
       </div>
     );
   }
 
-  if (!tokenValid) {
-    return null; // La redirection est déjà gérée dans useEffect
+  if (!createToken) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Alert className="max-w-md">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            Token de création manquant. Veuillez revenir à la page de paiement.
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
+
+  if (!tokenValidation.isValid) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Alert className="max-w-md">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            Token de création invalide. Veuillez vérifier votre lien.
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
+
+  if (!tokenValidation.isPaid) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Alert className="max-w-md">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            Le paiement n'a pas encore été validé. Veuillez patienter quelques instants.
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
+
+  if (tokenValidation.isExpired) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Alert className="max-w-md">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            Le token de création a expiré. Veuillez effectuer un nouveau paiement.
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
+
+  if (tokenValidation.isUsed) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Alert className="max-w-md">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            Ce token a déjà été utilisé pour créer une dynastie.
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-whatsapp-50 via-green-50 to-emerald-50 flex items-center justify-center px-4 py-8">
-      <div className="w-full max-w-2xl">
-        <div className="text-center mb-8">
-          <Crown className="w-16 h-16 text-whatsapp-600 mx-auto mb-4" />
-          <h1 className="text-3xl font-bold text-whatsapp-700 mb-2">Créer votre Dynastie</h1>
-          <p className="text-gray-600">
-            Félicitations ! Votre paiement a été confirmé. Créez maintenant votre dynastie.
-          </p>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+      <Card className="w-full max-w-md">
+        <CardHeader className="text-center">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+            <CheckCircle className="h-6 w-6 text-green-600" />
+          </div>
+          <CardTitle className="text-2xl">Créer votre dynastie</CardTitle>
+          <CardDescription>
+            Votre paiement a été validé ! Donnez un nom à votre dynastie pour commencer.
+          </CardDescription>
+        </CardHeader>
 
-        <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
-          <CardHeader>
-            <CardTitle className="text-center text-xl text-gray-900">
-              Informations de votre dynastie
-            </CardTitle>
-            <Alert className="border-green-200 bg-green-50">
-              <CheckCircle className="h-4 w-4" />
-              <AlertDescription className="text-green-800">
-                Paiement confirmé ! Vous êtes autorisé à créer votre dynastie.
-              </AlertDescription>
-            </Alert>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="name">Nom de la dynastie *</Label>
-                <Input
-                  id="name"
-                  {...register('name')}
-                  placeholder="ex: Famille Martin, Les Dubois, etc."
-                  className="text-lg font-medium"
-                />
-                {errors.name && (
-                  <p className="text-sm text-red-600">{errors.name.message}</p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="location">Localisation d'origine</Label>
-                <Input
-                  id="location"
-                  {...register('location')}
-                  placeholder="ex: Paris, Lyon, Région Provence, etc."
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="founding_year">Année de fondation (optionnel)</Label>
-                <Input
-                  id="founding_year"
-                  {...register('founding_year')}
-                  placeholder="ex: 1950, 1875, etc."
-                  type="number"
-                  min="1800"
-                  max={new Date().getFullYear()}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="description">Description de la dynastie</Label>
-                <Textarea
-                  id="description"
-                  {...register('description')}
-                  placeholder="Racontez l'histoire de votre famille, ses origines, ses valeurs..."
-                  rows={4}
-                />
-              </div>
-
-              <Alert className="border-blue-200 bg-blue-50">
-                <AlertTriangle className="h-4 w-4" />
-                <AlertDescription className="text-blue-800 text-sm">
-                  Une fois votre dynastie créée, vous deviendrez automatiquement le Patriarche 
-                  et pourrez inviter d'autres membres de votre famille.
-                </AlertDescription>
-              </Alert>
-
-              <Button
-                type="submit"
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="dynastyName">Nom de la dynastie *</Label>
+              <Input
+                id="dynastyName"
+                type="text"
+                placeholder="Ex: Famille Martin"
+                value={formData.dynastyName}
+                onChange={(e) => setFormData(prev => ({ ...prev, dynastyName: e.target.value }))}
+                required
                 disabled={isSubmitting}
-                className="w-full bg-gradient-to-r from-whatsapp-500 to-whatsapp-600 hover:from-whatsapp-600 hover:to-whatsapp-700 text-white py-3 text-lg font-semibold"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                    Création de votre dynastie...
-                  </>
-                ) : (
-                  <>
-                    <Crown className="w-5 h-5 mr-2" />
-                    Créer ma Dynastie
-                  </>
-                )}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+              />
+            </div>
 
-        <div className="text-center mt-6">
-          <Button
-            variant="ghost"
-            onClick={() => navigate('/dynasty')}
-            className="text-whatsapp-600 hover:text-whatsapp-700"
-            disabled={isSubmitting}
-          >
-            ← Retour à l'accueil
-          </Button>
-        </div>
-      </div>
+            <div className="space-y-2">
+              <Label htmlFor="dynastyDescription">Description (optionnel)</Label>
+              <Textarea
+                id="dynastyDescription"
+                placeholder="Une brève description de votre dynastie..."
+                value={formData.dynastyDescription}
+                onChange={(e) => setFormData(prev => ({ ...prev, dynastyDescription: e.target.value }))}
+                disabled={isSubmitting}
+                rows={3}
+              />
+            </div>
+
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={isSubmitting || !formData.dynastyName.trim()}
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Création en cours...
+                </>
+              ) : (
+                'Créer ma dynastie'
+              )}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
-};
-
-export default DynastyCreateForm;
+}
