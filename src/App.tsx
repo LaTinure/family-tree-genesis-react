@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -38,6 +37,7 @@ import DynastyPayment from '@/pages/DynastyPayment';
 import DynastyPaymentSuccess from '@/pages/DynastyPaymentSuccess';
 import DynastyInviteHandler from '@/components/DynastyInviteHandler';
 import Media from '@/pages/dashboard/Media';
+import StripeTest from '@/pages/StripeTest';
 
 // Configuration React Query
 const queryClient = new QueryClient({
@@ -87,6 +87,9 @@ function App() {
             <Route path="/dynasty/payment" element={<Layout><DynastyPayment /></Layout>} />
             <Route path="/dynasty/checkout/success" element={<Layout><DynastyPaymentSuccess /></Layout>} />
             <Route path={ROUTES.INVITE} element={<Layout><DynastyInviteHandler /></Layout>} />
+            
+            {/* Route de test pour déboguer Stripe */}
+            <Route path="/test/stripe" element={<Layout><StripeTest /></Layout>} />
 
             {/* Routes protégées */}
             <Route path={ROUTES.PROFILE} element={

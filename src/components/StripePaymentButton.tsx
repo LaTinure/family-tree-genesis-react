@@ -1,9 +1,11 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
-import { Loader2, CreditCard } from 'lucide-react';
+import { Loader2, CreditCard, AlertCircle } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
 import { supabase } from '../lib/supabaseClient';
+import { Alert, AlertDescription } from './ui/alert';
 
 interface StripePaymentButtonProps {
   amount?: number;
@@ -19,7 +21,7 @@ interface StripePaymentButtonProps {
 }
 
 export default function StripePaymentButton({
-  amount = 1000, // 10€ en centimes
+  amount = 1000,
   successUrl,
   cancelUrl,
   tempUserData,
@@ -27,106 +29,115 @@ export default function StripePaymentButton({
   children = 'Payer 10 € et créer ma dynastie',
 }: StripePaymentButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  const logStep = (step: string, data?: any) => {
+    console.log(`🔍 [PAYMENT-BUTTON] ${step}`, data || '');
+  };
+
   const handlePayment = async () => {
     setIsLoading(true);
+    setError(null);
+    logStep("🚀 Début du processus de paiement");
 
     try {
-      // Récupérer le token d'authentification
+      // 1. Récupération du token d'authentification
       const { data: { session } } = await supabase.auth.getSession();
       const authToken = session?.access_token;
+      
+      logStep("🔐 Token d'auth", authToken ? "Présent" : "Absent");
 
+      // 2. Validation des données
       if (!authToken && !tempUserData) {
+        const errorMsg = "Vous devez être connecté ou fournir vos informations";
+        logStep("❌ Validation échouée", errorMsg);
+        setError(errorMsg);
         toast({
           title: "Erreur d'authentification",
-          description: "Vous devez être connecté ou fournir vos informations",
+          description: errorMsg,
           variant: "destructive",
         });
         return;
       }
 
-      // Appeler l'Edge Function pour créer la session Stripe
+      // 3. Préparation de la requête
+      const requestData = {
+        customAmount: amount,
+        successUrl: successUrl || `${window.location.origin}/dynasty/create`,
+        cancelUrl: cancelUrl || `${window.location.origin}/dynasty/payment`,
+        ...(tempUserData && { tempUserData })
+      };
+
+      logStep("📤 Données de requête", requestData);
+
+      // 4. Appel à l'Edge Function
       const response = await fetch('/api/create-checkout-session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': authToken ? `Bearer ${authToken}` : '',
+          ...(authToken && { 'Authorization': `Bearer ${authToken}` }),
         },
-        body: JSON.stringify({
-          customAmount: amount,
-          successUrl: successUrl || `${window.location.origin}/dynasty/create`,
-          cancelUrl: cancelUrl || `${window.location.origin}/dynasty/payment`,
-          tempUserData,
-        }),
+        body: JSON.stringify(requestData),
       });
 
-      let text;
+      logStep("📥 Réponse reçue", {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok
+      });
+
+      // 5. Parsing sécurisé de la réponse
       let result;
+      const responseText = await response.text();
+      
+      if (!responseText) {
+        throw new Error('Réponse vide du serveur');
+      }
+
       try {
-        text = await response.text();
-        result = JSON.parse(text);
-      } catch (err) {
-        console.error('❌ Erreur parsing JSON :', err, 'Réponse brute :', text);
-        throw new Error('Réponse invalide du serveur (pas en JSON)');
+        result = JSON.parse(responseText);
+        logStep("✅ JSON parsé", result);
+      } catch (parseError) {
+        logStep("❌ Erreur parsing JSON", { responseText, parseError });
+        throw new Error(`Réponse invalide du serveur: ${responseText}`);
       }
 
+      // 6. Gestion des erreurs serveur
       if (!response.ok) {
-        console.error('🚨 Échec backend:', result?.error || response.statusText);
-        throw new Error(result?.error || 'Erreur serveur');
+        const errorMsg = result?.error || `Erreur ${response.status}: ${response.statusText}`;
+        logStep("❌ Erreur serveur", { status: response.status, error: errorMsg });
+        setError(errorMsg);
+        toast({
+          title: "Erreur de paiement",
+          description: errorMsg,
+          variant: "destructive",
+        });
+        return;
       }
 
-      console.log('✅ Session Stripe créée:', result.sessionId);
-      console.log('🔗 URL Stripe:', result.url);
-
-      // Ouvrir Stripe Checkout dans une nouvelle fenêtre
-      if (result.url) {
-        const stripeWindow = window.open(result.url, '_blank', 'width=500,height=600');
-
-        if (!stripeWindow) {
-          toast({
-            title: "Erreur",
-            description: "Veuillez autoriser les popups pour continuer le paiement",
-            variant: "destructive",
-          });
-          return;
-        }
-
-        // Surveiller la fermeture de la fenêtre Stripe
-        const checkClosed = setInterval(() => {
-          if (stripeWindow.closed) {
-            clearInterval(checkClosed);
-
-            // Vérifier si le paiement a été complété en interrogeant le token
-            if (result.createToken) {
-              checkPaymentStatus(result.createToken);
-            }
-          }
-        }, 1000);
-
-        // Timeout de sécurité (5 minutes)
-        setTimeout(() => {
-          clearInterval(checkClosed);
-          if (!stripeWindow.closed) {
-            stripeWindow.close();
-            toast({
-              title: "Timeout",
-              description: "La session de paiement a expiré",
-              variant: "destructive",
-            });
-          }
-        }, 5 * 60 * 1000);
-
-      } else {
-        throw new Error('URL de paiement manquante');
+      // 7. Validation de la réponse
+      if (!result?.url) {
+        const errorMsg = "URL de paiement manquante dans la réponse";
+        logStep("❌ URL manquante", result);
+        setError(errorMsg);
+        throw new Error(errorMsg);
       }
+
+      logStep("🔗 Redirection vers Stripe", result.url);
+
+      // 8. Redirection vers Stripe
+      window.location.href = result.url;
 
     } catch (error) {
-      console.error('Erreur paiement Stripe:', error);
+      const errorMessage = error instanceof Error ? error.message : "Une erreur inconnue s'est produite";
+      logStep("🔥 Erreur critique", { error: errorMessage, stack: error instanceof Error ? error.stack : undefined });
+      
+      setError(errorMessage);
       toast({
         title: "Erreur de paiement",
-        description: error instanceof Error ? error.message : "Une erreur est survenue",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -134,66 +145,32 @@ export default function StripePaymentButton({
     }
   };
 
-  const checkPaymentStatus = async (createToken: string) => {
-    try {
-      // Attendre un peu pour que le webhook Stripe soit traité
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      const { data: tokenData, error } = await supabase
-        .from('dynasty_creation_tokens')
-        .select('status, is_used')
-        .eq('token', createToken)
-        .single();
-
-      if (error || !tokenData) {
-        console.error('Erreur vérification token:', error);
-        return;
-      }
-
-      if (tokenData.status === 'paid' && !tokenData.is_used) {
-        toast({
-          title: "Paiement confirmé !",
-          description: "Redirection vers la création de votre dynastie...",
-        });
-
-        // Rediriger vers la page de création de dynastie
-        setTimeout(() => {
-          navigate(`/dynasty/create?create_token=${createToken}`);
-        }, 1500);
-      } else if (tokenData.status === 'pending') {
-        toast({
-          title: "Paiement en cours",
-          description: "Votre paiement est en cours de traitement. Veuillez patienter...",
-        });
-      } else if (tokenData.is_used) {
-        toast({
-          title: "Token déjà utilisé",
-          description: "Ce token de paiement a déjà été utilisé",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      console.error('Erreur vérification statut:', error);
-    }
-  };
-
   return (
-    <Button
-      onClick={handlePayment}
-      disabled={isLoading}
-      className={`bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold py-3 px-6 ${className}`}
-    >
-      {isLoading ? (
-        <>
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          Préparation du paiement...
-        </>
-      ) : (
-        <>
-          <CreditCard className="mr-2 h-4 w-4" />
-          {children}
-        </>
+    <div className="space-y-4">
+      {error && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       )}
-    </Button>
+      
+      <Button
+        onClick={handlePayment}
+        disabled={isLoading}
+        className={`bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold py-3 px-6 ${className}`}
+      >
+        {isLoading ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Préparation du paiement...
+          </>
+        ) : (
+          <>
+            <CreditCard className="mr-2 h-4 w-4" />
+            {children}
+          </>
+        )}
+      </Button>
+    </div>
   );
 }
