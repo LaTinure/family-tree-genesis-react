@@ -1,6 +1,3 @@
-Bon on va remplacer les clés par leur variables respectives :
-Celui dans mon projet local, IDE Cursor, pas dans supabase Studio :
-//
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import Stripe from 'https://esm.sh/stripe@12.0.0';
