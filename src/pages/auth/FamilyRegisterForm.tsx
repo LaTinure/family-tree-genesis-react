@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -19,7 +20,6 @@ import { z } from 'zod';
 import { supabase } from '@/integrations/supabase/client';
 import { passwordValidation } from '@/lib/validations/passwordValidation';
 
-// Schéma de validation simplifié pour le formulaire
 const SimpleFamilyRegisterSchema = z.object({
   title: z.enum(['M.', 'Mme']),
   firstName: z.string().min(1, "Le prénom est requis"),
@@ -46,7 +46,6 @@ const SimpleFamilyRegisterSchema = z.object({
 
 type SimpleFamilyRegisterData = z.infer<typeof SimpleFamilyRegisterSchema>;
 
-// Fonction utilitaire pour calculer la force du mot de passe
 function getPasswordStrength(password: string) {
   let score = 0;
   if (password.length >= 12) score++;
@@ -77,10 +76,6 @@ export const FamilyRegisterForm = () => {
   const [role, setRole] = useState<'user' | 'admin'>('user');
   const [adminCode, setAdminCode] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
-  const [patriarchExists, setPatriarchExists] = useState(false);
-  const [hasAnyProfiles, setHasAnyProfiles] = useState(false);
-  const [isFirstUser, setIsFirstUser] = useState(false);
-  const [roleError, setRoleError] = useState('');
   const [isAdminDialogOpen, setIsAdminDialogOpen] = useState(false);
 
   const methods = useForm<SimpleFamilyRegisterData>({
@@ -110,49 +105,9 @@ export const FamilyRegisterForm = () => {
     }
   });
 
-  const watchedTitle = methods.watch('title');
-  const relationshipOptions = getRelationshipTypeOptions();
   const passwordValue = methods.watch('password');
   const passwordScore = getPasswordStrength(passwordValue || '');
   const { label: strengthLabel, color: strengthColor } = getStrengthLabel(passwordScore);
-
-  useEffect(() => {
-    const checkProfilesExists = async () => {
-      try {
-        const { data: profilesData, error: profilesError } = await supabase
-          .from("profiles")
-          .select("id");
-
-        if (profilesError) {
-          console.error("Erreur lors de la vérification des profils:", profilesError);
-          return;
-        }
-
-        const hasAnyProfiles = profilesData && profilesData.length > 0;
-        setHasAnyProfiles(hasAnyProfiles);
-        setIsFirstUser(!hasAnyProfiles);
-
-        if (hasAnyProfiles) {
-          const { data: patriarchData, error: patriarchError } = await supabase
-            .from("profiles")
-            .select("id")
-            .eq("is_patriarch", true)
-            .limit(1);
-
-          if (patriarchError) {
-            console.error("Erreur lors de la vérification du patriarche:", patriarchError);
-          } else {
-            setPatriarchExists(!!(patriarchData && patriarchData.length > 0));
-          }
-        } else {
-          setPatriarchExists(false);
-        }
-      } catch (err) {
-        console.error("Erreur lors de la vérification des profils:", err);
-      }
-    };
-    checkProfilesExists();
-  }, []);
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -179,23 +134,12 @@ export const FamilyRegisterForm = () => {
     });
   };
 
-  const cancelPhoto = () => {
-    setShowPhotoConfirm(false);
-    setTempPhoto('');
-    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-    if (fileInput) {
-      fileInput.value = '';
-    }
-  };
-
   const handleRoleChange = (value: 'user' | 'admin') => {
-    setRoleError('');
     if (value === 'admin') {
       setIsAdminDialogOpen(true);
     } else {
       setRole('user');
       setAdminCode('');
-      setRoleError('');
       setIsAdmin(false);
     }
     methods.setValue('role', value);
@@ -288,7 +232,7 @@ export const FamilyRegisterForm = () => {
 
       toast({
         title: "Inscription réussie !",
-        description: `Félicitations ! Vous êtes maintenant ${isFirstUser ? 'la racine de l\'arbre familial' : 'membre de la famille'}.`,
+        description: `Félicitations ! Vous êtes maintenant membre de la famille.`,
       });
 
       navigate('/dashboard');
@@ -307,7 +251,6 @@ export const FamilyRegisterForm = () => {
   return (
     <FormProvider {...methods}>
       <div className="flex flex-col items-center min-h-screen bg-gradient-to-br from-whatsapp-50 via-white to-whatsapp-100 pt-24 pb-12">
-        {/* Header visuel du formulaire */}
         <div className="mb-8 flex flex-col items-center">
           <img src="/images/profile01.png" alt="Logo" className="w-20 h-20 rounded-full shadow-lg mb-2" />
           <h2 className="text-3xl font-bold text-whatsapp-700 mb-1">Créer un compte Famille</h2>
@@ -335,7 +278,7 @@ export const FamilyRegisterForm = () => {
                 </label>
               </div>
             </div>
-            <p className="text-xs text-gray-500">Photo de profil <span className="text-red-500">*</span></p>
+            <p className="text-xs text-gray-500">Photo de profil</p>
           </div>
 
           {/* Nom à afficher et Civilité */}
@@ -428,7 +371,6 @@ export const FamilyRegisterForm = () => {
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
-              {/* Indicateur de force du mot de passe */}
               {passwordValue && (
                 <div className="mt-2">
                   <div className="w-full h-2 rounded bg-gray-200 overflow-hidden">
@@ -446,7 +388,7 @@ export const FamilyRegisterForm = () => {
             </div>
           </div>
 
-          {/* Indicatif pays + téléphone et Profession */}
+          {/* Téléphone et Profession */}
           <div className="grid grid-cols-2 gap-4">
             <div className="flex gap-2">
               <div className="w-1/3">
@@ -517,7 +459,6 @@ export const FamilyRegisterForm = () => {
               setIsAdminDialogOpen(false);
               setRole('user');
               setAdminCode('');
-              setRoleError('');
               setIsAdmin(false);
             }
           }}>
@@ -535,7 +476,6 @@ export const FamilyRegisterForm = () => {
                   placeholder="Code admin"
                   autoFocus
                 />
-                {roleError && <p className="text-sm text-red-600 mt-1">{roleError}</p>}
                 <div className="flex justify-end space-x-2">
                   <Button
                     type="button"
@@ -544,7 +484,6 @@ export const FamilyRegisterForm = () => {
                       setIsAdminDialogOpen(false);
                       setRole('user');
                       setAdminCode('');
-                      setRoleError('');
                       setIsAdmin(false);
                     }}
                   >
@@ -557,9 +496,6 @@ export const FamilyRegisterForm = () => {
                         setRole('admin');
                         setIsAdmin(true);
                         setIsAdminDialogOpen(false);
-                        setRoleError('');
-                      } else {
-                        setRoleError('Code administrateur incorrect');
                       }
                     }}
                     className="bg-whatsapp-600 hover:bg-whatsapp-700"
@@ -581,7 +517,7 @@ export const FamilyRegisterForm = () => {
                 <Avatar src={tempPhoto} size="xl" />
                 <p>Voulez-vous utiliser cette photo comme avatar ?</p>
                 <div className="flex justify-center space-x-2">
-                  <Button variant="outline" onClick={cancelPhoto}>
+                  <Button variant="outline" onClick={() => setShowPhotoConfirm(false)}>
                     Annuler
                   </Button>
                   <Button onClick={confirmPhoto} className="bg-whatsapp-600 hover:bg-whatsapp-700">
