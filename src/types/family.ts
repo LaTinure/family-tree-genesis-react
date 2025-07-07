@@ -73,6 +73,10 @@ export interface Media {
 export interface FamilyTreeNode {
   id: string;
   name: string;
+  member?: FamilyMember;
+  level?: number;
+  x?: number;
+  y?: number;
   children?: FamilyTreeNode[];
 }
 
@@ -110,3 +114,5 @@ export interface DynastyCreationToken {
   expires_at: string;
   created_at: string;
 }
+
+export type Title = 'Patriarche' | 'Matriarche' | 'Père' | 'Mère' | 'Fils' | 'Fille' | 'Grand-père' | 'Grand-mère' | 'Petit-fils' | 'Petite-fille' | 'Oncle' | 'Tante' | 'Neveu' | 'Nièce' | 'Cousin' | 'Cousine' | 'Beau-père' | 'Belle-mère' | 'Beau-fils' | 'Belle-fille' | 'Frère' | 'Sœur' | 'Époux' | 'Épouse';

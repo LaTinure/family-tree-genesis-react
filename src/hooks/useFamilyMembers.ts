@@ -1,3 +1,4 @@
+
 import { useState, useCallback, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { FamilyMember, NewFamilyMember } from '@/types/family';
@@ -57,7 +58,7 @@ export const useFamilyMembers = () => {
         is_patriarch: profile.is_patriarch || false,
         is_parent: profile.is_parent || false,
         situation: profile.situation || undefined,
-        role: (profile.role_radio as any) || 'user',
+        user_role: (profile.user_role as any) || 'Membre',
         created_at: profile.created_at || new Date().toISOString(),
         updated_at: profile.updated_at || new Date().toISOString()
       }));
@@ -103,7 +104,7 @@ export const useFamilyMembers = () => {
             father_id: memberData.father_id,
             mother_id: memberData.mother_id,
             situation: memberData.situation,
-            role_radio: memberData.role || 'user',
+            user_role: memberData.user_role || 'Membre',
             is_admin: false,
             is_patriarch: false,
             is_parent: false,
@@ -149,7 +150,7 @@ export const useFamilyMembers = () => {
           father_id: memberData.father_id,
           mother_id: memberData.mother_id,
           situation: memberData.situation,
-          role_radio: memberData.role,
+          user_role: memberData.user_role,
           is_admin: memberData.is_admin,
           is_patriarch: memberData.is_patriarch,
           is_parent: memberData.is_parent,

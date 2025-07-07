@@ -3,7 +3,7 @@ import Stripe from 'stripe';
 
 // Configuration Stripe
 export const stripe = new Stripe(import.meta.env.VITE_STRIPE_SECRET_KEY!, {
-  apiVersion: '2023-10-16',
+  apiVersion: '2025-06-30.basil',
 });
 
 // Types pour les sessions de paiement

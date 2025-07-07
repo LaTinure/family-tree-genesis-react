@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useFamilyMembers } from '@/hooks/useFamilyMembers';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -42,7 +43,7 @@ export const DebugPanel = () => {
 
         {error && (
           <div className="flex items-center gap-2 p-3 bg-red-100 border border-red-300 rounded-lg">
-            <AlertTriangle className="w-4 h-4 text-red-600" />
+            <AlertTriangle className="w-4 w-4 text-red-600" />
             <span className="text-red-800 text-sm">{error}</span>
           </div>
         )}
@@ -61,7 +62,7 @@ export const DebugPanel = () => {
                   </div>
                   <div className="text-right text-sm">
                     <p>ID: {member.id.substring(0, 8)}...</p>
-                    <p>Rôle: {member.role}</p>
+                    <p>Rôle: {member.user_role}</p>
                     <p>Patriarche: {member.is_patriarch ? 'Oui' : 'Non'}</p>
                     <p>Admin: {member.is_admin ? 'Oui' : 'Non'}</p>
                   </div>

@@ -105,8 +105,8 @@ export const AuthRedirect: React.FC<AuthRedirectProps> = ({ children }) => {
       // Si l'utilisateur a une dynastie et tente d'accéder aux pages publiques
       if (hasDynasty) {
         // Rediriger vers le dashboard si on essaie d'accéder aux pages publiques principales
-        const redirectRoutes = [ROUTES.LANDING, ROUTES.HOME, ROUTES.DYNASTY.SELECTOR];
-        if (redirectRoutes.includes(location.pathname)) {
+        const redirectRoutes = [ROUTES.LANDING, ROUTES.DYNASTY.SELECTOR];
+        if (redirectRoutes.includes(location.pathname as any)) {
           navigate(ROUTES.DASHBOARD.ROOT);
         }
         return;

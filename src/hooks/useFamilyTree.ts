@@ -47,7 +47,7 @@ export const useFamilyTree = () => {
           is_patriarch: profile.is_patriarch || false,
           is_parent: profile.is_parent || false,
           situation: profile.situation,
-          role: (profile.role as any) || 'Membre',
+          user_role: (profile.user_role as any) || 'Membre',
           created_at: profile.created_at,
           updated_at: profile.updated_at,
         }));
@@ -70,6 +70,7 @@ export const useFamilyTree = () => {
     members.forEach(member => {
       nodeMap.set(member.id, {
         id: member.id,
+        name: `${member.first_name} ${member.last_name}`,
         member,
         children: [],
         level: 0,
@@ -110,7 +111,9 @@ export const useFamilyTree = () => {
         if (parent) {
           parent.children = parent.children || [];
           parent.children.push(node);
-          node.level = parent.level + 1;
+          if (node.level !== undefined && parent.level !== undefined) {
+            node.level = parent.level + 1;
+          }
         }
       }
     });
@@ -137,7 +140,7 @@ export const useFamilyTree = () => {
         is_admin: true,
         is_patriarch: true,
         is_parent: true,
-        role: 'Administrateur',
+        user_role: 'Administrateur',
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       },
