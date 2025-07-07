@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
 import { Loader2, CreditCard, AlertCircle } from 'lucide-react';
-import { useToast } from '../hooks/use-toast';
-import { supabase } from '../lib/supabaseClient';
+import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 import { Alert, AlertDescription } from './ui/alert';
 
 interface StripePaymentButtonProps {
