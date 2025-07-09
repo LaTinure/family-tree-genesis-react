@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -10,7 +11,7 @@ import { AuthRedirect } from '@/components/auth/AuthRedirect';
 import { ROUTES } from '@/lib/constants/routes';
 
 // Pages
-import Index from '@/pages/Index';
+import Home from '@/pages/Home';
 import About from '@/pages/About';
 import Profile from '@/pages/Profile';
 import Dashboard from '@/pages/Dashboard';
@@ -31,13 +32,9 @@ import ContactAdmin from '@/pages/dashboard/ContactAdmin';
 import Settings from '@/pages/dashboard/Settings';
 import Gestion from '@/pages/dashboard/Gestion';
 import Help from '@/pages/Help';
-import DynastySelector from '@/pages/DynastySelector';
-import DynastyCreateForm from '@/pages/DynastyCreateForm';
-import DynastyPayment from '@/pages/DynastyPayment';
-import DynastyPaymentSuccess from '@/pages/DynastyPaymentSuccess';
+import DynastyCreate from '@/pages/DynastyCreate';
 import DynastyInviteHandler from '@/components/DynastyInviteHandler';
 import Media from '@/pages/dashboard/Media';
-import StripeTest from '@/pages/StripeTest';
 
 // Configuration React Query
 const queryClient = new QueryClient({
@@ -73,154 +70,119 @@ function App() {
         <AuthProvider>
           <AuthRedirect>
             <Routes>
-            {/* Routes publiques - /dynasty devient la page d'accueil par défaut */}
-            <Route path={ROUTES.LANDING} element={<Layout><DynastySelector /></Layout>} />
-            <Route path={ROUTES.HOME} element={<Layout><DynastySelector /></Layout>} />
-            <Route path="/index" element={<Layout><Index /></Layout>} />
-            <Route path={ROUTES.ABOUT} element={<Layout><About /></Layout>} />
-            <Route path={ROUTES.AUTH.FAMILY} element={<Layout><AuthFamily /></Layout>} />
-            <Route path="/login" element={<Layout><Login /></Layout>} />
-            <Route path="/register" element={<Layout><Register /></Layout>} />
-            <Route path={ROUTES.HELP} element={<Layout><Help /></Layout>} />
-            <Route path={ROUTES.DYNASTY.SELECTOR} element={<Layout><DynastySelector /></Layout>} />
-            <Route path={ROUTES.DYNASTY.CREATE} element={<Layout><DynastyCreateForm /></Layout>} />
-            <Route path="/dynasty/payment" element={<Layout><DynastyPayment /></Layout>} />
-            <Route path="/dynasty/checkout/success" element={<Layout><DynastyPaymentSuccess /></Layout>} />
-            <Route path={ROUTES.INVITE} element={<Layout><DynastyInviteHandler /></Layout>} />
-            
-            {/* Route de test pour déboguer Stripe */}
-            <Route path="/test/stripe" element={<Layout><StripeTest /></Layout>} />
+              {/* Page d'accueil */}
+              <Route path="/" element={<Layout><Home /></Layout>} />
+              
+              {/* Routes publiques */}
+              <Route path="/about" element={<Layout><About /></Layout>} />
+              <Route path="/help" element={<Layout><Help /></Layout>} />
+              <Route path="/auth-family" element={<Layout><AuthFamily /></Layout>} />
+              <Route path="/login" element={<Layout><Login /></Layout>} />
+              <Route path="/register" element={<Layout><Register /></Layout>} />
+              
+              {/* Création de dynastie */}
+              <Route path="/dynasty/create" element={<Layout><DynastyCreate /></Layout>} />
+              
+              {/* Gestion des invitations */}
+              <Route path="/invite" element={<Layout><DynastyInviteHandler /></Layout>} />
 
-            {/* Routes protégées */}
-            <Route path={ROUTES.PROFILE} element={
-              <ProtectedRoute>
-                <Layout>
-                  <Profile />
-                </Layout>
-              </ProtectedRoute>
-            } />
+              {/* Routes protégées */}
+              <Route path="/profile" element={
+                <ProtectedRoute>
+                  <Layout><Profile /></Layout>
+                </ProtectedRoute>
+              } />
 
-            <Route path={ROUTES.DASHBOARD.ROOT} element={
-              <ProtectedRoute>
-                <Layout>
-                  <Dashboard />
-                </Layout>
-              </ProtectedRoute>
-            } />
+              <Route path="/dashboard" element={
+                <ProtectedRoute>
+                  <Layout><Dashboard /></Layout>
+                </ProtectedRoute>
+              } />
 
-            <Route path={ROUTES.DASHBOARD.TREE} element={
-              <ProtectedRoute>
-                <Layout>
-                  <FamilyTree />
-                </Layout>
-              </ProtectedRoute>
-            } />
+              <Route path="/dashboard/tree" element={
+                <ProtectedRoute>
+                  <Layout><FamilyTree /></Layout>
+                </ProtectedRoute>
+              } />
 
-            <Route path={ROUTES.DASHBOARD.MEMBERS} element={
-              <ProtectedRoute>
-                <Layout>
-                  <Members />
-                </Layout>
-              </ProtectedRoute>
-            } />
+              <Route path="/dashboard/members" element={
+                <ProtectedRoute>
+                  <Layout><Members /></Layout>
+                </ProtectedRoute>
+              } />
 
-            <Route path={ROUTES.DASHBOARD.ADMIN} element={
-              <ProtectedRoute>
-                <Layout>
-                  <Admin />
-                </Layout>
-              </ProtectedRoute>
-            } />
+              <Route path="/dashboard/admin" element={
+                <ProtectedRoute>
+                  <Layout><Admin /></Layout>
+                </ProtectedRoute>
+              } />
 
-            <Route path={ROUTES.DASHBOARD.MESSAGES} element={
-              <ProtectedRoute>
-                <Layout>
-                  <Messages />
-                </Layout>
-              </ProtectedRoute>
-            } />
+              <Route path="/dashboard/messages" element={
+                <ProtectedRoute>
+                  <Layout><Messages /></Layout>
+                </ProtectedRoute>
+              } />
 
-            <Route path={ROUTES.DASHBOARD.NOTIFICATIONS} element={
-              <ProtectedRoute>
-                <Layout>
-                  <Notifications />
-                </Layout>
-              </ProtectedRoute>
-            } />
+              <Route path="/dashboard/notifications" element={
+                <ProtectedRoute>
+                  <Layout><Notifications /></Layout>
+                </ProtectedRoute>
+              } />
 
-            <Route path={ROUTES.DASHBOARD.INVITE} element={
-              <ProtectedRoute>
-                <Layout>
-                  <Invite />
-                </Layout>
-              </ProtectedRoute>
-            } />
+              <Route path="/dashboard/invite" element={
+                <ProtectedRoute>
+                  <Layout><Invite /></Layout>
+                </ProtectedRoute>
+              } />
 
-            <Route path={ROUTES.DASHBOARD.PROFILE} element={
-              <ProtectedRoute>
-                <Layout>
-                  <DashboardProfile />
-                </Layout>
-              </ProtectedRoute>
-            } />
+              <Route path="/dashboard/profile" element={
+                <ProtectedRoute>
+                  <Layout><DashboardProfile /></Layout>
+                </ProtectedRoute>
+              } />
 
-            <Route path={ROUTES.DASHBOARD.MEDIA} element={
-              <ProtectedRoute>
-                <Layout>
-                  <Media />
-                </Layout>
-              </ProtectedRoute>
-            } />
+              <Route path="/dashboard/media" element={
+                <ProtectedRoute>
+                  <Layout><Media /></Layout>
+                </ProtectedRoute>
+              } />
 
-            {/* Nouvelles routes pour les pages du dashboard */}
-            <Route path={ROUTES.DASHBOARD.CHAT} element={
-              <ProtectedRoute>
-                <Layout>
-                  <Chat />
-                </Layout>
-              </ProtectedRoute>
-            } />
+              <Route path="/dashboard/chat" element={
+                <ProtectedRoute>
+                  <Layout><Chat /></Layout>
+                </ProtectedRoute>
+              } />
 
-            <Route path={ROUTES.DASHBOARD.EVENTS} element={
-              <ProtectedRoute>
-                <Layout>
-                  <Events />
-                </Layout>
-              </ProtectedRoute>
-            } />
+              <Route path="/dashboard/events" element={
+                <ProtectedRoute>
+                  <Layout><Events /></Layout>
+                </ProtectedRoute>
+              } />
 
-            <Route path={ROUTES.DASHBOARD.REPORT} element={
-              <ProtectedRoute>
-                <Layout>
-                  <Report />
-                </Layout>
-              </ProtectedRoute>
-            } />
+              <Route path="/dashboard/report" element={
+                <ProtectedRoute>
+                  <Layout><Report /></Layout>
+                </ProtectedRoute>
+              } />
 
-            <Route path={ROUTES.DASHBOARD.CONTACT_ADMIN} element={
-              <ProtectedRoute>
-                <Layout>
-                  <ContactAdmin />
-                </Layout>
-              </ProtectedRoute>
-            } />
+              <Route path="/dashboard/contact-admin" element={
+                <ProtectedRoute>
+                  <Layout><ContactAdmin /></Layout>
+                </ProtectedRoute>
+              } />
 
-            <Route path={ROUTES.DASHBOARD.SETTINGS} element={
-              <ProtectedRoute>
-                <Layout>
-                  <Settings />
-                </Layout>
-              </ProtectedRoute>
-            } />
+              <Route path="/dashboard/settings" element={
+                <ProtectedRoute>
+                  <Layout><Settings /></Layout>
+                </ProtectedRoute>
+              } />
 
-            <Route path={ROUTES.DASHBOARD.GESTION} element={
-              <ProtectedRoute>
-                <Layout>
-                  <Gestion />
-                </Layout>
-              </ProtectedRoute>
-            } />
-          </Routes>
+              <Route path="/dashboard/gestion" element={
+                <ProtectedRoute>
+                  <Layout><Gestion /></Layout>
+                </ProtectedRoute>
+              } />
+            </Routes>
           </AuthRedirect>
 
           <Toaster />

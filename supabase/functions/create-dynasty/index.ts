@@ -1,155 +1,152 @@
+
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type"
+};
+
+const logStep = (step: string, data?: any) => {
+  console.log(`🔍 [CREATE-DYNASTY] ${step}`, data ? JSON.stringify(data, null, 2) : '');
 };
 
 serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders });
   }
 
   try {
-    const authHeader = req.headers.get('Authorization');
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL')!,
-      Deno.env.get('SUPABASE_ANON_KEY')!,
-      {
-        global: { headers: { Authorization: authHeader } },
-      }
-    );
+    logStep("🚀 Démarrage création dynastie");
 
-    const body = await req.json();
-    const { createToken, dynastyName, dynastyDescription } = body;
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
-    if (!createToken || !dynastyName) {
-      return new Response(JSON.stringify({
-        error: 'Token et nom de dynastie requis',
-      }), {
-        status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+    if (!supabaseUrl || !supabaseServiceKey) {
+      throw new Error("Variables Supabase manquantes");
     }
 
-    // Vérifier le token
+    const supabase = createClient(supabaseUrl, supabaseServiceKey, {
+      auth: { autoRefreshToken: false, persistSession: false }
+    });
+
+    const body = await req.json();
+    const { createToken, dynastyData } = body;
+
+    if (!createToken) {
+      throw new Error("Token de création manquant");
+    }
+
+    logStep("📋 Données reçues", { createToken: createToken.substring(0, 8) + "...", dynastyData });
+
+    // 1. Vérifier le token
     const { data: tokenData, error: tokenError } = await supabase
-      .from('dynasty_creation_tokens')
-      .select('*')
-      .eq('token', createToken)
+      .from("dynasty_creation_tokens")
+      .select("*")
+      .eq("token", createToken)
       .single();
 
     if (tokenError || !tokenData) {
-      return new Response(JSON.stringify({
-        error: 'Token invalide',
-      }), {
-        status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      logStep("❌ Token invalide", tokenError);
+      throw new Error("Token de création invalide");
     }
 
-    // Vérifications de sécurité
-    if (tokenData.status !== 'paid') {
-      return new Response(JSON.stringify({
-        error: 'Paiement non validé',
-      }), {
-        status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+    if (tokenData.status !== "paid") {
+      throw new Error("Paiement non validé");
     }
 
     if (tokenData.is_used) {
-      return new Response(JSON.stringify({
-        error: 'Token déjà utilisé',
-      }), {
-        status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      throw new Error("Token déjà utilisé");
     }
 
-    const now = new Date();
-    if (new Date(tokenData.expires_at) < now) {
-      return new Response(JSON.stringify({
-        error: 'Token expiré',
-      }), {
-        status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+    if (new Date(tokenData.expires_at) < new Date()) {
+      throw new Error("Token expiré");
     }
 
-    // Utiliser le service role pour les opérations critiques
-    const supabaseService = createClient(
-      Deno.env.get('SUPABASE_URL')!,
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
-      { auth: { autoRefreshToken: false, persistSession: false } }
-    );
+    logStep("✅ Token valide", { status: tokenData.status, user: tokenData.user_id });
 
-    // Générer l'admin_invite_token avec préfixe DYN_
-    const adminInviteToken = `DYN_${crypto.randomUUID()}`;
-
-    // Créer la dynastie
-    const { data: dynastyData, error: dynastyError } = await supabaseService
-      .from('dynasties')
+    // 2. Créer la dynastie
+    const { data: dynasty, error: dynastyError } = await supabase
+      .from("dynasties")
       .insert({
-        name: dynastyName,
-        description: dynastyDescription || '',
-        created_at: now.toISOString(),
-        admin_invite_token: adminInviteToken,
-        status: 'active',
+        name: dynastyData.name,
+        description: dynastyData.description || null,
+        location: dynastyData.location || null,
+        founding_year: dynastyData.founding_year || null,
+        created_by: tokenData.user_id,
       })
       .select()
       .single();
 
     if (dynastyError) {
-      console.error('❌ Erreur création dynastie:', dynastyError);
-      return new Response(JSON.stringify({
-        error: 'Erreur lors de la création de la dynastie',
-      }), {
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      logStep("❌ Erreur création dynastie", dynastyError);
+      throw new Error("Erreur lors de la création de la dynastie");
     }
 
-    // Marquer le token comme utilisé
-    const { error: updateError } = await supabaseService
-      .from('dynasty_creation_tokens')
+    logStep("✅ Dynastie créée", { dynastyId: dynasty.id, name: dynasty.name });
+
+    // 3. Créer un token d'invitation pour l'administrateur
+    const adminToken = `DYN_${crypto.randomUUID().replace(/-/g, '')}`;
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 7); // Expire dans 7 jours
+
+    const { error: inviteError } = await supabase
+      .from("invites")
+      .insert({
+        dynasty_id: dynasty.id,
+        token: adminToken,
+        user_role: "Administrateur",
+        expires_at: expiresAt.toISOString(),
+        used: false,
+      });
+
+    if (inviteError) {
+      logStep("❌ Erreur création invitation admin", inviteError);
+      throw new Error("Erreur lors de la création de l'invitation administrateur");
+    }
+
+    logStep("✅ Token admin créé", { adminToken: adminToken.substring(0, 12) + "..." });
+
+    // 4. Marquer le token comme utilisé
+    const { error: updateError } = await supabase
+      .from("dynasty_creation_tokens")
       .update({
         is_used: true,
-        used_at: now.toISOString(),
-        dynasty_id: dynastyData.id,
-        log: [...(tokenData.log || []), { status: 'used', at: now.toISOString(), dynasty_id: dynastyData.id }],
+        used_at: new Date().toISOString(),
+        dynasty_id: dynasty.id,
       })
-      .eq('token', createToken);
+      .eq("token", createToken);
 
     if (updateError) {
-      console.error('❌ Erreur mise à jour token:', updateError);
-      // Ne pas échouer car la dynastie est créée
+      logStep("⚠️ Erreur mise à jour token", updateError);
+      // Ne pas échouer pour ça
+    } else {
+      logStep("✅ Token marqué comme utilisé");
     }
 
-    console.log('✅ Dynastie créée:', dynastyData.id, 'avec token admin:', adminInviteToken);
-
-    return new Response(JSON.stringify({
+    const response = {
       success: true,
-      dynasty: {
-        id: dynastyData.id,
-        name: dynastyData.name,
-        admin_invite_token: adminInviteToken,
-      },
-      redirect_url: `/auth-family?token=${adminInviteToken}`,
-    }), {
+      dynastyId: dynasty.id,
+      adminToken: adminToken,
+      message: "Dynastie créée avec succès"
+    };
+
+    logStep("🎉 Réponse envoyée", response);
+
+    return new Response(JSON.stringify(response), {
       status: 200,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, "Content-Type": "application/json" }
     });
 
   } catch (error) {
-    console.error('🔥 Erreur création dynastie:', error);
+    logStep("🔥 Erreur critique", { message: error.message, stack: error.stack });
+
     return new Response(JSON.stringify({
-      error: 'Erreur interne du serveur',
-      details: error?.message,
+      success: false,
+      error: error.message || "Erreur interne du serveur"
     }), {
       status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, "Content-Type": "application/json" }
     });
   }
 });

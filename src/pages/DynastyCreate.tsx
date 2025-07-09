@@ -1,3 +1,5 @@
+// Fichier fusionné automatiquement, conflits résolus le 2024-07-07.
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useToast } from '../hooks/use-toast';
@@ -53,20 +55,17 @@ export default function DynastyCreate() {
       });
       return;
     }
-
     validateToken();
   }, [createToken]);
 
   const validateToken = async () => {
     try {
       console.log('🔍 Validation du token:', createToken);
-
       const { data: tokenData, error } = await supabase
         .from('dynasty_creation_tokens')
         .select('*')
         .eq('token', createToken)
         .single();
-
       if (error || !tokenData) {
         console.error('❌ Token invalide:', error);
         setTokenValidation({
@@ -79,16 +78,13 @@ export default function DynastyCreate() {
         });
         return;
       }
-
       const now = new Date();
       const isExpired = new Date(tokenData.expires_at) < now;
-
       console.log('✅ Token validé:', {
         status: tokenData.status,
         isExpired,
         isUsed: tokenData.is_used,
       });
-
       setTokenValidation({
         isValid: true,
         isPaid: tokenData.status === 'paid',
@@ -96,7 +92,6 @@ export default function DynastyCreate() {
         isUsed: tokenData.is_used,
         loading: false,
       });
-
     } catch (error) {
       console.error('🔥 Erreur validation token:', error);
       setTokenValidation({
@@ -112,7 +107,6 @@ export default function DynastyCreate() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!createToken || !formData.dynastyName.trim()) {
       toast({
         title: "Erreur",
@@ -121,12 +115,10 @@ export default function DynastyCreate() {
       });
       return;
     }
-
     setIsSubmitting(true);
-
     try {
       console.log('🚀 Création de la dynastie:', formData.dynastyName);
-
+      // Appel REST classique (fetch) pour compatibilité universelle
       const response = await fetch('/api/create-dynasty', {
         method: 'POST',
         headers: {
@@ -139,7 +131,6 @@ export default function DynastyCreate() {
           dynastyDescription: formData.dynastyDescription.trim(),
         }),
       });
-
       let result;
       try {
         result = await response.json();
@@ -148,24 +139,19 @@ export default function DynastyCreate() {
         console.error('❌ Erreur parsing JSON:', err, 'Réponse brute:', text);
         throw new Error('Réponse invalide du serveur');
       }
-
       if (!response.ok) {
         console.error('🚨 Échec backend:', result?.error || response.statusText);
         throw new Error(result?.error || 'Erreur lors de la création de la dynastie');
       }
-
       console.log('✅ Dynastie créée:', result.dynasty);
-
       toast({
         title: "Succès !",
         description: "Votre dynastie a été créée avec succès",
       });
-
       // Rediriger vers auth-family avec le token admin
       setTimeout(() => {
         navigate(`/auth-family?token=${result.dynasty.admin_invite_token}`);
       }, 1500);
-
     } catch (error) {
       console.error('🔥 Erreur création dynastie:', error);
       toast({
@@ -268,7 +254,6 @@ export default function DynastyCreate() {
             Votre paiement a été validé ! Donnez un nom à votre dynastie pour commencer.
           </CardDescription>
         </CardHeader>
-
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
@@ -286,7 +271,6 @@ export default function DynastyCreate() {
                 className="text-lg font-medium"
               />
             </div>
-
             <div className="space-y-2">
               <Label htmlFor="dynastyDescription" className="text-sm font-medium text-gray-700">
                 Description (optionnel)
@@ -301,7 +285,6 @@ export default function DynastyCreate() {
                 className="resize-none"
               />
             </div>
-
             <Button
               type="submit"
               className="w-full bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white font-semibold py-3 text-lg"

@@ -1,11 +1,10 @@
 
 export const ROUTES = {
   LANDING: '/',
-  HOME: '/dynasty',
+  HOME: '/',
   ABOUT: '/about',
   HELP: '/help',
   DYNASTY: {
-    SELECTOR: '/dynasty',
     CREATE: '/dynasty/create',
   },
   INVITE: '/invite',
